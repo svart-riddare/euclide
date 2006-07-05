@@ -13,7 +13,7 @@ typedef enum
 	King, Queen, QueenRook, KingRook, QueenBishop, KingBishop, QueenKnight, KingKnight,
 	APawn, BPawn, CPawn, DPawn, EPawn, FPawn, GPawn, HPawn,
 	
-	NumMen, UndefinedMen = -1,
+	NumMen, UndefinedMan = -1,
 	FirstMan = King, LastMan = HPawn,
 	FirstRook = QueenRook, LastRook = KingRook,
 	FirstBishop = QueenBishop, LastBishop = KingBishop,
@@ -26,7 +26,7 @@ typedef enum
 	AKnight, BKnight, CKnight, DKnight, EKnight, FKnight, GKnight, HKnight,
 
 	NumSupermen, UndefinedSuperman = -1,
-	FirstSuperman = AQueen, LastSuperman = HKnight,
+	FirstSuperman = King, LastSuperman = HKnight,
 	FirstSuperQueen = AQueen, LastSuperQueen = HQueen,
 	FirstSuperRook = ARook, LastSuperRook = HRook,
 	FirstSuperBisop = ABishop, LastSuperBishop = HBishop,
@@ -39,6 +39,11 @@ typedef enum
 inline bool isValidMan(Man man)
 {
 	return ((man >= FirstMan) && (man <= LastMan));
+}
+
+inline bool isValidSuperman(Man man)
+{
+	return ((man >= FirstSuperman) && (man <= LastSuperman));
 }
 
 /* -------------------------------------------------------------------------- */

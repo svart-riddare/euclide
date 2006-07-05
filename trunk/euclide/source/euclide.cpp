@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "position.h"
 
 namespace euclide
 {
@@ -18,6 +19,9 @@ class Euclide
 		EUCLIDE_Callbacks callbacks;
 
 		Problem *problem;
+
+		Pieces *whitePieces;
+		Pieces *blackPieces;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -38,6 +42,9 @@ Euclide::Euclide(const EUCLIDE_Configuration *pConfiguration, const EUCLIDE_Call
 
 	problem = NULL;
 
+	whitePieces = NULL;
+	blackPieces = NULL;
+
 	/* -- Display copyright string -- */
 
 	if (callbacks.displayCopyright)
@@ -48,20 +55,34 @@ Euclide::Euclide(const EUCLIDE_Configuration *pConfiguration, const EUCLIDE_Call
 
 Euclide::~Euclide()
 {
+	delete whitePieces;
+	delete blackPieces;
+
+	delete problem;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Euclide::solve(const EUCLIDE_Problem *problem)
+void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 {
 	/* -- Initialize problem structure -- */
 
-	this->problem = new Problem(problem);
+	problem = new Problem(inputProblem);
 
 	/* -- Display problem -- */
 
 	if (callbacks.displayProblem)
-		(*callbacks.displayProblem)(callbacks.handle, problem);
+		(*callbacks.displayProblem)(callbacks.handle, inputProblem);
+
+	/* -- Create position structures -- */
+
+	whitePieces = new Pieces(*problem, White);
+	blackPieces = new Pieces(*problem, Black);
+
+	/* -- Apply non ubiquity principle -- */
+
+	whitePieces->applyNonUbiquityPrinciple();
+	blackPieces->applyNonUbiquityPrinciple();
 }
 
 /* -------------------------------------------------------------------------- */

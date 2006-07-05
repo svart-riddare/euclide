@@ -1,6 +1,7 @@
 #ifndef __EUCLIDE_GLYPHS_H
 #define __EUCLIDE_GLYPHS_H
 
+#include "colors.h"
 #include "errors.h"
 
 namespace euclide
@@ -26,6 +27,21 @@ typedef enum
 inline bool isValidGlyph(Glyph glyph)
 {
 	return ((glyph >= FirstGlyph) && (glyph <= LastGlyph));
+}
+
+inline bool isValidGlyph(Glyph glyph, Color color)
+{
+	assert(isValidGlyph(glyph));
+	assert(isValidColor(color));
+
+	if (color == White)
+		return ((glyph >= FirstWhiteGlyph) && (glyph <= LastWhiteGlyph));
+
+	if (color == Black)
+		return ((glyph >= FirstBlackGlyph) && (glyph <= LastBlackGlyph));
+
+	assert(false);
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */

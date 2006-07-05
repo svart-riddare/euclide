@@ -26,18 +26,8 @@ typedef enum
 
 /* -------------------------------------------------------------------------- */
 
-inline void abort(Error error)
-{
-	throw error;
-}
-
-/* -------------------------------------------------------------------------- */
-
-inline void assert(bool expression)
-{
-	if (!expression)
-		abort(InternalLogicError);
-}
+void abort(Error error);
+void assert(bool expression);
 
 /* -------------------------------------------------------------------------- */
 
