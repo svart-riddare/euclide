@@ -16,11 +16,14 @@ using std::vector;
 
 /* -------------------------------------------------------------------------- */
 
+#define BOOST_ENABLE_ASSERT_HANDLER
+
 #include <boost/array.hpp>
 #include <boost/logic/tribool.hpp>
 
 using boost::array;
 using boost::logic::tribool;
+using boost::logic::indeterminate;
 
 /* -------------------------------------------------------------------------- */
 
@@ -34,12 +37,7 @@ using boost::logic::tribool;
 
 /* -------------------------------------------------------------------------- */
 
-#ifndef __EUCLIDE_PROBLEM_H
-	#include "problem.h"
-#ifndef __EUCLIDE_FATE_H
-	#include "fate.h"
-#endif
-#endif
+#include "problem.h"
 
 /* -------------------------------------------------------------------------- */
 

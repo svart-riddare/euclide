@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\interface;..\..\source\enumerations;..\..\source\constants;..\..\source\tables"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_SECURE_SCL=0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
@@ -113,7 +113,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="..\..\interface;..\..\source\enumerations;..\..\source\constants;..\..\source\tables"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_SECURE_SCL=0"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -161,6 +161,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\source\enumerations\errors.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\euclide.cpp"
 				>
 				<FileConfiguration
@@ -185,26 +189,12 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\source\fate.cpp"
+				RelativePath="..\..\source\finalsquares.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\source\position.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\..\source\problem.cpp"
@@ -216,11 +206,15 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath="..\..\source\fate.h"
+				RelativePath="..\..\source\finalsquares.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\source\includes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\position.h"
 				>
 			</File>
 			<File
