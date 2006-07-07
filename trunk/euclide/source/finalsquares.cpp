@@ -73,10 +73,11 @@ FinalSquares& FinalSquares::operator+=(const FinalSquare& finalSquare)
 
 /* -------------------------------------------------------------------------- */
 
-FinalSquares& FinalSquares::operator=(Square square)
-{
+bool FinalSquares::operator=(Square square)
+{	
 	assert(isValidSquare(square));
 	
+	bool modified = false;
 	int empty = 0;
 
 	for (vector<FinalSquare>::iterator I = squares.begin(); I != squares.end(); )
@@ -88,6 +89,7 @@ FinalSquares& FinalSquares::operator=(Square square)
 		}
 		else
 		{
+			modified = true;
 			I = squares.erase(I);
 		}
 	}
@@ -98,7 +100,7 @@ FinalSquares& FinalSquares::operator=(Square square)
 	if (empty == (int)squares.size())
 		captured = true;
 
-	return *this;
+	return modified;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -37,7 +37,7 @@ class FinalSquares
 		FinalSquares();
 
 		FinalSquares& operator+=(const FinalSquare& finalSquare);
-		FinalSquares& operator=(Square square);
+		bool operator=(Square square);
 
 		operator const vector<FinalSquare>&() const;
 		
