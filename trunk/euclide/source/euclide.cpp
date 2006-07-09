@@ -18,6 +18,7 @@ class Euclide
 		EUCLIDE_Configuration configuration;
 		EUCLIDE_Callbacks callbacks;
 
+		Board *board;
 		Problem *problem;
 
 		Pieces *whitePieces;
@@ -40,6 +41,7 @@ Euclide::Euclide(const EUCLIDE_Configuration *pConfiguration, const EUCLIDE_Call
 
 	/* -- Initialize other members -- */
 
+	board = NULL;
 	problem = NULL;
 
 	whitePieces = NULL;
@@ -59,6 +61,7 @@ Euclide::~Euclide()
 	delete blackPieces;
 
 	delete problem;
+	delete board;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -73,6 +76,10 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	if (callbacks.displayProblem)
 		(*callbacks.displayProblem)(callbacks.handle, inputProblem);
+
+	/* -- Create board structure -- */
+
+	board = new Board();
 
 	/* -- Create position structures -- */
 

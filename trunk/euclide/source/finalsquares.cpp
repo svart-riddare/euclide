@@ -32,6 +32,24 @@ FinalSquare::FinalSquare(Square square, Man man, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
+int FinalSquare::computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling)
+{
+	int distance = board.distance(man, this->man, color, square, castling);
+	if (distance > requiredMoves)
+		requiredMoves = distance;
+
+	return getRequiredMoves();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquare::getRequiredMoves() const
+{
+	return requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
 FinalSquare::operator Square() const
 {
 	return square;
@@ -80,7 +98,8 @@ bool FinalSquares::operator=(Square square)
 	bool modified = false;
 	int empty = 0;
 
-	for (vector<FinalSquare>::iterator I = squares.begin(); I != squares.end(); )
+	vector<FinalSquare>::iterator I = squares.begin();
+	while(I != squares.end())
 	{
 		if (*I == square)
 		{
@@ -101,6 +120,43 @@ bool FinalSquares::operator=(Square square)
 		captured = true;
 
 	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling)
+{
+	int minimum = infinity;
+
+	vector<FinalSquare>::iterator I = squares.begin(); 
+	while (I != squares.end())
+	{
+		int requiredMoves = I->computeRequiredMoves(board, man, color, castling);
+		if (requiredMoves < minimum)
+			minimum = requiredMoves;
+
+		if (requiredMoves >= infinity)
+			I = squares.erase(I);
+		else
+			I++;
+	}
+
+	requiredMoves = minimum;
+
+	if (requiredMoves >= infinity)
+		captured = true;
+	
+	return getRequiredMoves();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::getRequiredMoves() const
+{
+	if (!captured)
+		return requiredMoves;
+
+	return 0;
 }
 
 /* -------------------------------------------------------------------------- */

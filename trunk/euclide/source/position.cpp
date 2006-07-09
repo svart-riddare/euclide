@@ -30,7 +30,7 @@ Pieces::Pieces(const Problem& problem, Color color)
 				if (!isGlyphPawn(glyph) && isManPawn(man))
 				{
 					for (Column column = FirstColumn; column <= LastColumn; column++)
-						squares[man] += FinalSquare(square, tables::getGlyphSuperman[glyph][column], false);
+						squares[man] += FinalSquare(square, tables::glyphToMan[glyph][column], false);
 				}
 				else
 				{

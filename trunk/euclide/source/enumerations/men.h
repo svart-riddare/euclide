@@ -29,7 +29,7 @@ typedef enum
 	FirstSuperman = King, LastSuperman = HKnight,
 	FirstSuperQueen = AQueen, LastSuperQueen = HQueen,
 	FirstSuperRook = ARook, LastSuperRook = HRook,
-	FirstSuperBisop = ABishop, LastSuperBishop = HBishop,
+	FirstSuperBishop = ABishop, LastSuperBishop = HBishop,
 	FirstSuperKnight = AKnight, LastSuperKnight = HKnight,
 	
 } Man;

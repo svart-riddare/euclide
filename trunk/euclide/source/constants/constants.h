@@ -10,15 +10,11 @@ namespace constants
 
 /* -------------------------------------------------------------------------- */
 
-extern const wchar_t copyright[];
+extern const int infinity;
 
 /* -------------------------------------------------------------------------- */
 
-extern const char *glyphNames[NumGlyphs];
-
-extern const char *squareNames[NumSquares];
-extern const char *columnNames[NumColumns];
-extern const char *rowNames[NumRows];
+extern const wchar_t copyright[];
 
 /* -------------------------------------------------------------------------- */
 
