@@ -161,6 +161,14 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\source\board.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\castling.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\enumerations\errors.cpp"
 				>
 			</File>
@@ -205,6 +213,14 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath="..\..\source\board.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\castling.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\source\finalsquares.h"
 				>
@@ -270,11 +286,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\constants\glyphs.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\constants\squares.cpp"
+				RelativePath="..\..\source\constants\infinity.cpp"
 				>
 			</File>
 		</Filter>
@@ -283,6 +295,18 @@
 			>
 			<File
 				RelativePath="..\..\source\tables\glyphtoman.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\tables\initialsquares.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\tables\mantoglyph.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\tables\movements.cpp"
 				>
 			</File>
 			<File

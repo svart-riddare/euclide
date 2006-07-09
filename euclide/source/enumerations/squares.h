@@ -49,6 +49,16 @@ inline bool isValidSquare(Square square)
 	return ((square >= FirstSquare) && (square <= LastSquare));
 }
 
+inline bool isValidColumn(Column column)
+{
+	return ((column >= FirstColumn) && (column <= LastColumn));
+}
+
+inline bool isValidRow(Row row)
+{
+	return ((row >= FirstRow) && (row <= LastRow));
+}
+
 /* -------------------------------------------------------------------------- */
 
 inline Square operator++(Square& square, int)
@@ -88,6 +98,30 @@ inline Row operator++(Row& row)
 {
 	return
 	row = static_cast<Row>(row + 1);
+}
+
+/* -------------------------------------------------------------------------- */
+
+inline Column squareColumn(Square square)
+{
+	assert(isValidSquare(square));
+
+	return (Column)(square / 8);
+}
+
+inline Row squareRow(Square square)
+{
+	assert(isValidSquare(square));
+
+	return (Row)(square % 8);
+}
+
+inline Square mksquare(Column column, Row row)
+{
+	assert(isValidColumn(column));
+	assert(isValidRow(row));
+
+	return (Square)(column * 8 + row);
 }
 
 /* -------------------------------------------------------------------------- */

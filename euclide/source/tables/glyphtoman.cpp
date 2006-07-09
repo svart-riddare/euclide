@@ -10,7 +10,7 @@ namespace tables
 {
 
 /* --------------------------------------------------------------------------
-   -- Computer generated with make-tables on Wed Jun 28 23:51:14 2006
+   -- Computer generated with make-tables on Sat Jul 08 23:40:04 2006
    -------------------------------------------------------------------------- */
 
 const bool validGlyphManColor[NumGlyphs][NumMen][NumColors] =
@@ -59,7 +59,7 @@ const bool validGlyphManColor[NumGlyphs][NumMen][NumColors] =
 
 /* -------------------------------------------------------------------------- */
 
-const Man getGlyphSuperman[NumGlyphs][NumColumns] =
+const Man glyphToMan[NumGlyphs][NumColumns] =
 {
 	{  /* NoGlyph */
 		UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, UndefinedSuperman, 

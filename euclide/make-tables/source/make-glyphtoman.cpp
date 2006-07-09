@@ -1,10 +1,10 @@
 #include "make-tables.h"
+#include "strings.h"
 
 #include "enumerations.h"
-#include "constants.h"
 using namespace euclide;
 
-// ----------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
 
 void makeGlyphToMan(void)
 {	
@@ -14,7 +14,7 @@ void makeGlyphToMan(void)
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n\t\t", constants::glyphNames[glyph]);
+		fprintf(file, "\t{  /* %s */\n\t\t", strings::glyphs[glyph]);
 
 		for (Man man = FirstMan; man <= LastMan; man++)
 		{
@@ -47,11 +47,11 @@ void makeGlyphToMan(void)
 	fprintf(file, "\n};\n");
 	file.comment();
 
-	fprintf(file, "const Man getGlyphSuperman[NumGlyphs][NumColumns] =\n{\n");
+	fprintf(file, "const Man glyphToMan[NumGlyphs][NumColumns] =\n{\n");
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n\t\t", constants::glyphNames[glyph]);
+		fprintf(file, "\t{  /* %s */\n\t\t", strings::glyphs[glyph]);
 
 		const char *name = NULL;
 
@@ -69,7 +69,7 @@ void makeGlyphToMan(void)
 			if (name == NULL)
 				fprintf(file, "UndefinedSuperman, ");
 			else
-				fprintf(file, "%s%s, ", constants::columnNames[column], name);
+				fprintf(file, "%s%s, ", strings::columns[column], name);
 		}
 
 		fprintf(file, "\n\t},\n");
@@ -78,4 +78,5 @@ void makeGlyphToMan(void)
 	fprintf(file, "\n};\n");
 }
 
-// ----------------------------------------------------------------------------
+/* -------------------------------------------------------------------------- */
+

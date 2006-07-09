@@ -10,8 +10,10 @@
 #include <algorithm>
 #include <functional>
 #include <new>
+#include <queue>
 #include <vector>
 
+using std::queue;
 using std::vector;
 
 /* -------------------------------------------------------------------------- */
@@ -35,9 +37,22 @@ using boost::logic::indeterminate;
 #include "constants.h"
 #include "tables.h"
 
+using euclide::constants::infinity;
+
 /* -------------------------------------------------------------------------- */
 
+namespace euclide
+{
+	class Castling;
+	class Problem;
+	class Board;
+}
+
+/* -------------------------------------------------------------------------- */
+
+#include "castling.h"
 #include "problem.h"
+#include "board.h"
 
 /* -------------------------------------------------------------------------- */
 

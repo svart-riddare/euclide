@@ -187,7 +187,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\make-initialsquares.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\make-mantoglyph.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\make-movements.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\make-tables.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\strings.cpp"
 				>
 			</File>
 		</Filter>
@@ -203,16 +219,8 @@
 				RelativePath="..\..\source\make-tables.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Constant Files"
-			>
 			<File
-				RelativePath="..\..\..\source\constants\glyphs.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\source\constants\squares.cpp"
+				RelativePath="..\..\source\strings.h"
 				>
 			</File>
 		</Filter>
@@ -225,6 +233,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\source\enumerations\enumerations.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\source\enumerations\errors.cpp"
 				>
 			</File>
 			<File

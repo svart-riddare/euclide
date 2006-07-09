@@ -11,7 +11,19 @@ namespace tables
 /* -------------------------------------------------------------------------- */
 
 extern const bool validGlyphManColor[NumGlyphs][NumMen][NumColors];
-extern const Man getGlyphSuperman[NumGlyphs][NumColumns];
+extern const Man glyphToMan[NumGlyphs][NumColumns];
+
+/* -------------------------------------------------------------------------- */
+
+extern const Glyph manToGlyph[NumSupermen][NumColors];
+
+/* -------------------------------------------------------------------------- */
+
+extern const Square initialSquares[NumSupermen][NumColors];
+
+/* -------------------------------------------------------------------------- */
+
+extern const bool validMovements[NumGlyphs][NumSquares][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 
