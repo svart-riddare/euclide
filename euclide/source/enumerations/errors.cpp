@@ -5,7 +5,7 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-void abort(Error error)
+void abort(error_t error)
 {
 	throw error;
 }

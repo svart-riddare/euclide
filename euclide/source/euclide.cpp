@@ -110,7 +110,7 @@ EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Configuration *pConfiguration, const 
 		euclide = new euclide::Euclide(pConfiguration, pCallbacks);
 		euclide->solve(problem);
 	}
-	catch (euclide::Error error)
+	catch (euclide::error_t error)
 	{
 		status = euclide::getStatus(error); 
 	}

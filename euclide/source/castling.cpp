@@ -15,7 +15,7 @@ Castling::Castling()
 
 bool Castling::isNonePossible(Man man) const
 {
-	assert(isValidMan(man));
+	assert(man.isValid());
 
 	if (kingside)
 		if ((man == King) || (man == KingRook))
@@ -32,7 +32,7 @@ bool Castling::isNonePossible(Man man) const
 
 bool Castling::isKingsidePossible(Man man) const
 {
-	assert(isValidMan(man));
+	assert(man.isValid());
 
 	if ((man == King) || (man == KingRook))
 		if (kingside != false)
@@ -45,7 +45,7 @@ bool Castling::isKingsidePossible(Man man) const
 
 bool Castling::isQueensidePossible(Man man) const
 {
-	assert(isValidMan(man));
+	assert(man.isValid());
 
 	if ((man == King) || (man == QueenRook))
 		if (queenside != false)
@@ -59,7 +59,7 @@ bool Castling::isQueensidePossible(Man man) const
 Square Castling::kingsideSquare(Man man, Color color) const
 {
 	assert(isKingsidePossible(man));
-	assert(isValidColor(color));
+	assert(color.isValid());
 
 	if (man == KingRook)
 		return (color == White) ? F1 : F8;
@@ -74,7 +74,7 @@ Square Castling::kingsideSquare(Man man, Color color) const
 Square Castling::queensideSquare(Man man, Color color) const
 {
 	assert(isQueensidePossible(man));
-	assert(isValidColor(color));
+	assert(color.isValid());
 
 	if (man == QueenRook)
 		return (color == White) ? D1 : D8;

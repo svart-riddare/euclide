@@ -26,15 +26,10 @@ void makeMovements(void)
 			{
 				bool isValid = false;
 
-				Column fromColumn = squareColumn(from);
-				Column toColumn = squareColumn(to);
-				Row fromRow = squareRow(from);
-				Row toRow = squareRow(to);
-
-				int horizontalDelta = toColumn - fromColumn;
+				int horizontalDelta = to.column() - from.column();
 				int horizontalDistance = abs(horizontalDelta);
 				
-				int verticalDelta = toRow - fromRow;
+				int verticalDelta = to.row() - from.row();
 				int verticalDistance = abs(verticalDelta);
 
 
@@ -65,7 +60,7 @@ void makeMovements(void)
 							isValid = true;
 
 				if (glyph == WhitePawn)
-					if ((fromRow == Two) && (toRow == Four))
+					if ((from.row() == Two) && (to.row() == Four))
 						if (!horizontalDistance)
 							isValid = true;
 
@@ -75,7 +70,7 @@ void makeMovements(void)
 							isValid = true;
 
 				if (glyph == BlackPawn)
-					if ((fromRow == Seven) && (toRow == Five))
+					if ((from.row() == Seven) && (to.row() == Five))
 						if (!horizontalDistance)
 							isValid = true;
 

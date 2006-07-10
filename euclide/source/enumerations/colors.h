@@ -15,14 +15,48 @@ typedef enum
 	NumColors, UndefinedColor = -1,
 	FirstColor = White, LastColor = Black,
 
-} Color;
+} color_t;
 
 /* -------------------------------------------------------------------------- */
 
-inline bool isValidColor(Color color)
+class Color 
 {
-	return ((color >= FirstColor) && (color <= LastColor));
-}
+	public :
+		inline Color() {}
+		inline Color(color_t color)
+			{ this->color = color; }
+
+		/* ---------------------------------- */
+
+		inline operator color_t() const
+			{ return color; }		
+		inline operator color_t&()
+			{ return color; }
+
+		/* ---------------------------------- */
+
+		inline Color operator++(int)
+			{ return (color_t)((int&)color)++; }
+		inline Color operator--(int)
+			{ return (color_t)((int&)color)--; }
+
+		inline Color& operator++()
+			{ ++(int&)color; return *this; }
+		inline Color& operator--()
+			{ --(int&)color; return *this; }
+		
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((color >= FirstColor) && (color <= LastColor));
+		}
+
+		/* ---------------------------------- */
+
+	private :
+		color_t color;
+};
 
 /* -------------------------------------------------------------------------- */
 
