@@ -27,7 +27,7 @@ Pieces::Pieces(const Problem& problem, Color color)
 			{
 				/* -- Handle promoted pawns -- */
 
-				if (!isGlyphPawn(glyph) && isManPawn(man))
+				if (!glyph.isPawn() && man.isPawn())
 				{
 					for (Column column = FirstColumn; column <= LastColumn; column++)
 						squares[man] += FinalSquare(square, tables::glyphToMan[glyph][column], false);
@@ -84,7 +84,7 @@ void Pieces::applyNonUbiquityPrinciple()
 		/* -- If there is no possible man for a given square,
 		      the problem has no solution -- */
 
-		if (isValidGlyph(glyphs[square], color))
+		if (glyphs[square].isColor(color))
 			if (men[square] == UndefinedMan)
 				abort(NoSolution);
 

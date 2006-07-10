@@ -26,78 +26,86 @@ typedef enum
 	AKnight, BKnight, CKnight, DKnight, EKnight, FKnight, GKnight, HKnight,
 
 	NumSupermen, UndefinedSuperman = -1,
-	FirstSuperman = King, LastSuperman = HKnight,
+	FirstSuperman = AQueen, LastSuperman = HKnight,
 	FirstSuperQueen = AQueen, LastSuperQueen = HQueen,
 	FirstSuperRook = ARook, LastSuperRook = HRook,
 	FirstSuperBishop = ABishop, LastSuperBishop = HBishop,
 	FirstSuperKnight = AKnight, LastSuperKnight = HKnight,
 	
-} Man;
+} man_t;
 
 /* -------------------------------------------------------------------------- */
 
-inline bool isValidMan(Man man)
+class Man 
 {
-	return ((man >= FirstMan) && (man <= LastMan));
-}
+	public :
+		inline Man() {}
+		inline Man(man_t man)
+			{ this->man = man; }
 
-inline bool isValidSuperman(Man man)
-{
-	return ((man >= FirstSuperman) && (man <= LastSuperman));
-}
+		/* ---------------------------------- */
 
-/* -------------------------------------------------------------------------- */
+		inline operator man_t() const
+			{ return man; }		
+		inline operator man_t&()
+			{ return man; }
 
-inline bool isManKing(Man man)
-{
-	assert(isValidMan(man));
-	return (man == King);
-}
+		/* ---------------------------------- */
 
-inline bool isManQueen(Man man)
-{
-	assert(isValidMan(man));
-	return (man == Queen);
-}
+		inline Man operator++(int)
+			{ return (man_t)((int&)man)++; }
+		inline Man operator--(int)
+			{ return (man_t)((int&)man)--; }
 
-inline bool isManRook(Man man)
-{
-	assert(isValidMan(man));
-	return ((man == KingRook) || (man == QueenRook));
-}
+		inline Man& operator++()
+			{ ++(int&)man; return *this; }
+		inline Man& operator--()
+			{ --(int&)man; return *this; }
+		
+		/* ---------------------------------- */
 
-inline bool isManBishop(Man man)
-{
-	assert(isValidMan(man));
-	return ((man == KingBishop) || (man == QueenBishop));
-}
+		bool isValid() const
+		{
+			return ((man >= FirstMan) && (man <= LastSuperman));
+		}
 
-inline bool isManKnight(Man man)
-{
-	assert(isValidMan(man));
-	return ((man == KingKnight) || (man == QueenKnight));
-}
+		/* ---------------------------------- */
 
-inline bool isManPawn(Man man)
-{
-	assert(isValidMan(man));
-	return ((man >= FirstPawn) && (man <= LastPawn));
-}
+		bool isKing() const
+		{
+			return (man == King);
+		}
 
-/* -------------------------------------------------------------------------- */
+		bool isQueen()
+		{
+			return (man == Queen);
+		}
 
-inline Man operator++(Man& man, int)
-{
-	Man result = man;
-	man = static_cast<Man>(man + 1);
-	return result;
-}
+		bool isRook()
+		{
+			return ((man == QueenRook) || (man == KingRook));
+		}
 
-inline Man operator++(Man& man)
-{
-	return 
-	man = static_cast<Man>(man + 1);
-}
+		bool isBishop()
+		{
+			return ((man == QueenBishop) || (man == KingBishop));
+		}
+
+		bool isKnight()
+		{
+			return ((man == QueenKnight) || (man == QueenKnight));
+		}
+
+		bool isPawn()
+		{
+			return ((man >= FirstPawn) || (man >= LastPawn));
+		}
+
+		/* ---------------------------------- */
+
+	private :
+		man_t man;
+};
 
 /* -------------------------------------------------------------------------- */
 

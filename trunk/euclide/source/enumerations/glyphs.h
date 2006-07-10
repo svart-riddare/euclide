@@ -20,96 +20,105 @@ typedef enum
 	FirstWhiteGlyph = WhiteKing, LastWhiteGlyph = WhitePawn,
 	FirstBlackGlyph = BlackKing, LastBlackGlyph = BlackPawn,
 	
-} Glyph;
+} glyph_t;
 
 /* -------------------------------------------------------------------------- */
 
-inline bool isValidGlyph(Glyph glyph)
+class Glyph 
 {
-	return ((glyph >= FirstGlyph) && (glyph <= LastGlyph));
-}
+	public :
+		inline Glyph() {}
+		inline Glyph(glyph_t glyph)
+			{ this->glyph = glyph; }
+		inline Glyph(EUCLIDE_Glyph glyph)
+			{ this->glyph = (glyph_t)glyph; }
 
-inline bool isValidGlyph(Glyph glyph, Color color)
-{
-	assert(isValidGlyph(glyph));
-	assert(isValidColor(color));
+		/* ---------------------------------- */
 
-	if (color == White)
-		return ((glyph >= FirstWhiteGlyph) && (glyph <= LastWhiteGlyph));
+		inline operator glyph_t() const
+			{ return glyph; }		
+		inline operator glyph_t&()
+			{ return glyph; }
 
-	if (color == Black)
-		return ((glyph >= FirstBlackGlyph) && (glyph <= LastBlackGlyph));
+		/* ---------------------------------- */
 
-	assert(false);
-	return false;
-}
+		inline Glyph operator++(int)
+			{ return (glyph_t)((int&)glyph)++; }
+		inline Glyph operator--(int)
+			{ return (glyph_t)((int&)glyph)--; }
+
+		inline Glyph& operator++()
+			{ ++(int&)glyph; return *this; }
+		inline Glyph& operator--()
+			{ --(int&)glyph; return *this; }
+		
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((glyph >= FirstGlyph) && (glyph <= LastGlyph));
+		}
+
+		/* ---------------------------------- */
+
+		bool isColor(Color color) const
+		{
+			if (color == White)
+				return ((glyph >= FirstWhiteGlyph) && (glyph <= LastWhiteGlyph));
+
+			if (color == Black)
+				return ((glyph >= FirstBlackGlyph) && (glyph <= LastBlackGlyph));
+
+			return false;
+		}
+
+		bool isWhite() const
+			{ return isColor(White); }
+		bool isBlack() const
+			{ return isColor(Black); }
+
+		/* ---------------------------------- */
+
+		bool isKing() const
+		{
+			return ((glyph == WhiteKing) || (glyph == BlackKing));
+		}
+
+		bool isQueen()
+		{
+			return ((glyph == WhiteQueen) || (glyph == BlackQueen));
+		}
+
+		bool isRook()
+		{
+			return ((glyph == WhiteRook) || (glyph == BlackRook));
+		}
+
+		bool isBishop()
+		{
+			return ((glyph == WhiteBishop) || (glyph == BlackBishop));
+		}
+
+		bool isKnight()
+		{
+			return ((glyph == WhiteKnight) || (glyph == BlackKnight));
+		}
+
+		bool isPawn()
+		{
+			return ((glyph == WhitePawn) || (glyph == BlackPawn));
+		}
+
+		/* ---------------------------------- */
+
+	private :
+		glyph_t glyph;
+};
 
 /* -------------------------------------------------------------------------- */
 
-inline bool isWhiteGlyph(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph >= FirstWhiteGlyph) && (glyph <= LastWhiteGlyph));
-}
-
-inline bool isBlackGlyph(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph >= FirstBlackGlyph) && (glyph <= LastBlackGlyph));
-}
-
-/* -------------------------------------------------------------------------- */
-
-inline bool isGlyphKing(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhiteKing) || (glyph == BlackKing));
-}
-
-inline bool isGlyphQueen(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhiteQueen) || (glyph == BlackQueen));
-}
-
-inline bool isGlyphRook(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhiteRook) || (glyph == BlackRook));
-}
-
-inline bool isGlyphBishop(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhiteBishop) || (glyph == BlackBishop));
-}
-
-inline bool isGlyphKnight(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhiteKnight) || (glyph == BlackKnight));
-}
-
-inline bool isGlyphPawn(Glyph glyph)
-{
-	assert(isValidGlyph(glyph));
-	return ((glyph == WhitePawn) || (glyph == BlackPawn));
-}
-
-/* -------------------------------------------------------------------------- */
-
-inline Glyph operator++(Glyph& glyph, int)
-{
-	Glyph result = glyph;
-	glyph = static_cast<Glyph>(glyph + 1);
-	return result;
-}
-
-inline Glyph operator++(Glyph& glyph)
-{
-	return
-	glyph = static_cast<Glyph>(glyph + 1);
-}
+#define isWhiteGlyph std::mem_fun_ref<bool, Glyph>(&Glyph::isWhite)
+#define isBlackGlyph std::mem_fun_ref<bool, Glyph>(&Glyph::isBlack)
 
 /* -------------------------------------------------------------------------- */
 

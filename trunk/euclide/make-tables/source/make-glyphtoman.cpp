@@ -20,25 +20,25 @@ void makeGlyphToMan(void)
 		{
 			bool valid = false;
 
-			if (isGlyphKing(glyph) && isManKing(man))
+			if (glyph.isKing() && man.isKing())
 				valid = true;
 
-			if (isGlyphQueen(glyph) && isManQueen(man))
+			if (glyph.isQueen() && man.isQueen())
 				valid = true;
 
-			if (isGlyphRook(glyph) && isManRook(man))
+			if (glyph.isRook() && man.isRook())
 				valid = true;
 
-			if (isGlyphBishop(glyph) && isManBishop(man))
+			if (glyph.isBishop() && man.isBishop())
 				valid = true;
 
-			if (isGlyphKnight(glyph) && isManKnight(man))
+			if (glyph.isKnight() && man.isKnight())
 				valid = true;
 
-			if (!isGlyphKing(glyph) && isManPawn(man))
+			if (!glyph.isKing() && man.isPawn())
 				valid = true;
 		
-			fprintf(file, "{ %s, %s }, ", (valid && isWhiteGlyph(glyph)) ? " true" : "false", (valid && isBlackGlyph(glyph)) ? " true" : "false");
+			fprintf(file, "{ %s, %s }, ", (valid && glyph.isWhite()) ? " true" : "false", (valid && glyph.isBlack()) ? " true" : "false");
 		}
 
 		fprintf(file, "\n\t},\n");
@@ -55,13 +55,13 @@ void makeGlyphToMan(void)
 
 		const char *name = NULL;
 
-		if (isGlyphQueen(glyph))
+		if (glyph.isQueen())
 			name = "Queen";
-		if (isGlyphRook(glyph))
+		if (glyph.isRook())
 			name = "Rook";
-		if (isGlyphBishop(glyph))
+		if (glyph.isBishop())
 			name = "Bishop";
-		if (isGlyphKnight(glyph))
+		if (glyph.isKnight())
 			name = "Knight";
 
 		for (Column column = FirstColumn; column <= LastColumn; column++)

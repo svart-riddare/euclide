@@ -20,7 +20,7 @@ Problem::Problem(const EUCLIDE_Problem *problem)
 	/* -- Convert from C enumerated type to C++ one -- */
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (!isValidGlyph(glyphs[square] = static_cast<Glyph>(problem->glyphs[square])))
+		if (!(glyphs[square] = problem->glyphs[square]).isValid())
 			abort(IncorrectInputError);
 
 	/* -- Count number of mens -- */
@@ -36,12 +36,9 @@ Problem::Problem(const EUCLIDE_Problem *problem)
 
 Glyph Problem::operator[](Square square) const
 {
-	assert(isValidSquare(square));
-
+	assert(square.isValid());
 	return glyphs[square];
 }
-
-/* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
 

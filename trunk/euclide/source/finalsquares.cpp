@@ -18,8 +18,8 @@ FinalSquare::FinalSquare()
 
 FinalSquare::FinalSquare(Square square, Man man, bool captured)
 {
-	assert(isValidSquare(square));
-	assert(isValidSuperman(man));
+	assert(square.isValid());
+	assert(man.isValid());
 
 	this->square = square;
 	this->man = man;
@@ -93,7 +93,7 @@ FinalSquares& FinalSquares::operator+=(const FinalSquare& finalSquare)
 
 bool FinalSquares::operator=(Square square)
 {	
-	assert(isValidSquare(square));
+	assert(square.isValid());
 	
 	bool modified = false;
 	int empty = 0;
@@ -101,7 +101,7 @@ bool FinalSquares::operator=(Square square)
 	vector<FinalSquare>::iterator I = squares.begin();
 	while(I != squares.end())
 	{
-		if (*I == square)
+		if ((Square)*I == square)
 		{
 			empty += I->empty();
 			I++;

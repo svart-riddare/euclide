@@ -22,7 +22,7 @@ typedef enum
 	NumSquares, UndefinedSquare = -1,
 	FirstSquare = A1, LastSquare = H8,
 
-} Square;
+} square_t;
 
 typedef enum
 {
@@ -31,7 +31,7 @@ typedef enum
 	NumColumns, UndefinedColumn = -1,
 	FirstColumn = A, LastColumn = H,
 
-} Column;
+} column_t;
 
 typedef enum
 {
@@ -40,89 +40,150 @@ typedef enum
 	NumRows, UndefinedRow = -1,
 	FirstRow = One, LastRow = Eight,
 
-} Row;
+} row_t;
 
 /* -------------------------------------------------------------------------- */
 
-inline bool isValidSquare(Square square)
+class Column
 {
-	return ((square >= FirstSquare) && (square <= LastSquare));
-}
+	public :
+		inline Column() {}
+		inline Column(column_t column)
+			{ this->column = column; }
 
-inline bool isValidColumn(Column column)
-{
-	return ((column >= FirstColumn) && (column <= LastColumn));
-}
+		/* ---------------------------------- */
 
-inline bool isValidRow(Row row)
-{
-	return ((row >= FirstRow) && (row <= LastRow));
-}
+		inline operator column_t() const
+			{ return column; }		
+		inline operator column_t&()
+			{ return column; }
+
+		/* ---------------------------------- */
+
+		inline Column operator++(int)
+			{ return (column_t)((int&)column)++; }
+		inline Column operator--(int)
+			{ return (column_t)((int&)column)--; }
+
+		inline Column& operator++()
+			{ ++(int&)column; return *this; }
+		inline Column& operator--()
+			{ --(int&)column; return *this; }
+		
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((column >= FirstColumn) && (column <= LastColumn));
+		}
+
+	private :
+		column_t column;
+};
 
 /* -------------------------------------------------------------------------- */
 
-inline Square operator++(Square& square, int)
+class Row
 {
-	Square result = square;
-	square = static_cast<Square>(square + 1);
-	return result;
-}
+	public :
+		inline Row() {}
+		inline Row(row_t row)
+			{ this->row = row; }
 
-inline Square operator++(Square& square)
-{
-	return 
-	square = static_cast<Square>(square + 1);
-}
+		/* ---------------------------------- */
 
-inline Column operator++(Column& column, int)
-{
-	Column result = column;
-	column = static_cast<Column>(column + 1);
-	return result;
-}
+		inline operator row_t() const
+			{ return row; }		
+		inline operator row_t&()
+			{ return row; }
 
-inline Column operator++(Column& column)
-{
-	return
-	column = static_cast<Column>(column + 1);
-}
+		/* ---------------------------------- */
 
-inline Row operator++(Row& row, int)
-{
-	Row result = row;
-	row = static_cast<Row>(row + 1);
-	return result;
-}
+		inline Row operator++(int)
+			{ return (row_t)((int&)row)++; }
+		inline Row operator--(int)
+			{ return (row_t)((int&)row)--; }
 
-inline Row operator++(Row& row)
-{
-	return
-	row = static_cast<Row>(row + 1);
-}
+		inline Row& operator++()
+			{ ++(int&)row; return *this; }
+		inline Row& operator--()
+			{ --(int&)row; return *this; }
+		
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((row >= FirstRow) && (row <= LastRow));
+		}
+
+	private :
+		row_t row;
+};
 
 /* -------------------------------------------------------------------------- */
 
-inline Column squareColumn(Square square)
+class Square 
 {
-	assert(isValidSquare(square));
+	public :
+		inline Square() {}
+		inline Square(square_t square)
+			{ this->square = square; }
+		inline Square(column_t column, row_t row)
+			{ this->square = (square_t)(column * 8 + row); }
 
-	return (Column)(square / 8);
-}
+		/* ---------------------------------- */
 
-inline Row squareRow(Square square)
-{
-	assert(isValidSquare(square));
+		inline operator square_t() const
+			{ return square; }		
+		inline operator square_t&()
+			{ return square; }
 
-	return (Row)(square % 8);
-}
+		/* ---------------------------------- */
 
-inline Square mksquare(Column column, Row row)
-{
-	assert(isValidColumn(column));
-	assert(isValidRow(row));
+		inline Square operator++(int)
+			{ return (square_t)((int&)square)++; }
+		inline Square operator--(int)
+			{ return (square_t)((int&)square)--; }
 
-	return (Square)(column * 8 + row);
-}
+		inline Square& operator++()
+			{ ++(int&)square; return *this; }
+		inline Square& operator--()
+			{ --(int&)square; return *this; }
+		
+		/* ---------------------------------- */
+
+		Square operator-() const
+		{
+			assert(isValid());
+			return (square_t)(square ^ 7);
+		}
+
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((square >= FirstSquare) && (square <= LastSquare));
+		}
+
+		/* ---------------------------------- */
+
+		inline column_t column() const
+		{
+			assert(isValid());
+			return (column_t)(square / 8);
+		}
+
+		inline row_t row() const
+		{
+			assert(isValid());
+			return (row_t)(square % 8);
+		}
+
+		/* ---------------------------------- */
+
+	private :
+		square_t square;
+};
 
 /* -------------------------------------------------------------------------- */
 

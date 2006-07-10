@@ -17,8 +17,8 @@ Board::Board()
 
 int Board::distance(const int blockedMovements[NumSquares][NumSquares], Square from, Square to)
 {
-	assert(isValidSquare(from));
-	assert(isValidSquare(to));
+	assert(from.isValid());
+	assert(to.isValid());
 
 	/* -- Handle case where no movement is required -- */
 
@@ -78,7 +78,7 @@ int Board::distance(const int blockedMovements[NumSquares][NumSquares], Square f
 
 int Board::distance(Glyph glyph, Square from, Square to) const
 {
-	assert(isValidGlyph(glyph));
+	assert(glyph.isValid());
 	return distance(blockedMovements[glyph], from, to);
 }
 
@@ -86,8 +86,8 @@ int Board::distance(Glyph glyph, Square from, Square to) const
 
 int Board::distance(Man man, Color color, Square square, Square to) const
 {
-	assert(isValidSuperman(man));
-	assert(isValidColor(color));
+	assert(man.isValid());
+	assert(color.isValid());
 
 	return distance(tables::manToGlyph[man][color], square, to);
 }
@@ -96,9 +96,9 @@ int Board::distance(Man man, Color color, Square square, Square to) const
 
 int Board::distance(Man man, Man superman, Color color, Square from, Square to) const
 {
-	assert(isValidMan(man));
-	assert(isValidSuperman(man));
-	assert(isValidColor(color));
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
 
 	if (man == superman)
 		return distance(man, color, from, to);

@@ -22,17 +22,17 @@ typedef enum
 
 	NumErrors
 
-} Error;
+} error_t;
 
 /* -------------------------------------------------------------------------- */
 
-void abort(Error error);
+void abort(error_t error);
 void assert(bool expression);
 
 /* -------------------------------------------------------------------------- */
 
 static inline
-EUCLIDE_Status getStatus(Error error)
+EUCLIDE_Status getStatus(error_t error)
 {
 	if (error == NoError)
 		return EUCLIDE_STATUS_OK;
