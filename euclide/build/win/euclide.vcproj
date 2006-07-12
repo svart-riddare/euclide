@@ -294,10 +294,6 @@
 			Name="Table Files"
 			>
 			<File
-				RelativePath="..\..\source\tables\glyphtoman.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\tables\initialsquares.cpp"
 				>
 			</File>

@@ -18,21 +18,27 @@ typedef enum
 	FirstRook = QueenRook, LastRook = KingRook,
 	FirstBishop = QueenBishop, LastBishop = KingBishop,
 	FirstKnight = QueenKnight, LastKnight = KingKnight,
-	FirstPawn = APawn, LastPawn = HPawn,
+	FirstPawn = APawn, LastPawn = HPawn
 
+} man_t;
+
+typedef enum
+{
 	AQueen = NumMen, BQueen, CQueen, DQueen, EQueen, FQueen, GQueen, HQueen,
 	ARook, BRook, CRook, DRook, ERook, FRook, GRook, HRook,
 	ABishop, BBishop, CBishop, DBishop, EBishop, FBishop, GBishop, HBishop,
 	AKnight, BKnight, CKnight, DKnight, EKnight, FKnight, GKnight, HKnight,
 
 	NumSupermen, UndefinedSuperman = -1,
-	FirstSuperman = AQueen, LastSuperman = HKnight,
-	FirstSuperQueen = AQueen, LastSuperQueen = HQueen,
-	FirstSuperRook = ARook, LastSuperRook = HRook,
-	FirstSuperBishop = ABishop, LastSuperBishop = HBishop,
-	FirstSuperKnight = AKnight, LastSuperKnight = HKnight,
+	FirstSuperman = King, LastSuperman = HKnight,
 	
-} man_t;
+	FirstPromotedMan = AQueen, LastPromotedMan = HKnight,
+	FirstPromotedQueen = AQueen, LastPromotedQueen = HQueen,
+	FirstPromotedRook = ARook, LastPromotedRook = HRook,
+	FirstPromotedBishop = ABishop, LastPromotedBishop = HBishop,
+	FirstPromotedKnight = AKnight, LastPromotedKnight = HKnight,
+	
+} superman_t;
 
 /* -------------------------------------------------------------------------- */
 
@@ -66,7 +72,7 @@ class Man
 
 		bool isValid() const
 		{
-			return ((man >= FirstMan) && (man <= LastSuperman));
+			return ((man >= FirstMan) && (man <= LastMan));
 		}
 
 		/* ---------------------------------- */
@@ -105,6 +111,98 @@ class Man
 
 	private :
 		man_t man;
+};
+
+/* -------------------------------------------------------------------------- */
+
+class Superman
+{
+	public :
+		inline Superman() {}
+		inline Superman(man_t man)
+			{ superman = (superman_t)man; }
+		inline Superman(Man man)
+			{ superman = (superman_t)(man_t)man; }
+		inline Superman(superman_t superman)
+			{ this->superman = superman; }
+
+		/* ---------------------------------- */
+
+		inline operator superman_t() const
+			{ return superman; }		
+		inline operator superman_t&()
+			{ return superman; }
+
+		/* ---------------------------------- */
+
+		inline operator Man() const
+		{ 
+			assert(superman <= LastMan); 
+			return (man_t)superman;
+		}
+
+		/* ---------------------------------- */
+
+		inline Superman operator++(int)
+			{ return (superman_t)((int&)superman)++; }
+		inline Superman operator--(int)
+			{ return (superman_t)((int&)superman)--; }
+
+		inline Superman& operator++()
+			{ ++(int&)superman; return *this; }
+		inline Superman& operator--()
+			{ --(int&)superman; return *this; }
+		
+		/* ---------------------------------- */
+
+		bool isValid() const
+		{
+			return ((superman >= FirstSuperman) && (superman <= LastSuperman));
+		}
+
+		/* ---------------------------------- */
+
+		bool isPromoted() const
+		{
+			return ((superman >= FirstPromotedMan) && (superman <= LastPromotedMan));
+		}
+
+		/* ---------------------------------- */
+
+		bool isKing() const
+		{
+			return (superman == King);
+		}
+
+		bool isQueen()
+		{
+			return ((superman == Queen) || ((superman >= FirstPromotedQueen) && (superman <= LastPromotedQueen)));
+		}
+
+		bool isRook()
+		{
+			return (((superman >= FirstRook) && (superman <= LastRook)) || ((superman >= FirstPromotedRook) && (superman <= LastPromotedRook)));
+		}
+
+		bool isBishop()
+		{
+			return (((superman >= FirstBishop) && (superman <= LastBishop)) || ((superman >= FirstPromotedBishop) && (superman <= LastPromotedBishop)));
+		}
+
+		bool isKnight()
+		{
+			return (((superman >= FirstKnight) && (superman <= LastKnight)) || ((superman >= FirstPromotedKnight) && (superman <= LastPromotedKnight)));
+		}
+
+		bool isPawn()
+		{
+			return ((superman >= FirstPawn) || (superman >= LastPawn));
+		}
+
+		/* ---------------------------------- */
+
+	private :
+		superman_t superman;
 };
 
 /* -------------------------------------------------------------------------- */

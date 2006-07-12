@@ -19,25 +19,18 @@ Pieces::Pieces(const Problem& problem, Color color)
 		if (glyph == NoGlyph)
 			continue;
 
+		/* -- Associate glyphs to men -- */
+
 		for (Man man = FirstMan; man <= LastMan; man++)
-		{
-			/* -- Associate glyphs to men -- */
+			if (tables::supermanToGlyph[man][color] == glyph)
+				squares[man] += FinalSquare(square, man, man, false);
 
-			if (tables::validGlyphManColor[glyph][man][color])
-			{
-				/* -- Handle promoted pawns -- */
+		/* -- Handle promoted pieces -- */
 
-				if (!glyph.isPawn() && man.isPawn())
-				{
-					for (Column column = FirstColumn; column <= LastColumn; column++)
-						squares[man] += FinalSquare(square, tables::glyphToMan[glyph][column], false);
-				}
-				else
-				{
-					squares[man] += FinalSquare(square, man, false);
-				}
-			}
-		}
+		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+			if (tables::supermanToGlyph[superman][color] == glyph)
+				for (Man man = FirstPawn; man <= LastPawn; man++)
+					squares[man] += FinalSquare(square, man, superman, false);
 	}
 }
 

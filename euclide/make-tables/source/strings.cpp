@@ -48,7 +48,7 @@ const char *rows[NumRows] =
 
 /* -------------------------------------------------------------------------- */
 
-const char *men[NumSupermen] = 
+const char *supermen[NumSupermen] = 
 {
 	"King", 
 	"Queen", 

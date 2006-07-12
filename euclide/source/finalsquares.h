@@ -11,20 +11,21 @@ namespace euclide
 class FinalSquare
 {
 	public :
-		FinalSquare();
-		FinalSquare(Square square, Man man, bool captured);
+		FinalSquare(Square square, Man man, Superman superman, bool captured);
 
-		int computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling);
+		int computeRequiredMoves(const Board& board, Color color, const Castling& castling);
 		int getRequiredMoves() const;
 
 		operator Square() const;
 		operator Man() const;
+		operator Superman() const;
 
 		bool empty() const;
 
 	private :
 		Square square;
 		Man man;
+		Superman superman;
 
 		bool captured;
 
@@ -42,7 +43,7 @@ class FinalSquares
 		FinalSquares& operator+=(const FinalSquare& finalSquare);
 		bool operator=(Square square);
 
-		int computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling);
+		int computeRequiredMoves(const Board& board, Color color, const Castling& castling);
 		int getRequiredMoves() const;
 
 		operator const vector<FinalSquare>&() const;
