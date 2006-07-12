@@ -15,7 +15,7 @@ extern const char *squares[NumSquares];
 extern const char *columns[NumColumns];
 extern const char *rows[NumRows];
 
-extern const char *men[NumSupermen];
+extern const char *supermen[NumSupermen];
 
 /* -------------------------------------------------------------------------- */
 

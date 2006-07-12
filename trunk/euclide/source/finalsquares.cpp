@@ -5,24 +5,15 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-FinalSquare::FinalSquare()
-{
-	square = UndefinedSquare;
-	man = UndefinedMan;
-
-	requiredMoves = 0;
-	requiredCaptures = 0;
-}
-
-/* -------------------------------------------------------------------------- */
-
-FinalSquare::FinalSquare(Square square, Man man, bool captured)
+FinalSquare::FinalSquare(Square square, Man man, Superman superman, bool captured)
 {
 	assert(square.isValid());
 	assert(man.isValid());
+	assert(superman.isValid());
 
 	this->square = square;
 	this->man = man;
+	this->superman = superman;
 
 	this->captured = captured;
 
@@ -32,9 +23,9 @@ FinalSquare::FinalSquare(Square square, Man man, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
-int FinalSquare::computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling)
+int FinalSquare::computeRequiredMoves(const Board& board, Color color, const Castling& castling)
 {
-	int distance = board.distance(man, this->man, color, square, castling);
+	int distance = board.distance(man, superman, color, square, castling);
 	if (distance > requiredMoves)
 		requiredMoves = distance;
 
@@ -60,6 +51,13 @@ FinalSquare::operator Square() const
 FinalSquare::operator Man() const
 {
 	return man;
+}
+
+/* -------------------------------------------------------------------------- */
+
+FinalSquare::operator Superman() const
+{
+	return superman;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -124,14 +122,14 @@ bool FinalSquares::operator=(Square square)
 
 /* -------------------------------------------------------------------------- */
 
-int FinalSquares::computeRequiredMoves(const Board& board, Man man, Color color, const Castling& castling)
+int FinalSquares::computeRequiredMoves(const Board& board, Color color, const Castling& castling)
 {
 	int minimum = infinity;
 
 	vector<FinalSquare>::iterator I = squares.begin(); 
 	while (I != squares.end())
 	{
-		int requiredMoves = I->computeRequiredMoves(board, man, color, castling);
+		int requiredMoves = I->computeRequiredMoves(board, color, castling);
 		if (requiredMoves < minimum)
 			minimum = requiredMoves;
 

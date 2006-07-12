@@ -5,8 +5,7 @@
 
 // ----------------------------------------------------------------------------
 
-void makeGlyphToMan(void);
-void makeManToGlyph(void);
+void makeSupermanToGlyph(void);
 void makeInitialSquares(void);
 void makeMovements(void);
 
@@ -16,8 +15,7 @@ typedef void (*makefunction)(void);
 
 const makefunction MakeFunctions[] =
 {
-	makeGlyphToMan,
-	makeManToGlyph,
+	makeSupermanToGlyph,
 	makeInitialSquares,
 	makeMovements,
 	NULL

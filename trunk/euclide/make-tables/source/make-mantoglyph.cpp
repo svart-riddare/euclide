@@ -6,54 +6,54 @@ using namespace euclide;
 
 /* -------------------------------------------------------------------------- */
 
-void makeManToGlyph(void)
+void makeSupermanToGlyph(void)
 {	
 	CodeFile file("mantoglyph.cpp");
 
-	fprintf(file, "const Glyph manToGlyph[NumSupermen][NumColors] =\n{\n");
+	fprintf(file, "const Glyph supermanToGlyph[NumSupermen][NumColors] =\n{\n");
 
-	for (Man man = FirstSuperman; man <= LastSuperman; man++)
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 	{
 		Glyph whiteGlyph = NoGlyph;
 		Glyph blackGlyph = NoGlyph;
 
-		if (man == King)
+		if (superman.isKing())
 		{
 			whiteGlyph = WhiteKing;
 			blackGlyph = BlackKing;
 		}
-
-		if ((man == Queen) || ((man >= FirstSuperQueen) && (man <= LastSuperQueen)))
+		else
+		if (superman.isQueen())
 		{
 			whiteGlyph = WhiteQueen;
 			blackGlyph = BlackQueen;
 		}
-
-		if (((man >= FirstRook) && (man <= LastRook)) || ((man >= FirstSuperRook) && (man <= LastSuperRook)))
+		else
+		if (superman.isRook())
 		{
 			whiteGlyph = WhiteRook;
 			blackGlyph = BlackRook;
 		}
-		
-		if (((man >= FirstBishop) && (man <= LastBishop)) || ((man >= FirstSuperBishop) && (man <= LastSuperBishop)))
+		else
+		if (superman.isBishop())
 		{
 			whiteGlyph = WhiteBishop;
 			blackGlyph = BlackBishop;
 		}
-
-		if (((man >= FirstKnight) && (man <= LastKnight)) || ((man >= FirstSuperKnight) && (man <= LastSuperKnight)))
+		else
+		if (superman.isKnight())
 		{
 			whiteGlyph = WhiteKnight;
 			blackGlyph = BlackKnight;
 		}
-
-		if ((man >= FirstPawn) && (man <= LastPawn))
+		else
+		if (superman.isPawn())
 		{
 			whiteGlyph = WhitePawn;
 			blackGlyph = BlackPawn;
 		}
 
-		fprintf(file, "\t{ %s,\t%s },  /* %s */\n", strings::glyphs[whiteGlyph], strings::glyphs[blackGlyph], strings::men[man]);
+		fprintf(file, "\t{ %16s,\t%16s },  /* %s */\n", strings::glyphs[whiteGlyph], strings::glyphs[blackGlyph], strings::supermen[superman]);
 	}
 
 	fprintf(file, "\n};\n");

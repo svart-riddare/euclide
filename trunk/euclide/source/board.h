@@ -14,9 +14,9 @@ class Board
 		Board();
 
 		int distance(Glyph glyph, Square from, Square to) const;
-		int distance(Man man, Color color, Square square, Square to) const;
-		int distance(Man man, Man superman, Color color, Square from, Square to) const;
-		int distance(Man man, Man superman, Color color, Square to, const Castling& castling) const;
+		int distance(Superman superman, Color color, Square square, Square to) const;
+		int distance(Man man, Superman superman, Color color, Square from, Square to) const;
+		int distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const;
 
 		void block(Glyph glyph, Square square);
 		void block(Glyph glyph, Square from, Square to);

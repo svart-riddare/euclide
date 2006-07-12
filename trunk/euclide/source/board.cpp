@@ -84,17 +84,17 @@ int Board::distance(Glyph glyph, Square from, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(Man man, Color color, Square square, Square to) const
+int Board::distance(Superman superman, Color color, Square square, Square to) const
 {
-	assert(man.isValid());
+	assert(superman.isValid());
 	assert(color.isValid());
 
-	return distance(tables::manToGlyph[man][color], square, to);
+	return distance(tables::supermanToGlyph[superman][color], square, to);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(Man man, Man superman, Color color, Square from, Square to) const
+int Board::distance(Man man, Superman superman, Color color, Square from, Square to) const
 {
 	assert(man.isValid());
 	assert(color.isValid());
@@ -112,7 +112,7 @@ int Board::distance(Man man, Man superman, Color color, Square from, Square to) 
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(Man man, Man superman, Color color, Square to, const Castling& castling) const
+int Board::distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const
 {
 	int minimum = infinity;
 
