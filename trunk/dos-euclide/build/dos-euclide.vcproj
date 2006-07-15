@@ -148,7 +148,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib"
-				OutputFile="../binary/dos-euclide-debug.exe"
+				OutputFile="../bin/dos-euclide.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
