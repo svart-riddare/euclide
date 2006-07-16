@@ -100,6 +100,8 @@ int Board::distance(Man man, Superman superman, Color color, Square from, Square
 	assert(color.isValid());
 	assert(superman.isValid());
 
+	/* -- No promotion case -- */
+
 	if (man == superman)
 		return distance(man, color, from, to);
 

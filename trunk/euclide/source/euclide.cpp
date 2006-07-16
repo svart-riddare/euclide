@@ -90,6 +90,25 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	whitePieces->applyNonUbiquityPrinciple();
 	blackPieces->applyNonUbiquityPrinciple();
+
+	/* -- Compute number of required moves -- */
+
+	int whiteMoves = problem->moves(White);
+	int blackMoves = problem->moves(Black);
+
+	int requiredWhiteMoves = whitePieces->computeRequiredMoves(*board);
+	int requiredBlackMoves = blackPieces->computeRequiredMoves(*board);
+
+	whitePieces->applyMoveConstraints(whiteMoves);
+	blackPieces->applyMoveConstraints(blackMoves);
+	
+	int freeWhiteMoves = whiteMoves - requiredWhiteMoves;
+	int freeBlackMoves = blackMoves - requiredBlackMoves;
+
+	if (callbacks.displayFreeMoves)
+		(*callbacks.displayFreeMoves)(callbacks.handle, freeWhiteMoves, freeBlackMoves);
+
+
 }
 
 /* -------------------------------------------------------------------------- */

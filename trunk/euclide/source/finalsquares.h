@@ -20,7 +20,9 @@ class FinalSquare
 		operator Man() const;
 		operator Superman() const;
 
-		bool empty() const;
+		bool isSquare(Square square, bool captured) const;
+		bool isSquare(Square square) const;
+		bool isEmpty() const;
 
 	private :
 		Square square;
@@ -35,21 +37,28 @@ class FinalSquare
 
 /* -------------------------------------------------------------------------- */
 
+typedef vector<FinalSquare> finalsquares_t;
+
+/* -------------------------------------------------------------------------- */
+
 class FinalSquares
 {
 	public :
 		FinalSquares();
-
 		FinalSquares& operator+=(const FinalSquare& finalSquare);
-		bool operator=(Square square);
 
 		int computeRequiredMoves(const Board& board, Color color, const Castling& castling);
+		int getRequiredMoves(array<int, NumSquares>& squares) const;
 		int getRequiredMoves() const;
 
-		operator const vector<FinalSquare>&() const;
-		
+		operator const finalsquares_t&() const;
+
+		bool applyDeduction(Square square, bool captured);
+		bool applyDeduction(int availableMoves);
+		bool applyDeduction();
+
 	private :
-		vector<FinalSquare> squares;
+		finalsquares_t squares;
 		tribool captured;
 
 		int requiredMoves;
