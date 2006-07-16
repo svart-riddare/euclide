@@ -25,10 +25,17 @@ Problem::Problem(const EUCLIDE_Problem *problem)
 
 	/* -- Count number of mens -- */
 
-	numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, isWhiteGlyph);
-	numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, isBlackGlyph);
+	int numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, isWhiteGlyph);
+	int numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, isBlackGlyph);
 
 	if ((numWhiteMen > NumMen) || (numBlackMen > NumMen))
+		abort(IncorrectInputError);
+
+	/* -- Store number of moves -- */
+
+	numHalfMoves = problem->numHalfMoves;
+
+	if (numHalfMoves <= 0)
 		abort(IncorrectInputError);
 }
 
@@ -38,6 +45,18 @@ Glyph Problem::operator[](Square square) const
 {
 	assert(square.isValid());
 	return glyphs[square];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Problem::moves(Color color) const
+{
+	assert(color.isValid());
+
+	if (color == White)
+		return (numHalfMoves + 1) / 2;
+
+	return numHalfMoves / 2;
 }
 
 /* -------------------------------------------------------------------------- */

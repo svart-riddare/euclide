@@ -14,12 +14,11 @@ class Problem
 		Problem(const EUCLIDE_Problem *problem);
 
 		Glyph operator[](Square square) const;
+		int moves(Color color) const;
 
 	private :
 		Glyph glyphs[NumSquares];
-
-		int numWhiteMen;
-		int numBlackMen;
+		int numHalfMoves;
 };
 
 /* -------------------------------------------------------------------------- */

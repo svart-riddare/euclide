@@ -62,7 +62,21 @@ FinalSquare::operator Superman() const
 
 /* -------------------------------------------------------------------------- */
 
-bool FinalSquare::empty() const
+bool FinalSquare::isSquare(Square square, bool captured) const
+{
+	return (this->square == square) && (this->captured == captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool FinalSquare::isSquare(Square square) const
+{
+	return (this->square == square);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool FinalSquare::isEmpty() const
 {
 	return captured;
 }
@@ -81,7 +95,7 @@ FinalSquares::FinalSquares()
 
 FinalSquares& FinalSquares::operator+=(const FinalSquare& finalSquare)
 {
-	assert((finalSquare.empty() == captured) || indeterminate(captured));
+	assert(!requiredMoves);
 
 	squares.push_back(finalSquare);
 	return *this;
@@ -89,19 +103,14 @@ FinalSquares& FinalSquares::operator+=(const FinalSquare& finalSquare)
 
 /* -------------------------------------------------------------------------- */
 
-bool FinalSquares::operator=(Square square)
+bool FinalSquares::applyDeduction(Square square, bool captured)
 {	
-	assert(square.isValid());
-	
 	bool modified = false;
-	int empty = 0;
 
-	vector<FinalSquare>::iterator I = squares.begin();
-	while(I != squares.end())
+	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); )
 	{
-		if ((Square)*I == square)
+		if (I->isSquare(square, captured))
 		{
-			empty += I->empty();
 			I++;
 		}
 		else
@@ -111,13 +120,62 @@ bool FinalSquares::operator=(Square square)
 		}
 	}
 
-	if (empty == 0)
-		captured = false;
-
-	if (empty == (int)squares.size())
-		captured = true;
+	if (modified)
+		applyDeduction();
 
 	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool FinalSquares::applyDeduction(int availableMoves)
+{
+	bool modified = false;
+
+	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); )
+	{
+		if (I->getRequiredMoves() <= availableMoves)
+		{
+			I++;
+		}
+		else
+		{
+			modified = true;
+			I = squares.erase(I);
+		}
+	}
+
+	if (modified)
+		applyDeduction();
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool FinalSquares::applyDeduction()
+{
+	/* -- If there is no possible squares, the problem has no solutions -- */
+
+	if (squares.empty())
+		abort(NoSolution);
+
+	/* -- Check capture state -- */
+
+	if (!indeterminate(captured))
+		return false;
+
+	/* -- Determine capture state if possible -- */
+
+	int numEmptySquares = (int)std::count_if(squares.begin(), squares.end(), std::mem_fun_ref<bool, FinalSquare>(&FinalSquare::isEmpty));
+
+	if (numEmptySquares == (int)squares.size())
+		captured = true;
+
+	if (numEmptySquares == 0)
+		captured = false;
+
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -126,24 +184,41 @@ int FinalSquares::computeRequiredMoves(const Board& board, Color color, const Ca
 {
 	int minimum = infinity;
 
-	vector<FinalSquare>::iterator I = squares.begin(); 
-	while (I != squares.end())
+	/* -- Compute required for for each possible final square -- */
+
+	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); I++)
 	{
+		/* -- Keep minimum value -- */
+
 		int requiredMoves = I->computeRequiredMoves(board, color, castling);
 		if (requiredMoves < minimum)
 			minimum = requiredMoves;
-
-		if (requiredMoves >= infinity)
-			I = squares.erase(I);
-		else
-			I++;
 	}
 
-	requiredMoves = minimum;
+	/* -- Update required moves for current man -- */
 
-	if (requiredMoves >= infinity)
-		captured = true;
-	
+	if (minimum > requiredMoves)
+		requiredMoves = minimum;
+
+	return getRequiredMoves();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::getRequiredMoves(array<int, NumSquares>& squares) const
+{
+	/* Find minimum number of moves to reach occupied squares -- */
+
+	for (finalsquares_t::const_iterator I = this->squares.begin(); I != this->squares.end(); I++)
+	{
+		int requiredMoves = I->getRequiredMoves();
+		Square square = *I;
+
+		if (requiredMoves < squares[square])
+			if (!I->isEmpty())
+				squares[square] = requiredMoves;
+	}
+
 	return getRequiredMoves();
 }
 
@@ -151,15 +226,12 @@ int FinalSquares::computeRequiredMoves(const Board& board, Color color, const Ca
 
 int FinalSquares::getRequiredMoves() const
 {
-	if (!captured)
-		return requiredMoves;
-
-	return 0;
+	return requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
-FinalSquares::operator const vector<FinalSquare>&() const
+FinalSquares::operator const finalsquares_t&() const
 {
 	return squares;
 }

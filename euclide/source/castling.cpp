@@ -35,7 +35,7 @@ bool Castling::isKingsidePossible(Man man) const
 	assert(man.isValid());
 
 	if ((man == King) || (man == KingRook))
-		if (kingside != false)
+		if (kingside || indeterminate(kingside))
 			return true;
 
 	return false;
@@ -48,7 +48,7 @@ bool Castling::isQueensidePossible(Man man) const
 	assert(man.isValid());
 
 	if ((man == King) || (man == QueenRook))
-		if (queenside != false)
+		if (queenside || indeterminate(queenside))
 			return true;
 
 	return false;

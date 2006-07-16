@@ -10,9 +10,11 @@
 #include <algorithm>
 #include <functional>
 #include <new>
+#include <list>
 #include <queue>
 #include <vector>
 
+using std::list;
 using std::queue;
 using std::vector;
 
