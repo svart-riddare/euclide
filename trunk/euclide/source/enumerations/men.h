@@ -104,7 +104,7 @@ class Man
 
 		bool isPawn()
 		{
-			return ((man >= FirstPawn) || (man >= LastPawn));
+			return ((man >= FirstPawn) && (man <= LastPawn));
 		}
 
 		/* ---------------------------------- */
@@ -196,7 +196,7 @@ class Superman
 
 		bool isPawn()
 		{
-			return ((superman >= FirstPawn) || (superman >= LastPawn));
+			return ((superman >= FirstPawn) && (superman <= LastPawn));
 		}
 
 		/* ---------------------------------- */

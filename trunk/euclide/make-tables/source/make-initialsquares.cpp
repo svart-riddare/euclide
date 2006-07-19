@@ -42,10 +42,10 @@ void makeInitialSquares(void)
 		else
 			square = Square((column_t)(superman % NumColumns), (superman <= LastPawn) ? Two : Eight);
 
-		fprintf(file, "\t{ %s,\t%s },  /* %s */\n", strings::squares[square], strings::squares[-square], strings::supermen[superman]);
+		fprintf(file, "\t{ %s, %s },  /* %s */\n", strings::squares[square], strings::squares[-square], strings::supermen[superman]);
 	}
 
-	fprintf(file, "\n};\n");
+	fprintf(file, "};\n");
 }
 
 /* -------------------------------------------------------------------------- */

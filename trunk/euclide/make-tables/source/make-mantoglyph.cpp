@@ -53,10 +53,10 @@ void makeSupermanToGlyph(void)
 			blackGlyph = BlackPawn;
 		}
 
-		fprintf(file, "\t{ %16s,\t%16s },  /* %s */\n", strings::glyphs[whiteGlyph], strings::glyphs[blackGlyph], strings::supermen[superman]);
+		fprintf(file, "\t{ %16s, %16s },  /* %s */\n", strings::glyphs[whiteGlyph], strings::glyphs[blackGlyph], strings::supermen[superman]);
 	}
 
-	fprintf(file, "\n};\n");
+	fprintf(file, "};\n");
 }
 
 /* -------------------------------------------------------------------------- */

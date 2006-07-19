@@ -80,10 +80,10 @@ void makeMovements(void)
 			fprintf(file, "},\n");
 		}
 
-		fprintf(file, "\n\t},\n");
+		fprintf(file, "\t},\n");
 	}
 
-	fprintf(file, "\n};\n");
+	fprintf(file, "};\n");
 }
 
 /* -------------------------------------------------------------------------- */
