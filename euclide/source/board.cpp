@@ -7,6 +7,8 @@ namespace euclide
 
 Board::Board()
 {
+	blocks = 0;
+
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 			for (Square to = FirstSquare; to <= LastSquare; to++)
@@ -108,7 +110,6 @@ int Board::distance(Man man, Superman superman, Color color, Square from, Square
 	/* -- Handle promoted men -- */
 
 	Square square = tables::initialSquares[superman][color];
-
 	return distance(man, color, from, square) + distance(superman, color, square, to);
 }
 
@@ -119,7 +120,10 @@ int Board::distance(Man man, Superman superman, Color color, Square to, const Ca
 	int minimum = infinity;
 
 	if (castling.isNonePossible(man))
-		minimum = distance(man, superman, color, tables::initialSquares[man][color], to);
+		if (blocks > 0)
+			minimum = distance(man, superman, color, tables::initialSquares[man][color], to);
+		else
+			minimum = distanze(man, superman, color, to);
 
 	if (castling.isKingsidePossible(man))
 		minimum = std::min(minimum, distance(man, superman, color, castling.kingsideSquare(man, color), to) + ((man == King) ? 1 : 0));
@@ -128,6 +132,26 @@ int Board::distance(Man man, Superman superman, Color color, Square to, const Ca
 		minimum = std::min(minimum, distance(man, superman, color, castling.queensideSquare(man, color), to) + ((man == King) ? 1 : 0));
 
 	return minimum;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::distanze(Man man, Superman superman, Color color, Square to) const
+{
+	assert(to.isValid());
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- Return distance in original position on empty board -- */
+
+	if (man == superman)
+		return tables::initialDistances[man][to][color];
+
+	/* -- Handle promoted men -- */
+
+	Square square = tables::initialSquares[superman][color];
+	return tables::initialDistances[man][square][color] + tables::initialDistances[superman][to][color];
 }
 
 /* -------------------------------------------------------------------------- */

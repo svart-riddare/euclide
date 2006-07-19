@@ -183,6 +183,14 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath="..\..\..\source\constants\infinity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\make-initialdistances.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\make-initialsquares.cpp"
 				>
 			</File>

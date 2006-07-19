@@ -17,6 +17,7 @@ class Board
 		int distance(Superman superman, Color color, Square square, Square to) const;
 		int distance(Man man, Superman superman, Color color, Square from, Square to) const;
 		int distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const;
+		int distanze(Man man, Superman superman, Color color, Square to) const;
 
 		void block(Glyph glyph, Square square);
 		void block(Glyph glyph, Square from, Square to);
@@ -28,6 +29,7 @@ class Board
 
 	private :
 		int blockedMovements[NumGlyphs][NumSquares][NumSquares];
+		int blocks;
 };
 
 /* -------------------------------------------------------------------------- */

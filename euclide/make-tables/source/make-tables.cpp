@@ -61,6 +61,7 @@ void CodeFile::header(const char *include)
 	if (include)
 		fprintf(file, "\n#include \"%s\"\n", include);
 
+	fprintf(file, "\nusing euclide::constants::infinity;\n");
 	fprintf(file, "\nnamespace euclide\n{\n");
 	fprintf(file, "namespace tables\n{\n");
 
