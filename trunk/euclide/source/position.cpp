@@ -250,4 +250,11 @@ int Pieces::getRequiredCaptures() const
 
 /* -------------------------------------------------------------------------- */
 
+const FinalSquares& Pieces::operator[](Man man) const
+{
+	return squares[man];
+}
+
+/* -------------------------------------------------------------------------- */
+
 }

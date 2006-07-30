@@ -40,6 +40,9 @@ class Glyph
 		inline operator glyph_t&()
 			{ return glyph; }
 
+		inline EUCLIDE_Glyph glyph_c() const
+			{ return (EUCLIDE_Glyph)glyph; }
+
 		/* ---------------------------------- */
 
 		inline Glyph operator++(int)

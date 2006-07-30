@@ -1,12 +1,12 @@
 #ifndef __EUCLIDE_H
 #define __EUCLIDE_H
 
-//#include <stddef.h>
-//#include <stdbool.h>
-//#include <wchar.h>
-
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
+	#define _Bool unsigned char
 #endif
 
 /* -------------------------------------------------------------------------- */
@@ -64,12 +64,40 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
+typedef struct
+{
+	EUCLIDE_Glyph initialGlyph;
+	EUCLIDE_Glyph promotionGlyph;
+
+	int initialSquare;
+	int finalSquare;
+	
+	int requiredMoves;
+	int numSquares;
+
+	_Bool captured;
+
+} EUCLIDE_Deduction;
+
+typedef struct
+{
+	EUCLIDE_Deduction whitePieces[16];
+	EUCLIDE_Deduction blackPieces[16];
+
+	int freeWhiteMoves;
+	int freeBlackMoves;
+
+} EUCLIDE_Deductions;
+
+/* -------------------------------------------------------------------------- */
+
 typedef void *EUCLIDE_Handle;
 
 typedef void (*EUCLIDE_DisplayCopyrightFunction)(EUCLIDE_Handle handle, const wchar_t *copyright);
 typedef void (*EUCLIDE_DisplayProblemFunction)(EUCLIDE_Handle handle, const EUCLIDE_Problem *problem);
 typedef void (*EUCLIDE_DisplayMessageFunction)(EUCLIDE_Handle handle, EUCLIDE_Message message);
 typedef void (*EUCLIDE_DisplayFreeMovesFunction)(EUCLIDE_Handle handle, int whiteFreeMoves, int blackFreeMoves);
+typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_Handle handle, const EUCLIDE_Deductions *deductions);
 
 typedef struct
 {
@@ -77,6 +105,7 @@ typedef struct
 	EUCLIDE_DisplayProblemFunction displayProblem;
 	EUCLIDE_DisplayMessageFunction displayMessage;
 	EUCLIDE_DisplayFreeMovesFunction displayFreeMoves;
+	EUCLIDE_DisplayDeductionsFunction displayDeductions;
 
 	EUCLIDE_Handle handle;
 
