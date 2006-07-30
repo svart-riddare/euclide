@@ -14,6 +14,8 @@ class Euclide
 
 		void solve(const EUCLIDE_Problem *problem);
 
+		operator EUCLIDE_Deductions() const;
+
 	private :
 		EUCLIDE_Configuration configuration;
 		EUCLIDE_Callbacks callbacks;
@@ -120,6 +122,55 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	if (callbacks.displayFreeMoves)
 		(*callbacks.displayFreeMoves)(callbacks.handle, freeWhiteMoves, freeBlackMoves);
+
+	/* -- Display actual deductions -- */
+	
+	EUCLIDE_Deductions deductions = *this;
+
+	if (callbacks.displayDeductions)
+		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
+}
+
+/* -------------------------------------------------------------------------- */
+
+Euclide::operator EUCLIDE_Deductions() const
+{
+	EUCLIDE_Deductions deductions;
+	
+	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		for (Man man = FirstMan; man <= LastMan; man++)
+		{
+			EUCLIDE_Deduction *deduction = (color == White) ? &deductions.whitePieces[man] : &deductions.blackPieces[man];
+			const FinalSquares& squares = (color == White) ? (*whitePieces)[man] : (*blackPieces)[man];
+
+			deduction->initialGlyph = tables::supermanToGlyph[man][color].glyph_c();
+			deduction->promotionGlyph = deduction->initialGlyph;
+
+			deduction->initialSquare = tables::initialSquares[man][color];
+			deduction->finalSquare = -1;
+
+			deduction->requiredMoves = squares.getRequiredMoves();
+			deduction->numSquares = (int)((const finalsquares_t&)squares).size();
+
+			deduction->captured = 0;
+
+			if (((const finalsquares_t&)squares).size() == 1)
+			{
+				const FinalSquare& square = ((const finalsquares_t&)squares)[0];
+				Superman superman = /*(Superman)*/square;
+
+				deduction->promotionGlyph = tables::supermanToGlyph[superman][color].glyph_c();
+				deduction->finalSquare = (Square)square;
+				deduction->captured = square.isEmpty();
+			}
+		}
+	}
+
+	deductions.freeWhiteMoves = problem->moves(White) - whitePieces->getRequiredMoves();
+	deductions.freeBlackMoves = problem->moves(Black) - blackPieces->getRequiredMoves();
+
+	return deductions;
 }
 
 /* -------------------------------------------------------------------------- */

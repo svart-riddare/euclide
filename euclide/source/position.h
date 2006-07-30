@@ -23,6 +23,8 @@ class Pieces
 
 		int computeRequiredCaptures(const Board& board);
 		int getRequiredCaptures() const;
+
+		const FinalSquares& operator[](Man man) const;
 		
 	private :
 		array<Glyph, NumSquares> glyphs;

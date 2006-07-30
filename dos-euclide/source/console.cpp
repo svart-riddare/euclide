@@ -14,6 +14,7 @@ Console::Console()
 	callbacks.displayProblem = _displayProblem;
 	callbacks.displayMessage = _displayMessage;
 	callbacks.displayFreeMoves = _displayFreeMoves;
+	callbacks.displayDeductions = _displayDeductions;
 
 	callbacks.handle = static_cast<EUCLIDE_Handle>(this);
 
@@ -27,7 +28,7 @@ Console::Console()
 		return;
 
 	GetConsoleScreenBufferInfo(output, &initialState);
-	width = std::min((int)initialState.dwSize.X, 80);
+	width = 2 * (std::min((int)initialState.dwSize.X, 80) / 2);
 	height = std::min((int)initialState.dwSize.Y, 25);
 
 	if ((width < 64) || (height < 25))
@@ -50,6 +51,12 @@ Console::Console()
 	window.Top = 0;
 	SetConsoleWindowInfo(output, TRUE, &window);
 
+	/* -- Allocate output buffer -- */
+
+	characters = new CHAR_INFO[16 * width];
+
+	/* -- Clear input & output -- */
+
 	valid = true;
 	clear();
 
@@ -60,6 +67,8 @@ Console::Console()
 
 Console::~Console()
 {
+	/* -- Restore console output -- */
+
 	COORD cursor = { 0, 8 };
 	SetConsoleCursorPosition(output, cursor);
 
@@ -80,6 +89,10 @@ Console::~Console()
 
 	SetConsoleMode(output, initialOutputMode);
 	SetConsoleMode(input, initialInputMode);
+
+	/* -- Delete allocated resources -- */
+
+	delete characters;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -232,6 +245,98 @@ void Console::displayFreeMoves(int whiteFreeMoves, int blackFreeMoves)
 	_stprintf(string, _T("%d - %d"), whiteFreeMoves, blackFreeMoves);
 
 	write(string, 32, true, 11, 2, colors::freeMoves);
+	displayTimer();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::displayDeductions(const EUCLIDE_Deductions *deductions)
+{
+	LPCTSTR symbols = strings::load(strings::GlyphSymbols);
+	CHAR_INFO *characters = this->characters;
+	
+	for (int piece = 0; piece < 16; piece++)
+	{
+		for (int color = 0; color <= 1; color++)
+		{
+			const EUCLIDE_Deduction *deduction = color ? &deductions->blackPieces[piece] : &deductions->whitePieces[piece];
+
+			/* -- Set default attributes and clear area -- */
+
+			for (int k = 0; k < width / 2; k++)
+			{
+				characters[k].Attributes = color ? (deduction->captured ? colors::blackCaptures : colors::blackMoves) : (deduction->captured ? colors::whiteCaptures : colors::whiteMoves);
+				characters[k].Char.UnicodeChar = ' ';
+			}
+
+			/* -- Print required moves -- */
+
+			if (deduction->requiredMoves > 0)
+			{
+				characters[1].Attributes = color ? colors::numBlackMoves : colors::numWhiteMoves;
+				characters[2].Attributes = color ? colors::numBlackMoves : colors::numWhiteMoves;
+
+				if (deduction->requiredMoves > 9)
+					characters[1].Char.UnicodeChar = (WCHAR)('0' + (deduction->requiredMoves / 10 % 10));
+				
+				characters[2].Char.UnicodeChar = (WCHAR)('0' + deduction->requiredMoves % 10);
+			}
+
+			/* -- Print deduction -- */
+
+			if (deduction->finalSquare >= 0)
+			{
+				characters[5].Char.UnicodeChar = symbols[deduction->initialGlyph];
+				characters[6].Char.UnicodeChar = (WCHAR)('a' + deduction->initialSquare / 8);
+				characters[7].Char.UnicodeChar = (WCHAR)('1' + deduction->initialSquare % 8);
+
+				if ((deduction->finalSquare != deduction->initialSquare) || (deduction->requiredMoves > 0))
+				{
+					characters[9].Char.UnicodeChar = '-';
+					characters[10].Char.UnicodeChar = '>';
+
+					characters[12].Char.UnicodeChar = symbols[deduction->promotionGlyph];
+					characters[13].Char.UnicodeChar = (WCHAR)('a' + deduction->finalSquare / 8);
+					characters[14].Char.UnicodeChar = (WCHAR)('1' + deduction->finalSquare % 8);
+				}
+			}
+
+			/* -- Print number of possible squares -- */
+
+			if (deduction->numSquares > 1)
+			{
+				if (deduction->numSquares >= 10000)
+					characters[20].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 10000) % 10);
+				if (deduction->numSquares >= 1000)
+					characters[21].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 1000) % 10);
+				if (deduction->numSquares >= 100)
+					characters[22].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 100) % 10);
+				if (deduction->numSquares >= 10)
+					characters[23].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 10) % 10);
+				if (deduction->numSquares >= 1)
+					characters[24].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 1) % 10);
+
+				characters[20].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+				characters[21].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+				characters[22].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+				characters[23].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+				characters[24].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+			}
+
+			/* -- Move on -- */
+
+			characters += width / 2;
+		}
+	}
+
+	/* -- Output to screen -- */
+
+	COORD size = { (short)width, 16 };
+	COORD zero = { 0, 0 };
+	SMALL_RECT window = { 0, 8, (short)(width - 1), (short)(height - 1) };
+
+	WriteConsoleOutput(output, this->characters, size, zero, &window);
+	displayFreeMoves(deductions->freeWhiteMoves, deductions->freeBlackMoves);
 	displayTimer();
 }
 
