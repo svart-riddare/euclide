@@ -86,29 +86,40 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	whitePieces = new Pieces(*problem, White);
 	blackPieces = new Pieces(*problem, Black);
 
-	/* -- Apply non ubiquity principle -- */
+	/* -- Compute required moves and captures and
+	      apply non ubiquity principle as often as needed -- */
 
-	whitePieces->applyNonUbiquityPrinciple();
-	blackPieces->applyNonUbiquityPrinciple();
+	while (whitePieces->applyNonUbiquityPrinciple())
+	{
+		whitePieces->computeRequiredMoves(*board);
+		whitePieces->applyMoveConstraints(problem->moves(White));
+		
+		whitePieces->computeRequiredCaptures(*board);
+		whitePieces->applyCaptureConstraints(problem->captures(White));
+	}
 
-	/* -- Compute number of required moves -- */
+	while (blackPieces->applyNonUbiquityPrinciple())
+	{
+		blackPieces->computeRequiredMoves(*board);
+		blackPieces->applyMoveConstraints(problem->moves(Black));
+		
+		blackPieces->computeRequiredCaptures(*board);
+		blackPieces->applyCaptureConstraints(problem->captures(Black));
+	}
+
+	/* -- Display number of free moves -- */
 
 	int whiteMoves = problem->moves(White);
 	int blackMoves = problem->moves(Black);
 
-	int requiredWhiteMoves = whitePieces->computeRequiredMoves(*board);
-	int requiredBlackMoves = blackPieces->computeRequiredMoves(*board);
+	int requiredWhiteMoves = whitePieces->getRequiredMoves();
+	int requiredBlackMoves = blackPieces->getRequiredMoves();
 
-	whitePieces->applyMoveConstraints(whiteMoves);
-	blackPieces->applyMoveConstraints(blackMoves);
-	
 	int freeWhiteMoves = whiteMoves - requiredWhiteMoves;
 	int freeBlackMoves = blackMoves - requiredBlackMoves;
 
 	if (callbacks.displayFreeMoves)
 		(*callbacks.displayFreeMoves)(callbacks.handle, freeWhiteMoves, freeBlackMoves);
-
-
 }
 
 /* -------------------------------------------------------------------------- */

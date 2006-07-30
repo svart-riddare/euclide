@@ -120,10 +120,37 @@ bool Pieces::applyMoveConstraints(int availableMoves)
 {
 	bool modified = false;
 
+	/* -- Compute number of assigned moves -- */
+
+	int requiredMoves = 0;
+	for (Man man = FirstMan; man <= LastMan; man++)
+		requiredMoves += squares[man].getRequiredMoves();
+
 	/* -- Apply move constraint to each man -- */
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		if (squares[man].applyDeduction(squares[man].getRequiredMoves() + availableMoves - requiredMoves))
+		if (squares[man].applyDeduction(squares[man].getRequiredMoves() + availableMoves - requiredMoves, infinity))
+			modified = true;
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Pieces::applyCaptureConstraints(int availableCaptures)
+{
+	bool modified = false;
+
+	/* -- Compute number of assigned captures -- */
+
+	int requiredCaptures = 0;
+	for (Man man = FirstMan; man <= LastMan; man++)
+		requiredCaptures += squares[man].getRequiredCaptures();
+
+	/* -- Apply capture constraint to each man -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (squares[man].applyDeduction(infinity, squares[man].getRequiredCaptures() + availableCaptures - requiredCaptures))
 			modified = true;
 
 	return modified;
@@ -173,6 +200,52 @@ int Pieces::computeRequiredMoves(const Board& board)
 int Pieces::getRequiredMoves() const
 {
 	return requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Pieces::computeRequiredCaptures(const Board &board)
+{
+	int requiredCaptures = 0;
+
+	/* -- Sum number of required captures for each man -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		requiredCaptures += squares[man].computeRequiredCaptures(board, color);
+
+	/* -- Keep result -- */
+
+	if (requiredCaptures > this->requiredCaptures)
+		this->requiredCaptures = requiredCaptures;
+
+	/* -- Sum required captures for each occupied square -- */
+
+	array<int, NumSquares> squareRequiredCaptures;
+	squareRequiredCaptures.assign(infinity);
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		squares[man].getRequiredCaptures(squareRequiredCaptures);
+
+	requiredCaptures = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (glyphs[square].isColor(color))
+			requiredCaptures += squareRequiredCaptures[square];
+
+	/* -- Keep result -- */
+
+	if (requiredCaptures > this->requiredCaptures)
+		this->requiredCaptures = requiredCaptures;
+
+	/* -- Return number of required captures -- */
+
+	return getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Pieces::getRequiredCaptures() const
+{
+	return requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */

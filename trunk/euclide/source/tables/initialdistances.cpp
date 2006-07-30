@@ -12,7 +12,7 @@ namespace tables
 {
 
 /* --------------------------------------------------------------------------
-   -- Computer generated with make-tables on Thu Jul 20 00:00:22 2006
+   -- Computer generated with make-tables on Sun Jul 30 17:26:15 2006
    -------------------------------------------------------------------------- */
 
 const int initialDistances[NumSupermen][NumSquares][NumColors] =
@@ -548,52 +548,52 @@ const int initialDistances[NumSupermen][NumSquares][NumColors] =
 	{  /* APawn */
 		{ infinity,        5 },  /* A1 */
 		{        0,        4 },  /* A2 */
-		{        0,        3 },  /* A3 */
+		{        1,        3 },  /* A3 */
 		{        1,        2 },  /* A4 */
 		{        2,        1 },  /* A5 */
-		{        3,        0 },  /* A6 */
+		{        3,        1 },  /* A6 */
 		{        4,        0 },  /* A7 */
 		{        5, infinity },  /* A8 */
 		{ infinity,        5 },  /* B1 */
 		{ infinity,        4 },  /* B2 */
 		{        1,        3 },  /* B3 */
-		{        1,        2 },  /* B4 */
-		{        2,        1 },  /* B5 */
+		{        2,        2 },  /* B4 */
+		{        2,        2 },  /* B5 */
 		{        3,        1 },  /* B6 */
 		{        4, infinity },  /* B7 */
 		{        5, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
 		{ infinity,        4 },  /* C2 */
 		{ infinity,        3 },  /* C3 */
-		{        2,        2 },  /* C4 */
-		{        2,        2 },  /* C5 */
+		{        2,        3 },  /* C4 */
+		{        3,        2 },  /* C5 */
 		{        3, infinity },  /* C6 */
 		{        4, infinity },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
 		{ infinity,        4 },  /* D2 */
-		{ infinity,        3 },  /* D3 */
+		{ infinity,        4 },  /* D3 */
 		{ infinity,        3 },  /* D4 */
 		{        3, infinity },  /* D5 */
-		{        3, infinity },  /* D6 */
+		{        4, infinity },  /* D6 */
 		{        4, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
-		{ infinity,        4 },  /* E2 */
+		{ infinity,        5 },  /* E2 */
 		{ infinity,        4 },  /* E3 */
 		{ infinity, infinity },  /* E4 */
 		{ infinity, infinity },  /* E5 */
 		{        4, infinity },  /* E6 */
-		{        4, infinity },  /* E7 */
+		{        5, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
-		{ infinity,        5 },  /* F1 */
+		{ infinity,        6 },  /* F1 */
 		{ infinity,        5 },  /* F2 */
 		{ infinity, infinity },  /* F3 */
 		{ infinity, infinity },  /* F4 */
 		{ infinity, infinity },  /* F5 */
 		{ infinity, infinity },  /* F6 */
 		{        5, infinity },  /* F7 */
-		{        5, infinity },  /* F8 */
+		{        6, infinity },  /* F8 */
 		{ infinity,        6 },  /* G1 */
 		{ infinity, infinity },  /* G2 */
 		{ infinity, infinity },  /* G3 */
@@ -615,59 +615,59 @@ const int initialDistances[NumSupermen][NumSquares][NumColors] =
 		{ infinity,        5 },  /* A1 */
 		{ infinity,        4 },  /* A2 */
 		{        1,        3 },  /* A3 */
-		{        1,        2 },  /* A4 */
-		{        2,        1 },  /* A5 */
+		{        2,        2 },  /* A4 */
+		{        2,        2 },  /* A5 */
 		{        3,        1 },  /* A6 */
 		{        4, infinity },  /* A7 */
 		{        5, infinity },  /* A8 */
 		{ infinity,        5 },  /* B1 */
 		{        0,        4 },  /* B2 */
-		{        0,        3 },  /* B3 */
+		{        1,        3 },  /* B3 */
 		{        1,        2 },  /* B4 */
 		{        2,        1 },  /* B5 */
-		{        3,        0 },  /* B6 */
+		{        3,        1 },  /* B6 */
 		{        4,        0 },  /* B7 */
 		{        5, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
 		{ infinity,        4 },  /* C2 */
 		{        1,        3 },  /* C3 */
-		{        1,        2 },  /* C4 */
-		{        2,        1 },  /* C5 */
+		{        2,        2 },  /* C4 */
+		{        2,        2 },  /* C5 */
 		{        3,        1 },  /* C6 */
 		{        4, infinity },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
 		{ infinity,        4 },  /* D2 */
 		{ infinity,        3 },  /* D3 */
-		{        2,        2 },  /* D4 */
-		{        2,        2 },  /* D5 */
+		{        2,        3 },  /* D4 */
+		{        3,        2 },  /* D5 */
 		{        3, infinity },  /* D6 */
 		{        4, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
 		{ infinity,        4 },  /* E2 */
-		{ infinity,        3 },  /* E3 */
+		{ infinity,        4 },  /* E3 */
 		{ infinity,        3 },  /* E4 */
 		{        3, infinity },  /* E5 */
-		{        3, infinity },  /* E6 */
+		{        4, infinity },  /* E6 */
 		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
-		{ infinity,        4 },  /* F2 */
+		{ infinity,        5 },  /* F2 */
 		{ infinity,        4 },  /* F3 */
 		{ infinity, infinity },  /* F4 */
 		{ infinity, infinity },  /* F5 */
 		{        4, infinity },  /* F6 */
-		{        4, infinity },  /* F7 */
+		{        5, infinity },  /* F7 */
 		{        5, infinity },  /* F8 */
-		{ infinity,        5 },  /* G1 */
+		{ infinity,        6 },  /* G1 */
 		{ infinity,        5 },  /* G2 */
 		{ infinity, infinity },  /* G3 */
 		{ infinity, infinity },  /* G4 */
 		{ infinity, infinity },  /* G5 */
 		{ infinity, infinity },  /* G6 */
 		{        5, infinity },  /* G7 */
-		{        5, infinity },  /* G8 */
+		{        6, infinity },  /* G8 */
 		{ infinity,        6 },  /* H1 */
 		{ infinity, infinity },  /* H2 */
 		{ infinity, infinity },  /* H3 */
@@ -681,262 +681,262 @@ const int initialDistances[NumSupermen][NumSquares][NumColors] =
 		{ infinity,        5 },  /* A1 */
 		{ infinity,        4 },  /* A2 */
 		{ infinity,        3 },  /* A3 */
-		{        2,        2 },  /* A4 */
-		{        2,        2 },  /* A5 */
+		{        2,        3 },  /* A4 */
+		{        3,        2 },  /* A5 */
 		{        3, infinity },  /* A6 */
 		{        4, infinity },  /* A7 */
 		{        5, infinity },  /* A8 */
 		{ infinity,        5 },  /* B1 */
 		{ infinity,        4 },  /* B2 */
 		{        1,        3 },  /* B3 */
-		{        1,        2 },  /* B4 */
-		{        2,        1 },  /* B5 */
+		{        2,        2 },  /* B4 */
+		{        2,        2 },  /* B5 */
 		{        3,        1 },  /* B6 */
 		{        4, infinity },  /* B7 */
 		{        5, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
 		{        0,        4 },  /* C2 */
-		{        0,        3 },  /* C3 */
+		{        1,        3 },  /* C3 */
 		{        1,        2 },  /* C4 */
 		{        2,        1 },  /* C5 */
-		{        3,        0 },  /* C6 */
+		{        3,        1 },  /* C6 */
 		{        4,        0 },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
 		{ infinity,        4 },  /* D2 */
 		{        1,        3 },  /* D3 */
-		{        1,        2 },  /* D4 */
-		{        2,        1 },  /* D5 */
+		{        2,        2 },  /* D4 */
+		{        2,        2 },  /* D5 */
 		{        3,        1 },  /* D6 */
 		{        4, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
 		{ infinity,        4 },  /* E2 */
 		{ infinity,        3 },  /* E3 */
-		{        2,        2 },  /* E4 */
-		{        2,        2 },  /* E5 */
+		{        2,        3 },  /* E4 */
+		{        3,        2 },  /* E5 */
 		{        3, infinity },  /* E6 */
 		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
 		{ infinity,        4 },  /* F2 */
-		{ infinity,        3 },  /* F3 */
+		{ infinity,        4 },  /* F3 */
 		{ infinity,        3 },  /* F4 */
 		{        3, infinity },  /* F5 */
-		{        3, infinity },  /* F6 */
+		{        4, infinity },  /* F6 */
 		{        4, infinity },  /* F7 */
 		{        5, infinity },  /* F8 */
 		{ infinity,        5 },  /* G1 */
-		{ infinity,        4 },  /* G2 */
+		{ infinity,        5 },  /* G2 */
 		{ infinity,        4 },  /* G3 */
 		{ infinity, infinity },  /* G4 */
 		{ infinity, infinity },  /* G5 */
 		{        4, infinity },  /* G6 */
-		{        4, infinity },  /* G7 */
+		{        5, infinity },  /* G7 */
 		{        5, infinity },  /* G8 */
-		{ infinity,        5 },  /* H1 */
+		{ infinity,        6 },  /* H1 */
 		{ infinity,        5 },  /* H2 */
 		{ infinity, infinity },  /* H3 */
 		{ infinity, infinity },  /* H4 */
 		{ infinity, infinity },  /* H5 */
 		{ infinity, infinity },  /* H6 */
 		{        5, infinity },  /* H7 */
-		{        5, infinity },  /* H8 */
+		{        6, infinity },  /* H8 */
 	},
 	{  /* DPawn */
 		{ infinity,        5 },  /* A1 */
 		{ infinity,        4 },  /* A2 */
-		{ infinity,        3 },  /* A3 */
+		{ infinity,        4 },  /* A3 */
 		{ infinity,        3 },  /* A4 */
 		{        3, infinity },  /* A5 */
-		{        3, infinity },  /* A6 */
-		{        4, infinity },  /* A7 */
-		{        5, infinity },  /* A8 */
-		{ infinity,        5 },  /* B1 */
-		{ infinity,        4 },  /* B2 */
-		{ infinity,        3 },  /* B3 */
-		{        2,        2 },  /* B4 */
-		{        2,        2 },  /* B5 */
-		{        3, infinity },  /* B6 */
-		{        4, infinity },  /* B7 */
-		{        5, infinity },  /* B8 */
-		{ infinity,        5 },  /* C1 */
-		{ infinity,        4 },  /* C2 */
-		{        1,        3 },  /* C3 */
-		{        1,        2 },  /* C4 */
-		{        2,        1 },  /* C5 */
-		{        3,        1 },  /* C6 */
-		{        4, infinity },  /* C7 */
-		{        5, infinity },  /* C8 */
-		{ infinity,        5 },  /* D1 */
-		{        0,        4 },  /* D2 */
-		{        0,        3 },  /* D3 */
-		{        1,        2 },  /* D4 */
-		{        2,        1 },  /* D5 */
-		{        3,        0 },  /* D6 */
-		{        4,        0 },  /* D7 */
-		{        5, infinity },  /* D8 */
-		{ infinity,        5 },  /* E1 */
-		{ infinity,        4 },  /* E2 */
-		{        1,        3 },  /* E3 */
-		{        1,        2 },  /* E4 */
-		{        2,        1 },  /* E5 */
-		{        3,        1 },  /* E6 */
-		{        4, infinity },  /* E7 */
-		{        5, infinity },  /* E8 */
-		{ infinity,        5 },  /* F1 */
-		{ infinity,        4 },  /* F2 */
-		{ infinity,        3 },  /* F3 */
-		{        2,        2 },  /* F4 */
-		{        2,        2 },  /* F5 */
-		{        3, infinity },  /* F6 */
-		{        4, infinity },  /* F7 */
-		{        5, infinity },  /* F8 */
-		{ infinity,        5 },  /* G1 */
-		{ infinity,        4 },  /* G2 */
-		{ infinity,        3 },  /* G3 */
-		{ infinity,        3 },  /* G4 */
-		{        3, infinity },  /* G5 */
-		{        3, infinity },  /* G6 */
-		{        4, infinity },  /* G7 */
-		{        5, infinity },  /* G8 */
-		{ infinity,        5 },  /* H1 */
-		{ infinity,        4 },  /* H2 */
-		{ infinity,        4 },  /* H3 */
-		{ infinity, infinity },  /* H4 */
-		{ infinity, infinity },  /* H5 */
-		{        4, infinity },  /* H6 */
-		{        4, infinity },  /* H7 */
-		{        5, infinity },  /* H8 */
-	},
-	{  /* EPawn */
-		{ infinity,        5 },  /* A1 */
-		{ infinity,        4 },  /* A2 */
-		{ infinity,        4 },  /* A3 */
-		{ infinity, infinity },  /* A4 */
-		{ infinity, infinity },  /* A5 */
 		{        4, infinity },  /* A6 */
 		{        4, infinity },  /* A7 */
 		{        5, infinity },  /* A8 */
 		{ infinity,        5 },  /* B1 */
 		{ infinity,        4 },  /* B2 */
 		{ infinity,        3 },  /* B3 */
-		{ infinity,        3 },  /* B4 */
-		{        3, infinity },  /* B5 */
+		{        2,        3 },  /* B4 */
+		{        3,        2 },  /* B5 */
 		{        3, infinity },  /* B6 */
 		{        4, infinity },  /* B7 */
 		{        5, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
 		{ infinity,        4 },  /* C2 */
-		{ infinity,        3 },  /* C3 */
+		{        1,        3 },  /* C3 */
 		{        2,        2 },  /* C4 */
 		{        2,        2 },  /* C5 */
-		{        3, infinity },  /* C6 */
+		{        3,        1 },  /* C6 */
 		{        4, infinity },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
-		{ infinity,        4 },  /* D2 */
+		{        0,        4 },  /* D2 */
 		{        1,        3 },  /* D3 */
 		{        1,        2 },  /* D4 */
 		{        2,        1 },  /* D5 */
 		{        3,        1 },  /* D6 */
-		{        4, infinity },  /* D7 */
+		{        4,        0 },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
-		{        0,        4 },  /* E2 */
-		{        0,        3 },  /* E3 */
-		{        1,        2 },  /* E4 */
-		{        2,        1 },  /* E5 */
-		{        3,        0 },  /* E6 */
-		{        4,        0 },  /* E7 */
+		{ infinity,        4 },  /* E2 */
+		{        1,        3 },  /* E3 */
+		{        2,        2 },  /* E4 */
+		{        2,        2 },  /* E5 */
+		{        3,        1 },  /* E6 */
+		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
 		{ infinity,        4 },  /* F2 */
-		{        1,        3 },  /* F3 */
-		{        1,        2 },  /* F4 */
-		{        2,        1 },  /* F5 */
-		{        3,        1 },  /* F6 */
+		{ infinity,        3 },  /* F3 */
+		{        2,        3 },  /* F4 */
+		{        3,        2 },  /* F5 */
+		{        3, infinity },  /* F6 */
 		{        4, infinity },  /* F7 */
 		{        5, infinity },  /* F8 */
 		{ infinity,        5 },  /* G1 */
 		{ infinity,        4 },  /* G2 */
-		{ infinity,        3 },  /* G3 */
-		{        2,        2 },  /* G4 */
-		{        2,        2 },  /* G5 */
-		{        3, infinity },  /* G6 */
+		{ infinity,        4 },  /* G3 */
+		{ infinity,        3 },  /* G4 */
+		{        3, infinity },  /* G5 */
+		{        4, infinity },  /* G6 */
 		{        4, infinity },  /* G7 */
 		{        5, infinity },  /* G8 */
 		{ infinity,        5 },  /* H1 */
-		{ infinity,        4 },  /* H2 */
-		{ infinity,        3 },  /* H3 */
-		{ infinity,        3 },  /* H4 */
-		{        3, infinity },  /* H5 */
-		{        3, infinity },  /* H6 */
-		{        4, infinity },  /* H7 */
+		{ infinity,        5 },  /* H2 */
+		{ infinity,        4 },  /* H3 */
+		{ infinity, infinity },  /* H4 */
+		{ infinity, infinity },  /* H5 */
+		{        4, infinity },  /* H6 */
+		{        5, infinity },  /* H7 */
 		{        5, infinity },  /* H8 */
 	},
-	{  /* FPawn */
+	{  /* EPawn */
 		{ infinity,        5 },  /* A1 */
 		{ infinity,        5 },  /* A2 */
-		{ infinity, infinity },  /* A3 */
+		{ infinity,        4 },  /* A3 */
 		{ infinity, infinity },  /* A4 */
 		{ infinity, infinity },  /* A5 */
-		{ infinity, infinity },  /* A6 */
+		{        4, infinity },  /* A6 */
 		{        5, infinity },  /* A7 */
 		{        5, infinity },  /* A8 */
 		{ infinity,        5 },  /* B1 */
 		{ infinity,        4 },  /* B2 */
 		{ infinity,        4 },  /* B3 */
-		{ infinity, infinity },  /* B4 */
-		{ infinity, infinity },  /* B5 */
+		{ infinity,        3 },  /* B4 */
+		{        3, infinity },  /* B5 */
 		{        4, infinity },  /* B6 */
 		{        4, infinity },  /* B7 */
 		{        5, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
 		{ infinity,        4 },  /* C2 */
 		{ infinity,        3 },  /* C3 */
-		{ infinity,        3 },  /* C4 */
-		{        3, infinity },  /* C5 */
+		{        2,        3 },  /* C4 */
+		{        3,        2 },  /* C5 */
 		{        3, infinity },  /* C6 */
 		{        4, infinity },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
 		{ infinity,        4 },  /* D2 */
-		{ infinity,        3 },  /* D3 */
+		{        1,        3 },  /* D3 */
 		{        2,        2 },  /* D4 */
 		{        2,        2 },  /* D5 */
+		{        3,        1 },  /* D6 */
+		{        4, infinity },  /* D7 */
+		{        5, infinity },  /* D8 */
+		{ infinity,        5 },  /* E1 */
+		{        0,        4 },  /* E2 */
+		{        1,        3 },  /* E3 */
+		{        1,        2 },  /* E4 */
+		{        2,        1 },  /* E5 */
+		{        3,        1 },  /* E6 */
+		{        4,        0 },  /* E7 */
+		{        5, infinity },  /* E8 */
+		{ infinity,        5 },  /* F1 */
+		{ infinity,        4 },  /* F2 */
+		{        1,        3 },  /* F3 */
+		{        2,        2 },  /* F4 */
+		{        2,        2 },  /* F5 */
+		{        3,        1 },  /* F6 */
+		{        4, infinity },  /* F7 */
+		{        5, infinity },  /* F8 */
+		{ infinity,        5 },  /* G1 */
+		{ infinity,        4 },  /* G2 */
+		{ infinity,        3 },  /* G3 */
+		{        2,        3 },  /* G4 */
+		{        3,        2 },  /* G5 */
+		{        3, infinity },  /* G6 */
+		{        4, infinity },  /* G7 */
+		{        5, infinity },  /* G8 */
+		{ infinity,        5 },  /* H1 */
+		{ infinity,        4 },  /* H2 */
+		{ infinity,        4 },  /* H3 */
+		{ infinity,        3 },  /* H4 */
+		{        3, infinity },  /* H5 */
+		{        4, infinity },  /* H6 */
+		{        4, infinity },  /* H7 */
+		{        5, infinity },  /* H8 */
+	},
+	{  /* FPawn */
+		{ infinity,        6 },  /* A1 */
+		{ infinity,        5 },  /* A2 */
+		{ infinity, infinity },  /* A3 */
+		{ infinity, infinity },  /* A4 */
+		{ infinity, infinity },  /* A5 */
+		{ infinity, infinity },  /* A6 */
+		{        5, infinity },  /* A7 */
+		{        6, infinity },  /* A8 */
+		{ infinity,        5 },  /* B1 */
+		{ infinity,        5 },  /* B2 */
+		{ infinity,        4 },  /* B3 */
+		{ infinity, infinity },  /* B4 */
+		{ infinity, infinity },  /* B5 */
+		{        4, infinity },  /* B6 */
+		{        5, infinity },  /* B7 */
+		{        5, infinity },  /* B8 */
+		{ infinity,        5 },  /* C1 */
+		{ infinity,        4 },  /* C2 */
+		{ infinity,        4 },  /* C3 */
+		{ infinity,        3 },  /* C4 */
+		{        3, infinity },  /* C5 */
+		{        4, infinity },  /* C6 */
+		{        4, infinity },  /* C7 */
+		{        5, infinity },  /* C8 */
+		{ infinity,        5 },  /* D1 */
+		{ infinity,        4 },  /* D2 */
+		{ infinity,        3 },  /* D3 */
+		{        2,        3 },  /* D4 */
+		{        3,        2 },  /* D5 */
 		{        3, infinity },  /* D6 */
 		{        4, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
 		{ infinity,        4 },  /* E2 */
 		{        1,        3 },  /* E3 */
-		{        1,        2 },  /* E4 */
-		{        2,        1 },  /* E5 */
+		{        2,        2 },  /* E4 */
+		{        2,        2 },  /* E5 */
 		{        3,        1 },  /* E6 */
 		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
 		{        0,        4 },  /* F2 */
-		{        0,        3 },  /* F3 */
+		{        1,        3 },  /* F3 */
 		{        1,        2 },  /* F4 */
 		{        2,        1 },  /* F5 */
-		{        3,        0 },  /* F6 */
+		{        3,        1 },  /* F6 */
 		{        4,        0 },  /* F7 */
 		{        5, infinity },  /* F8 */
 		{ infinity,        5 },  /* G1 */
 		{ infinity,        4 },  /* G2 */
 		{        1,        3 },  /* G3 */
-		{        1,        2 },  /* G4 */
-		{        2,        1 },  /* G5 */
+		{        2,        2 },  /* G4 */
+		{        2,        2 },  /* G5 */
 		{        3,        1 },  /* G6 */
 		{        4, infinity },  /* G7 */
 		{        5, infinity },  /* G8 */
 		{ infinity,        5 },  /* H1 */
 		{ infinity,        4 },  /* H2 */
 		{ infinity,        3 },  /* H3 */
-		{        2,        2 },  /* H4 */
-		{        2,        2 },  /* H5 */
+		{        2,        3 },  /* H4 */
+		{        3,        2 },  /* H5 */
 		{        3, infinity },  /* H6 */
 		{        4, infinity },  /* H7 */
 		{        5, infinity },  /* H8 */
@@ -950,59 +950,59 @@ const int initialDistances[NumSupermen][NumSquares][NumColors] =
 		{ infinity, infinity },  /* A6 */
 		{ infinity, infinity },  /* A7 */
 		{        6, infinity },  /* A8 */
-		{ infinity,        5 },  /* B1 */
+		{ infinity,        6 },  /* B1 */
 		{ infinity,        5 },  /* B2 */
 		{ infinity, infinity },  /* B3 */
 		{ infinity, infinity },  /* B4 */
 		{ infinity, infinity },  /* B5 */
 		{ infinity, infinity },  /* B6 */
 		{        5, infinity },  /* B7 */
-		{        5, infinity },  /* B8 */
+		{        6, infinity },  /* B8 */
 		{ infinity,        5 },  /* C1 */
-		{ infinity,        4 },  /* C2 */
+		{ infinity,        5 },  /* C2 */
 		{ infinity,        4 },  /* C3 */
 		{ infinity, infinity },  /* C4 */
 		{ infinity, infinity },  /* C5 */
 		{        4, infinity },  /* C6 */
-		{        4, infinity },  /* C7 */
+		{        5, infinity },  /* C7 */
 		{        5, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
 		{ infinity,        4 },  /* D2 */
-		{ infinity,        3 },  /* D3 */
+		{ infinity,        4 },  /* D3 */
 		{ infinity,        3 },  /* D4 */
 		{        3, infinity },  /* D5 */
-		{        3, infinity },  /* D6 */
+		{        4, infinity },  /* D6 */
 		{        4, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
 		{ infinity,        4 },  /* E2 */
 		{ infinity,        3 },  /* E3 */
-		{        2,        2 },  /* E4 */
-		{        2,        2 },  /* E5 */
+		{        2,        3 },  /* E4 */
+		{        3,        2 },  /* E5 */
 		{        3, infinity },  /* E6 */
 		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
 		{ infinity,        4 },  /* F2 */
 		{        1,        3 },  /* F3 */
-		{        1,        2 },  /* F4 */
-		{        2,        1 },  /* F5 */
+		{        2,        2 },  /* F4 */
+		{        2,        2 },  /* F5 */
 		{        3,        1 },  /* F6 */
 		{        4, infinity },  /* F7 */
 		{        5, infinity },  /* F8 */
 		{ infinity,        5 },  /* G1 */
 		{        0,        4 },  /* G2 */
-		{        0,        3 },  /* G3 */
+		{        1,        3 },  /* G3 */
 		{        1,        2 },  /* G4 */
 		{        2,        1 },  /* G5 */
-		{        3,        0 },  /* G6 */
+		{        3,        1 },  /* G6 */
 		{        4,        0 },  /* G7 */
 		{        5, infinity },  /* G8 */
 		{ infinity,        5 },  /* H1 */
 		{ infinity,        4 },  /* H2 */
 		{        1,        3 },  /* H3 */
-		{        1,        2 },  /* H4 */
-		{        2,        1 },  /* H5 */
+		{        2,        2 },  /* H4 */
+		{        2,        2 },  /* H5 */
 		{        3,        1 },  /* H6 */
 		{        4, infinity },  /* H7 */
 		{        5, infinity },  /* H8 */
@@ -1024,52 +1024,52 @@ const int initialDistances[NumSupermen][NumSquares][NumColors] =
 		{ infinity, infinity },  /* B6 */
 		{ infinity, infinity },  /* B7 */
 		{        6, infinity },  /* B8 */
-		{ infinity,        5 },  /* C1 */
+		{ infinity,        6 },  /* C1 */
 		{ infinity,        5 },  /* C2 */
 		{ infinity, infinity },  /* C3 */
 		{ infinity, infinity },  /* C4 */
 		{ infinity, infinity },  /* C5 */
 		{ infinity, infinity },  /* C6 */
 		{        5, infinity },  /* C7 */
-		{        5, infinity },  /* C8 */
+		{        6, infinity },  /* C8 */
 		{ infinity,        5 },  /* D1 */
-		{ infinity,        4 },  /* D2 */
+		{ infinity,        5 },  /* D2 */
 		{ infinity,        4 },  /* D3 */
 		{ infinity, infinity },  /* D4 */
 		{ infinity, infinity },  /* D5 */
 		{        4, infinity },  /* D6 */
-		{        4, infinity },  /* D7 */
+		{        5, infinity },  /* D7 */
 		{        5, infinity },  /* D8 */
 		{ infinity,        5 },  /* E1 */
 		{ infinity,        4 },  /* E2 */
-		{ infinity,        3 },  /* E3 */
+		{ infinity,        4 },  /* E3 */
 		{ infinity,        3 },  /* E4 */
 		{        3, infinity },  /* E5 */
-		{        3, infinity },  /* E6 */
+		{        4, infinity },  /* E6 */
 		{        4, infinity },  /* E7 */
 		{        5, infinity },  /* E8 */
 		{ infinity,        5 },  /* F1 */
 		{ infinity,        4 },  /* F2 */
 		{ infinity,        3 },  /* F3 */
-		{        2,        2 },  /* F4 */
-		{        2,        2 },  /* F5 */
+		{        2,        3 },  /* F4 */
+		{        3,        2 },  /* F5 */
 		{        3, infinity },  /* F6 */
 		{        4, infinity },  /* F7 */
 		{        5, infinity },  /* F8 */
 		{ infinity,        5 },  /* G1 */
 		{ infinity,        4 },  /* G2 */
 		{        1,        3 },  /* G3 */
-		{        1,        2 },  /* G4 */
-		{        2,        1 },  /* G5 */
+		{        2,        2 },  /* G4 */
+		{        2,        2 },  /* G5 */
 		{        3,        1 },  /* G6 */
 		{        4, infinity },  /* G7 */
 		{        5, infinity },  /* G8 */
 		{ infinity,        5 },  /* H1 */
 		{        0,        4 },  /* H2 */
-		{        0,        3 },  /* H3 */
+		{        1,        3 },  /* H3 */
 		{        1,        2 },  /* H4 */
 		{        2,        1 },  /* H5 */
-		{        3,        0 },  /* H6 */
+		{        3,        1 },  /* H6 */
 		{        4,        0 },  /* H7 */
 		{        5, infinity },  /* H8 */
 	},

@@ -16,6 +16,9 @@ class FinalSquare
 		int computeRequiredMoves(const Board& board, Color color, const Castling& castling);
 		int getRequiredMoves() const;
 
+		int computeRequiredCaptures(const Board& board, Color color);
+		int getRequiredCaptures() const;
+
 		operator Square() const;
 		operator Man() const;
 		operator Superman() const;
@@ -51,10 +54,14 @@ class FinalSquares
 		int getRequiredMoves(array<int, NumSquares>& squares) const;
 		int getRequiredMoves() const;
 
+		int computeRequiredCaptures(const Board& board, Color color);
+		int getRequiredCaptures(array<int, NumSquares>& squares) const;
+		int getRequiredCaptures() const;
+
 		operator const finalsquares_t&() const;
 
+		bool applyDeduction(int availableMoves, int availableCaptures);
 		bool applyDeduction(Square square, bool captured);
-		bool applyDeduction(int availableMoves);
 		bool applyDeduction();
 
 	private :

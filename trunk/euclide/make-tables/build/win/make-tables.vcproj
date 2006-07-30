@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\make-initialcaptures.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\make-initialdistances.cpp"
 				>
 			</File>

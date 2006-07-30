@@ -41,6 +41,24 @@ int FinalSquare::getRequiredMoves() const
 
 /* -------------------------------------------------------------------------- */
 
+int FinalSquare::computeRequiredCaptures(const Board& board, Color color)
+{
+	int captures = board.icaptures(man, superman, color, square);
+	if (captures > requiredCaptures)
+		requiredCaptures = captures;
+
+	return getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquare::getRequiredCaptures() const
+{
+	return requiredCaptures;
+}
+
+/* -------------------------------------------------------------------------- */
+
 FinalSquare::operator Square() const
 {
 	return square;
@@ -128,13 +146,13 @@ bool FinalSquares::applyDeduction(Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
-bool FinalSquares::applyDeduction(int availableMoves)
+bool FinalSquares::applyDeduction(int availableMoves, int availableCaptures)
 {
 	bool modified = false;
 
 	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); )
 	{
-		if (I->getRequiredMoves() <= availableMoves)
+		if ((I->getRequiredMoves() <= availableMoves) && (I->getRequiredCaptures() <= availableCaptures))
 		{
 			I++;
 		}
@@ -184,7 +202,7 @@ int FinalSquares::computeRequiredMoves(const Board& board, Color color, const Ca
 {
 	int minimum = infinity;
 
-	/* -- Compute required for for each possible final square -- */
+	/* -- Compute required moves for each possible final square -- */
 
 	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); I++)
 	{
@@ -207,7 +225,7 @@ int FinalSquares::computeRequiredMoves(const Board& board, Color color, const Ca
 
 int FinalSquares::getRequiredMoves(array<int, NumSquares>& squares) const
 {
-	/* Find minimum number of moves to reach occupied squares -- */
+	/* -- Find minimum number of moves to reach occupied squares -- */
 
 	for (finalsquares_t::const_iterator I = this->squares.begin(); I != this->squares.end(); I++)
 	{
@@ -227,6 +245,57 @@ int FinalSquares::getRequiredMoves(array<int, NumSquares>& squares) const
 int FinalSquares::getRequiredMoves() const
 {
 	return requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::computeRequiredCaptures(const Board& board, Color color)
+{
+	int minimum = infinity;
+
+	/* -- Compute required captures for each possible final square -- */
+
+	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); I++)
+	{
+		/* -- Keep minimum value -- */
+
+		int requiredCaptures = I->computeRequiredCaptures(board, color);
+		if (requiredCaptures < minimum)
+			minimum = requiredCaptures;
+	}
+
+	/* -- Update required moves for current man -- */
+
+	if (minimum > requiredCaptures)
+		requiredCaptures = minimum;
+
+	return getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::getRequiredCaptures(array<int, NumSquares>& squares) const
+{
+	/* -- Find minimum number of captures to reach occupied squares -- */
+
+	for (finalsquares_t::const_iterator I = this->squares.begin(); I != this->squares.end(); I++)
+	{
+		int requiredCaptures = I->getRequiredCaptures();
+		Square square = *I;
+
+		if (requiredCaptures < squares[square])
+			if (!I->isEmpty())
+				squares[square] = requiredCaptures;
+	}
+
+	return getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int FinalSquares::getRequiredCaptures() const
+{
+	return requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
