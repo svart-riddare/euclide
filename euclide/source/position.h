@@ -16,9 +16,13 @@ class Pieces
 
 		bool applyNonUbiquityPrinciple();
 		bool applyMoveConstraints(int availableMoves);
-
+		bool applyCaptureConstraints(int availableCaptures);
+		
 		int computeRequiredMoves(const Board& board);
 		int getRequiredMoves() const;
+
+		int computeRequiredCaptures(const Board& board);
+		int getRequiredCaptures() const;
 		
 	private :
 		array<Glyph, NumSquares> glyphs;

@@ -7,6 +7,7 @@
 
 void makeSupermanToGlyph(void);
 void makeInitialDistances(void);
+void makeInitialCaptures(void);
 void makeInitialSquares(void);
 void makeMovements(void);
 
@@ -18,6 +19,7 @@ const makefunction MakeFunctions[] =
 {
 	makeSupermanToGlyph,
 	makeInitialDistances,
+	makeInitialCaptures,
 	makeInitialSquares,
 	makeMovements,
 	NULL

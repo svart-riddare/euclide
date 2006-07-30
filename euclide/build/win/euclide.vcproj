@@ -294,6 +294,10 @@
 			Name="Table Files"
 			>
 			<File
+				RelativePath="..\..\source\tables\initialcaptures.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\tables\initialdistances.cpp"
 				>
 			</File>

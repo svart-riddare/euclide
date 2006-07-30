@@ -12,7 +12,7 @@ Board::Board()
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 			for (Square to = FirstSquare; to <= LastSquare; to++)
-				blockedMovements[glyph][from][to] = tables::validMovements[glyph][from][to] ? 0 : infinity;
+				blockedMovements[glyph][from][to] = (tables::validMovements[glyph][from][to] || tables::validCaptures[glyph][from][to]) ? 0 : infinity;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -123,7 +123,7 @@ int Board::distance(Man man, Superman superman, Color color, Square to, const Ca
 		if (blocks > 0)
 			minimum = distance(man, superman, color, tables::initialSquares[man][color], to);
 		else
-			minimum = distanze(man, superman, color, to);
+			minimum = idistance(man, superman, color, to);
 
 	if (castling.isKingsidePossible(man))
 		minimum = std::min(minimum, distance(man, superman, color, castling.kingsideSquare(man, color), to) + ((man == King) ? 1 : 0));
@@ -136,7 +136,7 @@ int Board::distance(Man man, Superman superman, Color color, Square to, const Ca
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distanze(Man man, Superman superman, Color color, Square to) const
+int Board::idistance(Man man, Superman superman, Color color, Square to) const
 {
 	assert(to.isValid());
 	assert(man.isValid());
@@ -152,6 +152,26 @@ int Board::distanze(Man man, Superman superman, Color color, Square to) const
 
 	Square square = tables::initialSquares[superman][color];
 	return tables::initialDistances[man][square][color] + tables::initialDistances[superman][to][color];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::icaptures(Man man, Superman superman, Color color, Square to) const
+{
+	assert(to.isValid());
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- Return number of required captures in original position on empty board -- */
+
+	if (man == superman)
+		return tables::initialCaptures[man][to][color];
+
+	/* -- Handle promoted men -- */
+
+	Square square = tables::initialSquares[superman][color];
+	return tables::initialCaptures[man][square][color] + tables::initialCaptures[superman][to][color];
 }
 
 /* -------------------------------------------------------------------------- */

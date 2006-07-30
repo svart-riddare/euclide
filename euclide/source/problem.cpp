@@ -25,8 +25,8 @@ Problem::Problem(const EUCLIDE_Problem *problem)
 
 	/* -- Count number of mens -- */
 
-	int numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, isWhiteGlyph);
-	int numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, isBlackGlyph);
+	numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, isWhiteGlyph);
+	numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, isBlackGlyph);
 
 	if ((numWhiteMen > NumMen) || (numBlackMen > NumMen))
 		abort(IncorrectInputError);
@@ -57,6 +57,15 @@ int Problem::moves(Color color) const
 		return (numHalfMoves + 1) / 2;
 
 	return numHalfMoves / 2;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Problem::captures(Color color) const
+{
+	assert(color.isValid());
+
+	return NumMen - ((color == White) ? numBlackMen : numWhiteMen);
 }
 
 /* -------------------------------------------------------------------------- */
