@@ -146,6 +146,31 @@ bool FinalSquares::applyDeduction(Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
+bool FinalSquares::applyDeduction(const array<int, NumSquares>& availableMoves, const array<int, NumSquares>& availableCaptures)
+{
+	bool modified = false;
+
+	for (finalsquares_t::iterator I = squares.begin(); I != squares.end(); )
+	{
+		if ((I->getRequiredMoves() <= availableMoves[(Square)*I]) && (I->getRequiredCaptures() <= availableCaptures[(Square)*I]))
+		{
+			I++;
+		}
+		else
+		{
+			modified = true;
+			I = squares.erase(I);
+		}
+	}
+
+	if (modified)
+		applyDeduction();
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool FinalSquares::applyDeduction(int availableMoves, int availableCaptures)
 {
 	bool modified = false;

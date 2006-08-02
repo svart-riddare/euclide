@@ -120,7 +120,7 @@ bool Pieces::applyMoveConstraints(int availableMoves)
 {
 	bool modified = false;
 
-	/* -- Compute number of assigned moves -- */
+	/* -- Compute number of assigned moves to men -- */
 
 	int requiredMoves = 0;
 	for (Man man = FirstMan; man <= LastMan; man++)
@@ -132,6 +132,31 @@ bool Pieces::applyMoveConstraints(int availableMoves)
 		if (squares[man].applyDeduction(squares[man].getRequiredMoves() + availableMoves - requiredMoves, infinity))
 			modified = true;
 
+	/* -- Compute number of assigned moves to each square -- */
+
+	requiredMoves = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (glyphs[square].isColor(color))
+			requiredMoves += assignedMoves[square];
+
+	/* -- Compute number of available moves for each square -- */
+
+	array<int, NumSquares> unassignedMoves;
+	array<int, NumSquares> unassignedCaptures;
+	
+	unassignedMoves.assign(availableMoves - requiredMoves);
+	unassignedCaptures.assign(infinity);
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (glyphs[square].isColor(color))
+			unassignedMoves[square] += assignedMoves[square];
+
+	/* -- Apply move constraints -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (squares[man].applyDeduction(unassignedMoves, unassignedCaptures))
+			modified = true;
+
 	return modified;
 }
 
@@ -141,7 +166,7 @@ bool Pieces::applyCaptureConstraints(int availableCaptures)
 {
 	bool modified = false;
 
-	/* -- Compute number of assigned captures -- */
+	/* -- Compute number of assigned captures to men -- */
 
 	int requiredCaptures = 0;
 	for (Man man = FirstMan; man <= LastMan; man++)
@@ -151,6 +176,31 @@ bool Pieces::applyCaptureConstraints(int availableCaptures)
 
 	for (Man man = FirstMan; man <= LastMan; man++)
 		if (squares[man].applyDeduction(infinity, squares[man].getRequiredCaptures() + availableCaptures - requiredCaptures))
+			modified = true;
+
+	/* -- Compute number of assigned captures to each square -- */
+
+	requiredCaptures = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (glyphs[square].isColor(color))
+			requiredCaptures += assignedCaptures[square];
+
+	/* -- Compute number of available moves for each square -- */
+
+	array<int, NumSquares> unassignedMoves;
+	array<int, NumSquares> unassignedCaptures;
+	
+	unassignedCaptures.assign(availableCaptures - requiredCaptures);
+	unassignedMoves.assign(infinity);
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (glyphs[square].isColor(color))
+			unassignedCaptures[square] += assignedCaptures[square];
+
+	/* -- Apply capture constraints -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (squares[man].applyDeduction(unassignedMoves, unassignedCaptures))
 			modified = true;
 
 	return modified;
@@ -174,16 +224,15 @@ int Pieces::computeRequiredMoves(const Board& board)
 
 	/* -- Sum required moves for each occupied square -- */
 
-	array<int, NumSquares> squareRequiredMoves;
-	squareRequiredMoves.assign(infinity);
+	assignedMoves.assign(infinity);
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		squares[man].getRequiredMoves(squareRequiredMoves);
+		squares[man].getRequiredMoves(assignedMoves);
 
 	requiredMoves = 0;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (glyphs[square].isColor(color))
-			requiredMoves += squareRequiredMoves[square];
+			requiredMoves += assignedMoves[square];
 
 	/* -- Keep result -- */
 
@@ -220,16 +269,15 @@ int Pieces::computeRequiredCaptures(const Board &board)
 
 	/* -- Sum required captures for each occupied square -- */
 
-	array<int, NumSquares> squareRequiredCaptures;
-	squareRequiredCaptures.assign(infinity);
+	assignedCaptures.assign(infinity);
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		squares[man].getRequiredCaptures(squareRequiredCaptures);
+		squares[man].getRequiredCaptures(assignedCaptures);
 
 	requiredCaptures = 0;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (glyphs[square].isColor(color))
-			requiredCaptures += squareRequiredCaptures[square];
+			requiredCaptures += assignedCaptures[square];
 
 	/* -- Keep result -- */
 
