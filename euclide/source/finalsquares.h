@@ -60,6 +60,7 @@ class FinalSquares
 
 		operator const finalsquares_t&() const;
 
+		bool applyDeduction(const array<int, NumSquares>& availableMoves, const array<int, NumSquares>& availableCaptures);
 		bool applyDeduction(int availableMoves, int availableCaptures);
 		bool applyDeduction(Square square, bool captured);
 		bool applyDeduction();

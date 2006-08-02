@@ -30,6 +30,9 @@ class Pieces
 		array<Glyph, NumSquares> glyphs;
 		array<FinalSquares, NumMen> squares;
 
+		array<int, NumSquares> assignedMoves;
+		array<int, NumSquares> assignedCaptures;
+
 		Castling castling;
 		Color color;
 
