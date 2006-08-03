@@ -125,6 +125,10 @@ EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Configuration *pConfiguration, const 
 
 /* -------------------------------------------------------------------------- */
 
+#if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
+	#undef _Bool
+#endif
+
 #ifdef __cplusplus
 }
 #endif
