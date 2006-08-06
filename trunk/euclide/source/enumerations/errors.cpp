@@ -14,8 +14,12 @@ void abort(error_t error)
 
 void assert(bool expression)
 {
+#ifndef NDEBUG
 	if (!expression)
 		abort(InternalLogicError);
+#else
+	expression;
+#endif
 }
 
 /* -------------------------------------------------------------------------- */
