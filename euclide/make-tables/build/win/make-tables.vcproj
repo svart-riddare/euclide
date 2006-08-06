@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\make-obstructions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\make-tables.cpp"
 				>
 			</File>

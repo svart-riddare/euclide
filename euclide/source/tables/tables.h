@@ -28,6 +28,16 @@ extern const bool validCaptures[NumGlyphs][NumSquares][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 
+extern const bool *obstructions[];
+extern const bool *whiteObstructions[];
+extern const bool *blackObstructions[];
+
+extern const int numObstructions;
+extern const int numWhiteObstructions;
+extern const int numBlackObstructions;
+
+/* -------------------------------------------------------------------------- */
+
 }}
 
 #endif
