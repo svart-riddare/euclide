@@ -314,6 +314,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\tables\obstructions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\tables\tables.h"
 				>
 			</File>

@@ -55,7 +55,7 @@ void makeMovements(void)
 						isValid = true;
 
 				if (glyph == WhitePawn)
-					if (verticalDelta == 1)
+					if ((verticalDelta == 1) && (from.row() != One))
 						if (!horizontalDistance)
 							isValid = true;
 
@@ -65,7 +65,7 @@ void makeMovements(void)
 							isValid = true;
 
 				if (glyph == BlackPawn)
-					if (verticalDelta == -1)
+					if ((verticalDelta == -1) && (from.row() != Eight))
 						if (!horizontalDistance)
 							isValid = true;
 
@@ -107,36 +107,38 @@ void makeMovements(void)
 				int verticalDistance = abs(verticalDelta);
 
 
-				if ((glyph == WhiteKing) || (glyph == BlackKing))
+				if (glyph.isKing())
 					if (horizontalDistance <= 1)
 						if (verticalDistance <= 1)
 							isValid = true;
 
-				if ((glyph == WhiteQueen) || (glyph == BlackQueen))
+				if (glyph.isQueen())
 					if (!horizontalDistance || !verticalDistance || (horizontalDistance == verticalDistance))
 						isValid = true;
 
-				if ((glyph == WhiteRook) || (glyph == BlackRook))
+				if (glyph.isRook())
 					if (!horizontalDistance || !verticalDistance)
 						isValid = true;
 
-				if ((glyph == WhiteBishop) || (glyph == BlackBishop))
+				if (glyph.isBishop())
 					if (horizontalDistance == verticalDistance)
 						isValid = true;
 
-				if ((glyph == WhiteKnight) || (glyph == BlackKnight))
+				if (glyph.isKnight())
 					if ((horizontalDistance * verticalDistance) == 2)
 						isValid = true;
 
 				if (glyph == WhitePawn)
 					if (verticalDelta == 1)
-						if (abs(horizontalDistance) == 1)
-							isValid = true;
+						if (horizontalDistance == 1)
+							if (from.row() != One)
+								isValid = true;
 
 				if (glyph == BlackPawn)
 					if (verticalDelta == -1)
-						if (abs(horizontalDistance) == 1)
-							isValid = true;
+						if (horizontalDistance == 1)
+							if (from.row() != Eight)
+								isValid = true;
 
 				fprintf(file, "%s, ", isValid ? " true" : "false");
 			}

@@ -7,17 +7,78 @@ namespace euclide
 
 Board::Board()
 {
-	blocks = 0;
+	empty = true;
+
+	/* -- Initialize table of allowed movements -- */
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 			for (Square to = FirstSquare; to <= LastSquare; to++)
-				blockedMovements[glyph][from][to] = (tables::validMovements[glyph][from][to] || tables::validCaptures[glyph][from][to]) ? 0 : infinity;
+				movements[glyph][from][to] = (tables::validMovements[glyph][from][to] || tables::validCaptures[glyph][from][to]) ? 0 : infinity;
+
+	/* -- Allocate memory for obstruction tables -- */
+
+	obstructions[NoGlyph][0] = new int *[tables::numObstructions];
+	obstructions[WhiteKing][0] = new int *[tables::numWhiteObstructions];
+	obstructions[BlackKing][0] = new int *[tables::numBlackObstructions];
+
+	/* -- Fill obstruction tables, hacker's style -- */
+
+	int n = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
+	{
+		obstructions[NoGlyph][square] = &obstructions[NoGlyph][0][n];
+
+		for ( ; tables::obstructions[n]; n++)
+			obstructions[NoGlyph][0][n] = (int *)movements + (tables::obstructions[n] - &tables::validMovements[0][0][0]);
+
+		obstructions[NoGlyph][0][n] = NULL;
+	}
+
+	n = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
+	{
+		obstructions[WhiteKing][square] = &obstructions[WhiteKing][0][n];
+
+		for ( ; tables::whiteObstructions[n]; n++)
+			obstructions[WhiteKing][0][n] = (int *)movements + (tables::whiteObstructions[n] - &tables::validMovements[0][0][0]);
+
+		obstructions[WhiteKing][0][n] = NULL;
+	}
+
+	n = 0;
+	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
+	{
+		obstructions[BlackKing][square] = &obstructions[BlackKing][0][n];
+
+		for ( ; tables::blackObstructions[n]; n++)
+			obstructions[BlackKing][0][n] = (int *)movements + (tables::blackObstructions[n] - &tables::validMovements[0][0][0]);
+
+		obstructions[BlackKing][0][n] = NULL;
+	}
+
+	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+	{
+		if (glyph.isWhite())
+			std::copy(obstructions[WhiteKing], obstructions[WhiteKing] + NumSquares, obstructions[glyph]);
+
+		if (glyph.isBlack())
+			std::copy(obstructions[BlackKing], obstructions[BlackKing] + NumSquares, obstructions[glyph]);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(const int blockedMovements[NumSquares][NumSquares], Square from, Square to)
+Board::~Board()
+{
+	delete[] obstructions[NoGlyph][0];
+	delete[] obstructions[WhiteKing][0];
+	delete[] obstructions[BlackKing][0];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::distance(const int movements[NumSquares][NumSquares], Square from, Square to)
 {
 	assert(from.isValid());
 	assert(to.isValid());
@@ -53,7 +114,7 @@ int Board::distance(const int blockedMovements[NumSquares][NumSquares], Square f
 		{
 			/* -- Check whether this movement is forbiden -- */
 
-			if (blockedMovements[from][square])
+			if (movements[from][square])
 				continue;
 
 			/* -- Check if the square has been attained by a quicker path -- */
@@ -81,7 +142,7 @@ int Board::distance(const int blockedMovements[NumSquares][NumSquares], Square f
 int Board::distance(Glyph glyph, Square from, Square to) const
 {
 	assert(glyph.isValid());
-	return distance(blockedMovements[glyph], from, to);
+	return distance(movements[glyph], from, to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -120,7 +181,7 @@ int Board::distance(Man man, Superman superman, Color color, Square to, const Ca
 	int minimum = infinity;
 
 	if (castling.isNonePossible(man))
-		if (blocks > 0)
+		if (!empty)
 			minimum = distance(man, superman, color, tables::initialSquares[man][color], to);
 		else
 			minimum = idistance(man, superman, color, to);
@@ -172,6 +233,38 @@ int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 
 	Square square = tables::initialSquares[superman][color];
 	return tables::initialCaptures[man][square][color] + tables::initialCaptures[superman][to][color];
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::block(Glyph glyph, Square square, bool captured)
+{
+	assert(glyph.isValid());
+	assert(square.isValid());
+
+	empty = false;
+
+	for (int **obstructions = this->obstructions[captured ? glyph : NoGlyph][square]; *obstructions; obstructions++)
+		**obstructions += 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::block(Glyph glyph, Square from, Square to, bool captured)
+{
+	unblock(glyph, from);
+	block(glyph, to, captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::unblock(Glyph glyph, Square square, bool captured)
+{
+	assert(glyph.isValid());
+	assert(square.isValid());
+
+	for (int **obstructions = this->obstructions[square][captured ? glyph : NoGlyph]; *obstructions; obstructions++)
+		**obstructions -= 1;
 }
 
 /* -------------------------------------------------------------------------- */
