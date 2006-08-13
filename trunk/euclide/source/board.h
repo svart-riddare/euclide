@@ -15,12 +15,20 @@ class Board
 		~Board();
 
 		int distance(Glyph glyph, Square from, Square to) const;
-		int distance(Superman superman, Color color, Square square, Square to) const;
+		int distance(Superman superman, Color color, Square from, Square to) const;
 		int distance(Man man, Superman superman, Color color, Square from, Square to) const;
 		int distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const;
+
+		int captures(Glyph glyph, Square from, Square to) const;
+		int captures(Superman superman, Color color, Square from, Square to) const;
+		int captures(Man man, Superman superman, Color color, Square from, Square to) const;
+		int captures(Man man, Superman superman, Color color, Square to) const;
 		
 		int idistance(Man man, Superman superman, Color color, Square to) const;
 		int icaptures(Man man, Superman superman, Color color, Square to) const;
+
+		int captures(Glyph glyph, Square from, Square to, vector<SquareSet>& captures) const;
+		int captures(Man man, Superman superman, Color color, Square from, Square to, vector<SquareSet>& captures) const;
 
 		void block(Glyph glyph, Square square, bool captured = false);
 		void block(Glyph glyph, Square from, Square to, bool captured = false);
@@ -28,6 +36,7 @@ class Board
 
 	protected :
 		static int distance(const int movements[NumSquares][NumSquares], Square from, Square to);
+		static int captures(const int movements[NumSquares][NumSquares], const bool captures[NumSquares][NumSquares], Square from, Square to);
 
 	private :
 		int movements[NumGlyphs][NumSquares][NumSquares];

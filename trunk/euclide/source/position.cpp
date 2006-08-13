@@ -298,9 +298,46 @@ int Pieces::getRequiredCaptures() const
 
 /* -------------------------------------------------------------------------- */
 
+void Pieces::getCaptureSquares(const Board& board, vector<SquareSet>& captures)
+{
+	captures.clear();
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+	{
+		/* -- Check if there is any required captures -- */
+
+		if (squares[man].getRequiredCaptures() <= 0)
+			continue;
+
+		/* -- Compute the required squares for capture -- */
+
+		const finalsquares_t& squares = this->squares[man];
+		vector<SquareSet> manCaptures;
+
+		if (squares.size() > 1)
+			continue;
+
+		const FinalSquare& square = squares[0];
+		board.captures(man, square.operator Superman(), color, tables::initialSquares[man][color], (Square)square, manCaptures);
+
+		/* -- Add capture squares to general array -- */
+
+		captures.insert(captures.end(), manCaptures.begin(), manCaptures.end());
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
 const FinalSquares& Pieces::operator[](Man man) const
 {
 	return squares[man];
+}
+
+/* -------------------------------------------------------------------------- */
+
+Pieces::operator vector<SquareSet>&()
+{
+	return captures;
 }
 
 /* -------------------------------------------------------------------------- */

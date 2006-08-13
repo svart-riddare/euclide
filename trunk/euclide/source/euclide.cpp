@@ -129,6 +129,43 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	if (callbacks.displayDeductions)
 		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
+
+	/* -- Find squares where required captures have occured -- */
+
+	whitePieces->getCaptureSquares(*board, *blackPieces);
+	blackPieces->getCaptureSquares(*board, *whitePieces);
+
+	/* -- Recompute move requirements -- */
+
+	do
+	{
+		whitePieces->computeRequiredMoves(*board);
+		whitePieces->applyMoveConstraints(problem->moves(White));
+		
+		whitePieces->computeRequiredCaptures(*board);
+		whitePieces->applyCaptureConstraints(problem->captures(White));
+	}
+	while (whitePieces->applyNonUbiquityPrinciple());
+
+	do
+	{
+		blackPieces->computeRequiredMoves(*board);
+		blackPieces->applyMoveConstraints(problem->moves(Black));
+		
+		blackPieces->computeRequiredCaptures(*board);
+		blackPieces->applyCaptureConstraints(problem->captures(Black));
+	}
+	while (blackPieces->applyNonUbiquityPrinciple());
+
+	/* -- Display actual deductions -- */
+	
+	deductions = *this;
+
+	if (callbacks.displayFreeMoves)
+		(*callbacks.displayFreeMoves)(callbacks.handle, problem->moves(White) - whitePieces->getRequiredMoves(), problem->moves(Black) - blackPieces->getRequiredMoves());
+
+	if (callbacks.displayDeductions)
+		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
 }
 
 /* -------------------------------------------------------------------------- */

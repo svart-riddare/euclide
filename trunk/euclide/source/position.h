@@ -24,11 +24,15 @@ class Pieces
 		int computeRequiredCaptures(const Board& board);
 		int getRequiredCaptures() const;
 
+		void getCaptureSquares(const Board& board, vector<SquareSet>& captures);
+
 		const FinalSquares& operator[](Man man) const;
+		operator vector<SquareSet>&();
 		
 	private :
 		array<Glyph, NumSquares> glyphs;
 		array<FinalSquares, NumMen> squares;
+		vector<SquareSet> captures;
 
 		array<int, NumSquares> assignedMoves;
 		array<int, NumSquares> assignedCaptures;

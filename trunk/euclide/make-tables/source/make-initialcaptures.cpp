@@ -35,6 +35,14 @@ void makeInitialCaptures(void)
 	}
 
 	fprintf(file, "};\n");
+	file.comment();
+
+	fprintf(file, "const int maxCaptures[NumGlyphs] = \n{\n");
+
+	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+		fprintf(file, "\t%d,  /* %s */\n", glyph.isPawn() ? 6 : 0, strings::glyphs[glyph]);
+
+	fprintf(file, "};\n");
 }
 
 /* -------------------------------------------------------------------------- */

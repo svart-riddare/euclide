@@ -21,6 +21,8 @@ extern const Square initialSquares[NumSupermen][NumColors];
 extern const int initialDistances[NumSupermen][NumSquares][NumColors];
 extern const int initialCaptures[NumSupermen][NumSquares][NumColors];
 
+extern const int maxCaptures[NumGlyphs];
+
 /* -------------------------------------------------------------------------- */
 
 extern const bool validMovements[NumGlyphs][NumSquares][NumSquares];

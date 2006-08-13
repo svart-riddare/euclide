@@ -12,7 +12,7 @@ namespace tables
 {
 
 /* --------------------------------------------------------------------------
-   -- Computer generated with make-tables on Sun Jul 30 17:26:15 2006
+   -- Computer generated with make-tables on Mon Aug 07 22:02:44 2006
    -------------------------------------------------------------------------- */
 
 const int initialCaptures[NumSupermen][NumSquares][NumColors] =
@@ -3185,6 +3185,25 @@ const int initialCaptures[NumSupermen][NumSquares][NumColors] =
 		{ 0, 0 },  /* H7 */
 		{ 0, 0 },  /* H8 */
 	},
+};
+
+/* -------------------------------------------------------------------------- */
+
+const int maxCaptures[NumGlyphs] = 
+{
+	0,  /* NoGlyph */
+	0,  /* WhiteKing */
+	0,  /* WhiteQueen */
+	0,  /* WhiteRook */
+	0,  /* WhiteBishop */
+	0,  /* WhiteKnight */
+	6,  /* WhitePawn */
+	0,  /* BlackKing */
+	0,  /* BlackQueen */
+	0,  /* BlackRook */
+	0,  /* BlackBishop */
+	0,  /* BlackKnight */
+	6,  /* BlackPawn */
 };
 
 /* -------------------------------------------------------------------------- */
