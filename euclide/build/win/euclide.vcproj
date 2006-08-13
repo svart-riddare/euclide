@@ -311,7 +311,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\predicates.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\problem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\sets.h"
 				>
 			</File>
 		</Filter>

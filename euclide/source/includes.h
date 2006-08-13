@@ -8,15 +8,20 @@
 /* -------------------------------------------------------------------------- */
 
 #include <algorithm>
+#include <bitset>
 #include <functional>
 #include <new>
 #include <list>
 #include <queue>
 #include <vector>
+#include <utility>
 
+using std::bitset;
 using std::list;
 using std::queue;
+using std::priority_queue;
 using std::vector;
+using std::pair;
 
 /* -------------------------------------------------------------------------- */
 
@@ -38,6 +43,8 @@ using boost::logic::indeterminate;
 #include "enumerations.h"
 #include "constants.h"
 #include "tables.h"
+#include "sets.h"
+#include "predicates.h"
 
 using euclide::constants::infinity;
 

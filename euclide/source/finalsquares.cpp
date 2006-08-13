@@ -43,7 +43,7 @@ int FinalSquare::getRequiredMoves() const
 
 int FinalSquare::computeRequiredCaptures(const Board& board, Color color)
 {
-	int captures = board.icaptures(man, superman, color, square);
+	int captures = board.captures(man, superman, color, square);
 	if (captures > requiredCaptures)
 		requiredCaptures = captures;
 

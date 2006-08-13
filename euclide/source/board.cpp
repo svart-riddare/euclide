@@ -99,7 +99,7 @@ int Board::distance(const int movements[NumSquares][NumSquares], Square from, Sq
 	distances.assign(-1);
 	distances[from] = 0;
 
-	/* -- Loop while there is still an intermediate square -- */
+	/* -- Loop until finding the minimum distance -- */
 
 	while (!squares.empty())
 	{
@@ -147,12 +147,12 @@ int Board::distance(Glyph glyph, Square from, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(Superman superman, Color color, Square square, Square to) const
+int Board::distance(Superman superman, Color color, Square from, Square to) const
 {
 	assert(superman.isValid());
 	assert(color.isValid());
 
-	return distance(tables::supermanToGlyph[superman][color], square, to);
+	return distance(tables::supermanToGlyph[superman][color], from, to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -217,6 +217,121 @@ int Board::idistance(Man man, Superman superman, Color color, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
+int Board::captures(const int movements[NumSquares][NumSquares], const bool captures[NumSquares][NumSquares], Square from, Square to)
+{
+	assert(from.isValid());
+	assert(to.isValid());
+
+	/* -- Handle case where no movement is required -- */
+
+	if (from == to)
+		return 0;
+
+	/* -- Initialize distances (number of captures) -- */
+
+	array<int, NumSquares> distances;
+	distances.assign(-1);
+	distances[from] = 0;
+
+	/* -- Initialize ordered square queue -- */
+
+	_greater<int, NumSquares> priority(distances);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares>> squares(priority);
+	squares.push(from);
+
+	/* -- Loop until finding the least number of captures -- */
+
+	while (!squares.empty())
+	{
+		/* -- Remove first queue square -- */
+
+		Square from = squares.top(); squares.pop();
+		int distance = distances[from];
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			/* -- Check whether this movement is forbiden -- */
+
+			if (movements[from][square])
+				continue;
+
+			/* -- Check if the square has been attained by a quicker path -- */
+
+			if (distances[square] >= 0)
+				continue;
+			
+			/* -- Add square to queue -- */
+
+			distances[square] = distance + (captures[from][square] ? 1 : 0);
+			squares.push(square);
+			
+			/* -- Have we reached our destination? -- */
+
+			if (square == to)
+				return distances[square];
+		}
+	}
+
+	return infinity;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Glyph glyph, Square from, Square to) const
+{
+	assert(glyph.isValid());
+
+	/* -- Some pieces do not need to capture in order to move -- */
+
+	if (!tables::maxCaptures[glyph])
+		return 0;
+
+	return captures(movements[glyph], tables::validCaptures[glyph], from, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Superman superman, Color color, Square from, Square to) const
+{
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	return captures(tables::supermanToGlyph[superman][color], from, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return captures(man, color, from, to);
+
+	/* -- Handle promoted men -- */
+
+	Square square = tables::initialSquares[superman][color];
+	return captures(man, color, from, square) + captures(superman, color, square, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Man man, Superman superman, Color color, Square to) const
+{
+	if (empty)
+		return icaptures(man, superman, color, to);
+
+	return captures(man, superman, color, tables::initialSquares[man][color], to);
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 {
 	assert(to.isValid());
@@ -233,6 +348,142 @@ int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 
 	Square square = tables::initialSquares[superman][color];
 	return tables::initialCaptures[man][square][color] + tables::initialCaptures[superman][to][color];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Glyph glyph, Square from, Square to, vector<SquareSet>& captures) const
+{
+	assert(glyph.isValid());
+	assert(from.isValid());
+	assert(to.isValid());
+
+	/* -- Some pieces does not need to capture in order to move -- */
+
+	captures.clear();
+	if (!tables::maxCaptures[glyph])
+		return 0;
+
+	/* -- Initialize distances (number of captures) -- */
+
+	array<int, NumSquares> distances;
+	distances.assign(infinity);
+	distances[from] = 0;
+
+	/* -- Initialize ordered square queue -- */
+
+	_greater<int, NumSquares> priority(distances);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares>> squares(priority);
+	squares.push(from);
+
+	/* -- Initialize reverse move graph -- */
+
+	array<list<Square>, NumSquares> moves;
+
+	/* -- Loop until all moves have been tabulated -- */
+
+	while (!squares.empty())
+	{
+		/* -- Remove first queue square -- */
+
+		Square from = squares.top(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			/* -- Check whether this movement is forbiden -- */
+
+			if (movements[glyph][from][square])
+				continue;
+
+			/* -- Compute distance -- */
+
+			int distance = distances[from] + (tables::validCaptures[glyph][from][square] ? 1 : 0);
+
+			if (distance > distances[square])
+				continue;
+
+			/* -- Update distance, build move graph and insert square once -- */
+
+			bool insert = (distances[square] == infinity);
+
+			moves[square].push_back(from);
+			distances[square] = distance;
+
+			if (insert)
+				squares.push(square);
+		}
+	}
+
+	/* -- Initialize output capture list -- */
+
+	if (distances[to] > 0)
+	{
+		captures.resize(distances[to]);
+
+		/* -- Start from destination square to build all possible minimal paths -- */
+
+		array<bool, NumSquares> visited;
+		visited.assign(false);
+
+		visited[from] = true;
+		visited[to] = true;
+
+		queue<Square> squares;
+		squares.push(to);
+
+		while (!squares.empty())
+		{
+			Square from = squares.front(); squares.pop();
+
+			for (list<Square>::const_iterator I = moves[from].begin(); I != moves[from].end(); I++)
+			{
+				if (!visited[*I])
+					squares.push(*I);
+
+				visited[*I] = true;
+			}
+		}
+
+		/* -- We are now ready to collect the captures -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			for (list<Square>::const_iterator I = moves[square].begin(); I != moves[square].end(); I++)
+			{
+				if (!tables::validCaptures[glyph][*I][square])
+					continue;
+
+				if (!visited[*I] || !visited[square])
+					continue;
+
+				assert(distances[*I] < distances[to]);
+				captures[distances[*I]].set(square);
+			}
+		}
+	}
+	
+	return distances[to];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<SquareSet>& captures) const
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return this->captures(tables::supermanToGlyph[superman][color], from, to, captures);
+
+	/* -- Handle promoted men -- */
+
+	Square square = tables::initialSquares[superman][color];
+	return this->captures(tables::supermanToGlyph[man][color], from, square) + this->captures(tables::supermanToGlyph[superman][color], square, to);
 }
 
 /* -------------------------------------------------------------------------- */
