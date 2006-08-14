@@ -11,6 +11,7 @@
 #include <bitset>
 #include <functional>
 #include <new>
+#include <numeric>
 #include <list>
 #include <queue>
 #include <vector>
@@ -30,7 +31,6 @@ using std::pair;
 #include <boost/array.hpp>
 #include <boost/logic/tribool.hpp>
 
-using boost::array;
 using boost::logic::tribool;
 using boost::logic::indeterminate;
 
@@ -40,11 +40,16 @@ using boost::logic::indeterminate;
 
 /* -------------------------------------------------------------------------- */
 
+#include "utilities/array.h"
+#include "utilities/algorithm.h"
+#include "utilities/predicates.h"
+
+/* -------------------------------------------------------------------------- */
+
 #include "enumerations.h"
 #include "constants.h"
 #include "tables.h"
 #include "sets.h"
-#include "predicates.h"
 
 using euclide::constants::infinity;
 

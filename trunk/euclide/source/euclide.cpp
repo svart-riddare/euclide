@@ -109,60 +109,12 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 		blackPieces->applyCaptureConstraints(problem->captures(Black));
 	}
 
-	/* -- Display number of free moves -- */
-
-	int whiteMoves = problem->moves(White);
-	int blackMoves = problem->moves(Black);
-
-	int requiredWhiteMoves = whitePieces->getRequiredMoves();
-	int requiredBlackMoves = blackPieces->getRequiredMoves();
-
-	int freeWhiteMoves = whiteMoves - requiredWhiteMoves;
-	int freeBlackMoves = blackMoves - requiredBlackMoves;
-
-	if (callbacks.displayFreeMoves)
-		(*callbacks.displayFreeMoves)(callbacks.handle, freeWhiteMoves, freeBlackMoves);
-
 	/* -- Display actual deductions -- */
 	
 	EUCLIDE_Deductions deductions = *this;
 
-	if (callbacks.displayDeductions)
-		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
-
-	/* -- Find squares where required captures have occured -- */
-
-	whitePieces->getCaptureSquares(*board, *blackPieces);
-	blackPieces->getCaptureSquares(*board, *whitePieces);
-
-	/* -- Recompute move requirements -- */
-
-	do
-	{
-		whitePieces->computeRequiredMoves(*board);
-		whitePieces->applyMoveConstraints(problem->moves(White));
-		
-		whitePieces->computeRequiredCaptures(*board);
-		whitePieces->applyCaptureConstraints(problem->captures(White));
-	}
-	while (whitePieces->applyNonUbiquityPrinciple());
-
-	do
-	{
-		blackPieces->computeRequiredMoves(*board);
-		blackPieces->applyMoveConstraints(problem->moves(Black));
-		
-		blackPieces->computeRequiredCaptures(*board);
-		blackPieces->applyCaptureConstraints(problem->captures(Black));
-	}
-	while (blackPieces->applyNonUbiquityPrinciple());
-
-	/* -- Display actual deductions -- */
-	
-	deductions = *this;
-
 	if (callbacks.displayFreeMoves)
-		(*callbacks.displayFreeMoves)(callbacks.handle, problem->moves(White) - whitePieces->getRequiredMoves(), problem->moves(Black) - blackPieces->getRequiredMoves());
+		(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
 
 	if (callbacks.displayDeductions)
 		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
@@ -179,7 +131,7 @@ Euclide::operator EUCLIDE_Deductions() const
 		for (Man man = FirstMan; man <= LastMan; man++)
 		{
 			EUCLIDE_Deduction *deduction = (color == White) ? &deductions.whitePieces[man] : &deductions.blackPieces[man];
-			const FinalSquares& squares = (color == White) ? (*whitePieces)[man] : (*blackPieces)[man];
+			const Pieces *pieces = (color == White) ? whitePieces : blackPieces;
 
 			deduction->initialGlyph = tables::supermanToGlyph[man][color].glyph_c();
 			deduction->promotionGlyph = deduction->initialGlyph;
@@ -187,19 +139,18 @@ Euclide::operator EUCLIDE_Deductions() const
 			deduction->initialSquare = tables::initialSquares[man][color];
 			deduction->finalSquare = -1;
 
-			deduction->requiredMoves = squares.getRequiredMoves();
-			deduction->numSquares = (int)((const finalsquares_t&)squares).size();
+			deduction->requiredMoves = pieces->getRequiredMoves(man);
+			deduction->numSquares = pieces->getNumDestinations(man);
 
-			deduction->captured = 0;
+			deduction->captured = false;
 
-			if (((const finalsquares_t&)squares).size() == 1)
+			if (deduction->numSquares == 1)
 			{
-				const FinalSquare& square = ((const finalsquares_t&)squares)[0];
-				Superman superman = /*(Superman)*/square;
+				const Destination& destination = pieces->getDestination(man);
 
-				deduction->promotionGlyph = tables::supermanToGlyph[superman][color].glyph_c();
-				deduction->finalSquare = (Square)square;
-				deduction->captured = square.isEmpty();
+				deduction->promotionGlyph = tables::supermanToGlyph[destination.superman()][destination.color()].glyph_c();
+				deduction->finalSquare = destination.square();
+				deduction->captured = destination.captured();
 			}
 		}
 	}

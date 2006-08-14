@@ -2,7 +2,7 @@
 #define __EUCLIDE_POSITION_H
 
 #include "includes.h"
-#include "finalsquares.h"
+#include "destinations.h"
 
 namespace euclide 
 {
@@ -19,29 +19,33 @@ class Pieces
 		bool applyCaptureConstraints(int availableCaptures);
 		
 		int computeRequiredMoves(const Board& board);
-		int getRequiredMoves() const;
-
 		int computeRequiredCaptures(const Board& board);
-		int getRequiredCaptures() const;
 
-		void getCaptureSquares(const Board& board, vector<SquareSet>& captures);
+		int getRequiredMoves(Man man) const;
+		int getNumDestinations(Man man) const;
+		const Destination& getDestination(Man man) const;
 
-		const FinalSquares& operator[](Man man) const;
-		operator vector<SquareSet>&();
+	public :
+		int getRequiredMoves() const
+			{ return requiredMoves; }
 		
+		int getRequiredCaptures() const
+			{ return requiredCaptures; }
+	
 	private :
 		array<Glyph, NumSquares> glyphs;
-		array<FinalSquares, NumMen> squares;
-		vector<SquareSet> captures;
-
-		array<int, NumSquares> assignedMoves;
-		array<int, NumSquares> assignedCaptures;
+		Destinations destinations;
 
 		Castling castling;
 		Color color;
 
 		int requiredMoves;
+		int requiredMovesByMen;
+		int requiredMovesBySquares;
+		
 		int requiredCaptures;
+		int requiredCapturesByMen;
+		int requiredCapturesBySquares;
 };
 
 /* -------------------------------------------------------------------------- */
