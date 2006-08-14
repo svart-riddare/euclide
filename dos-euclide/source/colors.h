@@ -20,10 +20,10 @@ static const WORD blackPieces = 0;
 static const WORD lightSquares = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
 static const WORD darkSquares = BACKGROUND_RED | BACKGROUND_BLUE;
 
-static const WORD whiteMoves = FOREGROUND_RED | FOREGROUND_GREEN;
-static const WORD whiteCaptures = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-static const WORD blackMoves = FOREGROUND_RED | FOREGROUND_GREEN;
-static const WORD blackCaptures = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+static const WORD whiteMoves = FOREGROUND_RED | FOREGROUND_GREEN  | FOREGROUND_BLUE;
+static const WORD whiteCaptures = FOREGROUND_RED | FOREGROUND_GREEN;
+static const WORD blackMoves = FOREGROUND_RED | FOREGROUND_GREEN  | FOREGROUND_BLUE;
+static const WORD blackCaptures = FOREGROUND_RED | FOREGROUND_GREEN;
 
 static const WORD numWhiteMoves = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 static const WORD numWhiteSquares = FOREGROUND_RED;
