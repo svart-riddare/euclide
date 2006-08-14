@@ -6,15 +6,19 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Pieces::Pieces(const Problem& problem, Color color)
+	: color(color)
 {
 	/* -- Member variable initialization -- */
 
-	this->color = color;
-
 	requiredMoves = 0;
-	requiredCaptures = 0;
+	requiredMovesByMen = 0;
+	requiredMovesBySquares = 0;
 
-	/* -- Associate with each man a possible final square -- */
+	requiredCaptures = 0;
+	requiredCapturesByMen = 0;
+	requiredCapturesBySquares = 0;
+
+	/* -- Associate with each man a possible destination -- */
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 	{
@@ -25,25 +29,25 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 		for (Man man = FirstMan; man <= LastMan; man++)
 			if (tables::supermanToGlyph[man][color] == glyph)
-				squares[man] += FinalSquare(square, man, man, false);
+				destinations += Destination(square, color, man, man, false);
 
 		/* -- Handle promoted pieces -- */
 
 		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
 			if (tables::supermanToGlyph[superman][color] == glyph)
 				for (Man man = FirstPawn; man <= LastPawn; man++)
-					squares[man] += FinalSquare(square, man, superman, false);
+					destinations += Destination(square, color, man, superman, false);
 
 		/* -- Each man also have been captured on any square -- */
 
 		for (Man man = FirstMan; man <= LastMan; man++)
-			squares[man] += FinalSquare(square, man, man, true);
+			destinations += Destination(square, color, man, man, true);
 
 		/* -- Pawns may also have been captured as promoted pieces -- */
 
 		for (Man man = FirstPawn; man <= LastPawn; man++)
 			for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
-				squares[man] += FinalSquare(square, man, superman, true);
+				destinations += Destination(square, color, man, superman, true);
 	}
 }
 
@@ -51,38 +55,31 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 bool Pieces::applyNonUbiquityPrinciple()
 {
-	array<bool, NumSquares> unique;
-	array<Man, NumSquares> men;
+	array<bool, NumSquares> unique(false);
+	array<Man, NumSquares> men(UndefinedMan);
 
-	unique.assign(false);
-	men.assign(UndefinedMan);
+	/* -- Scan the list of possible destinations -- */
 
-	/* -- Scan, for each man, the list of possible final squares -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
+	for (Destinations::const_iterator I = destinations.begin(); I != destinations.end(); I++)
 	{
-		const finalsquares_t& squares = this->squares[man];
+		/* -- Skip captures -- */
 
-		for (finalsquares_t::const_iterator I = squares.begin(); I != squares.end(); I++)
+		if (I->captured())
+			continue;
+
+		/* -- Check if a single man can end alive on a given square -- */
+
+		Square square = I->square();
+		Man man = I->man();
+
+		if (men[square] == UndefinedMan)
 		{
-			/* -- Skip captures -- */
-
-			if (I->isEmpty())
-				continue;
-
-			/* -- Check if it is the only man that can end alive on this square -- */
-
-			Square square = *I;
-
-			if (men[square] == UndefinedMan)
-			{
-				unique[square] = true;
-				men[square] = man;
-			}
-			else
-			if (men[square] != man)
-				unique[square] = false;
+			unique[square] = true;
+			men[square] = man;
 		}
+		else
+		if (men[square] != man)
+			unique[square] = false;
 	}
 
 	bool modified = false;
@@ -102,7 +99,7 @@ bool Pieces::applyNonUbiquityPrinciple()
 		/* -- Non ubiquity deduction -- */
 
 		if (unique[square])
-			if (squares[men[square]].applyDeduction(square, false))
+			if (destinations.setManSquare(men[square], square, false))
 				modified = true;
 	}	
 
@@ -118,136 +115,49 @@ bool Pieces::applyNonUbiquityPrinciple()
 
 bool Pieces::applyMoveConstraints(int availableMoves)
 {
-	bool modified = false;
-
-	/* -- Compute number of assigned moves to men -- */
-
-	int requiredMoves = 0;
-	for (Man man = FirstMan; man <= LastMan; man++)
-		requiredMoves += squares[man].getRequiredMoves();
-
-	/* -- Apply move constraint to each man -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (squares[man].applyDeduction(squares[man].getRequiredMoves() + availableMoves - requiredMoves, infinity))
-			modified = true;
-
-	/* -- Compute number of assigned moves to each square -- */
-
-	requiredMoves = 0;
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (glyphs[square].isColor(color))
-			requiredMoves += assignedMoves[square];
-
-	/* -- Compute number of available moves for each square -- */
-
-	array<int, NumSquares> unassignedMoves;
-	array<int, NumSquares> unassignedCaptures;
-	
-	unassignedMoves.assign(availableMoves - requiredMoves);
-	unassignedCaptures.assign(infinity);
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (glyphs[square].isColor(color))
-			unassignedMoves[square] += assignedMoves[square];
-
-	/* -- Apply move constraints -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (squares[man].applyDeduction(unassignedMoves, unassignedCaptures))
-			modified = true;
-
-	return modified;
+	return destinations.setAvailableMoves(availableMoves - requiredMovesByMen, availableMoves - requiredMovesBySquares);
 }
 
 /* -------------------------------------------------------------------------- */
 
 bool Pieces::applyCaptureConstraints(int availableCaptures)
 {
-	bool modified = false;
-
-	/* -- Compute number of assigned captures to men -- */
-
-	int requiredCaptures = 0;
-	for (Man man = FirstMan; man <= LastMan; man++)
-		requiredCaptures += squares[man].getRequiredCaptures();
-
-	/* -- Apply capture constraint to each man -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (squares[man].applyDeduction(infinity, squares[man].getRequiredCaptures() + availableCaptures - requiredCaptures))
-			modified = true;
-
-	/* -- Compute number of assigned captures to each square -- */
-
-	requiredCaptures = 0;
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (glyphs[square].isColor(color))
-			requiredCaptures += assignedCaptures[square];
-
-	/* -- Compute number of available moves for each square -- */
-
-	array<int, NumSquares> unassignedMoves;
-	array<int, NumSquares> unassignedCaptures;
-	
-	unassignedCaptures.assign(availableCaptures - requiredCaptures);
-	unassignedMoves.assign(infinity);
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (glyphs[square].isColor(color))
-			unassignedCaptures[square] += assignedCaptures[square];
-
-	/* -- Apply capture constraints -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (squares[man].applyDeduction(unassignedMoves, unassignedCaptures))
-			modified = true;
-
-	return modified;
+	return destinations.setAvailableCaptures(availableCaptures - requiredCapturesByMen, availableCaptures - requiredCapturesBySquares);
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Pieces::computeRequiredMoves(const Board& board)
 {
-	int requiredMoves = 0;
+	/* -- Update number of required moves -- */
+
+	destinations.updateRequiredMoves(board, castling);
 
 	/* -- Sum number of required moves for each man -- */
+	
+	const array<int, NumMen>& requiredMovesByMan =
+		destinations.getRequiredMovesByMan();
 
-	for (Man man = FirstMan; man <= LastMan; man++)
-		requiredMoves += squares[man].computeRequiredMoves(board, color, castling);
+	maximize(requiredMovesByMen, std::accumulate(requiredMovesByMan.begin(), requiredMovesByMan.end(), 0));
 
-	/* -- Keep result -- */
+	/* -- Sum number of required moves for each occupied square -- */
 
-	if (requiredMoves > this->requiredMoves)
-		this->requiredMoves = requiredMoves;
+	const array<int, NumSquares>& requiredMovesBySquare =
+		destinations.getRequiredMovesBySquare(false);
 
-	/* -- Sum required moves for each occupied square -- */
-
-	assignedMoves.assign(infinity);
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		squares[man].getRequiredMoves(assignedMoves);
-
-	requiredMoves = 0;
+	int _requiredMovesBySquares = 0;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (glyphs[square].isColor(color))
-			requiredMoves += assignedMoves[square];
+			_requiredMovesBySquares += requiredMovesBySquare[square];
 
-	/* -- Keep result -- */
+	maximize(requiredMovesBySquares, _requiredMovesBySquares);
 
-	if (requiredMoves > this->requiredMoves)
-		this->requiredMoves = requiredMoves;
+	/* -- Maximize both values -- */
 
-	/* -- Return number of required moves -- */
+	requiredMoves = std::max(requiredMovesByMen, requiredMovesBySquares);
 
-	return getRequiredMoves();
-}
+	/* -- Return value -- */
 
-/* -------------------------------------------------------------------------- */
-
-int Pieces::getRequiredMoves() const
-{
 	return requiredMoves;
 }
 
@@ -255,89 +165,60 @@ int Pieces::getRequiredMoves() const
 
 int Pieces::computeRequiredCaptures(const Board &board)
 {
-	int requiredCaptures = 0;
+	/* -- Update number of required captures -- */
+
+	destinations.updateRequiredCaptures(board);
 
 	/* -- Sum number of required captures for each man -- */
+	
+	const array<int, NumMen>& requiredCapturesByMan =
+		destinations.getRequiredCapturesByMan();
 
-	for (Man man = FirstMan; man <= LastMan; man++)
-		requiredCaptures += squares[man].computeRequiredCaptures(board, color);
+	maximize(requiredCapturesByMen, std::accumulate(requiredCapturesByMan.begin(), requiredCapturesByMan.end(), 0));
 
-	/* -- Keep result -- */
+	/* -- Sum number of required captures for each occupied square -- */
 
-	if (requiredCaptures > this->requiredCaptures)
-		this->requiredCaptures = requiredCaptures;
+	const array<int, NumSquares>& requiredCapturesBySquare =
+		destinations.getRequiredCapturesBySquare(false);
 
-	/* -- Sum required captures for each occupied square -- */
-
-	assignedCaptures.assign(infinity);
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		squares[man].getRequiredCaptures(assignedCaptures);
-
-	requiredCaptures = 0;
+	int _requiredCapturesBySquares = 0;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (glyphs[square].isColor(color))
-			requiredCaptures += assignedCaptures[square];
+			_requiredCapturesBySquares += requiredCapturesBySquare[square];
 
-	/* -- Keep result -- */
+	maximize(requiredCapturesBySquares, _requiredCapturesBySquares);
 
-	if (requiredCaptures > this->requiredCaptures)
-		this->requiredCaptures = requiredCaptures;
+	/* -- Maximize both values -- */
 
-	/* -- Return number of required captures -- */
+	requiredCaptures = std::max(requiredCapturesByMen, requiredCapturesBySquares);
 
-	return getRequiredCaptures();
-}
+	/* -- Return value -- */
 
-/* -------------------------------------------------------------------------- */
-
-int Pieces::getRequiredCaptures() const
-{
 	return requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Pieces::getCaptureSquares(const Board& board, vector<SquareSet>& captures)
+int Pieces::getRequiredMoves(Man man) const
 {
-	captures.clear();
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-	{
-		/* -- Check if there is any required captures -- */
-
-		if (squares[man].getRequiredCaptures() <= 0)
-			continue;
-
-		/* -- Compute the required squares for capture -- */
-
-		const finalsquares_t& squares = this->squares[man];
-		vector<SquareSet> manCaptures;
-
-		if (squares.size() > 1)
-			continue;
-
-		const FinalSquare& square = squares[0];
-		board.captures(man, square.operator Superman(), color, tables::initialSquares[man][color], (Square)square, manCaptures);
-
-		/* -- Add capture squares to general array -- */
-
-		captures.insert(captures.end(), manCaptures.begin(), manCaptures.end());
-	}
+	return destinations.getRequiredMovesByMan()[man];
 }
 
 /* -------------------------------------------------------------------------- */
 
-const FinalSquares& Pieces::operator[](Man man) const
+int Pieces::getNumDestinations(Man man) const
 {
-	return squares[man];
+	return (int)std::count_if(destinations.begin(), destinations.end(), std::bind2nd(std::const_mem_fun1_ref_t<bool, Destination, Man>(&Destination::isMan), man));
 }
 
 /* -------------------------------------------------------------------------- */
 
-Pieces::operator vector<SquareSet>&()
+const Destination& Pieces::getDestination(Man man) const
 {
-	return captures;
+	Destinations::const_iterator destination = 
+		std::find_if(destinations.begin(), destinations.end(), std::bind2nd(std::const_mem_fun1_ref_t<bool, Destination, Man>(&Destination::isMan), man));
+	
+	return *destination;
 }
 
 /* -------------------------------------------------------------------------- */

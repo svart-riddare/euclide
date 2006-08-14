@@ -236,6 +236,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\destinations.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\enumerations\errors.cpp"
 				>
 			</File>
@@ -274,10 +278,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\source\finalsquares.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\position.cpp"
 				>
 			</File>
@@ -299,7 +299,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\finalsquares.h"
+				RelativePath="..\..\source\destinations.h"
 				>
 			</File>
 			<File
@@ -308,10 +308,6 @@
 			</File>
 			<File
 				RelativePath="..\..\source\position.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\predicates.h"
 				>
 			</File>
 			<File
@@ -404,6 +400,22 @@
 			</File>
 			<File
 				RelativePath="..\..\source\tables\tables.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Utility Files"
+			>
+			<File
+				RelativePath="..\..\source\utilities\algorithm.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\utilities\array.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\utilities\predicates.h"
 				>
 			</File>
 		</Filter>
