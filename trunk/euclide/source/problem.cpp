@@ -25,8 +25,8 @@ Problem::Problem(const EUCLIDE_Problem *problem)
 
 	/* -- Count number of mens -- */
 
-	numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, isWhiteGlyph);
-	numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, isBlackGlyph);
+	numWhiteMen = (int)std::count_if(glyphs, glyphs + NumSquares, std::mem_fun_ref(&Glyph::isWhite));
+	numBlackMen = (int)std::count_if(glyphs, glyphs + NumSquares, std::mem_fun_ref(&Glyph::isBlack));
 
 	if ((numWhiteMen > NumMen) || (numBlackMen > NumMen))
 		abort(IncorrectInputError);
