@@ -69,8 +69,8 @@ class Destinations : public vector<Destination>
 		void updateRequiredCaptures(const Board& board);
 
 		bool setManSquare(Man man, Square square, bool captured);
-		bool setAvailableMoves(int availableMovesForMen, int availableMovesForSquares);
-		bool setAvailableCaptures(int availableCapturesForMen, int availableCapturesForSquares);
+		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare);
+		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare);
 		
 	public :
 		inline const array<int, NumMen>& getRequiredMovesByMan() const
@@ -78,14 +78,14 @@ class Destinations : public vector<Destination>
 		inline const array<int, NumSquares>& getRequiredMovesBySquare() const
 			{ return requiredMovesBySquare; }
 		inline const array<int, NumSquares>& getRequiredMovesBySquare(bool captured) const
-			{ return captured ? requiredMovesByDeadSquare : requiredMovesByLiveSquare; }
+			{ return captured ? requiredMovesByUnoccupiedSquare : requiredMovesByOccupiedSquare; }
 
 		inline const array<int, NumMen>& getRequiredCapturesByMan() const
 			{ return requiredCapturesByMan; }
 		inline const array<int, NumSquares>& getRequiredCapturesBySquare() const
 			{ return requiredCapturesBySquare; }
 		inline const array<int, NumSquares>& getRequiredCapturesBySquare(bool captured) const
-			{ return captured ? requiredCapturesByDeadSquare : requiredCapturesByLiveSquare; }
+			{ return captured ? requiredCapturesByUnoccupiedSquare : requiredCapturesByOccupiedSquare; }
 
 	protected :
 		template <class Predicate>
@@ -97,13 +97,13 @@ class Destinations : public vector<Destination>
 	private :
 		array<int, NumMen> requiredMovesByMan;
 		array<int, NumSquares> requiredMovesBySquare;
-		array<int, NumSquares> requiredMovesByLiveSquare;
-		array<int, NumSquares> requiredMovesByDeadSquare;
+		array<int, NumSquares> requiredMovesByOccupiedSquare;
+		array<int, NumSquares> requiredMovesByUnoccupiedSquare;
 
 		array<int, NumMen> requiredCapturesByMan;
 		array<int, NumSquares> requiredCapturesBySquare;
-		array<int, NumSquares> requiredCapturesByLiveSquare;
-		array<int, NumSquares> requiredCapturesByDeadSquare;
+		array<int, NumSquares> requiredCapturesByOccupiedSquare;
+		array<int, NumSquares> requiredCapturesByUnoccupiedSquare;
 };
 
 /* -------------------------------------------------------------------------- */

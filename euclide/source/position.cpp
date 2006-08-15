@@ -115,14 +115,40 @@ bool Pieces::applyNonUbiquityPrinciple()
 
 bool Pieces::applyMoveConstraints(int availableMoves)
 {
-	return destinations.setAvailableMoves(availableMoves - requiredMovesByMen, availableMoves - requiredMovesBySquares);
+	array<int, NumMen> availableMovesByMan(availableMoves - requiredMovesByMen);
+	array<int, NumSquares> availableMovesByOccupiedSquare(availableMoves - requiredMovesBySquares);
+	array<int, NumSquares> availableMovesByUnoccupiedSquare(availableMoves - requiredMovesBySquares);
+
+	const array<int, NumMen>& requiredMovesByMan = destinations.getRequiredMovesByMan();
+	const array<int, NumSquares>& requiredMovesByOccupiedSquare = destinations.getRequiredMovesBySquare(false);
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		availableMovesByMan[man] += requiredMovesByMan[man];
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		availableMovesByOccupiedSquare[square] += requiredMovesByOccupiedSquare[square];
+
+	return destinations.setAvailableMoves(availableMovesByMan, availableMovesByOccupiedSquare, availableMovesByUnoccupiedSquare);
 }
 
 /* -------------------------------------------------------------------------- */
 
 bool Pieces::applyCaptureConstraints(int availableCaptures)
 {
-	return destinations.setAvailableCaptures(availableCaptures - requiredCapturesByMen, availableCaptures - requiredCapturesBySquares);
+	array<int, NumMen> availableCapturesByMan(availableCaptures - requiredCapturesByMen);
+	array<int, NumSquares> availableCapturesByOccupiedSquare(availableCaptures - requiredCapturesBySquares);
+	array<int, NumSquares> availableCapturesByUnoccupiedSquare(availableCaptures - requiredCapturesBySquares);
+
+	const array<int, NumMen>& requiredCapturesByMan = destinations.getRequiredCapturesByMan();
+	const array<int, NumSquares>& requiredCapturesByOccupiedSquare = destinations.getRequiredCapturesBySquare(false);
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		availableCapturesByMan[man] += requiredCapturesByMan[man];
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		availableCapturesByOccupiedSquare[square] += requiredCapturesByOccupiedSquare[square];
+
+	return destinations.setAvailableCaptures(availableCapturesByMan, availableCapturesByOccupiedSquare, availableCapturesByUnoccupiedSquare);
 }
 
 /* -------------------------------------------------------------------------- */
