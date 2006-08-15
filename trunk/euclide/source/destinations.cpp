@@ -48,13 +48,13 @@ Destinations::Destinations()
 
 	requiredMovesByMan.assign(0);
 	requiredMovesBySquare.assign(0);
-	requiredMovesByLiveSquare.assign(0);
-	requiredMovesByDeadSquare.assign(0);
+	requiredMovesByOccupiedSquare.assign(0);
+	requiredMovesByUnoccupiedSquare.assign(0);
 
 	requiredCapturesByMan.assign(0);
 	requiredCapturesBySquare.assign(0);
-	requiredCapturesByLiveSquare.assign(0);
-	requiredCapturesByDeadSquare.assign(0);
+	requiredCapturesByOccupiedSquare.assign(0);
+	requiredCapturesByUnoccupiedSquare.assign(0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -71,8 +71,8 @@ void Destinations::updateRequiredMoves(const Board& board, const Castling& castl
 {
 	requiredMovesByMan.assign(infinity);
 	requiredMovesBySquare.assign(infinity);
-	requiredMovesByLiveSquare.assign(infinity);
-	requiredMovesByDeadSquare.assign(infinity);
+	requiredMovesByOccupiedSquare.assign(infinity);
+	requiredMovesByUnoccupiedSquare.assign(infinity);
 
 	for (iterator I = begin(); I != end(); I++)
 	{
@@ -82,9 +82,9 @@ void Destinations::updateRequiredMoves(const Board& board, const Castling& castl
 		minimize(requiredMovesBySquare[I->square()], requiredMoves);
 
 		if (I->captured())
-			minimize(requiredMovesByDeadSquare[I->square()], requiredMoves);
+			minimize(requiredMovesByUnoccupiedSquare[I->square()], requiredMoves);
 		else
-			minimize(requiredMovesByLiveSquare[I->square()], requiredMoves);
+			minimize(requiredMovesByOccupiedSquare[I->square()], requiredMoves);
 	}
 }
 
@@ -94,8 +94,8 @@ void Destinations::updateRequiredCaptures(const Board& board)
 {
 	requiredCapturesByMan.assign(infinity);
 	requiredCapturesBySquare.assign(infinity);
-	requiredCapturesByLiveSquare.assign(infinity);
-	requiredCapturesByDeadSquare.assign(infinity);
+	requiredCapturesByOccupiedSquare.assign(infinity);
+	requiredCapturesByUnoccupiedSquare.assign(infinity);
 
 	for (iterator I = begin(); I != end(); I++)
 	{
@@ -105,9 +105,9 @@ void Destinations::updateRequiredCaptures(const Board& board)
 		minimize(requiredCapturesBySquare[I->square()], requiredCaptures);
 
 		if (I->captured())
-			minimize(requiredCapturesByDeadSquare[I->square()], requiredCaptures);
+			minimize(requiredCapturesByUnoccupiedSquare[I->square()], requiredCaptures);
 		else
-			minimize(requiredCapturesByLiveSquare[I->square()], requiredCaptures);
+			minimize(requiredCapturesByOccupiedSquare[I->square()], requiredCaptures);
 	}
 
 	std::replace(requiredCapturesByMan.begin(), requiredCapturesByMan.end(), infinity, 0);
@@ -140,46 +140,70 @@ bool Destinations::setManSquare(Man man, Square square, bool captured)
 
 struct SetAvailableMovesPredicate
 {
-	const Destinations *_destinations; int _availableMovesForMen; int _availableMovesForSquares;
-	SetAvailableMovesPredicate(const Destinations *destinations, int availableMovesForMen, int availableMovesForSquares)
-		: _destinations(destinations), _availableMovesForMen(availableMovesForMen), _availableMovesForSquares(availableMovesForSquares) {}
+	const array<int, NumMen>& _availableMovesByMan; const array<int, NumSquares>& _availableMovesByOccupiedSquare; const array<int, NumSquares>& _availableMovesByUnoccupiedSquare;
+	SetAvailableMovesPredicate(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare)
+		: _availableMovesByMan(availableMovesByMan), _availableMovesByOccupiedSquare(availableMovesByOccupiedSquare), _availableMovesByUnoccupiedSquare(availableMovesByUnoccupiedSquare) {}
+
+	void operator=(const SetAvailableMovesPredicate&)
+		{ assert(false); }
 
 	bool operator()(const Destination& destination)
 	{
-		int availableMovesForMan = _availableMovesForMen + _destinations->getRequiredMovesByMan()[destination.man()];
-		int availableMovesForSquare = _availableMovesForSquares + _destinations->getRequiredMovesBySquare(false)[destination.square()];
-		int availableMoves = std::min(availableMovesForMan, availableMovesForSquare);
+		int requiredMoves = destination.getRequiredMoves();
 
-		return (availableMoves < destination.getRequiredMoves());
+		if (requiredMoves > _availableMovesByMan[destination.man()])
+			return true;
+
+		if (!destination.captured())
+			if (requiredMoves > _availableMovesByOccupiedSquare[destination.square()])
+				return true;
+
+		if (destination.captured())
+			if (requiredMoves > _availableMovesByUnoccupiedSquare[destination.square()])
+				return true;
+
+		return false;
 	}
 };
 
-bool Destinations::setAvailableMoves(int availableMovesForMen, int availableMovesForSquares)
+bool Destinations::setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare)
 {
-	return remove(SetAvailableMovesPredicate(this, availableMovesForMen, availableMovesForSquares));
+	return remove(SetAvailableMovesPredicate(availableMovesByMan, availableMovesByOccupiedSquare, availableMovesByUnoccupiedSquare));
 }
 
 /* -------------------------------------------------------------------------- */
 
 struct SetAvailableCapturesPredicate
 {
-	const Destinations *_destinations; int _availableCapturesForMen; int _availableCapturesForSquares;
-	SetAvailableCapturesPredicate(const Destinations *destinations, int availableCapturesForMen, int availableCapturesForSquares)
-		: _destinations(destinations), _availableCapturesForMen(availableCapturesForMen), _availableCapturesForSquares(availableCapturesForSquares) {}
+	const array<int, NumMen>& _availableCapturesByMan; const array<int, NumSquares>& _availableCapturesByOccupiedSquare; const array<int, NumSquares>& _availableCapturesByUnoccupiedSquare;
+	SetAvailableCapturesPredicate(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare)
+		: _availableCapturesByMan(availableCapturesByMan), _availableCapturesByOccupiedSquare(availableCapturesByOccupiedSquare), _availableCapturesByUnoccupiedSquare(availableCapturesByUnoccupiedSquare) {}
+
+	void operator=(const SetAvailableCapturesPredicate&)
+		{ assert(false); }
 
 	bool operator()(const Destination& destination)
 	{
-		int availableCapturesForMan = _availableCapturesForMen + _destinations->getRequiredCapturesByMan()[destination.man()];
-		int availableCapturesForSquare = _availableCapturesForSquares + _destinations->getRequiredCapturesBySquare(false)[destination.square()];
-		int availableCaptures = std::min(availableCapturesForMan, availableCapturesForSquare);
+		int requiredCaptures = destination.getRequiredCaptures();
 
-		return (availableCaptures < destination.getRequiredCaptures());
+		if (requiredCaptures > _availableCapturesByMan[destination.man()])
+			return true;
+
+		if (!destination.captured())
+			if (requiredCaptures > _availableCapturesByOccupiedSquare[destination.square()])
+				return true;
+
+		if (destination.captured())
+			if (requiredCaptures > _availableCapturesByUnoccupiedSquare[destination.square()])
+				return true;
+
+		return false;
 	}
 };
 
-bool Destinations::setAvailableCaptures(int availableCapturesForMen, int availableCapturesForSquares)
+bool Destinations::setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare)
 {
-	return remove(SetAvailableCapturesPredicate(this, availableCapturesForMen, availableCapturesForSquares));
+	return remove(SetAvailableCapturesPredicate(availableCapturesByMan, availableCapturesByOccupiedSquare, availableCapturesByUnoccupiedSquare));
 }
 
 /* -------------------------------------------------------------------------- */
