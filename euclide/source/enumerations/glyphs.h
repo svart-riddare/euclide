@@ -120,11 +120,6 @@ class Glyph
 
 /* -------------------------------------------------------------------------- */
 
-#define isWhiteGlyph std::mem_fun_ref<bool, Glyph>(&Glyph::isWhite)
-#define isBlackGlyph std::mem_fun_ref<bool, Glyph>(&Glyph::isBlack)
-
-/* -------------------------------------------------------------------------- */
-
 }
 
 #endif

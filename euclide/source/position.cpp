@@ -234,7 +234,7 @@ int Pieces::getRequiredMoves(Man man) const
 
 int Pieces::getNumDestinations(Man man) const
 {
-	return (int)std::count_if(destinations.begin(), destinations.end(), std::bind2nd(std::const_mem_fun1_ref_t<bool, Destination, Man>(&Destination::isMan), man));
+	return (int)std::count_if(destinations.begin(), destinations.end(), std::bind2nd(std::mem_fun_ref(&Destination::isMan), man));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -242,7 +242,7 @@ int Pieces::getNumDestinations(Man man) const
 const Destination& Pieces::getDestination(Man man) const
 {
 	Destinations::const_iterator destination = 
-		std::find_if(destinations.begin(), destinations.end(), std::bind2nd(std::const_mem_fun1_ref_t<bool, Destination, Man>(&Destination::isMan), man));
+		std::find_if(destinations.begin(), destinations.end(), std::bind2nd(std::mem_fun_ref(&Destination::isMan), man));
 	
 	return *destination;
 }
