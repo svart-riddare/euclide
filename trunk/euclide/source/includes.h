@@ -29,6 +29,7 @@ using std::pair;
 #define BOOST_ENABLE_ASSERT_HANDLER
 
 #include <boost/array.hpp>
+#include <boost/bind.hpp>
 #include <boost/logic/tribool.hpp>
 
 using boost::logic::tribool;
