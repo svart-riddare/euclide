@@ -6,7 +6,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Pieces::Pieces(const Problem& problem, Color color)
-	: color(color)
+	: color(color), targets(problem, color)
 {
 	/* -- Member variable initialization -- */
 
@@ -158,6 +158,7 @@ int Pieces::computeRequiredMoves(const Board& board)
 	/* -- Update number of required moves -- */
 
 	destinations.updateRequiredMoves(board, castling);
+	targets.update(destinations);
 
 	/* -- Sum number of required moves for each man -- */
 	
@@ -194,6 +195,7 @@ int Pieces::computeRequiredCaptures(const Board &board)
 	/* -- Update number of required captures -- */
 
 	destinations.updateRequiredCaptures(board);
+	targets.update(destinations);
 
 	/* -- Sum number of required captures for each man -- */
 	
@@ -221,6 +223,23 @@ int Pieces::computeRequiredCaptures(const Board &board)
 	/* -- Return value -- */
 
 	return requiredCaptures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Pieces::updateTargets()
+{
+	targets.update(destinations);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
+{
+	targets.reset(board, pieces);
+	targets.update(destinations);
+
+	destinations.setCaptureSquares(targets.getCaptures());
 }
 
 /* -------------------------------------------------------------------------- */

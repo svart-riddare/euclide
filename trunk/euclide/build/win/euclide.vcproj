@@ -285,6 +285,10 @@
 				RelativePath="..\..\source\problem.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\source\targets.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -315,7 +319,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\sets.h"
+				RelativePath="..\..\source\targets.h"
 				>
 			</File>
 		</Filter>

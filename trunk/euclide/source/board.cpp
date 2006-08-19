@@ -352,7 +352,7 @@ int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Glyph glyph, Square from, Square to, vector<SquareSet>& captures) const
+int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquares>>& captures) const
 {
 	assert(glyph.isValid());
 	assert(from.isValid());
@@ -360,7 +360,6 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<SquareSet>& capt
 
 	/* -- Some pieces does not need to capture in order to move -- */
 
-	captures.clear();
 	if (!tables::maxCaptures[glyph])
 		return 0;
 
@@ -469,7 +468,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<SquareSet>& capt
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<SquareSet>& captures) const
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<bitset<NumSquares>>& captures) const
 {
 	assert(man.isValid());
 	assert(superman.isValid());

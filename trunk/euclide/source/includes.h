@@ -50,7 +50,6 @@ using boost::logic::indeterminate;
 #include "enumerations.h"
 #include "constants.h"
 #include "tables.h"
-#include "sets.h"
 
 using euclide::constants::infinity;
 
