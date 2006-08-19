@@ -69,6 +69,7 @@ class Destinations : public vector<Destination>
 		void updateRequiredCaptures(const Board& board);
 
 		bool setManSquare(Man man, Square square, bool captured);
+		bool setCaptureSquares(const bitset<NumSquares>& squares);
 		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare);
 		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare);
 		

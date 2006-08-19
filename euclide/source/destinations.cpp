@@ -138,6 +138,32 @@ bool Destinations::setManSquare(Man man, Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
+struct SetCaptureSquaresPredicate
+{
+	const bitset<NumSquares>& _squares;
+	SetCaptureSquaresPredicate(const bitset<NumSquares>& squares)
+		: _squares(squares) {}
+
+	void operator=(const SetCaptureSquaresPredicate&)
+		{ assert(false); }
+
+	bool operator()(const Destination& destination)
+	{
+		if (destination.captured())
+			if (!_squares.test(destination.square()))
+				return true;
+
+		return false;
+	}
+};
+
+bool Destinations::setCaptureSquares(const bitset<NumSquares>& squares)
+{
+	return remove(SetCaptureSquaresPredicate(squares));
+}
+
+/* -------------------------------------------------------------------------- */
+
 struct SetAvailableMovesPredicate
 {
 	const array<int, NumMen>& _availableMovesByMan; const array<int, NumSquares>& _availableMovesByOccupiedSquare; const array<int, NumSquares>& _availableMovesByUnoccupiedSquare;

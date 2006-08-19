@@ -3,6 +3,7 @@
 
 #include "includes.h"
 #include "destinations.h"
+#include "targets.h"
 
 namespace euclide 
 {
@@ -21,20 +22,29 @@ class Pieces
 		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
 
+		void updateTargets();
+		void analyseCaptures(const Board& board, const Pieces& pieces);
+
 		int getRequiredMoves(Man man) const;
 		int getNumDestinations(Man man) const;
 		const Destination& getDestination(Man man) const;
-
-	public :
-		int getRequiredMoves() const
-			{ return requiredMoves; }
 		
-		int getRequiredCaptures() const
+	public :
+		inline int getRequiredMoves() const
+			{ return requiredMoves; }
+		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
-	
+		
+		inline const Destinations& getDestinations() const
+			{ return destinations; }
+		inline const Targets& getTargets() const
+			{ return targets; }
+
 	private :
 		array<Glyph, NumSquares> glyphs;
+		
 		Destinations destinations;
+		Targets targets;
 
 		Castling castling;
 		Color color;
