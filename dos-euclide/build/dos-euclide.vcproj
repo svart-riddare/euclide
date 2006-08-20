@@ -253,6 +253,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath="..\bin\edupuis.txt"
+			>
+		</File>
+		<File
 			RelativePath="..\bin\sample-input.txt"
 			>
 		</File>
