@@ -101,7 +101,7 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 	for (list<ForsytheSymbols>::const_iterator I = symbols.begin(); (I != symbols.end()) && !valid; I++)
 	{
 		const ForsytheSymbols symbols = *I;
-		const char *s = string;
+		const unsigned char *s = (const unsigned char *)string;
 
 		int numWhiteKings = 0;
 		int numBlackKings = 0;
