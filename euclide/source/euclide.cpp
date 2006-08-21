@@ -88,26 +88,34 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	whitePieces = new Pieces(*problem, White);
 	blackPieces = new Pieces(*problem, Black);
 
-	/* -- Compute required moves and captures and
-	      apply non ubiquity principle as often as needed -- */
+	/* -- Make initial non-ubiquity deduction (for kings) -- */
 
-	while (whitePieces->applyNonUbiquityPrinciple())
+	whitePieces->applyNonUbiquityPrinciple();
+	blackPieces->applyNonUbiquityPrinciple();
+
+	/* -- Compute initial number of required moves and captures -- */
+
+	whitePieces->computeRequiredMoves(*board);
+	whitePieces->computeRequiredCaptures(*board);
+
+	blackPieces->computeRequiredMoves(*board);
+	blackPieces->computeRequiredCaptures(*board);
+
+	/* -- Make recursive deductions based on these results -- */
+
+	do
 	{
-		whitePieces->computeRequiredMoves(*board);
 		whitePieces->applyMoveConstraints(problem->moves(White));
-		
-		whitePieces->computeRequiredCaptures(*board);
 		whitePieces->applyCaptureConstraints(problem->captures(White));
 	}
+	while (whitePieces->applyNonUbiquityPrinciple());
 
-	while (blackPieces->applyNonUbiquityPrinciple())
+	do
 	{
-		blackPieces->computeRequiredMoves(*board);
 		blackPieces->applyMoveConstraints(problem->moves(Black));
-		
-		blackPieces->computeRequiredCaptures(*board);
 		blackPieces->applyCaptureConstraints(problem->captures(Black));
 	}
+	while (blackPieces->applyNonUbiquityPrinciple());
 
 	/* -- Display actual deductions -- */
 	
@@ -126,20 +134,14 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	do
 	{
-		whitePieces->computeRequiredMoves(*board);
 		whitePieces->applyMoveConstraints(problem->moves(White));
-		
-		whitePieces->computeRequiredCaptures(*board);
 		whitePieces->applyCaptureConstraints(problem->captures(White));
 	}
 	while (whitePieces->applyNonUbiquityPrinciple());
 
 	do
 	{
-		blackPieces->computeRequiredMoves(*board);
 		blackPieces->applyMoveConstraints(problem->moves(Black));
-		
-		blackPieces->computeRequiredCaptures(*board);
 		blackPieces->applyCaptureConstraints(problem->captures(Black));
 	}
 	while (blackPieces->applyNonUbiquityPrinciple());

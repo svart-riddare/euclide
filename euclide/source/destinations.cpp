@@ -19,7 +19,7 @@ Destination::Destination(Square square, Color color, Man man, Superman superman,
 
 /* -------------------------------------------------------------------------- */
 
-int Destination::updateRequiredMoves(const Board& board, const Castling& castling)
+int Destination::computeRequiredMoves(const Board& board, const Castling& castling)
 {
 	int distance = board.distance(_man, _superman, _color, _square, castling);
 	if (distance > requiredMoves)
@@ -30,7 +30,7 @@ int Destination::updateRequiredMoves(const Board& board, const Castling& castlin
 
 /* -------------------------------------------------------------------------- */
 
-int Destination::updateRequiredCaptures(const Board& board)
+int Destination::computeRequiredCaptures(const Board& board)
 {
 	int captures = board.captures(_man, _superman, _color, _square);
 	if (captures > requiredCaptures)
@@ -42,194 +42,200 @@ int Destination::updateRequiredCaptures(const Board& board)
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
-Destinations::Destinations()
+Destinations::Destinations(const Problem& problem, Color color)
 {
-	reserve(NumSupermen * (NumMen + NumSquares));
+	/* -- Initialize move and capture requirements -- */
 
+	requiredMoves = 0;
 	requiredMovesByMan.assign(0);
 	requiredMovesBySquare.assign(0);
-	requiredMovesByOccupiedSquare.assign(0);
-	requiredMovesByUnoccupiedSquare.assign(0);
+	requiredMovesByShrine.assign(0);
 
+	requiredCaptures = 0;
 	requiredCapturesByMan.assign(0);
 	requiredCapturesBySquare.assign(0);
-	requiredCapturesByOccupiedSquare.assign(0);
-	requiredCapturesByUnoccupiedSquare.assign(0);
+	requiredCapturesByShrine.assign(0);
+
+	/* -- Associate with each man a possible destination -- */
+
+	reserve(NumSupermen * (NumMen + NumSquares));
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+	{
+		Glyph glyph = problem[square];
+
+		/* -- Associate glyphs to men -- */
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (tables::supermanToGlyph[man][color] == glyph)
+				push_back(Destination(square, color, man, man, false));
+
+		/* -- Handle promoted pieces -- */
+
+		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+			if (tables::supermanToGlyph[superman][color] == glyph)
+				for (Man man = FirstPawn; man <= LastPawn; man++)
+					push_back(Destination(square, color, man, superman, false));
+
+		/* -- Each man also have been captured on any square -- */
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			push_back(Destination(square, color, man, man, true));
+
+		/* -- Pawns may also have been captured as promoted pieces -- */
+
+		for (Man man = FirstPawn; man <= LastPawn; man++)
+			for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+				push_back(Destination(square, color, man, superman, true));
+	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-Destinations& Destinations::operator+=(const Destination& destination)
+void Destinations::computeRequiredMoves(const Board& board, const Castling& castling)
 {
-	push_back(destination);
-	return *this;
+	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredMoves, _1, cref(board), cref(castling)));
+	updateRequiredMoves();
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Destinations::updateRequiredMoves(const Board& board, const Castling& castling)
+void Destinations::computeRequiredCaptures(const Board &board)
+{
+	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredCaptures, _1, cref(board)));
+	updateRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Destinations::updateRequiredMoves()
 {
 	requiredMovesByMan.assign(infinity);
 	requiredMovesBySquare.assign(infinity);
-	requiredMovesByOccupiedSquare.assign(infinity);
-	requiredMovesByUnoccupiedSquare.assign(infinity);
+	requiredMovesByShrine.assign(infinity);
 
-	for (iterator I = begin(); I != end(); I++)
+	for (iterator destination = begin(); destination != end(); destination++)
 	{
-		int requiredMoves = I->updateRequiredMoves(board, castling);
+		int requiredMoves = destination->getRequiredMoves();
 
-		minimize(requiredMovesByMan[I->man()], requiredMoves);
-		minimize(requiredMovesBySquare[I->square()], requiredMoves);
+		minimize(requiredMovesByMan[destination->man()], requiredMoves);
 
-		if (I->captured())
-			minimize(requiredMovesByUnoccupiedSquare[I->square()], requiredMoves);
+		if (destination->captured())
+			minimize(requiredMovesByShrine[destination->square()], requiredMoves);
 		else
-			minimize(requiredMovesByOccupiedSquare[I->square()], requiredMoves);
+			minimize(requiredMovesBySquare[destination->square()], requiredMoves);
 	}
+
+	requiredMoves = std::accumulate(requiredMovesByMan.begin(), requiredMovesByMan.end(), 0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Destinations::updateRequiredCaptures(const Board& board)
+void Destinations::updateRequiredCaptures()
 {
 	requiredCapturesByMan.assign(infinity);
 	requiredCapturesBySquare.assign(infinity);
-	requiredCapturesByOccupiedSquare.assign(infinity);
-	requiredCapturesByUnoccupiedSquare.assign(infinity);
+	requiredCapturesByShrine.assign(infinity);
 
-	for (iterator I = begin(); I != end(); I++)
+	for (iterator destination = begin(); destination != end(); destination++)
 	{
-		int requiredCaptures = I->updateRequiredCaptures(board);
+		int requiredCaptures = destination->getRequiredCaptures();
 
-		minimize(requiredCapturesByMan[I->man()], requiredCaptures);
-		minimize(requiredCapturesBySquare[I->square()], requiredCaptures);
+		minimize(requiredCapturesByMan[destination->man()], requiredCaptures);
 
-		if (I->captured())
-			minimize(requiredCapturesByUnoccupiedSquare[I->square()], requiredCaptures);
+		if (destination->captured())
+			minimize(requiredCapturesByShrine[destination->square()], requiredCaptures);
 		else
-			minimize(requiredCapturesByOccupiedSquare[I->square()], requiredCaptures);
+			minimize(requiredCapturesBySquare[destination->square()], requiredCaptures);
 	}
 
 	std::replace(requiredCapturesByMan.begin(), requiredCapturesByMan.end(), infinity, 0);
+	requiredCaptures = std::accumulate(requiredCapturesByMan.begin(), requiredCapturesByMan.end(), 0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-struct SetManSquarePredicate
+bool Destinations::setShrines(const bitset<NumSquares>& shrines)
 {
-	Man _man; Square _square; bool _captured;
-	SetManSquarePredicate(Man man, Square square, bool captured)
-		: _man(man), _square(square), _captured(captured) {}
+	bitset<NumMen> men;
+	bitset<NumSquares> squares;
 
-	bool operator()(const Destination& destination)
-	{
-		if (destination.man() == _man)
-			if ((destination.square() != _square) || (destination.captured() != _captured))
-				return true;
+	men.set();
+	squares.set();
 
-		return false;
-	}
-};
+	return remove(boost::bind(&isDestinationCompatible, _1, cref(men), cref(squares), cref(shrines)));
+}
+
+/* -------------------------------------------------------------------------- */
 
 bool Destinations::setManSquare(Man man, Square square, bool captured)
 {
-	return remove(SetManSquarePredicate(man, square, captured));
+	bitset<NumMen> men;
+	bitset<NumSquares> squares;
+	bitset<NumSquares> shrines;
+
+	men[man] = true;
+	squares[square] = !captured;
+	shrines[square] = captured;
+
+	return remove(boost::bind(&isDestinationCompatible, _1, cref(men), cref(squares), cref(shrines)));
 }
 
 /* -------------------------------------------------------------------------- */
 
-struct SetCaptureSquaresPredicate
+bool Destinations::setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine)
 {
-	const bitset<NumSquares>& _squares;
-	SetCaptureSquaresPredicate(const bitset<NumSquares>& squares)
-		: _squares(squares) {}
-
-	void operator=(const SetCaptureSquaresPredicate&)
-		{ assert(false); }
-
-	bool operator()(const Destination& destination)
-	{
-		if (destination.captured())
-			if (!_squares.test(destination.square()))
-				return true;
-
-		return false;
-	}
-};
-
-bool Destinations::setCaptureSquares(const bitset<NumSquares>& squares)
-{
-	return remove(SetCaptureSquaresPredicate(squares));
+	return remove(boost::bind(&isEnoughMovesForDestination, _1, cref(availableMovesByMan), cref(availableMovesBySquare), cref(availableMovesByShrine)));
 }
 
 /* -------------------------------------------------------------------------- */
 
-struct SetAvailableMovesPredicate
+bool Destinations::setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine)
 {
-	const array<int, NumMen>& _availableMovesByMan; const array<int, NumSquares>& _availableMovesByOccupiedSquare; const array<int, NumSquares>& _availableMovesByUnoccupiedSquare;
-	SetAvailableMovesPredicate(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare)
-		: _availableMovesByMan(availableMovesByMan), _availableMovesByOccupiedSquare(availableMovesByOccupiedSquare), _availableMovesByUnoccupiedSquare(availableMovesByUnoccupiedSquare) {}
-
-	void operator=(const SetAvailableMovesPredicate&)
-		{ assert(false); }
-
-	bool operator()(const Destination& destination)
-	{
-		int requiredMoves = destination.getRequiredMoves();
-
-		if (requiredMoves > _availableMovesByMan[destination.man()])
-			return true;
-
-		if (!destination.captured())
-			if (requiredMoves > _availableMovesByOccupiedSquare[destination.square()])
-				return true;
-
-		if (destination.captured())
-			if (requiredMoves > _availableMovesByUnoccupiedSquare[destination.square()])
-				return true;
-
-		return false;
-	}
-};
-
-bool Destinations::setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare)
-{
-	return remove(SetAvailableMovesPredicate(availableMovesByMan, availableMovesByOccupiedSquare, availableMovesByUnoccupiedSquare));
+	return remove(boost::bind(&isEnoughCapturesForDestination, _1, cref(availableCapturesByMan), cref(availableCapturesBySquare), cref(availableCapturesByShrine)));
 }
 
 /* -------------------------------------------------------------------------- */
 
-struct SetAvailableCapturesPredicate
+bool Destinations::isDestinationCompatible(const Destination& destination, const bitset<NumMen>& men, const bitset<NumSquares>& squares, const bitset<NumSquares>& shrines)
 {
-	const array<int, NumMen>& _availableCapturesByMan; const array<int, NumSquares>& _availableCapturesByOccupiedSquare; const array<int, NumSquares>& _availableCapturesByUnoccupiedSquare;
-	SetAvailableCapturesPredicate(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare)
-		: _availableCapturesByMan(availableCapturesByMan), _availableCapturesByOccupiedSquare(availableCapturesByOccupiedSquare), _availableCapturesByUnoccupiedSquare(availableCapturesByUnoccupiedSquare) {}
+	if (!men[destination.man()])
+		return true;
 
-	void operator=(const SetAvailableCapturesPredicate&)
-		{ assert(false); }
+	if ((destination.captured() ? shrines : squares)[destination.square()])
+		return true;
 
-	bool operator()(const Destination& destination)
-	{
-		int requiredCaptures = destination.getRequiredCaptures();
+	return false;
+}
 
-		if (requiredCaptures > _availableCapturesByMan[destination.man()])
-			return true;
+/* -------------------------------------------------------------------------- */
 
-		if (!destination.captured())
-			if (requiredCaptures > _availableCapturesByOccupiedSquare[destination.square()])
-				return true;
+bool Destinations::isEnoughMovesForDestination(const Destination& destination, const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine)
+{
+	int requiredMoves = destination.getRequiredMoves();
 
-		if (destination.captured())
-			if (requiredCaptures > _availableCapturesByUnoccupiedSquare[destination.square()])
-				return true;
-
+	if (requiredMoves > availableMovesByMan[destination.man()])
 		return false;
-	}
-};
 
-bool Destinations::setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare)
+	if (requiredMoves > (destination.captured() ? availableMovesByShrine : availableMovesBySquare)[destination.square()])
+		return false;
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Destinations::isEnoughCapturesForDestination(const Destination& destination, const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine)
 {
-	return remove(SetAvailableCapturesPredicate(availableCapturesByMan, availableCapturesByOccupiedSquare, availableCapturesByUnoccupiedSquare));
+	int requiredCaptures = destination.getRequiredCaptures();
+
+	if (requiredCaptures > availableCapturesByMan[destination.man()])
+		return false;
+
+	if (requiredCaptures > (destination.captured() ? availableCapturesByShrine : availableCapturesBySquare)[destination.square()])
+		return false;
+
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */

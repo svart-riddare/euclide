@@ -13,8 +13,8 @@ class Destination
 	public :
 		Destination(Square square, Color color, Man man, Superman superman, bool captured);
 
-		int updateRequiredMoves(const Board& board, const Castling& castling);
-		int updateRequiredCaptures(const Board& board);
+		int computeRequiredMoves(const Board& board, const Castling& castling);
+		int computeRequiredCaptures(const Board& board);
 
 	public :
 		inline Square square() const
@@ -62,49 +62,53 @@ class Destination
 class Destinations : public vector<Destination>
 {
 	public :
-		Destinations();
-		Destinations& operator+=(const Destination& destination);
+		Destinations(const Problem& problem, Color color);
 
-		void updateRequiredMoves(const Board& board, const Castling& castling);
-		void updateRequiredCaptures(const Board& board);
+		void computeRequiredMoves(const Board& board, const Castling& castling);
+		void computeRequiredCaptures(const Board& board);
+		void updateRequiredMoves();
+		void updateRequiredCaptures();
 
+		bool setShrines(const bitset<NumSquares>& squares);
 		bool setManSquare(Man man, Square square, bool captured);
-		bool setCaptureSquares(const bitset<NumSquares>& squares);
 		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare);
 		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare);
 		
 	public :
+		inline int getRequiredMoves() const
+			{ return requiredMoves; }
+		inline int getRequiredCaptures() const
+			{ return requiredCaptures; }
+
 		inline const array<int, NumMen>& getRequiredMovesByMan() const
 			{ return requiredMovesByMan; }
-		inline const array<int, NumSquares>& getRequiredMovesBySquare() const
-			{ return requiredMovesBySquare; }
 		inline const array<int, NumSquares>& getRequiredMovesBySquare(bool captured) const
-			{ return captured ? requiredMovesByUnoccupiedSquare : requiredMovesByOccupiedSquare; }
+			{ return captured ? requiredMovesByShrine : requiredMovesBySquare; }
 
 		inline const array<int, NumMen>& getRequiredCapturesByMan() const
 			{ return requiredCapturesByMan; }
-		inline const array<int, NumSquares>& getRequiredCapturesBySquare() const
-			{ return requiredCapturesBySquare; }
 		inline const array<int, NumSquares>& getRequiredCapturesBySquare(bool captured) const
-			{ return captured ? requiredCapturesByUnoccupiedSquare : requiredCapturesByOccupiedSquare; }
+			{ return captured ? requiredCapturesByShrine : requiredCapturesBySquare; }
 
 	protected :
 		template <class Predicate>
 		bool remove(Predicate predicate);
 
-		template <class ForwardIterator, class Predicate>
-		ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, Predicate predicate);
+	protected :
+		static bool isDestinationCompatible(const Destination& destination, const bitset<NumMen>& men, const bitset<NumSquares>& squares, const bitset<NumSquares>& shrines);
+		static bool isEnoughMovesForDestination(const Destination& destination, const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
+		static bool isEnoughCapturesForDestination(const Destination& destination, const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
 
 	private :
+		int requiredMoves;
 		array<int, NumMen> requiredMovesByMan;
 		array<int, NumSquares> requiredMovesBySquare;
-		array<int, NumSquares> requiredMovesByOccupiedSquare;
-		array<int, NumSquares> requiredMovesByUnoccupiedSquare;
+		array<int, NumSquares> requiredMovesByShrine;
 
+		int requiredCaptures;
 		array<int, NumMen> requiredCapturesByMan;
 		array<int, NumSquares> requiredCapturesBySquare;
-		array<int, NumSquares> requiredCapturesByOccupiedSquare;
-		array<int, NumSquares> requiredCapturesByUnoccupiedSquare;
+		array<int, NumSquares> requiredCapturesByShrine;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -113,20 +117,16 @@ class Destinations : public vector<Destination>
 template <class Predicate>
 bool Destinations::remove(Predicate predicate)
 {
-	iterator last = remove_if(begin(), end(), predicate);
+	iterator last = std::remove_if(begin(), end(), !predicate);
 	if (last == end())
 		return false;
 
 	erase(last, end());
+
+	updateRequiredMoves();
+	updateRequiredCaptures();
+
 	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-template <class ForwardIterator, class Predicate>
-ForwardIterator Destinations::remove_if(ForwardIterator first, ForwardIterator last, Predicate predicate)
-{
-	return std::remove_if(first, last, predicate);
 }
 
 /* -------------------------------------------------------------------------- */

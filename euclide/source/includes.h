@@ -32,6 +32,9 @@ using std::pair;
 #include <boost/bind.hpp>
 #include <boost/logic/tribool.hpp>
 
+using boost::ref;
+using boost::cref;
+
 using boost::logic::tribool;
 using boost::logic::indeterminate;
 

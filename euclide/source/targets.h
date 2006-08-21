@@ -40,6 +40,11 @@ class Target
 		inline const bitset<NumMen>& men() const
 			{ return _men; }
 
+		inline bool isMan(Man man) const
+			{ return _men[man]; }
+		inline bool isSquare(Square square) const
+			{ return _squares[square]; }
+
 	public :
 		inline int getRequiredMoves() const
 			{ return requiredMoves; }
