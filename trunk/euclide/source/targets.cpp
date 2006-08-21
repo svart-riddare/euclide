@@ -79,12 +79,12 @@ int Target::updateRequiredMoves(const array<int, NumSquares>& requiredMoves)
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 	{
-		if (_squares.test(square))
+		if (_squares[square])
 		{
 			minimize(this->requiredMoves, requiredMoves[square]);
 
 			if (requiredMoves[square] >= infinity)
-				_squares.reset(square);
+				_squares[square] = false;
 		}
 	}
 
@@ -104,12 +104,12 @@ int Target::updateRequiredCaptures(const array<int, NumSquares>& requiredCapture
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 	{
-		if (_squares.test(square))
+		if (_squares[square])
 		{
 			minimize(this->requiredCaptures, requiredCaptures[square]);
 
 			if (requiredCaptures[square] >= infinity)
-				_squares.reset(square);
+				_squares[square] = false;
 		}
 	}
 
@@ -123,10 +123,10 @@ int Target::updateRequiredCaptures(const array<int, NumSquares>& requiredCapture
 
 bool Target::isTargetOf(const Destination& destination) const
 {
-	if (!_men.test(destination.man()))
+	if (!_men[destination.man()])
 		return false;
 
-	if (!_squares.test(destination.square()))
+	if (!_squares[destination.square()])
 		return false;
 
 	if (isOccupied() == destination.captured())

@@ -45,8 +45,10 @@ EUCLIDE_Status getStatus(error_t error)
 
 	if (error == OutOfMemoryError)
 		return EUCLIDE_STATUS_OUT_OF_MEMORY_ERROR;
+	
+	if (error == NoSolution)
+		return EUCLIDE_STATUS_OK;
 
-	assert(false);
 	return EUCLIDE_STATUS_UNKNOWN_ERROR;
 }
 

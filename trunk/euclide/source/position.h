@@ -19,10 +19,11 @@ class Pieces
 		bool applyMoveConstraints(int availableMoves);
 		bool applyCaptureConstraints(int availableCaptures);
 		
-		int computeRequiredMoves(const Board& board);
-		int computeRequiredCaptures(const Board& board);
+		void computeRequiredMoves(const Board& board);
+		void computeRequiredCaptures(const Board& board);
+		void updateRequiredMoves(bool updateDestinations = true);
+		void updateRequiredCaptures(bool updateDestinations = true);
 
-		void updateTargets();
 		void analyseCaptures(const Board& board, const Pieces& pieces);
 
 		int getRequiredMoves(Man man) const;
@@ -50,12 +51,7 @@ class Pieces
 		Color color;
 
 		int requiredMoves;
-		int requiredMovesByMen;
-		int requiredMovesBySquares;
-		
 		int requiredCaptures;
-		int requiredCapturesByMen;
-		int requiredCapturesBySquares;
 };
 
 /* -------------------------------------------------------------------------- */
