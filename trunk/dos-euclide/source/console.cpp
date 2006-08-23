@@ -171,7 +171,7 @@ void Console::displayCopyright(const wchar_t *copyright)
 #else
 	char *ansiCopyright = new char[2 * length + 1];
 	CharToOemW(copyright, ansiCopyright);
-	write(ansiCopyright, x, 0, Color::Copyright);
+	write(ansiCopyright, x, 0, colors::copyright);
 	delete[] ansiCopyright;
 #endif
 

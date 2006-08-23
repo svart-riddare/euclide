@@ -214,7 +214,7 @@ void Targets::reset(const Board& board, const Pieces& pieces)
 		if (!target->getRequiredCaptures())
 			continue;
 
-		vector<bitset<NumSquares>> captures(target->getRequiredCaptures());
+		vector<bitset<NumSquares> > captures(target->getRequiredCaptures());
 
 		/* -- Find all destinations compatibles with target -- */
 

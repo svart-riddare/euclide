@@ -6,7 +6,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Pieces::Pieces(const Problem& problem, Color color)
-	: color(color), destinations(problem, color), targets(problem, color)
+	: destinations(problem, color), targets(problem, color), color(color)
 {
 	/* -- Initialize move and capture requirements -- */
 

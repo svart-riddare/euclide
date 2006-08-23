@@ -137,7 +137,7 @@ class Superman
 
 		inline operator Man() const
 		{ 
-			assert(superman <= LastMan); 
+			assert(superman <= (superman_t)LastMan);
 			return (man_t)superman;
 		}
 
@@ -171,32 +171,32 @@ class Superman
 
 		bool isKing() const
 		{
-			return (superman == King);
+			return (superman == (superman_t)King);
 		}
 
 		bool isQueen()
 		{
-			return ((superman == Queen) || ((superman >= FirstPromotedQueen) && (superman <= LastPromotedQueen)));
+			return ((superman == (superman_t)Queen) || ((superman >= FirstPromotedQueen) && (superman <= LastPromotedQueen)));
 		}
 
 		bool isRook()
 		{
-			return (((superman >= FirstRook) && (superman <= LastRook)) || ((superman >= FirstPromotedRook) && (superman <= LastPromotedRook)));
+			return (((superman >= (superman_t)FirstRook) && (superman <= (superman_t)LastRook)) || ((superman >= FirstPromotedRook) && (superman <= LastPromotedRook)));
 		}
 
 		bool isBishop()
 		{
-			return (((superman >= FirstBishop) && (superman <= LastBishop)) || ((superman >= FirstPromotedBishop) && (superman <= LastPromotedBishop)));
+			return (((superman >= (superman_t)FirstBishop) && (superman <= (superman_t)LastBishop)) || ((superman >= FirstPromotedBishop) && (superman <= LastPromotedBishop)));
 		}
 
 		bool isKnight()
 		{
-			return (((superman >= FirstKnight) && (superman <= LastKnight)) || ((superman >= FirstPromotedKnight) && (superman <= LastPromotedKnight)));
+			return (((superman >= (superman_t)FirstKnight) && (superman <= (superman_t)LastKnight)) || ((superman >= FirstPromotedKnight) && (superman <= LastPromotedKnight)));
 		}
 
 		bool isPawn()
 		{
-			return ((superman >= FirstPawn) && (superman <= LastPawn));
+			return ((superman >= (superman_t)FirstPawn) && (superman <= (superman_t)LastPawn));
 		}
 
 		/* ---------------------------------- */

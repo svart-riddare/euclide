@@ -236,7 +236,7 @@ int Board::captures(const int movements[NumSquares][NumSquares], const bool capt
 	/* -- Initialize ordered square queue -- */
 
 	_greater<int, NumSquares> priority(distances);
-	priority_queue<Square, vector<Square>, _greater<int, NumSquares>> squares(priority);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
 	squares.push(from);
 
 	/* -- Loop until finding the least number of captures -- */
@@ -352,7 +352,7 @@ int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquares>>& captures) const
+int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquares> >& captures) const
 {
 	assert(glyph.isValid());
 	assert(from.isValid());
@@ -372,7 +372,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquare
 	/* -- Initialize ordered square queue -- */
 
 	_greater<int, NumSquares> priority(distances);
-	priority_queue<Square, vector<Square>, _greater<int, NumSquares>> squares(priority);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
 	squares.push(from);
 
 	/* -- Initialize reverse move graph -- */
@@ -468,7 +468,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquare
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<bitset<NumSquares>>& captures) const
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<bitset<NumSquares> >& captures) const
 {
 	assert(man.isValid());
 	assert(superman.isValid());
@@ -494,7 +494,7 @@ void Board::block(Glyph glyph, Square square, bool captured)
 
 	empty = false;
 
-	for (int **obstructions = this->obstructions[captured ? glyph : NoGlyph][square]; *obstructions; obstructions++)
+	for (int **obstructions = this->obstructions[captured ? glyph : Glyph(NoGlyph)][square]; *obstructions; obstructions++)
 		**obstructions += 1;
 }
 
@@ -513,7 +513,7 @@ void Board::unblock(Glyph glyph, Square square, bool captured)
 	assert(glyph.isValid());
 	assert(square.isValid());
 
-	for (int **obstructions = this->obstructions[square][captured ? glyph : NoGlyph]; *obstructions; obstructions++)
+	for (int **obstructions = this->obstructions[square][captured ? glyph : Glyph(NoGlyph)]; *obstructions; obstructions++)
 		**obstructions -= 1;
 }
 

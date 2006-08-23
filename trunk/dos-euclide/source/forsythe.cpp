@@ -138,7 +138,6 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 			if (isalpha(*s))
 			{
 				EUCLIDE_Glyph glyph = symbols[*s];
-				int square = 8 * column + row;
 
 				if (glyph == EUCLIDE_GLYPH_WHITE_KING)
 					numWhiteKings++;

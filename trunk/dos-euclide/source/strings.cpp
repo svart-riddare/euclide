@@ -14,7 +14,7 @@ LPCTSTR load(int stringId)
 	static int index = 0;
 
 	TCHAR *buffer = buffers[index++];
-	if (index >= sizeof(buffers) / sizeof(buffers[0]))
+	if (index >= (int)(sizeof(buffers) / sizeof(buffers[0])))
 		index = 0;
 
 	buffer[0] = '\0';
