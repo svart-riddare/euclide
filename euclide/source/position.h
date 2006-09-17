@@ -26,6 +26,7 @@ class Pieces
 		void updateRequiredCaptures(bool updateDestinations = true);
 
 		void analyseCaptures(const Board& board, const Pieces& pieces);
+		bool analyseStaticPieces(Board& board);
 
 		int getRequiredMoves(Man man) const;
 		int getNumDestinations(Man man) const;

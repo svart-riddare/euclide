@@ -65,6 +65,12 @@ Board::Board()
 		if (glyph.isBlack())
 			std::copy(obstructions[BlackKing], obstructions[BlackKing] + NumSquares, obstructions[glyph]);
 	}
+
+	/* -- Initiliaze list of locked initial squares -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		for (Color color = FirstColor; color <= LastColor; color++)
+			locks[man][color] = false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -515,6 +521,35 @@ void Board::unblock(Glyph glyph, Square square, bool captured)
 
 	for (int **obstructions = this->obstructions[square][captured ? glyph : Glyph(NoGlyph)]; *obstructions; obstructions++)
 		**obstructions -= 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Board::lock(Man man, Color color)
+{
+	assert(man.isValid());
+	assert(color.isValid());
+
+	Square initial = tables::initialSquares[man][color];
+	Glyph glyph = tables::supermanToGlyph[man][color];
+
+	/* -- Check if it was already locked -- */
+
+	if (locks[man][color])
+		return false;
+
+	/* -- Check if we can reach the initial square -- */
+
+	for (Square square = FirstSquare; square < LastSquare; square++)
+		if (movements[glyph][square][initial] == 0)
+			return false;
+
+	/* -- Lock the square -- */
+
+	block(glyph, initial);
+	locks[man][color] = true;
+
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -153,6 +153,39 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	if (callbacks.displayDeductions)
 		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
+
+	/* -- Block pieces on their initial squares -- */
+
+	whitePieces->analyseStaticPieces(*board);
+	blackPieces->analyseStaticPieces(*board);
+
+	whitePieces->computeRequiredMoves(*board);
+	whitePieces->computeRequiredCaptures(*board);
+
+	blackPieces->computeRequiredMoves(*board);
+	blackPieces->computeRequiredCaptures(*board);
+	
+	do
+	{
+		whitePieces->applyMoveConstraints(problem->moves(White));
+		whitePieces->applyCaptureConstraints(problem->captures(White));
+	}
+	while (whitePieces->applyNonUbiquityPrinciple());
+
+	do
+	{
+		blackPieces->applyMoveConstraints(problem->moves(Black));
+		blackPieces->applyCaptureConstraints(problem->captures(Black));
+	}
+	while (blackPieces->applyNonUbiquityPrinciple());
+
+	deductions = *this;
+
+	if (callbacks.displayFreeMoves)
+		(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
+
+	if (callbacks.displayDeductions)
+		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
 }
 
 /* -------------------------------------------------------------------------- */
