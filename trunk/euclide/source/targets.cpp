@@ -21,7 +21,7 @@ Target::Target(Glyph glyph, Square square)
 
 /* -------------------------------------------------------------------------- */
 
-Target::Target(Glyph glyph, const bitset<NumSquares>& squares)
+Target::Target(Glyph glyph, const Squares& squares)
 	: _glyph(glyph), _square(UndefinedSquare), _cause(NULL, 0)
 {
 	assert(glyph == NoGlyph);
@@ -48,7 +48,7 @@ void Target::setCause(const Cause& cause)
 
 /* -------------------------------------------------------------------------- */
 
-void Target::updateMen(const bitset<NumMen>& men)
+void Target::updateMen(const Men& men)
 {
 	_men &= men;
 	
@@ -58,9 +58,9 @@ void Target::updateMen(const bitset<NumMen>& men)
 
 /* -------------------------------------------------------------------------- */
 
-void Target::updateMen(const array<bitset<NumMen>, NumSquares>& men)
+void Target::updateMen(const array<Men, NumSquares>& men)
 {
-	bitset<NumMen> group;
+	Men group;
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (_squares.test(square))
@@ -71,7 +71,7 @@ void Target::updateMen(const array<bitset<NumMen>, NumSquares>& men)
 
 /* -------------------------------------------------------------------------- */
 
-void Target::updateSquares(const bitset<NumSquares>& squares)
+void Target::updateSquares(const Squares& squares)
 {
 	_squares &= squares;
 
@@ -190,9 +190,9 @@ Targets::Targets(const Problem& problem, Color color)
 
 void Targets::update(const Destinations& destinations)
 {
-	bitset<NumMen> empty;
-	array<bitset<NumMen>, NumSquares> men(empty);
-	array<bitset<NumMen>, NumSquares> ghosts(empty);
+	Men empty;
+	array<Men, NumSquares> men(empty);
+	array<Men, NumSquares> ghosts(empty);
 
 	/* -- Scan destinations to update possible men for each target -- */
 	
@@ -242,7 +242,7 @@ void Targets::refine(const Board& board, const Pieces& pieces)
 		if (!target->getRequiredCaptures())
 			continue;
 
-		vector<bitset<NumSquares> > captures(target->getRequiredCaptures());
+		vector<Squares> captures(target->getRequiredCaptures());
 
 		/* -- Find all destinations compatibles with target -- */
 

@@ -34,10 +34,10 @@ bool Pieces::applyNonUbiquityPrinciple()
 
 	/* -- Aggregate lists of possible squares/shrines for each man -- */
 
-	bitset<NumSquares> empty;
+	Squares empty;
 
-	array<bitset<NumSquares>, NumMen> squares(empty);
-	array<bitset<NumSquares>, NumMen> shrines(empty);
+	array<Squares, NumMen> squares(empty);
+	array<Squares, NumMen> shrines(empty);
 
 	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
 		for (Man man = FirstMan; man <= LastMan; man++)

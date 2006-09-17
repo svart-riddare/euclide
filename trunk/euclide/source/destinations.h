@@ -69,9 +69,9 @@ class Destinations : public vector<Destination>
 		void updateRequiredMoves();
 		void updateRequiredCaptures();
 
-		bool setShrines(const bitset<NumSquares>& squares);
+		bool setShrines(const Squares& squares);
 		bool setManSquare(Man man, Square square, bool captured);
-		bool setMenSquares(const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines);
+		bool setMenSquares(const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines);
 		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
 		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
 		
@@ -96,8 +96,8 @@ class Destinations : public vector<Destination>
 		bool remove(Predicate predicate);
 
 	protected :
-		static bool isDestinationCompatible(const Destination& destination, const bitset<NumMen>& men, const bitset<NumSquares>& squares, const bitset<NumSquares>& shrines);
-		static bool isDestinationPossible(const Destination& destination, const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines);
+		static bool isDestinationCompatible(const Destination& destination, const Men& men, const Squares& squares, const Squares& shrines);
+		static bool isDestinationPossible(const Destination& destination, const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines);
 		static bool isEnoughMovesForDestination(const Destination& destination, const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
 		static bool isEnoughCapturesForDestination(const Destination& destination, const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
 

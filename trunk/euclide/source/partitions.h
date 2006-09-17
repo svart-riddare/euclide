@@ -18,22 +18,22 @@ class Partition : public vector<Target *>
 		Partition(Targets& targets);
 		
 		bool update(Partitions& partitions, int maxDepth);
-		bool split(Partitions& partitions, const bitset<NumMen>& men, const int ks[]);
+		bool split(Partitions& partitions, const Men& men, const int ks[]);
 
-		bool split(Partitions& partitions, const bitset<NumMen>& men, int k1);
-		bool split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2);
-		bool split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2, int k3);
-		bool split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2, int k3, int k4);
+		bool split(Partitions& partitions, const Men& men, int k1);
+		bool split(Partitions& partitions, const Men& men, int k1, int k2);
+		bool split(Partitions& partitions, const Men& men, int k1, int k2, int k3);
+		bool split(Partitions& partitions, const Men& men, int k1, int k2, int k3, int k4);
 
 	public :
-		inline const bitset<NumMen>& men() const
+		inline const Men& men() const
 			{ return _men; }
 
 	protected :
 		static bool lessCandidates(const Target *targetA, const Target *targetB);
 
 	private :
-		bitset<NumMen> _men;
+		Men _men;
 };
 
 /* -------------------------------------------------------------------------- */

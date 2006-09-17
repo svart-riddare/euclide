@@ -155,10 +155,10 @@ void Destinations::updateRequiredCaptures()
 
 /* -------------------------------------------------------------------------- */
 
-bool Destinations::setShrines(const bitset<NumSquares>& shrines)
+bool Destinations::setShrines(const Squares& shrines)
 {
-	bitset<NumMen> men;
-	bitset<NumSquares> squares;
+	Men men;
+	Squares squares;
 
 	men.set();
 	squares.set();
@@ -170,9 +170,9 @@ bool Destinations::setShrines(const bitset<NumSquares>& shrines)
 
 bool Destinations::setManSquare(Man man, Square square, bool captured)
 {
-	bitset<NumMen> men;
-	bitset<NumSquares> squares;
-	bitset<NumSquares> shrines;
+	Men men;
+	Squares squares;
+	Squares shrines;
 
 	men[man] = true;
 	squares[square] = !captured;
@@ -183,7 +183,7 @@ bool Destinations::setManSquare(Man man, Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
-bool Destinations::setMenSquares(const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines)
+bool Destinations::setMenSquares(const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines)
 {
 	return remove(boost::bind(&isDestinationPossible, _1, cref(squares), cref(shrines)));
 }
@@ -204,7 +204,7 @@ bool Destinations::setAvailableCaptures(const array<int, NumMen>& availableCaptu
 
 /* -------------------------------------------------------------------------- */
 
-bool Destinations::isDestinationCompatible(const Destination& destination, const bitset<NumMen>& men, const bitset<NumSquares>& squares, const bitset<NumSquares>& shrines)
+bool Destinations::isDestinationCompatible(const Destination& destination, const Men& men, const Squares& squares, const Squares& shrines)
 {
 	if (!men[destination.man()])
 		return true;
@@ -217,7 +217,7 @@ bool Destinations::isDestinationCompatible(const Destination& destination, const
 
 /* -------------------------------------------------------------------------- */
 
-bool Destinations::isDestinationPossible(const Destination& destination, const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines)
+bool Destinations::isDestinationPossible(const Destination& destination, const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines)
 {
 	if ((destination.captured() ? shrines : squares)[destination.man()][destination.square()])
 		return true;

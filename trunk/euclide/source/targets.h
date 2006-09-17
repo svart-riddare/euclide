@@ -18,12 +18,12 @@ class Target
 
 	public :
 		Target(Glyph glyph, Square square);
-		Target(Glyph glyph, const bitset<NumSquares>& squares);
+		Target(Glyph glyph, const Squares& squares);
 
 		void setCause(const Cause& cause);
-		void updateMen(const bitset<NumMen>& men);
-		void updateMen(const array<bitset<NumMen>, NumSquares>& men);
-		void updateSquares(const bitset<NumSquares>& squares);
+		void updateMen(const Men& men);
+		void updateMen(const array<Men, NumSquares>& men);
+		void updateSquares(const Squares& squares);
 		int updateRequiredMoves(const array<int, NumSquares>& requiredMoves);
 		int updateRequiredCaptures(const array<int, NumSquares>& requiredCaptures);
 
@@ -40,9 +40,9 @@ class Target
 		inline Square square() const
 			{ return _square; }
 
-		inline const bitset<NumSquares>& squares() const
+		inline const Squares& squares() const
 			{ return _squares; }
-		inline const bitset<NumMen>& men() const
+		inline const Men& men() const
 			{ return _men; }
 		inline int candidates() const
 			{ return (int)_men.count(); }
@@ -62,8 +62,8 @@ class Target
 		Glyph _glyph;
 		Square _square;
 
-		bitset<NumSquares> _squares;
-		bitset<NumMen> _men;
+		Squares _squares;
+		Men _men;
 
 		Cause _cause;
 		
@@ -88,7 +88,7 @@ class Targets : public vector<Target>
 			{ return requiredCaptures; }
 
 	public :
-		inline const bitset<NumSquares>& getCaptures() const
+		inline const Squares& getCaptures() const
 			{ return captures; }
 
 	private :
@@ -97,7 +97,7 @@ class Targets : public vector<Target>
 		int requiredMoves;
 		int requiredCaptures;
 
-		bitset<NumSquares> captures;
+		Squares captures;
 };
 
 /* -------------------------------------------------------------------------- */

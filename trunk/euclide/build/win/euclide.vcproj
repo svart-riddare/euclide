@@ -427,6 +427,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\utilities\bitset.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\utilities\predicates.h"
 				>
 			</File>
