@@ -34,6 +34,8 @@ class Board
 		void block(Glyph glyph, Square from, Square to, bool captured = false);
 		void unblock(Glyph glyph, Square square, bool captured = false);
 
+		bool lock(Man man, Color color);
+
 	protected :
 		static int distance(const int movements[NumSquares][NumSquares], Square from, Square to);
 		static int captures(const int movements[NumSquares][NumSquares], const bool captures[NumSquares][NumSquares], Square from, Square to);
@@ -42,7 +44,8 @@ class Board
 		int movements[NumGlyphs][NumSquares][NumSquares];
 		int **obstructions[NumGlyphs][NumSquares];
 		int **checks[NumGlyphs][NumSquares];
-
+		
+		bool locks[NumMen][NumColors];
 		bool empty;
 };
 

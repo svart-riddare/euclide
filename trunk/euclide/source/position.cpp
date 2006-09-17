@@ -253,6 +253,31 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 
 /* -------------------------------------------------------------------------- */
 
+bool Pieces::analyseStaticPieces(Board& board)
+{
+	bool modified = false;
+
+	/* -- Lock pieces that have not moved -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+	{
+		Glyph glyph = tables::supermanToGlyph[man][color];
+		Square square = tables::initialSquares[man][color];
+
+		if (glyphs[square] == glyph)
+			modified = board.lock(man, color);		
+	}
+
+	/* -- Recursive deductions -- */
+
+	if (modified)
+		analyseStaticPieces(board);
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Pieces::getRequiredMoves(Man man) const
 {
 	return destinations.getRequiredMovesByMan()[man];
