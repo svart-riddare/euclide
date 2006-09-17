@@ -71,8 +71,9 @@ class Destinations : public vector<Destination>
 
 		bool setShrines(const bitset<NumSquares>& squares);
 		bool setManSquare(Man man, Square square, bool captured);
-		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesByOccupiedSquare, const array<int, NumSquares>& availableMovesByUnoccupiedSquare);
-		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesByOccupiedSquare, const array<int, NumSquares>& availableCapturesByUnoccupiedSquare);
+		bool setMenSquares(const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines);
+		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
+		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
 		
 	public :
 		inline int getRequiredMoves() const
@@ -96,6 +97,7 @@ class Destinations : public vector<Destination>
 
 	protected :
 		static bool isDestinationCompatible(const Destination& destination, const bitset<NumMen>& men, const bitset<NumSquares>& squares, const bitset<NumSquares>& shrines);
+		static bool isDestinationPossible(const Destination& destination, const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines);
 		static bool isEnoughMovesForDestination(const Destination& destination, const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
 		static bool isEnoughCapturesForDestination(const Destination& destination, const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
 

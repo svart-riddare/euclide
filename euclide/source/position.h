@@ -3,6 +3,7 @@
 
 #include "includes.h"
 #include "destinations.h"
+#include "partitions.h"
 #include "targets.h"
 
 namespace euclide 
@@ -46,6 +47,7 @@ class Pieces
 		
 		Destinations destinations;
 		Targets targets;
+		Partitions partitions;
 
 		Castling castling;
 		Color color;

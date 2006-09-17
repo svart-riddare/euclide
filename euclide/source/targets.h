@@ -13,10 +13,14 @@ class Pieces;
 
 class Target
 {
+	public:
+		typedef std::pair<const Target *, int> Cause;
+
 	public :
 		Target(Glyph glyph, Square square);
 		Target(Glyph glyph, const bitset<NumSquares>& squares);
 
+		void setCause(const Cause& cause);
 		void updateMen(const bitset<NumMen>& men);
 		void updateMen(const array<bitset<NumMen>, NumSquares>& men);
 		void updateSquares(const bitset<NumSquares>& squares);
@@ -24,6 +28,7 @@ class Target
 		int updateRequiredCaptures(const array<int, NumSquares>& requiredCaptures);
 
 		bool isTargetOf(const Destination& destination) const;
+		bool isCausedBy(const Cause& cause) const;
 
 	public :
 		inline bool isOccupied() const
@@ -39,6 +44,8 @@ class Target
 			{ return _squares; }
 		inline const bitset<NumMen>& men() const
 			{ return _men; }
+		inline int candidates() const
+			{ return (int)_men.count(); }
 
 		inline bool isMan(Man man) const
 			{ return _men[man]; }
@@ -57,6 +64,8 @@ class Target
 
 		bitset<NumSquares> _squares;
 		bitset<NumMen> _men;
+
+		Cause _cause;
 		
 		int requiredMoves;
 		int requiredCaptures;
@@ -69,7 +78,7 @@ class Targets : public vector<Target>
 	public :
 		Targets(const Problem& problem, Color color);
 
-		void reset(const Board& board, const Pieces& pieces);
+		void refine(const Board& board, const Pieces& pieces);
 		void update(const Destinations& destinations);
 
 	public :
