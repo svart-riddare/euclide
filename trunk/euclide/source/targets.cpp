@@ -7,7 +7,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Glyph glyph, Square square)
-	: _glyph(glyph), _square(square)
+	: _glyph(glyph), _square(square), _cause(NULL, 0)
 {
 	assert(glyph.isValid());
 	assert(square.isValid());
@@ -22,15 +22,28 @@ Target::Target(Glyph glyph, Square square)
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Glyph glyph, const bitset<NumSquares>& squares)
-	: _glyph(glyph), _square(UndefinedSquare)
+	: _glyph(glyph), _square(UndefinedSquare), _cause(NULL, 0)
 {
-	assert(glyph.isValid());
+	assert(glyph == NoGlyph);
 
 	_squares = squares;
 	_men.set();
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Target::setCause(const Cause& cause)
+{
+	if (cause != _cause)
+	{
+		assert(_cause == Cause(NULL, 0));
+		assert(_glyph == NoGlyph);
+		
+		_cause = cause;
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -136,6 +149,16 @@ bool Target::isTargetOf(const Destination& destination) const
 }
 
 /* -------------------------------------------------------------------------- */
+
+bool Target::isCausedBy(const Cause& cause) const
+{
+	if (cause == _cause)
+		return true;
+
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 Targets::Targets(const Problem& problem, Color color)
@@ -149,22 +172,27 @@ Targets::Targets(const Problem& problem, Color color)
 		if (problem[square].isColor(color))
 			push_back(Target(problem[square], square));
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	/* -- Other targets are captures -- */
 
 	if ((int)size() < NumMen)
 		captures.set();
+
+	while ((int)size() < NumMen)
+		push_back(Target(NoGlyph, captures));
+
+	/* -- Initialize member variables -- */
+
+	requiredMoves = 0;
+	requiredCaptures = 0;
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Targets::update(const Destinations& destinations)
 {
-	array<bitset<NumMen>, NumSquares> men;
-	array<bitset<NumMen>, NumSquares> ghosts;
-
-	std::for_each(men.begin(), men.end(), std::mem_fun_ref(&bitset<NumMen>::set));
-	std::for_each(ghosts.begin(), ghosts.end(), std::mem_fun_ref(&bitset<NumMen>::set));
+	bitset<NumMen> empty;
+	array<bitset<NumMen>, NumSquares> men(empty);
+	array<bitset<NumMen>, NumSquares> ghosts(empty);
 
 	/* -- Scan destinations to update possible men for each target -- */
 	
@@ -202,7 +230,7 @@ void Targets::update(const Destinations& destinations)
 
 /* -------------------------------------------------------------------------- */
 
-void Targets::reset(const Board& board, const Pieces& pieces)
+void Targets::refine(const Board& board, const Pieces& pieces)
 {
 	const Destinations& destinations = pieces.getDestinations();
 	const Targets& targets = pieces.getTargets();
@@ -238,20 +266,26 @@ void Targets::reset(const Board& board, const Pieces& pieces)
 		/* -- Add these required captures as targets -- */
 
 		for (int k = 0; k < (int)captures.size(); k++)
-			push_back(Target(NoGlyph, captures[k]));
+		{
+			Target::Cause cause(&*target, k);
+
+			/* -- Find which target is dedicated to this capture if any -- */
+
+			Targets::iterator target = std::find_if(begin(), end(), boost::bind(&Target::isCausedBy, _1, cause));
+			if (target == end())
+				for (target = begin(); target != end(); target++)
+					if (!target->isOccupied())
+						if (target->isCausedBy(Target::Cause(NULL, 0)))
+							break;
+
+			if (target == end())
+				abort(NoSolution);
+
+			target->setCause(cause);
+			target->updateSquares(captures[k]);
+
+		}
 	}
-
-	/* -- Complete target list -- */
-
-	bitset<NumSquares> squares;
-	squares.set();
-
-	while (size() < NumMen)
-		push_back(Target(NoGlyph, squares));
-
-	/* -- There should not be more than NumMen targets -- */
-
-	assert(size() <= NumMen);
 }
 
 /* -------------------------------------------------------------------------- */

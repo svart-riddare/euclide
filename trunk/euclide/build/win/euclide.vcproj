@@ -278,6 +278,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\source\partitions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\position.cpp"
 				>
 			</File>
@@ -308,6 +312,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\includes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\partitions.h"
 				>
 			</File>
 			<File

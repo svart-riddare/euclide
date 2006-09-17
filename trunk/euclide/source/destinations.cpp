@@ -183,6 +183,13 @@ bool Destinations::setManSquare(Man man, Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
+bool Destinations::setMenSquares(const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines)
+{
+	return remove(boost::bind(&isDestinationPossible, _1, cref(squares), cref(shrines)));
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Destinations::setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine)
 {
 	return remove(boost::bind(&isEnoughMovesForDestination, _1, cref(availableMovesByMan), cref(availableMovesBySquare), cref(availableMovesByShrine)));
@@ -203,6 +210,16 @@ bool Destinations::isDestinationCompatible(const Destination& destination, const
 		return true;
 
 	if ((destination.captured() ? shrines : squares)[destination.square()])
+		return true;
+
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Destinations::isDestinationPossible(const Destination& destination, const array<bitset<NumSquares>, NumMen>& squares, const array<bitset<NumSquares>, NumMen>& shrines)
+{
+	if ((destination.captured() ? shrines : squares)[destination.man()][destination.square()])
 		return true;
 
 	return false;

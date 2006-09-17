@@ -6,7 +6,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Pieces::Pieces(const Problem& problem, Color color)
-	: destinations(problem, color), targets(problem, color), color(color)
+	: destinations(problem, color), targets(problem, color), partitions(targets), color(color)
 {
 	/* -- Initialize move and capture requirements -- */
 
@@ -23,6 +23,33 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 bool Pieces::applyNonUbiquityPrinciple()
 {
+#if 1
+
+	targets.update(destinations);
+
+	/* -- Refine partitions if possible -- */
+
+	if (!partitions.refine())
+		return false;
+
+	/* -- Aggregate lists of possible squares/shrines for each man -- */
+
+	bitset<NumSquares> empty;
+
+	array<bitset<NumSquares>, NumMen> squares(empty);
+	array<bitset<NumSquares>, NumMen> shrines(empty);
+
+	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (target->isMan(man))
+				(target->isOccupied() ? squares : shrines)[man] |= target->squares();
+
+	/* -- Remove destinations which do not satisfy these constraints -- */
+
+	return destinations.setMenSquares(squares, shrines);
+
+#else
+
 	array<bool, NumSquares> unique(false);
 	array<Man, NumSquares> men(UndefinedMan);
 
@@ -77,6 +104,7 @@ bool Pieces::applyNonUbiquityPrinciple()
 		applyNonUbiquityPrinciple();
 
 	return modified;
+#endif
 }
 
 /* -------------------------------------------------------------------------- */
@@ -217,7 +245,7 @@ void Pieces::updateRequiredCaptures(bool updateDestinations)
 
 void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 {
-	targets.reset(board, pieces);
+	targets.refine(board, pieces);
 	targets.update(destinations);
 
 	destinations.setShrines(targets.getCaptures());
