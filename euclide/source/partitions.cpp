@@ -68,17 +68,17 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 
 	for (int k1 = 0; k1 < (numTargets - 2); k1++)
 	{
-		bitset<NumMen> men1 = at(k1)->men();
+		Men men1 = at(k1)->men();
 
 		for (int k2 = k1 + 1; k2 < (numTargets - 1); k2++)
 		{
-			bitset<NumMen> men2 = men1 | at(k2)->men();
+			Men men2 = men1 | at(k2)->men();
 			if (men2.count() > 3)
 				continue;
 
 			for (int k3 = k2 + 1; k3 < numTargets; k3++)
 			{
-				bitset<NumMen> men3 = men2 | at(k3)->men();
+				Men men3 = men2 | at(k3)->men();
 
 				if (men3.count() == 3)
 					if (split(partitions, men3, k1, k2, k3))
@@ -89,7 +89,7 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 
 	/* -- General case -- */
 
-	array<bitset<NumMen>, NumMen> men;
+	array<Men, NumMen> men;
 	array<int, NumMen> k;
 
 	for (int depth = 4; depth < maxDepth; depth++)
@@ -146,7 +146,7 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, const int ks[])
+bool Partition::split(Partitions& partitions, const Men& men, const int ks[])
 {
 	array<bool, NumMen> discard(true);
 
@@ -174,7 +174,7 @@ bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, const i
 			
 	/* -- Update new partition targets -- */
 
-	bitset<NumMen> xmen = men;
+	Men xmen = men;
 	xmen.flip();
 
 	for (vector<Target *>::const_iterator target = partition.begin(); target != partition.end(); target++)
@@ -185,14 +185,14 @@ bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, const i
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1)
+bool Partition::split(Partitions& partitions, const Men& men, int k1)
 {
 	return split(partitions, men, &k1);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2)
+bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2)
 {
 	int ks[2] = { k1, k2 };
 	return split(partitions, men, ks);
@@ -200,7 +200,7 @@ bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1,
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2, int k3)
+bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2, int k3)
 {
 	int ks[3] = { k1, k2, k3 };
 	return split(partitions, men, ks);
@@ -208,7 +208,7 @@ bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1,
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const bitset<NumMen>& men, int k1, int k2, int k3, int k4)
+bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2, int k3, int k4)
 {
 	int ks[4] = { k1, k2, k3, k4 };
 	return split(partitions, men, ks);

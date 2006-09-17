@@ -42,16 +42,17 @@ using boost::logic::indeterminate;
 /* -------------------------------------------------------------------------- */
 
 #include "euclide.h"
+#include "enumerations.h"
 
 /* -------------------------------------------------------------------------- */
 
 #include "utilities/array.h"
 #include "utilities/algorithm.h"
+#include "utilities/bitset.h"
 #include "utilities/predicates.h"
 
 /* -------------------------------------------------------------------------- */
 
-#include "enumerations.h"
 #include "constants.h"
 #include "tables.h"
 
@@ -68,6 +69,7 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
+#include "tables.h"
 #include "castling.h"
 #include "problem.h"
 #include "board.h"

@@ -358,7 +358,7 @@ int Board::icaptures(Man man, Superman superman, Color color, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquares> >& captures) const
+int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captures) const
 {
 	assert(glyph.isValid());
 	assert(from.isValid());
@@ -474,7 +474,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<bitset<NumSquare
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<bitset<NumSquares> >& captures) const
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const
 {
 	assert(man.isValid());
 	assert(superman.isValid());
