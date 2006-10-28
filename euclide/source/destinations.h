@@ -41,9 +41,23 @@ class Destination
 	public :
 		inline int getRequiredMoves() const
 			{ return requiredMoves; }
-
 		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
+
+		static inline bool lessMoves(const Destination& destinationA, const Destination& destinationB)
+			{ return destinationA.requiredMoves < destinationB.requiredMoves; }
+		static inline bool lessCaptures(const Destination& destinationA, const Destination& destinationB)
+			{ return destinationA.requiredCaptures < destinationB.requiredCaptures; }
+
+	public :
+		inline bool isInMoves(int numAvailableMoves) const
+			{ return requiredMoves <= numAvailableMoves; }
+		inline bool isInCaptures(int numAvailableCaptures) const
+			{ return requiredCaptures <= numAvailableCaptures; }
+		inline bool isInSquares(const Squares& squares) const
+			{ return squares[_square]; }
+		inline bool isInMen(const Men& men) const
+			{ return men[_man]; }
 
 	private :
 		Square _square;
@@ -59,79 +73,8 @@ class Destination
 
 /* -------------------------------------------------------------------------- */
 
-class Destinations : public vector<Destination>
-{
-	public :
-		Destinations(const Problem& problem, Color color);
+typedef vector<Destination> Destinations;
 
-		void computeRequiredMoves(const Board& board, const Castling& castling);
-		void computeRequiredCaptures(const Board& board);
-		void updateRequiredMoves();
-		void updateRequiredCaptures();
-
-		bool setShrines(const Squares& squares);
-		bool setManSquare(Man man, Square square, bool captured);
-		bool setMenSquares(const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines);
-		bool setAvailableMoves(const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
-		bool setAvailableCaptures(const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
-		
-	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
-
-		inline const array<int, NumMen>& getRequiredMovesByMan() const
-			{ return requiredMovesByMan; }
-		inline const array<int, NumSquares>& getRequiredMovesBySquare(bool captured) const
-			{ return captured ? requiredMovesByShrine : requiredMovesBySquare; }
-
-		inline const array<int, NumMen>& getRequiredCapturesByMan() const
-			{ return requiredCapturesByMan; }
-		inline const array<int, NumSquares>& getRequiredCapturesBySquare(bool captured) const
-			{ return captured ? requiredCapturesByShrine : requiredCapturesBySquare; }
-
-	protected :
-		template <class Predicate>
-		bool remove(Predicate predicate);
-
-	protected :
-		static bool isDestinationCompatible(const Destination& destination, const Men& men, const Squares& squares, const Squares& shrines);
-		static bool isDestinationPossible(const Destination& destination, const array<Squares, NumMen>& squares, const array<Squares, NumMen>& shrines);
-		static bool isEnoughMovesForDestination(const Destination& destination, const array<int, NumMen>& availableMovesByMan, const array<int, NumSquares>& availableMovesBySquare, const array<int, NumSquares>& availableMovesByShrine);
-		static bool isEnoughCapturesForDestination(const Destination& destination, const array<int, NumMen>& availableCapturesByMan, const array<int, NumSquares>& availableCapturesBySquare, const array<int, NumSquares>& availableCapturesByShrine);
-
-	private :
-		int requiredMoves;
-		array<int, NumMen> requiredMovesByMan;
-		array<int, NumSquares> requiredMovesBySquare;
-		array<int, NumSquares> requiredMovesByShrine;
-
-		int requiredCaptures;
-		array<int, NumMen> requiredCapturesByMan;
-		array<int, NumSquares> requiredCapturesBySquare;
-		array<int, NumSquares> requiredCapturesByShrine;
-};
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-template <class Predicate>
-bool Destinations::remove(Predicate predicate)
-{
-	iterator last = std::remove_if(begin(), end(), !predicate);
-	if (last == end())
-		return false;
-
-	erase(last, end());
-
-	updateRequiredMoves();
-	updateRequiredCaptures();
-
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 }

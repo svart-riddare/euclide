@@ -5,27 +5,91 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Partition::Partition()
+Partition::Partition(const Problem& problem, Color color)
+	: _color(color)
 {
+	/* -- Initialize member variables -- */
+
+	_men.set();
+	_squares.set();
+	
+	requiredMoves = 0;
+	requiredCaptures = 0;
+
+	/* -- Create list of targets -- */
+
 	reserve(NumMen);
-}
 
-/* -------------------------------------------------------------------------- */
+	/* -- Occupied squares are obvious targets -- */
 
-Partition::Partition(Targets& targets)
-{
-	assert(targets.size() == NumMen);
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (problem[square].isColor(color))
+			push_back(new Target(problem[square], square));
 
-	reserve(NumMen);
-	for (vector<Target>::iterator target = targets.begin(); target != targets.end(); target++)
-		push_back(&*target);
+	assert(size() <= NumMen);
+
+	/* -- Other targets are captures -- */
+
+	Squares captures;
+	
+	if (size() < NumMen)	
+		captures.set();
+
+	while (size() < NumMen)
+		push_back(new Target(color, captures));
+
+	/* -- This single partition groups all men -- */
 
 	_men.set();
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::update(Partitions& partitions, int maxDepth)
+Partition::Partition(Partition& partition, const Men& men, const bitset<NumMen>& targets)
+	: _color(partition.color())
+{
+	/* -- Initialize member variables -- */
+
+	_men = men;
+	_squares = partition._squares;
+
+	requiredMoves = 0;
+	requiredCaptures = 0;
+
+	/* -- Move some targets from the given partition to the new one -- */
+
+	reserve(targets.count());
+
+	for (int source = 0, destination = 0; source < (int)partition.size(); source++)
+	{
+		if (targets[source])
+			push_back(partition[source]);
+		else
+			partition[destination++] = partition[source];
+	}
+
+	partition.resize(partition.size() - targets.count());
+
+	/* -- Update state -- */
+
+	updateRequiredMoves();
+	updateRequiredCaptures();
+	updatePossibleSquares();
+}
+
+/* -------------------------------------------------------------------------- */
+
+Partition::~Partition()
+{
+#if 0
+	for (iterator target = begin(); target != end(); target++)
+		delete (Target *)(*target);
+#endif
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::refine(Partitions& partitions, int maxDepth)
 {
 	if (maxDepth >= (int)size())
 		maxDepth = (int)size() - 1;
@@ -40,8 +104,7 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 		return false;
 
 	if (front()->candidates() <= 1)
-		if (split(partitions, front()->men(), 0))
-			return true;
+		return split(partitions, front()->men(), 1);
 
 	/* -- Look for pair of targets with same two candidates -- */
 
@@ -55,8 +118,7 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 	for (int k1 = 0; k1 < numTargets; k1++)
 		for (int k2 = k1 + 1; k2 < numTargets; k2++)
 			if (at(k1)->men() == at(k2)->men())
-				if (split(partitions, at(k1)->men(), k1, k2))
-					return true;
+				return split(partitions, at(k1)->men(), (1 << k1) | (1 << k2));
 
 	/* -- Look for targets trios with three different candidates -- */
 
@@ -81,8 +143,7 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 				Men men3 = men2 | at(k3)->men();
 
 				if (men3.count() == 3)
-					if (split(partitions, men3, k1, k2, k3))
-						return true;
+					return split(partitions, men3, (1 << k1) | (1 << k2) | (1 << k3));
 			}
 		}
 	}
@@ -117,8 +178,13 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 			/* -- Is it possible to split the current subset ? -- */
 
 			if ((int)men[n].count() == depth)
-				if (split(partitions, men[n], k.data()))
-					return true;
+			{
+				bitset<NumMen> targets;
+				for (int i = 0; i < depth; i++)
+					targets.set(k[i]);
+
+				return split(partitions, men[n], targets);
+			}
 
 			/* -- Move on to the next subset having the same size -- */
 
@@ -146,104 +212,202 @@ bool Partition::update(Partitions& partitions, int maxDepth)
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const Men& men, const int ks[])
+bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMen>& targets)
 {
-	array<bool, NumMen> discard(true);
+	/* -- Create new partition -- */
 
-	for (int k = 0; k < (int)men.count(); k++)
-		discard[ks[k]] = false;
+	partitions.push_back(Partition(*this, men, targets));
 
-	/* -- Create a new partition -- */
+	/* -- Update some state variable -- */
 
-	Partition partition;
+	requiredMoves = 0;
+	requiredCaptures = 0;
 
-	for (int source = 0, destination = 0; source < (int)size(); source++)
-	{
-		if (discard[source])
-			partition.push_back(at(source));
-		else
-			at(destination++) = at(source);
-	}
-
-	resize(men.count());
-
-	/* -- Add new partition to partition list -- */
-
-	assert(partition.size() > 0);
-	partitions.push_back(partition);
-			
-	/* -- Update new partition targets -- */
+	/* -- Set possible men -- */
 
 	Men xmen = men;
-	xmen.flip();
+	_men &= xmen.flip();
 
-	for (vector<Target *>::const_iterator target = partition.begin(); target != partition.end(); target++)
-		(*target)->updateMen(xmen);
+	for (iterator target = begin(); target != end(); target++)
+		(*target)->setPossibleMen(xmen);
+
+	/* -- Update state -- */
+
+	updateRequiredMoves();
+	updateRequiredCaptures();
+	updatePossibleSquares();
 
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const Men& men, int k1)
+int Partition::computeRequiredMoves(const Board& board, const Castling& castling)
 {
-	return split(partitions, men, &k1);
+	int requiredMoves = 0;
+
+	for (iterator target = begin(); target != end(); target++)
+		requiredMoves += (*target)->computeRequiredMoves(board, castling);
+
+	return maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2)
+int Partition::computeRequiredCaptures(const Board& board)
 {
-	int ks[2] = { k1, k2 };
-	return split(partitions, men, ks);
+	int requiredCaptures = 0;
+
+	for (iterator target = begin(); target != end(); target++)
+		requiredCaptures += (*target)->computeRequiredCaptures(board);
+
+	return maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2, int k3)
+int Partition::updateRequiredMoves()
 {
-	int ks[3] = { k1, k2, k3 };
-	return split(partitions, men, ks);
+	int requiredMoves = 0;
+
+	for (iterator target = begin(); target != end(); target++)
+		requiredMoves += (*target)->updateRequiredMoves();
+
+	return maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(Partitions& partitions, const Men& men, int k1, int k2, int k3, int k4)
+int Partition::updateRequiredCaptures()
 {
-	int ks[4] = { k1, k2, k3, k4 };
-	return split(partitions, men, ks);
+	int requiredCaptures = 0;
+
+	for (iterator target = begin(); target != end(); target++)
+		requiredCaptures += (*target)->updateRequiredCaptures();
+
+	return maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::lessCandidates(const Target *targetA, const Target *targetB)
+const Men& Partition::updatePossibleMen()
 {
-	return targetA->candidates() < targetB->candidates();
+	_men.reset();
+
+	for (iterator target = begin(); target != end(); target++)
+		_men |= (*target)->updatePossibleMen();
+
+	return _men;
 }
 
 /* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
 
-Partitions::Partitions(Targets& targets)
+const Squares& Partition::updatePossibleSquares()
 {
-	push_back(Partition(targets));
+	_squares.reset();
+
+	for (iterator target = begin(); target != end(); target++)
+		_squares |= (*target)->updatePossibleSquares();
+
+	return _squares;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partitions::refine(bool quick)
+bool Partition::setPossibleMen(const Men& men)
 {
+	Men xmen = men;
+	xmen.flip() &= _men;
+
+	if (xmen.none())
+		return false;
+
+	_men &= men;
+
 	bool modified = false;
-
-	for (int k = 0; k < (int)size(); k++)
-		if (at(k).update(*this, quick ? 3 : NumMen))
+	for (iterator target = begin(); target != end(); target++)
+		if ((*target)->setPossibleMen(men))
 			modified = true;
-	
-	return modified;
+
+	if (!modified)
+		return false;
+
+	updatePossibleSquares();
+	updateRequiredMoves();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::setPossibleSquares(const Squares& squares)
+{
+	Squares xsquares = squares;
+	xsquares.flip() &= _squares;
+
+	if (xsquares.none())
+		return false;
+
+	_squares &= squares;
+
+	bool modified = false;
+	for (iterator target = begin(); target != end(); target++)
+		if ((*target)->setPossibleSquares(squares))
+			modified = true;
+
+	if (modified)
+		return false;
+
+	updatePossibleMen();
+	updateRequiredMoves();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::setAvailableMoves(int numAvailableMoves)
+{
+	int numFreeMoves = numAvailableMoves - getRequiredMoves();
+
+	bool modified = false;
+	for (iterator target = begin(); target != end(); target++)
+		if ((*target)->setAvailableMoves((*target)->getRequiredMoves() + numFreeMoves))
+			modified = true;
+
+	if (!modified)
+		return false;
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::setAvailableCaptures(int numAvailableCaptures)
+{
+	int numFreeCaptures = numAvailableCaptures - getRequiredCaptures();
+
+	bool modified = false;
+	for (iterator target = begin(); target != end(); target++)
+		if ((*target)->setAvailableCaptures((*target)->getRequiredCaptures() + numFreeCaptures))
+			modified = true;
+
+	if (!modified)
+		return false;
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredMoves();
+
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
 }
-
-

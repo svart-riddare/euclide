@@ -11,26 +11,22 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-class Pieces
+class Pieces : public Partitions
 {
 	public :
 		Pieces(const Problem& problem, Color color);
 
-		bool applyNonUbiquityPrinciple();
-		bool applyMoveConstraints(int availableMoves);
-		bool applyCaptureConstraints(int availableCaptures);
-		
-		void computeRequiredMoves(const Board& board);
-		void computeRequiredCaptures(const Board& board);
-		void updateRequiredMoves(bool updateDestinations = true);
-		void updateRequiredCaptures(bool updateDestinations = true);
+		bool analysePartitions();
+		bool analyseMoveConstraints(int availableMoves);
+		bool analyseCaptureConstraints(int availableCaptures);
 
 		void analyseCaptures(const Board& board, const Pieces& pieces);
 		bool analyseStaticPieces(Board& board);
 
-		int getRequiredMoves(Man man) const;
-		int getNumDestinations(Man man) const;
-		const Destination& getDestination(Man man) const;
+		int computeRequiredMoves(const Board& board);
+		int computeRequiredCaptures(const Board& board);
+		int updateRequiredMoves();
+		int updateRequiredCaptures();
 		
 	public :
 		inline int getRequiredMoves() const
@@ -38,21 +34,13 @@ class Pieces
 		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
 		
-		inline const Destinations& getDestinations() const
-			{ return destinations; }
-		inline const Targets& getTargets() const
-			{ return targets; }
-
 	private :
 		array<Glyph, NumSquares> glyphs;
-		
-		Destinations destinations;
-		Targets targets;
-		Partitions partitions;
 
 		Castling castling;
-		Color color;
+		Color _color;
 
+	private :
 		int requiredMoves;
 		int requiredCaptures;
 };
