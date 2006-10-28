@@ -90,8 +90,8 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	/* -- Make initial non-ubiquity deduction (for kings) -- */
 
-	whitePieces->applyNonUbiquityPrinciple();
-	blackPieces->applyNonUbiquityPrinciple();
+	whitePieces->analysePartitions();
+	blackPieces->analysePartitions();
 
 	/* -- Compute initial number of required moves and captures -- */
 
@@ -105,17 +105,17 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	do
 	{
-		whitePieces->applyMoveConstraints(problem->moves(White));
-		whitePieces->applyCaptureConstraints(problem->captures(White));
+		whitePieces->analyseMoveConstraints(problem->moves(White));
+		whitePieces->analyseCaptureConstraints(problem->captures(White));
 	}
-	while (whitePieces->applyNonUbiquityPrinciple());
+	while (whitePieces->analysePartitions());
 
 	do
 	{
-		blackPieces->applyMoveConstraints(problem->moves(Black));
-		blackPieces->applyCaptureConstraints(problem->captures(Black));
+		blackPieces->analyseMoveConstraints(problem->moves(Black));
+		blackPieces->analyseCaptureConstraints(problem->captures(Black));
 	}
-	while (blackPieces->applyNonUbiquityPrinciple());
+	while (blackPieces->analysePartitions());
 
 	/* -- Display actual deductions -- */
 	
@@ -134,17 +134,17 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	do
 	{
-		whitePieces->applyMoveConstraints(problem->moves(White));
-		whitePieces->applyCaptureConstraints(problem->captures(White));
+		whitePieces->analyseMoveConstraints(problem->moves(White));
+		whitePieces->analyseCaptureConstraints(problem->captures(White));
 	}
-	while (whitePieces->applyNonUbiquityPrinciple());
+	while (whitePieces->analysePartitions());
 
 	do
 	{
-		blackPieces->applyMoveConstraints(problem->moves(Black));
-		blackPieces->applyCaptureConstraints(problem->captures(Black));
+		blackPieces->analyseMoveConstraints(problem->moves(Black));
+		blackPieces->analyseCaptureConstraints(problem->captures(Black));
 	}
-	while (blackPieces->applyNonUbiquityPrinciple());
+	while (blackPieces->analysePartitions());
 
 	deductions = *this;
 
@@ -167,17 +167,17 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	
 	do
 	{
-		whitePieces->applyMoveConstraints(problem->moves(White));
-		whitePieces->applyCaptureConstraints(problem->captures(White));
+		whitePieces->analyseMoveConstraints(problem->moves(White));
+		whitePieces->analyseCaptureConstraints(problem->captures(White));
 	}
-	while (whitePieces->applyNonUbiquityPrinciple());
+	while (whitePieces->analysePartitions());
 
 	do
 	{
-		blackPieces->applyMoveConstraints(problem->moves(Black));
-		blackPieces->applyCaptureConstraints(problem->captures(Black));
+		blackPieces->analyseMoveConstraints(problem->moves(Black));
+		blackPieces->analyseCaptureConstraints(problem->captures(Black));
 	}
-	while (blackPieces->applyNonUbiquityPrinciple());
+	while (blackPieces->analysePartitions());
 
 	deductions = *this;
 
@@ -192,41 +192,74 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 Euclide::operator EUCLIDE_Deductions() const
 {
-	EUCLIDE_Deductions deductions;
+	EUCLIDE_Deductions _deductions;
 	
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
+		const Pieces *pieces = (color == White) ? whitePieces : blackPieces;
+		EUCLIDE_Deduction *deductions = (color == White) ? _deductions.whitePieces : _deductions.blackPieces;
+
+		/* -- Initialize deductions for each man -- */
+		
 		for (Man man = FirstMan; man <= LastMan; man++)
 		{
-			EUCLIDE_Deduction *deduction = (color == White) ? &deductions.whitePieces[man] : &deductions.blackPieces[man];
-			const Pieces *pieces = (color == White) ? whitePieces : blackPieces;
-
+			EUCLIDE_Deduction *deduction = &deductions[man];
+		
 			deduction->initialGlyph = tables::supermanToGlyph[man][color].glyph_c();
 			deduction->promotionGlyph = deduction->initialGlyph;
 
 			deduction->initialSquare = tables::initialSquares[man][color];
 			deduction->finalSquare = -1;
 
-			deduction->requiredMoves = pieces->getRequiredMoves(man);
-			deduction->numSquares = pieces->getNumDestinations(man);
+			deduction->requiredMoves = INT_MAX;
+			deduction->numSquares = 0;
 
 			deduction->captured = false;
+		}
 
-			if (deduction->numSquares == 1)
+		/* -- Scan all destinations to fill deductions -- */
+
+		for (Partitions::const_iterator partition = pieces->begin(); partition != pieces->end(); partition++)
+		{
+			bool generic = false;
+
+			for (vector<Target *>::const_iterator target = partition->begin(); target != partition->end(); target++)
 			{
-				const Destination& destination = pieces->getDestination(man);
+				if ((*target)->isGeneric())
+				{
+					if (generic)
+						continue;
 
-				deduction->promotionGlyph = tables::supermanToGlyph[destination.superman()][destination.color()].glyph_c();
-				deduction->finalSquare = destination.square();
-				deduction->captured = destination.captured();
+					generic = true;
+				}
+
+				for (Destinations::const_iterator destination = (*target)->begin(); destination != (*target)->end(); destination++)
+				{
+					EUCLIDE_Deduction *deduction = &deductions[destination->man()];
+
+					minimize(deduction->requiredMoves, destination->getRequiredMoves());
+					
+					if (++deduction->numSquares == 1)
+					{
+						deduction->promotionGlyph = tables::supermanToGlyph[destination->superman()][destination->color()].glyph_c();
+						deduction->finalSquare = destination->square();
+						deduction->captured = destination->captured();
+					}
+					else
+					{
+						deduction->promotionGlyph = deduction->initialGlyph;
+						deduction->finalSquare = -1;
+						deduction->captured = false;
+					}
+				}
 			}
 		}
 	}
 
-	deductions.freeWhiteMoves = problem->moves(White) - whitePieces->getRequiredMoves();
-	deductions.freeBlackMoves = problem->moves(Black) - blackPieces->getRequiredMoves();
+	_deductions.freeWhiteMoves = problem->moves(White) - whitePieces->getRequiredMoves();
+	_deductions.freeBlackMoves = problem->moves(Black) - blackPieces->getRequiredMoves();
 
-	return deductions;
+	return _deductions;
 }
 
 /* -------------------------------------------------------------------------- */

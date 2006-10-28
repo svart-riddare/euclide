@@ -11,32 +11,43 @@ class Pieces;
 
 /* -------------------------------------------------------------------------- */
 
-class Target
+class Target : public vector<Destination>
 {
 	public:
 		typedef std::pair<const Target *, int> Cause;
 
 	public :
 		Target(Glyph glyph, Square square);
-		Target(Glyph glyph, const Squares& squares);
+		Target(Color color, const Squares& squares);
+
+		int computeRequiredMoves(const Board& board, const Castling& castling);
+		int computeRequiredCaptures(const Board& board);
+
+		int updateRequiredMoves();
+		int updateRequiredCaptures();
+		const Men& updatePossibleMen();
+		const Squares& updatePossibleSquares();
+
+		bool setPossibleMen(const Men& men);
+		bool setPossibleSquares(const Squares& squares);
+		bool setAvailableMoves(int numAvailableMoves);
+		bool setAvailableCaptures(int numAvailableCaptures);
 
 		void setCause(const Cause& cause);
-		void updateMen(const Men& men);
-		void updateMen(const array<Men, NumSquares>& men);
-		void updateSquares(const Squares& squares);
-		int updateRequiredMoves(const array<int, NumSquares>& requiredMoves);
-		int updateRequiredCaptures(const array<int, NumSquares>& requiredCaptures);
-
-		bool isTargetOf(const Destination& destination) const;
-		bool isCausedBy(const Cause& cause) const;
 
 	public :
 		inline bool isOccupied() const
 			{ return (_glyph != NoGlyph); }
+		inline bool isGeneric() const
+			{ return (_glyph == NoGlyph) && !_cause.first; }
 
 	public :
+		inline Man man() const
+			{ return _man; }
 		inline Glyph glyph() const
 			{ return _glyph; }
+		inline Color color() const
+			{ return _color; }
 		inline Square square() const
 			{ return _square; }
 
@@ -52,6 +63,9 @@ class Target
 		inline bool isSquare(Square square) const
 			{ return _squares[square]; }
 
+		inline const Cause& cause() const
+			{ return _cause; }
+
 	public :
 		inline int getRequiredMoves() const
 			{ return requiredMoves; }
@@ -59,46 +73,24 @@ class Target
 			{ return requiredCaptures; }
 
 	private :
+		Man _man;
 		Glyph _glyph;
+		Color _color;
 		Square _square;
 
 		Squares _squares;
 		Men _men;
 
 		Cause _cause;
-		
+
+	private :
 		int requiredMoves;
 		int requiredCaptures;
 };
 
 /* -------------------------------------------------------------------------- */
 
-class Targets : public vector<Target>
-{
-	public :
-		Targets(const Problem& problem, Color color);
-
-		void refine(const Board& board, const Pieces& pieces);
-		void update(const Destinations& destinations);
-
-	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
-
-	public :
-		inline const Squares& getCaptures() const
-			{ return captures; }
-
-	private :
-		Color color;
-
-		int requiredMoves;
-		int requiredCaptures;
-
-		Squares captures;
-};
+typedef vector<Target> Targets;
 
 /* -------------------------------------------------------------------------- */
 

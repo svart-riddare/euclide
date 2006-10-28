@@ -7,7 +7,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Glyph glyph, Square square)
-	: _glyph(glyph), _square(square), _cause(NULL, 0)
+	: _man(UndefinedMan), _glyph(glyph), _color(glyph.color()), _square(square), _cause(NULL, 0)
 {
 	assert(glyph.isValid());
 	assert(square.isValid());
@@ -17,20 +17,210 @@ Target::Target(Glyph glyph, Square square)
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
+
+	/* -- List possible destinations -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (tables::supermanToGlyph[man][_color] == glyph)
+			push_back(Destination(square, _color, man, man, false));
+
+	/* -- Handle promoted pieces -- */
+
+	for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+		if (tables::supermanToGlyph[superman][_color] == glyph)
+			for (Man man = FirstPawn; man <= LastPawn; man++)
+				push_back(Destination(square, _color, man, superman, false));
 }
 
 /* -------------------------------------------------------------------------- */
 
-Target::Target(Glyph glyph, const Squares& squares)
-	: _glyph(glyph), _square(UndefinedSquare), _cause(NULL, 0)
+Target::Target(Color color, const Squares& squares)
+	: _man(UndefinedMan), _glyph(NoGlyph), _color(color), _square(UndefinedSquare), _cause(NULL, 0)
 {
-	assert(glyph == NoGlyph);
-
 	_squares = squares;
 	_men.set();
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
+
+	/* -- List possible destinations -- */
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+	{
+		if (!squares[square])
+			continue;
+
+		/* -- Each man may have been captured on this square -- */
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			push_back(Destination(square, color, man, man, true));
+
+		/* -- Pawns may also have been captured as promoted pieces -- */
+
+		for (Man man = FirstPawn; man <= LastPawn; man++)
+			for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+				push_back(Destination(square, color, man, superman, true));
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Target::computeRequiredMoves(const Board& board, const Castling& castling)
+{
+	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredMoves, _1, cref(board), cref(castling)));
+	return updateRequiredMoves();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Target::computeRequiredCaptures(const Board& board)
+{
+	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredCaptures, _1, cref(board)));
+	return updateRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Target::updateRequiredMoves()
+{
+	return requiredMoves = std::min_element(begin(), end(), Destination::lessMoves)->getRequiredMoves();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Target::updateRequiredCaptures()
+{
+	return requiredCaptures = std::min_element(begin(), end(), Destination::lessCaptures)->getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+const Men& Target::updatePossibleMen()
+{
+	if (_man != UndefinedMan)
+		return _men;
+
+	_men.reset();
+	for (vector<Destination>::const_iterator destination = begin(); destination != end(); destination++)
+		_men.set(destination->man());
+
+	if (_men.count() == 1)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (_men[man])
+				_man = man;
+
+	return _men;
+}
+
+/* -------------------------------------------------------------------------- */
+
+const Squares& Target::updatePossibleSquares()
+{
+	if (_square != UndefinedSquare)
+		return _squares;
+
+	_squares.reset();
+	for (vector<Destination>::const_iterator destination = begin(); destination != end(); destination++)
+		_squares.set(destination->square());
+
+	if (_squares.count() == 1)
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			if (_squares[square])
+				_square = square;
+
+	return _squares;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setPossibleMen(const Men& men)
+{
+	Men xmen = men;
+	xmen.flip() &= _men;
+
+	if (xmen.none())
+		return false;
+
+	_men &= men;
+
+	iterator last = std::remove_if(begin(), end(), boost::bind(&Destination::isInMen, _1, cref(xmen)))	;
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleSquares();
+	updateRequiredMoves();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setPossibleSquares(const Squares& squares)
+{
+	Squares xsquares = squares;
+	xsquares.flip() &= _squares;
+
+	if (xsquares.none())
+		return false;
+
+	_squares &= squares;
+
+	iterator last = std::remove_if(begin(), end(), boost::bind(&Destination::isInSquares, _1, cref(xsquares)));
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleMen();
+	updateRequiredMoves();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setAvailableMoves(int numAvailableMoves)
+{
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInMoves, _1, numAvailableMoves));
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setAvailableCaptures(int numAvailableCaptures)
+{
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInCaptures, _1, numAvailableCaptures));
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredMoves();
+
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -43,248 +233,6 @@ void Target::setCause(const Cause& cause)
 		assert(_glyph == NoGlyph);
 		
 		_cause = cause;
-	}
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Target::updateMen(const Men& men)
-{
-	_men &= men;
-	
-	if (_men.none())
-		abort(NoSolution);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Target::updateMen(const array<Men, NumSquares>& men)
-{
-	Men group;
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (_squares.test(square))
-			group |= men[square];
-
-	updateMen(group);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Target::updateSquares(const Squares& squares)
-{
-	_squares &= squares;
-
-	if (_squares.none())
-		abort(NoSolution);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Target::updateRequiredMoves(const array<int, NumSquares>& requiredMoves)
-{
-	this->requiredMoves = infinity;
-
-	if (_square.isValid())
-		return this->requiredMoves = requiredMoves[_square];
-
-	/* -- Find minimum requirement -- */
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-	{
-		if (_squares[square])
-		{
-			minimize(this->requiredMoves, requiredMoves[square]);
-
-			if (requiredMoves[square] >= infinity)
-				_squares[square] = false;
-		}
-	}
-
-	return this->requiredMoves;
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Target::updateRequiredCaptures(const array<int, NumSquares>& requiredCaptures)
-{
-	this->requiredCaptures = infinity;
-
-	if (_square.isValid())
-		return this->requiredCaptures = requiredCaptures[_square];
-
-	/* -- Find minimum requirement -- */
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-	{
-		if (_squares[square])
-		{
-			minimize(this->requiredCaptures, requiredCaptures[square]);
-
-			if (requiredCaptures[square] >= infinity)
-				_squares[square] = false;
-		}
-	}
-
-	if (_squares.none())
-		abort(NoSolution);
-
-	return this->requiredCaptures;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Target::isTargetOf(const Destination& destination) const
-{
-	if (!_men[destination.man()])
-		return false;
-
-	if (!_squares[destination.square()])
-		return false;
-
-	if (isOccupied() == destination.captured())
-		return false;
-
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Target::isCausedBy(const Cause& cause) const
-{
-	if (cause == _cause)
-		return true;
-
-	return false;
-}
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-Targets::Targets(const Problem& problem, Color color)
-{
-	this->color = color;
-
-	/* -- Occupied squares are obvious targets -- */
-
-	reserve(NumMen);
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (problem[square].isColor(color))
-			push_back(Target(problem[square], square));
-
-	/* -- Other targets are captures -- */
-
-	if ((int)size() < NumMen)
-		captures.set();
-
-	while ((int)size() < NumMen)
-		push_back(Target(NoGlyph, captures));
-
-	/* -- Initialize member variables -- */
-
-	requiredMoves = 0;
-	requiredCaptures = 0;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Targets::update(const Destinations& destinations)
-{
-	Men empty;
-	array<Men, NumSquares> men(empty);
-	array<Men, NumSquares> ghosts(empty);
-
-	/* -- Scan destinations to update possible men for each target -- */
-	
-	for (Destinations::const_iterator destination = destinations.begin(); destination != destinations.end(); destination++)
-		if (!destination->captured())
-			men[destination->square()].set(destination->man());
-		else
-			ghosts[destination->square()].set(destination->man());
-
-	for (Targets::iterator target = begin(); target != end(); target++)
-		if (target->isOccupied())
-			target->updateMen(men[target->square()]);
-		else
-			target->updateMen(ghosts);
-
-	/* -- Update required moves -- */
-
-	requiredMoves = 0;
-	for (Targets::iterator target = begin(); target != end(); target++)
-		requiredMoves += target->updateRequiredMoves(destinations.getRequiredMovesBySquare(!target->isOccupied()));
-
-	/* -- Update required captures -- */
-
-	requiredCaptures = 0;
-	for (Targets::iterator target = begin(); target != end(); target++)
-		requiredCaptures += target->updateRequiredCaptures(destinations.getRequiredCapturesBySquare(!target->isOccupied()));
-
-	/* -- Update possible squares for captures -- */
-
-	captures.reset();
-	for (Targets::const_iterator target = begin(); target != end(); target++)
-		if (!target->isOccupied())
-			captures |= target->squares();
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Targets::refine(const Board& board, const Pieces& pieces)
-{
-	const Destinations& destinations = pieces.getDestinations();
-	const Targets& targets = pieces.getTargets();
-
-	/* -- Scan opponent targets for required captures -- */
-
-	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
-	{
-		if (!target->getRequiredCaptures())
-			continue;
-
-		vector<Squares> captures(target->getRequiredCaptures());
-
-		/* -- Find all destinations compatibles with target -- */
-
-		for (Destinations::const_iterator destination = destinations.begin(); destination != destinations.end(); destination++)
-		{
-			if (!target->isTargetOf(*destination))
-				continue;
-
-			assert(destination->getRequiredCaptures() >= target->getRequiredCaptures());
-
-			/* -- We seek minimal number of captures -- */
-
-			if (destination->getRequiredCaptures() > target->getRequiredCaptures())
-				continue;
-
-			/* -- Find squares for required captures -- */
-
-			board.captures(destination->man(), destination->superman(), destination->color(), tables::initialSquares[destination->man()][destination->color()], destination->square(), captures);
-		}
-
-		/* -- Add these required captures as targets -- */
-
-		for (int k = 0; k < (int)captures.size(); k++)
-		{
-			Target::Cause cause(&*target, k);
-
-			/* -- Find which target is dedicated to this capture if any -- */
-
-			Targets::iterator target = std::find_if(begin(), end(), boost::bind(&Target::isCausedBy, _1, cause));
-			if (target == end())
-				for (target = begin(); target != end(); target++)
-					if (!target->isOccupied())
-						if (target->isCausedBy(Target::Cause(NULL, 0)))
-							break;
-
-			if (target == end())
-				abort(NoSolution);
-
-			target->setCause(cause);
-			target->updateSquares(captures[k]);
-
-		}
 	}
 }
 

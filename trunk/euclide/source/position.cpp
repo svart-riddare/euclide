@@ -6,7 +6,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Pieces::Pieces(const Problem& problem, Color color)
-	: destinations(problem, color), targets(problem, color), partitions(targets), color(color)
+	: _color(color)
 {
 	/* -- Initialize move and capture requirements -- */
 
@@ -17,238 +17,134 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		glyphs[square] = problem[square];
+
+	/* -- Create single partition -- */
+
+	reserve(NumMen);
+	push_back(Partition(problem, color));
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::applyNonUbiquityPrinciple()
+bool Pieces::analysePartitions()
 {
-#if 1
+	bool modified = false;
+	int partitions = (int)size();
 
-	targets.update(destinations);
+	/* -- Refine (split) partitions is possible -- */
 
-	/* -- Refine partitions if possible -- */
+	for (int k = 0; k < partitions; k++)
+		while (at(k).refine(*this, NumMen))
+			modified = true;
+	
+	return modified;
+}
 
-	if (!partitions.refine())
+/* -------------------------------------------------------------------------- */
+
+bool Pieces::analyseMoveConstraints(int availableMoves)
+{
+	int freeMoves = availableMoves - getRequiredMoves();
+	
+	bool modified = false;
+	for (iterator partition = begin(); partition != end(); partition++)
+		if (partition->setAvailableMoves(partition->getRequiredMoves() + freeMoves))
+			modified = true;
+
+	if (!modified)
 		return false;
 
-	/* -- Aggregate lists of possible squares/shrines for each man -- */
+	updateRequiredCaptures();
+	return true;
+}
 
-	Squares empty;
+/* -------------------------------------------------------------------------- */
 
-	array<Squares, NumMen> squares(empty);
-	array<Squares, NumMen> shrines(empty);
-
-	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
-		for (Man man = FirstMan; man <= LastMan; man++)
-			if (target->isMan(man))
-				(target->isOccupied() ? squares : shrines)[man] |= target->squares();
-
-	/* -- Remove destinations which do not satisfy these constraints -- */
-
-	return destinations.setMenSquares(squares, shrines);
-
-#else
-
-	array<bool, NumSquares> unique(false);
-	array<Man, NumSquares> men(UndefinedMan);
-
-	/* -- Scan the list of possible destinations -- */
-
-	for (Destinations::const_iterator I = destinations.begin(); I != destinations.end(); I++)
-	{
-		/* -- Skip captures -- */
-
-		if (I->captured())
-			continue;
-
-		/* -- Check if a single man can end alive on a given square -- */
-
-		Square square = I->square();
-		Man man = I->man();
-
-		if (men[square] == UndefinedMan)
-		{
-			unique[square] = true;
-			men[square] = man;
-		}
-		else
-		if (men[square] != man)
-			unique[square] = false;
-	}
+bool Pieces::analyseCaptureConstraints(int availableCaptures)
+{
+	int freeCaptures = availableCaptures - getRequiredCaptures();
 
 	bool modified = false;
+	for (iterator partition = begin(); partition != end(); partition++)
+		if (partition->setAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
+			modified = true;
 
-	/* -- If a man is the only one that can end on a given occupied square, 
-	      then this man must indeed end on that square -- */
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-	{
-		/* -- If there is no possible man for a given occupied square,
-		      the problem has no solution -- */
-
-		if (glyphs[square].isColor(color))
-			if (men[square] == UndefinedMan)
-				abort(NoSolution);
-
-		/* -- Non ubiquity deduction -- */
-
-		if (unique[square])
-			if (destinations.setManSquare(men[square], square, false))
-				modified = true;
-	}	
-
-	/* -- Make some further deductions if possible -- */
-
-	if (modified)
-		applyNonUbiquityPrinciple();
-
-	return modified;
-#endif
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Pieces::applyMoveConstraints(int availableMoves)
-{
-	/* -- Compute number of available moves -- */
-
-	array<int, NumMen> availableMovesByMan(availableMoves - destinations.getRequiredMoves());
-	array<int, NumSquares> availableMovesBySquare(availableMoves - targets.getRequiredMoves());
-	array<int, NumSquares> availableMovesByShrine(availableMoves - targets.getRequiredMoves());
-
-	const array<int, NumMen>& requiredMovesByMan = destinations.getRequiredMovesByMan();
-	const array<int, NumSquares>& requiredMovesBySquare = destinations.getRequiredMovesBySquare(false);
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		availableMovesByMan[man] += requiredMovesByMan[man];
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		availableMovesBySquare[square] += requiredMovesBySquare[square];
-
-	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
-		if (!target->isOccupied())
-			for (Square square = FirstSquare; square <= LastSquare; square++)
-				if (target->isSquare(square))
-					maximize(availableMovesByShrine[square], availableMovesBySquare[square] + target->getRequiredMoves());
-
-	/* -- Apply these numbers to remove unreachable destinations -- */
-
-	if (!destinations.setAvailableMoves(availableMovesByMan, availableMovesBySquare, availableMovesByShrine))
+	if (!modified)
 		return false;
 
-	updateRequiredMoves(true);
-	applyMoveConstraints(availableMoves);
-
+	updateRequiredMoves();
 	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Pieces::applyCaptureConstraints(int availableCaptures)
-{
-	array<int, NumMen> availableCapturesByMan(availableCaptures - destinations.getRequiredCaptures());
-	array<int, NumSquares> availableCapturesBySquare(availableCaptures - targets.getRequiredCaptures());
-	array<int, NumSquares> availableCapturesByShrine(availableCaptures - targets.getRequiredCaptures());
-
-	const array<int, NumMen>& requiredCapturesByMan = destinations.getRequiredCapturesByMan();
-	const array<int, NumSquares>& requiredCapturesBySquare = destinations.getRequiredCapturesBySquare(false);
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		availableCapturesByMan[man] += requiredCapturesByMan[man];
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		availableCapturesBySquare[square] += requiredCapturesBySquare[square];
-
-	for (Targets::const_iterator target = targets.begin(); target != targets.end(); target++)
-		if (!target->isOccupied())
-			for (Square square = FirstSquare; square <= LastSquare; square++)
-				if (target->isSquare(square))
-					maximize(availableCapturesByShrine[square], availableCapturesBySquare[square] + target->getRequiredCaptures());
-
-	/* -- Apply these numbers to remove unreachable destinations -- */
-
-	if (!destinations.setAvailableCaptures(availableCapturesByMan, availableCapturesBySquare, availableCapturesByShrine))
-		return false;
-
-	updateRequiredCaptures(true);
-	applyCaptureConstraints(availableCaptures);
-
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Pieces::computeRequiredMoves(const Board& board)
-{
-	/* -- Update number of required moves -- */
-
-	destinations.computeRequiredMoves(board, castling);
-	updateRequiredMoves(false);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Pieces::computeRequiredCaptures(const Board &board)
-{
-	/* -- Update number of required captures -- */
-
-	destinations.computeRequiredCaptures(board);
-	updateRequiredCaptures(false);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Pieces::updateRequiredMoves(bool updateDestinations)
-{
-	/* -- Update required moves for destinations and targets -- */
-
-	if (updateDestinations)
-		destinations.updateRequiredMoves();
-
-	targets.update(destinations);
-
-	/* -- Sum number of required moves for each man and targets -- */
-
-	int requiredMovesByMen = destinations.getRequiredMoves();
-	int requiredMovesByTargets = targets.getRequiredMoves();
-
-	/* -- Keep maximum value -- */
-
-	maximize(requiredMoves, requiredMovesByMen);
-	maximize(requiredMoves, requiredMovesByTargets);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Pieces::updateRequiredCaptures(bool updateDestinations)
-{
-	/* -- Update required captures for destinations and targets -- */
-
-	if (updateDestinations)
-		destinations.updateRequiredCaptures();
-
-	targets.update(destinations);
-
-	/* -- Sum number of required captures for each man and targets -- */
-
-	int requiredCapturesByMen = destinations.getRequiredCaptures();
-	int requiredCapturesByTargets = targets.getRequiredCaptures();
-
-	/* -- Keep maximum value -- */
-
-	maximize(requiredCaptures, requiredCapturesByMen);
-	maximize(requiredCaptures, requiredCapturesByTargets);
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 {
-	targets.refine(board, pieces);
-	targets.update(destinations);
+	/* -- Scan opponent targets for required captures -- */
 
-	destinations.setShrines(targets.getCaptures());
+	for (const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+	{
+		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
+		{
+			if (!(*target)->getRequiredCaptures())
+				continue;
+
+			vector<Squares> captures((*target)->getRequiredCaptures());
+
+			for (Target::const_iterator destination = (*target)->begin(); destination != (*target)->end(); destination++)
+			{
+				assert(destination->getRequiredCaptures() >= (*target)->getRequiredCaptures());
+
+				/* -- We seek the minimal number of captures -- */
+
+				if (destination->getRequiredCaptures() > (*target)->getRequiredCaptures())
+					continue;
+
+				/* -- Find squares for required captures -- */
+
+				board.captures(destination->man(), destination->superman(), destination->color(), tables::initialSquares[destination->man()][destination->color()], destination->square(), captures);
+			}
+
+			/* -- These captures will constitute a target for the captured piece -- */
+		
+			for (int k = 0; k < (int)captures.size(); k++)
+			{
+				Target::Cause cause(*target, k);
+
+				/* -- Find target which is dedicated to this capture, if any -- */
+
+				Target *dedicated = NULL;
+				Target *candidate = NULL;
+
+				for (iterator partition = begin(); partition != end(); partition++)
+				{
+					for (Partition::iterator target = partition->begin(); target != partition->end(); target++)
+					{
+						if ((*target)->cause() == cause)
+							dedicated = *target;
+
+						if ((*target)->isGeneric())
+							candidate = *target;
+					}
+				}
+
+				/* -- If there is no dedicated target, create one -- */
+
+				if (!dedicated)
+				{
+					if (!candidate)
+						abort(NoSolution);
+
+					candidate->setCause(cause);
+					dedicated = candidate;
+				}
+
+				/* -- Update list of possible squares for dedicated target -- */
+					
+				dedicated->setPossibleSquares(captures[k]);
+			}
+		}
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -261,11 +157,11 @@ bool Pieces::analyseStaticPieces(Board& board)
 
 	for (Man man = FirstMan; man <= LastMan; man++)
 	{
-		Glyph glyph = tables::supermanToGlyph[man][color];
-		Square square = tables::initialSquares[man][color];
+		Glyph glyph = tables::supermanToGlyph[man][_color];
+		Square square = tables::initialSquares[man][_color];
 
 		if (glyphs[square] == glyph)
-			modified = board.lock(man, color);		
+			modified = board.lock(man, _color);	
 	}
 
 	/* -- Recursive deductions -- */
@@ -278,26 +174,46 @@ bool Pieces::analyseStaticPieces(Board& board)
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::getRequiredMoves(Man man) const
+int Pieces::computeRequiredMoves(const Board& board)
 {
-	return destinations.getRequiredMovesByMan()[man];
+	int requiredMoves = 0;
+	for (iterator partition = begin(); partition != end(); partition++)
+		requiredMoves += partition->computeRequiredMoves(board, castling);
+
+	return maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::getNumDestinations(Man man) const
+int Pieces::computeRequiredCaptures(const Board& board)
 {
-	return (int)std::count_if(destinations.begin(), destinations.end(), boost::bind(&Destination::isMan, _1, man));
+	int requiredCaptures = 0;
+	for (iterator partition = begin(); partition != end(); partition++)
+		requiredCaptures += partition->computeRequiredCaptures(board);
+
+	return maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-const Destination& Pieces::getDestination(Man man) const
+int Pieces::updateRequiredMoves()
 {
-	Destinations::const_iterator destination = 
-		std::find_if(destinations.begin(), destinations.end(), boost::bind(&Destination::isMan, _1, man));
-	
-	return *destination;
+	int requiredMoves = 0;
+	for (iterator partition = begin(); partition != end(); partition++)
+		requiredMoves += partition->updateRequiredMoves();
+
+	return maximize(this->requiredMoves, requiredMoves);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Pieces::updateRequiredCaptures()
+{
+	int requiredCaptures = 0;
+	for (iterator partition = begin(); partition != end(); partition++)
+		requiredCaptures += partition->updateRequiredCaptures();
+
+	return maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */

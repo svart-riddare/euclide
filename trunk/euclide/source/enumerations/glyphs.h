@@ -80,6 +80,17 @@ class Glyph
 		bool isBlack() const
 			{ return isColor(Black); }
 
+		Color color() const
+		{
+			if (isWhite())
+				return White;
+			
+			if (isBlack())
+				return Black;
+
+			return UndefinedColor;
+		}
+
 		/* ---------------------------------- */
 
 		bool isKing() const
