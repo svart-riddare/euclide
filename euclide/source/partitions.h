@@ -11,7 +11,7 @@ class Partitions;
 
 /* -------------------------------------------------------------------------- */
 
-class Partition : public vector<Target *>
+class Partition : public vector_ptr<Target>
 {
 	public :
 		Partition(const Problem& problem, Color color);

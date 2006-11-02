@@ -223,9 +223,9 @@ Euclide::operator EUCLIDE_Deductions() const
 		{
 			bool generic = false;
 
-			for (vector<Target *>::const_iterator target = partition->begin(); target != partition->end(); target++)
+			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 			{
-				if ((*target)->isGeneric())
+				if (target->isGeneric())
 				{
 					if (generic)
 						continue;
@@ -233,7 +233,7 @@ Euclide::operator EUCLIDE_Deductions() const
 					generic = true;
 				}
 
-				for (Destinations::const_iterator destination = (*target)->begin(); destination != (*target)->end(); destination++)
+				for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
 				{
 					EUCLIDE_Deduction *deduction = &deductions[destination->man()];
 

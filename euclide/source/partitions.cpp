@@ -229,7 +229,7 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 	_men &= xmen.flip();
 
 	for (iterator target = begin(); target != end(); target++)
-		(*target)->setPossibleMen(xmen);
+		target->setPossibleMen(xmen);
 
 	/* -- Update state -- */
 
@@ -247,7 +247,7 @@ int Partition::computeRequiredMoves(const Board& board, const Castling& castling
 	int requiredMoves = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredMoves += (*target)->computeRequiredMoves(board, castling);
+		requiredMoves += target->computeRequiredMoves(board, castling);
 
 	return maximize(this->requiredMoves, requiredMoves);
 }
@@ -259,7 +259,7 @@ int Partition::computeRequiredCaptures(const Board& board)
 	int requiredCaptures = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredCaptures += (*target)->computeRequiredCaptures(board);
+		requiredCaptures += target->computeRequiredCaptures(board);
 
 	return maximize(this->requiredCaptures, requiredCaptures);
 }
@@ -271,7 +271,7 @@ int Partition::updateRequiredMoves()
 	int requiredMoves = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredMoves += (*target)->updateRequiredMoves();
+		requiredMoves += target->updateRequiredMoves();
 
 	return maximize(this->requiredMoves, requiredMoves);
 }
@@ -283,7 +283,7 @@ int Partition::updateRequiredCaptures()
 	int requiredCaptures = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredCaptures += (*target)->updateRequiredCaptures();
+		requiredCaptures += target->updateRequiredCaptures();
 
 	return maximize(this->requiredCaptures, requiredCaptures);
 }
@@ -295,7 +295,7 @@ const Men& Partition::updatePossibleMen()
 	_men.reset();
 
 	for (iterator target = begin(); target != end(); target++)
-		_men |= (*target)->updatePossibleMen();
+		_men |= target->updatePossibleMen();
 
 	return _men;
 }
@@ -307,7 +307,7 @@ const Squares& Partition::updatePossibleSquares()
 	_squares.reset();
 
 	for (iterator target = begin(); target != end(); target++)
-		_squares |= (*target)->updatePossibleSquares();
+		_squares |= target->updatePossibleSquares();
 
 	return _squares;
 }
@@ -326,7 +326,7 @@ bool Partition::setPossibleMen(const Men& men)
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if ((*target)->setPossibleMen(men))
+		if (target->setPossibleMen(men))
 			modified = true;
 
 	if (!modified)
@@ -353,7 +353,7 @@ bool Partition::setPossibleSquares(const Squares& squares)
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if ((*target)->setPossibleSquares(squares))
+		if (target->setPossibleSquares(squares))
 			modified = true;
 
 	if (modified)
@@ -374,7 +374,7 @@ bool Partition::setAvailableMoves(int numAvailableMoves)
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if ((*target)->setAvailableMoves((*target)->getRequiredMoves() + numFreeMoves))
+		if (target->setAvailableMoves(target->getRequiredMoves() + numFreeMoves))
 			modified = true;
 
 	if (!modified)
@@ -395,7 +395,7 @@ bool Partition::setAvailableCaptures(int numAvailableCaptures)
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if ((*target)->setAvailableCaptures((*target)->getRequiredCaptures() + numFreeCaptures))
+		if (target->setAvailableCaptures(target->getRequiredCaptures() + numFreeCaptures))
 			modified = true;
 
 	if (!modified)

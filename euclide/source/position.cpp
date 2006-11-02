@@ -86,18 +86,18 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 	{
 		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
-			if (!(*target)->getRequiredCaptures())
+			if (!target->getRequiredCaptures())
 				continue;
 
-			vector<Squares> captures((*target)->getRequiredCaptures());
+			vector<Squares> captures(target->getRequiredCaptures());
 
-			for (Target::const_iterator destination = (*target)->begin(); destination != (*target)->end(); destination++)
+			for (Target::const_iterator destination = target->begin(); destination != target->end(); destination++)
 			{
-				assert(destination->getRequiredCaptures() >= (*target)->getRequiredCaptures());
+				assert(destination->getRequiredCaptures() >= target->getRequiredCaptures());
 
 				/* -- We seek the minimal number of captures -- */
 
-				if (destination->getRequiredCaptures() > (*target)->getRequiredCaptures())
+				if (destination->getRequiredCaptures() > target->getRequiredCaptures())
 					continue;
 
 				/* -- Find squares for required captures -- */
@@ -118,12 +118,12 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 
 				for (iterator partition = begin(); partition != end(); partition++)
 				{
-					for (Partition::iterator target = partition->begin(); target != partition->end(); target++)
+					for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 					{
-						if ((*target)->cause() == cause)
+						if (target->cause() == cause)
 							dedicated = *target;
 
-						if ((*target)->isGeneric())
+						if (target->isGeneric())
 							candidate = *target;
 					}
 				}
