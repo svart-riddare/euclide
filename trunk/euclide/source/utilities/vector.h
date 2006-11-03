@@ -16,7 +16,7 @@ class vector_ptr_const_iterator : public vector<T *>::const_iterator
 
 	public :
 		const T *operator->() const
-			{ return NULL; }
+			{ return **this; }
 };
 
 template <class T>
