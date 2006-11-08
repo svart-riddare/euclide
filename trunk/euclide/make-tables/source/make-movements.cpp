@@ -12,7 +12,7 @@ void makeMovements(void)
 {	
 	CodeFile file("movements.cpp");
 
-	fprintf(file, "const bool validMovements[NumGlyphs][NumSquares][NumSquares] =\n{\n");
+	fprintf(file, "const bool movements[NumGlyphs][NumSquares][NumSquares] =\n{\n");
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
@@ -31,7 +31,6 @@ void makeMovements(void)
 				
 				int verticalDelta = to.row() - from.row();
 				int verticalDistance = abs(verticalDelta);
-
 
 				if ((glyph == WhiteKing) || (glyph == BlackKing))
 					if (horizontalDistance <= 1)
@@ -86,7 +85,7 @@ void makeMovements(void)
 	fprintf(file, "};\n");
 	file.comment();
 
-	fprintf(file, "const bool validCaptures[NumGlyphs][NumSquares][NumSquares] =\n{\n");
+	fprintf(file, "const bool captures[NumGlyphs][NumSquares][NumSquares] =\n{\n");
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{

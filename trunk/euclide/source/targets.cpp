@@ -21,13 +21,13 @@ Target::Target(Glyph glyph, Square square)
 	/* -- List possible destinations -- */
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		if (tables::supermanToGlyph[man][_color] == glyph)
+		if (man.glyph(_color) == glyph)
 			push_back(Destination(square, _color, man, man, false));
 
 	/* -- Handle promoted pieces -- */
 
 	for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
-		if (tables::supermanToGlyph[superman][_color] == glyph)
+		if (superman.glyph(_color) == glyph)
 			for (Man man = FirstPawn; man <= LastPawn; man++)
 				push_back(Destination(square, _color, man, superman, false));
 }

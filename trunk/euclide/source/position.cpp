@@ -102,7 +102,7 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 
 				/* -- Find squares for required captures -- */
 
-				board.captures(destination->man(), destination->superman(), destination->color(), tables::initialSquares[destination->man()][destination->color()], destination->square(), captures);
+				board.getCaptures(destination->man(), destination->superman(), destination->color(), destination->man().square(destination->color()), destination->square(), captures);
 			}
 
 			/* -- These captures will constitute a target for the captured piece -- */
@@ -157,8 +157,8 @@ bool Pieces::analyseStaticPieces(Board& board)
 
 	for (Man man = FirstMan; man <= LastMan; man++)
 	{
-		Glyph glyph = tables::supermanToGlyph[man][_color];
-		Square square = tables::initialSquares[man][_color];
+		Glyph glyph = man.glyph(_color);
+		Square square = man.square(_color);
 
 		if (glyphs[square] == glyph)
 			modified = board.lock(man, _color);	

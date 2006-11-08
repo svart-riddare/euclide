@@ -5,86 +5,151 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Board::Board()
+Obstructions::Obstructions(Superman superman, Color color, Square square, int movements[NumSquares][NumSquares])
 {
-	empty = true;
+	assert(superman.isValid());
+	assert(color.isValid());
+	assert(square.isValid());
+
+	Glyph glyph = superman.glyph(color);
+
+	/* -- Allocate obstruction table from precomputed table -- */
+
+	const tables::Obstruction *_obstructions = tables::obstructions[glyph][square].first;
+	int numObstructions = tables::obstructions[glyph][square].second;
+	
+	obstructions = new int *[numObstructions];
+
+	/* -- Soft obstructions are used for pieces captured on the obstruction square -- */
+
+	numSoftObstructions = 0;
+	for (int k = 0; k < numObstructions; k++)
+		if (_obstructions[k].second != square)
+			obstructions[numSoftObstructions++] = &movements[_obstructions[k].first][_obstructions[k].second];
+
+	/* -- Hard obstructions are suitable only if the obstructing piece is not captured -- */
+
+	numHardObstructions = numSoftObstructions;
+	for (int k = 0; k < numObstructions; k++)
+		if (_obstructions[k].second == square)
+			obstructions[numHardObstructions++] = &movements[_obstructions[k].first][_obstructions[k].second];
+}
+
+/* -------------------------------------------------------------------------- */
+
+Obstructions::~Obstructions()
+{
+	delete[] obstructions;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Obstructions::block(bool soft) const
+{
+	int numObstructions = soft ? numSoftObstructions : numHardObstructions;
+
+	for (int k = 0; k < numObstructions; k++)
+		*(obstructions[k]) += 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Obstructions::unblock(bool soft) const
+{
+	int numObstructions = soft ? numSoftObstructions : numHardObstructions;
+
+	for (int k = 0; k < numObstructions; k++)
+		*(obstructions[k]) -= 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Obstructions::optimize()
+{
+	int k, n;
+
+	/* -- Remove from the obstruction table all useless entries -- */
+
+	for (k = 0, n = 0; k < numSoftObstructions; n += *obstructions[k++] ? 0 : 1)
+		obstructions[n] = obstructions[k];
+
+	numSoftObstructions = n;
+
+	for ( ; k < numHardObstructions; n += *obstructions[k++] ? 0 : 1)
+		obstructions[n] = obstructions[k];
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+Movements::Movements(Superman superman, Color color)
+	: superman(superman), color(color), glyph(superman.glyph(color))
+{
+	assert(superman.isValid());
+	assert(color.isValid());	
 
 	/* -- Initialize table of allowed movements -- */
 
-	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-				movements[glyph][from][to] = (tables::validMovements[glyph][from][to] || tables::validCaptures[glyph][from][to]) ? 0 : infinity;
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			movements[from][to] = (tables::movements[glyph][from][to] || tables::captures[glyph][from][to]) ? 0 : infinity;
 
-	/* -- Allocate memory for obstruction tables -- */
+	/* -- Count number of possible movements -- */
 
-	obstructions[NoGlyph][0] = new int *[tables::numObstructions];
-	obstructions[WhiteKing][0] = new int *[tables::numWhiteObstructions];
-	obstructions[BlackKing][0] = new int *[tables::numBlackObstructions];
+	possibilities = 0;
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			if (movements[from][to] == 0)
+				possibilities++;
 
-	/* -- Fill obstruction tables, hacker's style -- */
+	/* -- Check if some moves require captures -- */
 
-	int n = 0;
-	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
-	{
-		obstructions[NoGlyph][square] = &obstructions[NoGlyph][0][n];
+	hybrid = false;
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			if (tables::captures[glyph][from][to])
+				hybrid = true;
 
-		for ( ; tables::obstructions[n]; n++)
-			obstructions[NoGlyph][0][n] = (int *)movements + (tables::obstructions[n] - &tables::validMovements[0][0][0]);
+	/* -- Fill in initial distances and required captures -- */
 
-		obstructions[NoGlyph][0][n] = NULL;
-	}
+	distances(superman.square(color), initialDistances);
+	captures(superman.square(color), initialCaptures);
 
-	n = 0;
-	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
-	{
-		obstructions[WhiteKing][square] = &obstructions[WhiteKing][0][n];
+	/* -- Initialize obstruction tables -- */
 
-		for ( ; tables::whiteObstructions[n]; n++)
-			obstructions[WhiteKing][0][n] = (int *)movements + (tables::whiteObstructions[n] - &tables::validMovements[0][0][0]);
-
-		obstructions[WhiteKing][0][n] = NULL;
-	}
-
-	n = 0;
-	for (Square square = FirstSquare; square <= LastSquare; square++, n++)
-	{
-		obstructions[BlackKing][square] = &obstructions[BlackKing][0][n];
-
-		for ( ; tables::blackObstructions[n]; n++)
-			obstructions[BlackKing][0][n] = (int *)movements + (tables::blackObstructions[n] - &tables::validMovements[0][0][0]);
-
-		obstructions[BlackKing][0][n] = NULL;
-	}
-
-	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
-	{
-		if (glyph.isWhite())
-			std::copy(obstructions[WhiteKing], obstructions[WhiteKing] + NumSquares, obstructions[glyph]);
-
-		if (glyph.isBlack())
-			std::copy(obstructions[BlackKing], obstructions[BlackKing] + NumSquares, obstructions[glyph]);
-	}
-
-	/* -- Initiliaze list of locked initial squares -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		for (Color color = FirstColor; color <= LastColor; color++)
-			locks[man][color] = false;
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		obstructions[square] = new Obstructions(superman, color, square, movements);
 }
 
 /* -------------------------------------------------------------------------- */
 
-Board::~Board()
+Movements::~Movements()
 {
-	delete[] obstructions[NoGlyph][0];
-	delete[] obstructions[WhiteKing][0];
-	delete[] obstructions[BlackKing][0];
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		delete obstructions[square];
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(const int movements[NumSquares][NumSquares], Square from, Square to)
+int Movements::distance(Square square) const
+{
+	assert(square.isValid());
+
+	return initialDistances[square];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Movements::captures(Square square) const
+{
+	assert(square.isValid());
+
+	return initialCaptures[square];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Movements::distance(Square from, Square to) const
 {
 	assert(from.isValid());
 	assert(to.isValid());
@@ -101,11 +166,10 @@ int Board::distance(const int movements[NumSquares][NumSquares], Square from, Sq
 
 	/* -- Initialize distances -- */
 
-	array<int, NumSquares> distances;
-	distances.assign(-1);
+	array<int, NumSquares> distances(-1);
 	distances[from] = 0;
 
-	/* -- Loop until finding the minimum distance -- */
+	/* -- Loop until we find the minimum distance -- */
 
 	while (!squares.empty())
 	{
@@ -118,7 +182,7 @@ int Board::distance(const int movements[NumSquares][NumSquares], Square from, Sq
 
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 		{
-			/* -- Check whether this movement is forbiden -- */
+			/* -- Check whether this movement is possible -- */
 
 			if (movements[from][square])
 				continue;
@@ -145,98 +209,24 @@ int Board::distance(const int movements[NumSquares][NumSquares], Square from, Sq
 
 /* -------------------------------------------------------------------------- */
 
-int Board::distance(Glyph glyph, Square from, Square to) const
-{
-	assert(glyph.isValid());
-	return distance(movements[glyph], from, to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::distance(Superman superman, Color color, Square from, Square to) const
-{
-	assert(superman.isValid());
-	assert(color.isValid());
-
-	return distance(tables::supermanToGlyph[superman][color], from, to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::distance(Man man, Superman superman, Color color, Square from, Square to) const
-{
-	assert(man.isValid());
-	assert(color.isValid());
-	assert(superman.isValid());
-
-	/* -- No promotion case -- */
-
-	if (man == superman)
-		return distance(man, color, from, to);
-
-	/* -- Handle promoted men -- */
-
-	Square square = tables::initialSquares[superman][color];
-	return distance(man, color, from, square) + distance(superman, color, square, to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const
-{
-	int minimum = infinity;
-
-	if (castling.isNonePossible(man))
-		if (!empty)
-			minimum = distance(man, superman, color, tables::initialSquares[man][color], to);
-		else
-			minimum = idistance(man, superman, color, to);
-
-	if (castling.isKingsidePossible(man))
-		minimum = std::min(minimum, distance(man, superman, color, castling.kingsideSquare(man, color), to) + ((man == King) ? 1 : 0));
-
-	if (castling.isQueensidePossible(man))
-		minimum = std::min(minimum, distance(man, superman, color, castling.queensideSquare(man, color), to) + ((man == King) ? 1 : 0));
-
-	return minimum;
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::idistance(Man man, Superman superman, Color color, Square to) const
-{
-	assert(to.isValid());
-	assert(man.isValid());
-	assert(color.isValid());
-	assert(superman.isValid());
-
-	/* -- Return distance in original position on empty board -- */
-
-	if (man == superman)
-		return tables::initialDistances[man][to][color];
-
-	/* -- Handle promoted men -- */
-
-	Square square = tables::initialSquares[superman][color];
-	return tables::initialDistances[man][square][color] + tables::initialDistances[superman][to][color];
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::captures(const int movements[NumSquares][NumSquares], const bool captures[NumSquares][NumSquares], Square from, Square to)
+int Movements::captures(Square from, Square to) const
 {
 	assert(from.isValid());
 	assert(to.isValid());
 
-	/* -- Handle case where no movement is required -- */
+	/* -- Do we need to capture at all ? -- */
+
+	if (!hybrid)
+		return 0;
+
+	/* -- Handle case where no movement nor capture is required -- */
 
 	if (from == to)
 		return 0;
 
 	/* -- Initialize distances (number of captures) -- */
 
-	array<int, NumSquares> distances;
-	distances.assign(-1);
+	array<int, NumSquares> distances(-1);
 	distances[from] = 0;
 
 	/* -- Initialize ordered square queue -- */
@@ -245,7 +235,7 @@ int Board::captures(const int movements[NumSquares][NumSquares], const bool capt
 	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
 	squares.push(from);
 
-	/* -- Loop until finding the least number of captures -- */
+	/* -- Loop until we find the least number of captures -- */
 
 	while (!squares.empty())
 	{
@@ -270,7 +260,7 @@ int Board::captures(const int movements[NumSquares][NumSquares], const bool capt
 			
 			/* -- Add square to queue -- */
 
-			distances[square] = distance + (captures[from][square] ? 1 : 0);
+			distances[square] = distance + (tables::captures[glyph][from][square] ? 1 : 0);
 			squares.push(square);
 			
 			/* -- Have we reached our destination? -- */
@@ -285,94 +275,121 @@ int Board::captures(const int movements[NumSquares][NumSquares], const bool capt
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Glyph glyph, Square from, Square to) const
+int *Movements::distances(Square square, int distances[NumSquares]) const
 {
-	assert(glyph.isValid());
+	assert(square.isValid());
 
-	/* -- Some pieces do not need to capture in order to move -- */
+	/* -- Initialize distances -- */
 
-	if (!tables::maxCaptures[glyph])
-		return 0;
+	std::fill(distances, distances + NumSquares, infinity);
+	distances[square] = 0;
 
-	return captures(movements[glyph], tables::validCaptures[glyph], from, to);
+	/* -- Initialize square queue -- */
+
+	queue<Square> squares;
+	squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		Square from = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+		{
+			if (movements[from][to])
+				continue;
+
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[to] < infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[to] = distances[from] + 1;
+	
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(to);
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Superman superman, Color color, Square from, Square to) const
+int *Movements::captures(Square square, int captures[NumSquares]) const
 {
-	assert(superman.isValid());
-	assert(color.isValid());
+	assert(square.isValid());
 
-	return captures(tables::supermanToGlyph[superman][color], from, to);
+	/* -- Initialize captures -- */
+
+	std::fill(captures, captures + NumSquares, hybrid ? -1 : 0);
+	captures[square] = 0;
+
+	if (!hybrid)
+		return captures;
+
+	/* -- Initialize square priority queue -- */
+
+	_greater<int, NumSquares> priority(captures);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
+	squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		Square from = squares.top(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square to = FirstSquare; square <= LastSquare; square++)
+		{
+			if (movements[from][to])
+				continue;
+
+			/* -- This square may have been attained with less captures -- */
+
+			if (captures[to] >= 0)
+				continue;
+
+			/* -- Set square number of required captures -- */
+
+			captures[to] = captures[from] + (tables::captures[glyph][from][to] ? 1 : 0);
+
+			/* -- Add it to queue of reachable destinations -- */
+
+			squares.push(to);
+		}
+	}
+
+	/* -- Done -- */
+
+	return captures;
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Man man, Superman superman, Color color, Square from, Square to) const
+int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) const
 {
-	assert(man.isValid());
-	assert(color.isValid());
-	assert(superman.isValid());
-
-	/* -- No promotion case -- */
-
-	if (man == superman)
-		return captures(man, color, from, to);
-
-	/* -- Handle promoted men -- */
-
-	Square square = tables::initialSquares[superman][color];
-	return captures(man, color, from, square) + captures(superman, color, square, to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::captures(Man man, Superman superman, Color color, Square to) const
-{
-	if (empty)
-		return icaptures(man, superman, color, to);
-
-	return captures(man, superman, color, tables::initialSquares[man][color], to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::icaptures(Man man, Superman superman, Color color, Square to) const
-{
-	assert(to.isValid());
-	assert(man.isValid());
-	assert(color.isValid());
-	assert(superman.isValid());
-
-	/* -- Return number of required captures in original position on empty board -- */
-
-	if (man == superman)
-		return tables::initialCaptures[man][to][color];
-
-	/* -- Handle promoted men -- */
-
-	Square square = tables::initialSquares[superman][color];
-	return tables::initialCaptures[man][square][color] + tables::initialCaptures[superman][to][color];
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captures) const
-{
-	assert(glyph.isValid());
 	assert(from.isValid());
 	assert(to.isValid());
 
 	/* -- Some pieces does not need to capture in order to move -- */
 
-	if (!tables::maxCaptures[glyph])
+	if (!hybrid)
 		return 0;
 
 	/* -- Initialize distances (number of captures) -- */
 
-	array<int, NumSquares> distances;
-	distances.assign(infinity);
+	array<int, NumSquares> distances(infinity);
 	distances[from] = 0;
 
 	/* -- Initialize ordered square queue -- */
@@ -399,12 +416,12 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captur
 		{
 			/* -- Check whether this movement is forbiden -- */
 
-			if (movements[glyph][from][square])
+			if (movements[from][square])
 				continue;
 
-			/* -- Compute distance -- */
+			/* -- Compute distance (number of captures) -- */
 
-			int distance = distances[from] + (tables::validCaptures[glyph][from][square] ? 1 : 0);
+			int distance = distances[from] + (tables::captures[glyph][from][square] ? 1 : 0);
 
 			if (distance > distances[square])
 				continue;
@@ -421,7 +438,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captur
 		}
 	}
 
-	/* -- Initialize output capture list -- */
+	/* -- Fill capture list -- */
 
 	if (distances[to] > 0)
 	{
@@ -429,9 +446,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captur
 
 		/* -- Start from destination square to build all possible minimal paths -- */
 
-		array<bool, NumSquares> visited;
-		visited.assign(false);
-
+		array<bool, NumSquares> visited(false);
 		visited[from] = true;
 		visited[to] = true;
 
@@ -457,7 +472,7 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captur
 		{
 			for (list<Square>::const_iterator I = moves[square].begin(); I != moves[square].end(); I++)
 			{
-				if (!tables::validCaptures[glyph][*I][square])
+				if (!tables::captures[glyph][*I][square])
 					continue;
 
 				if (!visited[*I] || !visited[square])
@@ -468,13 +483,190 @@ int Board::captures(Glyph glyph, Square from, Square to, vector<Squares>& captur
 			}
 		}
 	}
-	
+
+	/* -- Return number of captures found -- */
+
 	return distances[to];
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Board::captures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const
+void Movements::block(Square square, bool captured)
+{
+	assert(square.isValid());
+
+	obstructions[square]->block(captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::unblock(Square square, bool captured)
+{
+	assert(square.isValid());
+
+	obstructions[square]->unblock(captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::optimize()
+{
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		obstructions[square]->optimize();
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Movements::locked() const
+{
+	if (!possibilities)
+		return true;
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (!movements[square][superman.square(color)])
+			return false;
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+Board::Board()
+{
+	modified = false;
+
+	/* -- Initialize movement tables -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			movements[superman][color] = new Movements(superman, color);
+
+	/* -- Initialize lock table -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			locks[man][color] = false;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Board::~Board()
+{
+	/* -- Release movement tables -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			delete movements[superman][color];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::distance(Man man, Superman superman, Color color, Square from, Square to) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return movements[man][color]->distance(from, to);
+
+	/* -- Handle promoted men -- */
+
+	Square square = superman.square(color);
+	return movements[man][color]->distance(from, square) + movements[superman][color]->distance(square, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const
+{
+	int minimum = infinity;
+
+	/* -- Find minimum distance given castling rights -- */
+
+	if (castling.isNonePossible(man))
+		minimum = distance(man, superman, color, to);
+
+	if (castling.isKingsidePossible(man))
+		minimum = std::min(minimum, distance(man, superman, color, castling.kingsideSquare(man, color), to) + ((man.isKing()) ? 1 : 0));
+
+	if (castling.isQueensidePossible(man))
+		minimum = std::min(minimum, distance(man, superman, color, castling.queensideSquare(man, color), to) + ((man.isKing()) ? 1 : 0));
+
+	return minimum;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::distance(Man man, Superman superman, Color color, Square to) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- Use extended algorithms if board movements have been altered -- */
+
+	if (modified)
+		return distance(man, superman, color, man.square(color), to);
+			
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return movements[man][color]->distance(to);
+
+	/* -- Handle promoted men -- */
+
+	return movements[man][color]->distance(superman.square(color)) + movements[superman][color]->distance(to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Man man, Superman superman, Color color, Square from, Square to) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return movements[man][color]->captures(from, to);
+
+	/* -- Handle promoted men -- */
+
+	Square square = superman.square(color);
+	return movements[man][color]->captures(from, square) + movements[superman][color]->captures(square, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::captures(Man man, Superman superman, Color color, Square to) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	/* -- Use extended algorithms if board movements have been altered -- */
+
+	if (modified)
+		return captures(man, superman, color, man.square(color), to);
+			
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return movements[man][color]->captures(to);
+
+	/* -- Handle promoted men -- */
+
+	return movements[man][color]->captures(superman.square(color)) + movements[superman][color]->captures(to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::getCaptures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const
 {
 	assert(man.isValid());
 	assert(superman.isValid());
@@ -483,12 +675,18 @@ int Board::captures(Man man, Superman superman, Color color, Square from, Square
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return this->captures(tables::supermanToGlyph[superman][color], from, to, captures);
+		return movements[man][color]->getCaptures(from, to, captures);
 
 	/* -- Handle promoted men -- */
 
-	Square square = tables::initialSquares[superman][color];
-	return this->captures(tables::supermanToGlyph[man][color], from, square) + this->captures(tables::supermanToGlyph[superman][color], square, to);
+	Square square = superman.square(color);
+	vector<Squares> _captures;
+	
+	movements[man][color]->getCaptures(from, square, captures);
+	movements[superman][color]->getCaptures(square, to, _captures);
+
+	captures.insert(captures.end(), _captures.begin(), _captures.end());
+	return (int)captures.size();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -498,10 +696,11 @@ void Board::block(Glyph glyph, Square square, bool captured)
 	assert(glyph.isValid());
 	assert(square.isValid());
 
-	empty = false;
+	modified = true;
 
-	for (int **obstructions = this->obstructions[captured ? glyph : Glyph(NoGlyph)][square]; *obstructions; obstructions++)
-		**obstructions += 1;
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			movements[superman][color]->block(square, captured && (color != glyph.color()));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -518,9 +717,10 @@ void Board::unblock(Glyph glyph, Square square, bool captured)
 {
 	assert(glyph.isValid());
 	assert(square.isValid());
-
-	for (int **obstructions = this->obstructions[square][captured ? glyph : Glyph(NoGlyph)]; *obstructions; obstructions++)
-		**obstructions -= 1;
+	
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			movements[superman][color]->unblock(square, captured && (color != glyph.color()));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -530,8 +730,8 @@ bool Board::lock(Man man, Color color)
 	assert(man.isValid());
 	assert(color.isValid());
 
-	Square initial = tables::initialSquares[man][color];
-	Glyph glyph = tables::supermanToGlyph[man][color];
+	Square initial = man.square(color);
+	Glyph glyph = man.glyph(color);
 
 	/* -- Check if it was already locked -- */
 
@@ -540,9 +740,8 @@ bool Board::lock(Man man, Color color)
 
 	/* -- Check if we can reach the initial square -- */
 
-	for (Square square = FirstSquare; square < LastSquare; square++)
-		if (movements[glyph][square][initial] == 0)
-			return false;
+	if (!movements[man][color]->locked())
+		return false;
 
 	/* -- Lock the square -- */
 
