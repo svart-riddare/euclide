@@ -12,10 +12,10 @@ namespace tables
 {
 
 /* --------------------------------------------------------------------------
-   -- Computer generated with make-tables on Fri Aug 04 23:01:11 2006
+   -- Computer generated with make-tables on Tue Nov 07 22:25:37 2006
    -------------------------------------------------------------------------- */
 
-const bool validMovements[NumGlyphs][NumSquares][NumSquares] =
+const bool movements[NumGlyphs][NumSquares][NumSquares] =
 {
 	{  /* NoGlyph */
 		{ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, },
@@ -879,7 +879,7 @@ const bool validMovements[NumGlyphs][NumSquares][NumSquares] =
 
 /* -------------------------------------------------------------------------- */
 
-const bool validCaptures[NumGlyphs][NumSquares][NumSquares] =
+const bool captures[NumGlyphs][NumSquares][NumSquares] =
 {
 	{  /* NoGlyph */
 		{ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, },

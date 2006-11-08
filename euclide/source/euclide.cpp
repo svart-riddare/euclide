@@ -205,10 +205,10 @@ Euclide::operator EUCLIDE_Deductions() const
 		{
 			EUCLIDE_Deduction *deduction = &deductions[man];
 		
-			deduction->initialGlyph = tables::supermanToGlyph[man][color].glyph_c();
+			deduction->initialGlyph = man.glyph(color).glyph_c();
 			deduction->promotionGlyph = deduction->initialGlyph;
 
-			deduction->initialSquare = tables::initialSquares[man][color];
+			deduction->initialSquare = man.square(color);
 			deduction->finalSquare = -1;
 
 			deduction->requiredMoves = INT_MAX;
@@ -241,7 +241,7 @@ Euclide::operator EUCLIDE_Deductions() const
 					
 					if (++deduction->numSquares == 1)
 					{
-						deduction->promotionGlyph = tables::supermanToGlyph[destination->superman()][destination->color()].glyph_c();
+						deduction->promotionGlyph = destination->superman().glyph(destination->color()).glyph_c();
 						deduction->finalSquare = destination->square();
 						deduction->captured = destination->captured();
 					}

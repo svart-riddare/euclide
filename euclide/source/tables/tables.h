@@ -2,6 +2,7 @@
 #define __EUCLIDE_TABLES_H
 
 #include "enumerations.h"
+#include <utility>
 
 namespace euclide
 {
@@ -10,33 +11,15 @@ namespace tables
 
 /* -------------------------------------------------------------------------- */
 
-extern const Glyph supermanToGlyph[NumSupermen][NumColors];
+extern const bool movements[NumGlyphs][NumSquares][NumSquares];
+extern const bool captures[NumGlyphs][NumSquares][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 
-extern const Square initialSquares[NumSupermen][NumColors];
+typedef std::pair<Square, Square> Obstruction;
+typedef std::pair<const Obstruction *, int> Obstructions;
 
-/* -------------------------------------------------------------------------- */
-
-extern const int initialDistances[NumSupermen][NumSquares][NumColors];
-extern const int initialCaptures[NumSupermen][NumSquares][NumColors];
-
-extern const int maxCaptures[NumGlyphs];
-
-/* -------------------------------------------------------------------------- */
-
-extern const bool validMovements[NumGlyphs][NumSquares][NumSquares];
-extern const bool validCaptures[NumGlyphs][NumSquares][NumSquares];
-
-/* -------------------------------------------------------------------------- */
-
-extern const bool *obstructions[];
-extern const bool *whiteObstructions[];
-extern const bool *blackObstructions[];
-
-extern const int numObstructions;
-extern const int numWhiteObstructions;
-extern const int numBlackObstructions;
+extern const Obstructions obstructions[NumGlyphs][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 

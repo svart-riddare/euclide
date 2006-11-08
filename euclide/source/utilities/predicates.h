@@ -12,15 +12,19 @@ template <typename T, int N>
 class _greater
 {
 	public :
-		_greater(const array<T, N>& values) : values(&values) {};
+		_greater(const array<T, N>& values) : values(values.data()) {};
+		_greater(const T values[N]) : values(values) {};
 
 		bool operator()(T m, T n) const
 		{
-			return (*values)[m] > (*values)[n];
+			assert((m >= 0) && (m < N));
+			assert((n >= 0) && (n < N));
+
+			return values[m] > values[n];
 		}
 
 	private :
-		const array<T, N> *values;
+		const T *values;
 };
 
 /* -------------------------------------------------------------------------- */

@@ -2,6 +2,8 @@
 #define __EUCLIDE_MEN_H
 
 #include "errors.h"
+#include "glyphs.h"
+#include "squares.h"
 
 namespace euclide
 {
@@ -73,6 +75,38 @@ class Man
 		bool isValid() const
 		{
 			return ((man >= FirstMan) && (man <= LastMan));
+		}
+
+		/* ---------------------------------- */
+
+		Glyph glyph(Color color) const
+		{
+			static const Glyph glyphs[NumMen][NumColors] =
+			{
+				{ WhiteKing, BlackKing },
+				{ WhiteQueen, BlackQueen },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteBishop, BlackBishop },{ WhiteBishop, BlackBishop },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }
+			};
+
+			assert(color.isValid());
+			return glyphs[man][color];
+		}
+
+		/* ---------------------------------- */
+
+		Square square(Color color) const
+		{
+			static const Square squares[NumMen][NumColors] =
+			{
+				{ E1, E8 }, { D1, D8 }, { A1, A8 }, { H1, H8 }, { C1, C8 }, { F1, F8 }, { B1, B8 }, { G1, G8 },
+				{ A2, A7 }, { B2, B7 }, { C2, C7 }, { D2, D7 }, { E2, E7 }, { F2, F7 }, { G2, G7 }, { H2, H7 }
+			};
+
+			assert(color.isValid());
+			return squares[man][color];
 		}
 
 		/* ---------------------------------- */
@@ -158,6 +192,44 @@ class Superman
 		bool isValid() const
 		{
 			return ((superman >= FirstSuperman) && (superman <= LastSuperman));
+		}
+
+		Glyph glyph(Color color) const
+		{
+			static const Glyph glyphs[NumSupermen][NumColors] =
+			{
+				{ WhiteKing, BlackKing },
+				{ WhiteQueen, BlackQueen },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }
+			};
+
+			assert(color.isValid());
+			return glyphs[superman][color];
+		}
+
+		/* ---------------------------------- */
+
+		Square square(Color color) const
+		{
+			static const Square squares[NumSupermen][NumColors] =
+			{
+				{ E1, E8 }, { D1, D8 }, { A1, A8 }, { H1, H8 }, { C1, C8 }, { F1, F8 }, { B1, B8 }, { G1, G8 },
+				{ A2, A7 }, { B2, B7 }, { C2, C7 }, { D2, D7 }, { E2, E7 }, { F2, F7 }, { G2, G7 }, { H2, H7 },
+				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
+				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
+				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
+				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 }
+			};
+
+			assert(color.isValid());
+			return squares[superman][color];
 		}
 
 		/* ---------------------------------- */

@@ -187,22 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\make-initialcaptures.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\make-initialdistances.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\make-initialsquares.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\make-mantoglyph.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\make-movements.cpp"
 				>
 			</File>

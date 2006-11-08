@@ -387,22 +387,6 @@
 			Name="Table Files"
 			>
 			<File
-				RelativePath="..\..\source\tables\initialcaptures.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\tables\initialdistances.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\tables\initialsquares.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\tables\mantoglyph.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\tables\movements.cpp"
 				>
 			</File>
