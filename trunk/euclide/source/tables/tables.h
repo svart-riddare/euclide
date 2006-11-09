@@ -16,8 +16,19 @@ extern const bool captures[NumGlyphs][NumSquares][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 
-typedef std::pair<Square, Square> Obstruction;
-typedef std::pair<const Obstruction *, int> Obstructions;
+typedef struct
+{
+	square_t from;
+	square_t to;
+
+} Obstruction;
+
+typedef struct
+{
+	const Obstruction *obstructions;
+	int numObstructions;
+
+} Obstructions;
 
 extern const Obstructions obstructions[NumGlyphs][NumSquares];
 

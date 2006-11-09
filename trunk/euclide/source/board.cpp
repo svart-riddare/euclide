@@ -15,8 +15,8 @@ Obstructions::Obstructions(Superman superman, Color color, Square square, int mo
 
 	/* -- Allocate obstruction table from precomputed table -- */
 
-	const tables::Obstruction *_obstructions = tables::obstructions[glyph][square].first;
-	int numObstructions = tables::obstructions[glyph][square].second;
+	const tables::Obstruction *_obstructions = tables::obstructions[glyph][square].obstructions;
+	int numObstructions = tables::obstructions[glyph][square].numObstructions;
 	
 	obstructions = new int *[numObstructions];
 
@@ -24,15 +24,15 @@ Obstructions::Obstructions(Superman superman, Color color, Square square, int mo
 
 	numSoftObstructions = 0;
 	for (int k = 0; k < numObstructions; k++)
-		if (_obstructions[k].second != square)
-			obstructions[numSoftObstructions++] = &movements[_obstructions[k].first][_obstructions[k].second];
+		if (_obstructions[k].to != square)
+			obstructions[numSoftObstructions++] = &movements[_obstructions[k].from][_obstructions[k].to];
 
 	/* -- Hard obstructions are suitable only if the obstructing piece is not captured -- */
 
 	numHardObstructions = numSoftObstructions;
 	for (int k = 0; k < numObstructions; k++)
-		if (_obstructions[k].second == square)
-			obstructions[numHardObstructions++] = &movements[_obstructions[k].first][_obstructions[k].second];
+		if (_obstructions[k].to == square)
+			obstructions[numHardObstructions++] = &movements[_obstructions[k].from][_obstructions[k].to];
 }
 
 /* -------------------------------------------------------------------------- */
