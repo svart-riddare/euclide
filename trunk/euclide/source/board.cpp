@@ -107,7 +107,7 @@ Movements::Movements(Superman superman, Color color)
 	hybrid = false;
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (tables::captures[glyph][from][to])
+			if (tables::captures[glyph][from][to] && !tables::movements[glyph][from][to])
 				hybrid = true;
 
 	/* -- Fill in initial distances and required captures -- */
@@ -260,7 +260,7 @@ int Movements::captures(Square from, Square to) const
 			
 			/* -- Add square to queue -- */
 
-			distances[square] = distance + (tables::captures[glyph][from][square] ? 1 : 0);
+			distances[square] = distance + ((tables::captures[glyph][from][square] && !tables::movements[glyph][from][square]) ? 1 : 0);
 			squares.push(square);
 			
 			/* -- Have we reached our destination? -- */
@@ -350,7 +350,7 @@ int *Movements::captures(Square square, int captures[NumSquares]) const
 
 		/* -- Handle every possible immediate destination -- */
 
-		for (Square to = FirstSquare; square <= LastSquare; square++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
 		{
 			if (movements[from][to])
 				continue;
@@ -362,13 +362,17 @@ int *Movements::captures(Square square, int captures[NumSquares]) const
 
 			/* -- Set square number of required captures -- */
 
-			captures[to] = captures[from] + (tables::captures[glyph][from][to] ? 1 : 0);
+			captures[to] = captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
 
 			/* -- Add it to queue of reachable destinations -- */
 
 			squares.push(to);
 		}
 	}
+
+	/* -- Don't leave negative values in the table -- */
+
+	std::replace(captures, captures + NumSquares, -1, infinity);
 
 	/* -- Done -- */
 
@@ -421,7 +425,7 @@ int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) co
 
 			/* -- Compute distance (number of captures) -- */
 
-			int distance = distances[from] + (tables::captures[glyph][from][square] ? 1 : 0);
+			int distance = distances[from] + ((tables::captures[glyph][from][square] && !tables::movements[glyph][from][square]) ? 1 : 0);
 
 			if (distance > distances[square])
 				continue;
