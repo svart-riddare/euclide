@@ -95,7 +95,7 @@ void makeObstructions(void)
 						blocked = false;
 
 					if (blocked)
-						fprintf(file, "\tObstruction(%s, %s),\n", strings::squares[from], strings::squares[to]), numObstructions[glyph][square]++;
+						fprintf(file, "\t{ %s, %s },\n", strings::squares[from], strings::squares[to]), numObstructions[glyph][square]++;
 				}
 			}
 		}
@@ -113,7 +113,7 @@ void makeObstructions(void)
 
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 		{
-			fprintf(file, "\t\tObstructions(&_obstructions[%5d], %3d),  /* %s */\n", index, numObstructions[glyph][square], strings::squares[square]);
+			fprintf(file, "\t\t{ &_obstructions[%5d], %3d },  /* %s */\n", index, numObstructions[glyph][square], strings::squares[square]);
 			index += numObstructions[glyph][square];
 		}
 
