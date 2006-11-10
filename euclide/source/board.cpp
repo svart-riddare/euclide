@@ -523,11 +523,26 @@ void Movements::optimize()
 
 bool Movements::locked() const
 {
+	Square initial = superman.square(color);
+
 	if (!possibilities)
 		return true;
 
+	/* -- Check whether the piece may leave it's home square -- */
+
+	bool isLocked = true;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (!movements[square][superman.square(color)])
+		if (!movements[initial][square])
+			if (square != initial)
+				isLocked = false;
+
+	if (isLocked)
+		return true;
+
+	/* -- Check whether the piece may return to it's home square -- */
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (!movements[square][initial])
 			return false;
 
 	return true;

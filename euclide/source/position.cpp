@@ -116,7 +116,7 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 				Target *dedicated = NULL;
 				Target *candidate = NULL;
 
-				for (iterator partition = begin(); partition != end(); partition++)
+				for (const_iterator partition = begin(); partition != end(); partition++)
 				{
 					for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 					{
@@ -145,6 +145,9 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 			}
 		}
 	}
+
+	updateRequiredMoves();
+	updateRequiredCaptures();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -170,6 +173,19 @@ bool Pieces::analyseStaticPieces(Board& board)
 		analyseStaticPieces(board);
 
 	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Pieces::analyseCastling(Board& board)
+{
+	if (castling.isKingsidePossible(King))
+		if (board.distance(King, King, _color, castling.kingsideSquare(King, _color)) >= infinity)
+			castling.setKingsidePossible(false);
+
+	if (castling.isQueensidePossible(King))
+		if (board.distance(King, King, _color, castling.queensideSquare(King, _color)) >= infinity)
+			castling.setQueensidePossible(false);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -86,4 +86,18 @@ Square Castling::queensideSquare(Man man, Color color) const
 
 /* -------------------------------------------------------------------------- */
 
+void Castling::setKingsidePossible(bool possible)
+{
+	kingside = possible;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Castling::setQueensidePossible(bool possible)
+{
+	queenside = possible;
+}
+
+/* -------------------------------------------------------------------------- */
+
 }

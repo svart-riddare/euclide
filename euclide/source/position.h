@@ -22,6 +22,7 @@ class Pieces : public Partitions
 
 		void analyseCaptures(const Board& board, const Pieces& pieces);
 		bool analyseStaticPieces(Board& board);
+		void analyseCastling(Board& board);
 
 		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
