@@ -20,6 +20,9 @@ class Castling
 		Square kingsideSquare(Man man, Color color) const;
 		Square queensideSquare(Man man, Color color) const;
 
+		void setKingsidePossible(bool possible);
+		void setQueensidePossible(bool possible);
+
 	private :
 		tribool kingside;
 		tribool queenside;
