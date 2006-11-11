@@ -49,8 +49,8 @@ class Movements
 		bool locked() const;
 
 	protected :
-		int *distances(Square square, int distances[NumSquares]) const;
-		int *captures(Square square, int captures[NumSquares]) const;
+		void computeInitialDistances();
+		void computeInitialCaptures();
 
 	private :
 		int movements[NumSquares][NumSquares];
@@ -59,11 +59,18 @@ class Movements
 		Superman superman;
 		Glyph glyph;
 		Color color;
-		
+
+		Square initial;
+		Square ksquare;
+		Square qsquare;
+		Square _ksquare;
+		Square _qsquare;
+		int castling;
+
 		bool hybrid;
 
-		int initialDistances[NumSquares];
-		int initialCaptures[NumSquares];
+		int distances[NumSquares];
+		int _captures[NumSquares];
 
 		Obstructions *obstructions[NumSquares];
 };
@@ -77,7 +84,6 @@ class Board
 		~Board();
 
 		int distance(Man man, Superman superman, Color color, Square from, Square to) const;
-		int distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const;
 		int distance(Man man, Superman superman, Color color, Square to) const;
 
 		int captures(Man man, Superman superman, Color color, Square from, Square to) const;

@@ -13,7 +13,7 @@ class Destination
 	public :
 		Destination(Square square, Color color, Man man, Superman superman, bool captured);
 
-		int computeRequiredMoves(const Board& board, const Castling& castling);
+		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
 
 	public :

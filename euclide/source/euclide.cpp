@@ -159,9 +159,6 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	whitePieces->analyseStaticPieces(*board);
 	blackPieces->analyseStaticPieces(*board);
 
-	whitePieces->analyseCastling(*board);
-	blackPieces->analyseCastling(*board);
-
 	whitePieces->computeRequiredMoves(*board);
 	whitePieces->computeRequiredCaptures(*board);
 

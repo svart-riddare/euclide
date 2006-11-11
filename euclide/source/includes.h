@@ -71,7 +71,6 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 #include "tables.h"
-#include "castling.h"
 #include "problem.h"
 #include "board.h"
 

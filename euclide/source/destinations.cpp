@@ -19,9 +19,9 @@ Destination::Destination(Square square, Color color, Man man, Superman superman,
 
 /* -------------------------------------------------------------------------- */
 
-int Destination::computeRequiredMoves(const Board& board, const Castling& castling)
+int Destination::computeRequiredMoves(const Board& board)
 {
-	int distance = board.distance(_man, _superman, _color, _square, castling);
+	int distance = board.distance(_man, _superman, _color, _square);
 	if (distance > requiredMoves)
 		requiredMoves = distance;
 
