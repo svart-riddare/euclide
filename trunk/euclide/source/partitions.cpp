@@ -242,12 +242,12 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 
 /* -------------------------------------------------------------------------- */
 
-int Partition::computeRequiredMoves(const Board& board, const Castling& castling)
+int Partition::computeRequiredMoves(const Board& board)
 {
 	int requiredMoves = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredMoves += target->computeRequiredMoves(board, castling);
+		requiredMoves += target->computeRequiredMoves(board);
 
 	return maximize(this->requiredMoves, requiredMoves);
 }

@@ -88,6 +88,31 @@ Movements::Movements(Superman superman, Color color)
 	assert(superman.isValid());
 	assert(color.isValid());	
 
+	/* -- Initialize initial squares -- */
+
+	initial = superman.square(color);
+	ksquare = initial;
+	qsquare = initial;
+
+	/* -- Handle castling -- */
+
+	castling = (superman == King) ? 1 : 0;
+
+	if (superman == King)
+		ksquare = Square((column_t)(initial.column() + 2), initial.row());
+
+	if (superman == King)
+		qsquare = Square((column_t)(initial.column() - 2), initial.row());
+
+	if (superman == KingRook)
+		ksquare = Square((column_t)(initial.column() - 2), initial.row());
+
+	if (superman == QueenRook)
+		qsquare = Square((column_t)(initial.column() + 3), initial.row());
+
+	_ksquare = ksquare;
+	_qsquare = qsquare;
+
 	/* -- Initialize table of allowed movements -- */
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
@@ -112,8 +137,8 @@ Movements::Movements(Superman superman, Color color)
 
 	/* -- Fill in initial distances and required captures -- */
 
-	distances(superman.square(color), initialDistances);
-	captures(superman.square(color), initialCaptures);
+	computeInitialDistances();
+	computeInitialCaptures();
 
 	/* -- Initialize obstruction tables -- */
 
@@ -135,7 +160,7 @@ int Movements::distance(Square square) const
 {
 	assert(square.isValid());
 
-	return initialDistances[square];
+	return distances[square];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -144,7 +169,7 @@ int Movements::captures(Square square) const
 {
 	assert(square.isValid());
 
-	return initialCaptures[square];
+	return _captures[square];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -275,19 +300,24 @@ int Movements::captures(Square from, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-int *Movements::distances(Square square, int distances[NumSquares]) const
+void Movements::computeInitialDistances()
 {
-	assert(square.isValid());
-
 	/* -- Initialize distances -- */
 
 	std::fill(distances, distances + NumSquares, infinity);
-	distances[square] = 0;
-
+	distances[ksquare] = castling;
+	distances[qsquare] = castling;
+	distances[initial] = 0;
+	
 	/* -- Initialize square queue -- */
 
 	queue<Square> squares;
-	squares.push(square);
+	squares.push(initial);
+
+	if (ksquare != initial)
+		squares.push(ksquare);
+	if (qsquare != initial)
+		squares.push(qsquare);
 
 	/* -- Loop until every reachable square has been handled -- */
 
@@ -316,31 +346,25 @@ int *Movements::distances(Square square, int distances[NumSquares]) const
 			squares.push(to);
 		}
 	}
-
-	/* -- Done -- */
-
-	return distances;
 }
 
 /* -------------------------------------------------------------------------- */
 
-int *Movements::captures(Square square, int captures[NumSquares]) const
+void Movements::computeInitialCaptures()
 {
-	assert(square.isValid());
-
 	/* -- Initialize captures -- */
 
-	std::fill(captures, captures + NumSquares, hybrid ? -1 : 0);
-	captures[square] = 0;
+	std::fill(_captures, _captures + NumSquares, hybrid ? -1 : 0);
+	_captures[initial] = 0;
 
 	if (!hybrid)
-		return captures;
+		return;
 
 	/* -- Initialize square priority queue -- */
 
-	_greater<int, NumSquares> priority(captures);
+	_greater<int, NumSquares> priority(_captures);
 	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
-	squares.push(square);
+	squares.push(initial);
 
 	/* -- Loop until every reachable square has been handled -- */
 
@@ -357,12 +381,12 @@ int *Movements::captures(Square square, int captures[NumSquares]) const
 
 			/* -- This square may have been attained with less captures -- */
 
-			if (captures[to] >= 0)
+			if (_captures[to] >= 0)
 				continue;
 
 			/* -- Set square number of required captures -- */
 
-			captures[to] = captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
+			_captures[to] = _captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
 
 			/* -- Add it to queue of reachable destinations -- */
 
@@ -372,11 +396,7 @@ int *Movements::captures(Square square, int captures[NumSquares]) const
 
 	/* -- Don't leave negative values in the table -- */
 
-	std::replace(captures, captures + NumSquares, -1, infinity);
-
-	/* -- Done -- */
-
-	return captures;
+	std::replace(_captures, _captures + NumSquares, -1, infinity);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -500,6 +520,14 @@ void Movements::block(Square square, bool captured)
 	assert(square.isValid());
 
 	obstructions[square]->block(captured);
+
+	/* -- Handle castling -- */
+
+	if (distances[ksquare] != (castling + 1))
+		ksquare = initial;
+
+	if (distances[qsquare] != (castling + 1))
+		qsquare = initial;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -509,6 +537,14 @@ void Movements::unblock(Square square, bool captured)
 	assert(square.isValid());
 
 	obstructions[square]->unblock(captured);
+
+	/* -- Handle castling -- */
+
+	if (distances[_ksquare] == (castling + 1))
+		ksquare = _ksquare;
+
+	if (distances[_qsquare] == (castling + 1))
+		qsquare = _qsquare;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -595,26 +631,6 @@ int Board::distance(Man man, Superman superman, Color color, Square from, Square
 
 	Square square = superman.square(color);
 	return movements[man][color]->distance(from, square) + movements[superman][color]->distance(square, to);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Board::distance(Man man, Superman superman, Color color, Square to, const Castling& castling) const
-{
-	int minimum = infinity;
-
-	/* -- Find minimum distance given castling rights -- */
-
-	if (castling.isNonePossible(man))
-		minimum = distance(man, superman, color, to);
-
-	if (castling.isKingsidePossible(man))
-		minimum = std::min(minimum, distance(man, superman, color, castling.kingsideSquare(man, color), to) + ((man.isKing()) ? 1 : 0));
-
-	if (castling.isQueensidePossible(man))
-		minimum = std::min(minimum, distance(man, superman, color, castling.queensideSquare(man, color), to) + ((man.isKing()) ? 1 : 0));
-
-	return minimum;
 }
 
 /* -------------------------------------------------------------------------- */

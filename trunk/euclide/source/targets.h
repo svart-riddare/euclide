@@ -20,7 +20,7 @@ class Target : public vector<Destination>
 		Target(Glyph glyph, Square square);
 		Target(Color color, const Squares& squares);
 
-		int computeRequiredMoves(const Board& board, const Castling& castling);
+		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
 
 		int updateRequiredMoves();

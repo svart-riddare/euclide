@@ -65,9 +65,9 @@ Target::Target(Color color, const Squares& squares)
 
 /* -------------------------------------------------------------------------- */
 
-int Target::computeRequiredMoves(const Board& board, const Castling& castling)
+int Target::computeRequiredMoves(const Board& board)
 {
-	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredMoves, _1, cref(board), cref(castling)));
+	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredMoves, _1, cref(board)));
 	return updateRequiredMoves();
 }
 

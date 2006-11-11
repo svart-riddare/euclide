@@ -232,10 +232,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\castling.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\source\destinations.cpp"
 				>
 			</File>
@@ -300,10 +296,6 @@
 			>
 			<File
 				RelativePath="..\..\source\board.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\castling.h"
 				>
 			</File>
 			<File

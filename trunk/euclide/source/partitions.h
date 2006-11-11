@@ -21,7 +21,7 @@ class Partition : public vector_ptr<Target>
 		bool refine(Partitions& partitions, int maxDepth);
 		bool split(Partitions& partitions, const Men& men, const bitset<NumMen>& targets);
 
-		int computeRequiredMoves(const Board& board, const Castling& castling);
+		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
 		
 		int updateRequiredMoves();

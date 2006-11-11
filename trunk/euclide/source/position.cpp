@@ -177,24 +177,11 @@ bool Pieces::analyseStaticPieces(Board& board)
 
 /* -------------------------------------------------------------------------- */
 
-void Pieces::analyseCastling(Board& board)
-{
-	if (castling.isKingsidePossible(King))
-		if (board.distance(King, King, _color, castling.kingsideSquare(King, _color)) >= infinity)
-			castling.setKingsidePossible(false);
-
-	if (castling.isQueensidePossible(King))
-		if (board.distance(King, King, _color, castling.queensideSquare(King, _color)) >= infinity)
-			castling.setQueensidePossible(false);
-}
-
-/* -------------------------------------------------------------------------- */
-
 int Pieces::computeRequiredMoves(const Board& board)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
-		requiredMoves += partition->computeRequiredMoves(board, castling);
+		requiredMoves += partition->computeRequiredMoves(board);
 
 	return maximize(this->requiredMoves, requiredMoves);
 }
