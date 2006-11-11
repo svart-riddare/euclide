@@ -73,6 +73,9 @@ void makeMovements(void)
 						if (!horizontalDistance)
 							isValid = true;
 
+				if (from == to)
+					isValid = false;
+
 				fprintf(file, "%s, ", isValid ? " true" : "false");
 			}
 
@@ -138,6 +141,9 @@ void makeMovements(void)
 						if (horizontalDistance == 1)
 							if (from.row() != Eight)
 								isValid = true;
+
+				if (from == to)
+					isValid = false;
 
 				fprintf(file, "%s, ", isValid ? " true" : "false");
 			}

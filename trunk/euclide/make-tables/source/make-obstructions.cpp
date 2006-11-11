@@ -51,20 +51,20 @@ void makeObstructions(void)
 					if (glyph.isKing())
 						if (horizontalDistance <= 1)
 							if (verticalDistance <= 1)
-								if (square == to)
+								if ((square == to) || (square == from))
 									blocked = true;
 						
 					if (glyph.isRook() || glyph.isQueen())
 						if (!horizontalDistance)
 							if (column == minColumn)
-							if ((minRow <= row) && (row <= maxRow))
-								blocked = true;
+								if ((minRow <= row) && (row <= maxRow))
+									blocked = true;
 									
 					if (glyph.isRook() || glyph.isQueen())
 						if (!verticalDistance)
 							if (row == minRow)
-							if ((minColumn <= column) && (column <= maxColumn))
-								blocked = true;
+								if ((minColumn <= column) && (column <= maxColumn))
+									blocked = true;
 					
 					if (glyph.isBishop() || glyph.isQueen())
 						if (horizontalDistance == verticalDistance)
@@ -75,23 +75,23 @@ void makeObstructions(void)
 					
 					if (glyph.isKnight())
 						if ((horizontalDistance * verticalDistance) == 2)
-							if (square == to)
-							blocked = true;
+							if ((square == to) || (square == from))
+								blocked = true;
 					
 					if (glyph.isPawn())
 						if (verticalDelta == (glyph.isWhite() ? 1 : -1))
 							if (from.row() != (glyph.isWhite() ? One : Eight))
 								if (horizontalDistance <= 1)
-									if (square == to)
-									blocked = true;
+									if ((square == to) || (square == from))
+										blocked = true;
 
 					if (glyph.isPawn())
 						if (from.row() == (glyph.isWhite() ? Two : Seven))
 							if ((verticalDistance == 2) && !horizontalDistance)
-								if (square == Square(from.column(), (row_t)(from.row() - verticalDistance / 2)))
+								if ((square == from) || (square == to) || (square == (from + to) / 2))
 									blocked = true;
 
-					if (from == square)
+					if (from == to)
 						blocked = false;
 
 					if (blocked)

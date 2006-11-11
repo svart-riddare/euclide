@@ -533,8 +533,7 @@ bool Movements::locked() const
 	bool isLocked = true;
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (!movements[initial][square])
-			if (square != initial)
-				isLocked = false;
+			isLocked = false;
 
 	if (isLocked)
 		return true;
