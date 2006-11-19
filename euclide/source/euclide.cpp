@@ -127,24 +127,33 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	if (callbacks.displayDeductions)
 		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
 
-	/* -- Analyse captures -- */
+	/* -- Analyse paths -- */
 
-	whitePieces->analyseCaptures(*board, *blackPieces);
-	blackPieces->analyseCaptures(*board, *whitePieces);
-
-	do
+	for (int n = 0; n < 2; n++)
 	{
-		whitePieces->analyseMoveConstraints(problem->moves(White));
-		whitePieces->analyseCaptureConstraints(problem->captures(White));
-	}
-	while (whitePieces->analysePartitions());
+		board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
+		board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
 
-	do
-	{
-		blackPieces->analyseMoveConstraints(problem->moves(Black));
-		blackPieces->analyseCaptureConstraints(problem->captures(Black));
+		whitePieces->computeRequiredMoves(*board);
+		whitePieces->computeRequiredCaptures(*board);
+
+		blackPieces->computeRequiredMoves(*board);
+		blackPieces->computeRequiredCaptures(*board);
+
+		do
+		{
+			whitePieces->analyseMoveConstraints(problem->moves(White));
+			whitePieces->analyseCaptureConstraints(problem->captures(White));
+		}
+		while (whitePieces->analysePartitions());
+
+		do
+		{
+			blackPieces->analyseMoveConstraints(problem->moves(Black));
+			blackPieces->analyseCaptureConstraints(problem->captures(Black));
+		}
+		while (blackPieces->analysePartitions());
 	}
-	while (blackPieces->analysePartitions());
 
 	deductions = *this;
 
@@ -154,30 +163,27 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	if (callbacks.displayDeductions)
 		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
 
-	/* -- Block pieces on their initial squares -- */
+	/* -- Analyse captures -- */
 
-	whitePieces->analyseStaticPieces(*board);
-	blackPieces->analyseStaticPieces(*board);
-
-	whitePieces->computeRequiredMoves(*board);
-	whitePieces->computeRequiredCaptures(*board);
-
-	blackPieces->computeRequiredMoves(*board);
-	blackPieces->computeRequiredCaptures(*board);
-	
-	do
+	if (whitePieces->analyseCaptures(*board, *blackPieces))
 	{
-		whitePieces->analyseMoveConstraints(problem->moves(White));
-		whitePieces->analyseCaptureConstraints(problem->captures(White));
+		do
+		{
+			whitePieces->analyseMoveConstraints(problem->moves(White));
+			whitePieces->analyseCaptureConstraints(problem->captures(White));
+		}
+		while (whitePieces->analysePartitions());
 	}
-	while (whitePieces->analysePartitions());
 
-	do
+	if (blackPieces->analyseCaptures(*board, *whitePieces))
 	{
-		blackPieces->analyseMoveConstraints(problem->moves(Black));
-		blackPieces->analyseCaptureConstraints(problem->captures(Black));
+		do
+		{
+			blackPieces->analyseMoveConstraints(problem->moves(Black));
+			blackPieces->analyseCaptureConstraints(problem->captures(Black));
+		}
+		while (blackPieces->analysePartitions());
 	}
-	while (blackPieces->analysePartitions());
 
 	deductions = *this;
 

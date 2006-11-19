@@ -1,4 +1,5 @@
 #include "board.h"
+#include "position.h"
 
 namespace euclide
 {
@@ -37,9 +38,53 @@ Obstructions::Obstructions(Superman superman, Color color, Square square, int mo
 
 /* -------------------------------------------------------------------------- */
 
+Obstructions::Obstructions(const Obstructions& obstructions)
+{
+	numSoftObstructions = obstructions.numSoftObstructions;
+	numHardObstructions = obstructions.numHardObstructions;
+
+	this->obstructions = new int *[numHardObstructions];
+	std::copy(obstructions.obstructions, obstructions.obstructions + numHardObstructions, this->obstructions);
+}
+
+/* -------------------------------------------------------------------------- */
+
 Obstructions::~Obstructions()
 {
 	delete[] obstructions;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Obstructions& Obstructions::operator&=(const Obstructions& obstructions)
+{
+	int k = 0;
+		
+	if (this->numSoftObstructions && obstructions.numSoftObstructions)
+	{
+		for (int m = 0, n = 0; ; )
+		{
+			if (this->obstructions[m] < obstructions.obstructions[n])
+			{
+				if (++m >= this->numSoftObstructions)
+					break;
+			}
+			else
+			if (this->obstructions[m] > obstructions.obstructions[n])
+			{
+				if (++n >= obstructions.numSoftObstructions)
+					break;
+			}
+			else
+			{
+				this->obstructions[k++] = this->obstructions[n++, m++];
+			}
+		}
+	}
+
+	numSoftObstructions = k;
+	numHardObstructions = k;
+	return *this;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -174,6 +219,32 @@ int Movements::captures(Square square) const
 
 /* -------------------------------------------------------------------------- */
 
+int Movements::distance(const Squares& squares) const
+{
+	int distance = infinity;
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (squares[square])
+			minimize(distance, distances[square]);
+
+	return distance;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Movements::captures(const Squares& squares) const
+{
+	int captures = infinity;
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (squares[square])
+			minimize(captures, _captures[square]);
+
+	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Movements::distance(Square from, Square to) const
 {
 	assert(from.isValid());
@@ -302,22 +373,44 @@ int Movements::captures(Square from, Square to) const
 
 void Movements::computeInitialDistances()
 {
+	computeForwardDistances(initial, distances);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::computeInitialCaptures()
+{
+	computeForwardCaptures(initial, _captures);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::computeForwardDistances(Square square, int distances[NumSquares]) const
+{
 	/* -- Initialize distances -- */
 
 	std::fill(distances, distances + NumSquares, infinity);
-	distances[ksquare] = castling;
-	distances[qsquare] = castling;
-	distances[initial] = 0;
+	
+	if (square == initial)
+	{
+		distances[ksquare] = castling;
+		distances[qsquare] = castling;
+	}
+	
+	distances[square] = 0;
 	
 	/* -- Initialize square queue -- */
 
 	queue<Square> squares;
-	squares.push(initial);
+	squares.push(square);
 
-	if (ksquare != initial)
-		squares.push(ksquare);
-	if (qsquare != initial)
-		squares.push(qsquare);
+	if (square == initial)
+	{
+		if (ksquare != initial)
+			squares.push(ksquare);
+		if (qsquare != initial)
+			squares.push(qsquare);
+	}
 
 	/* -- Loop until every reachable square has been handled -- */
 
@@ -350,21 +443,21 @@ void Movements::computeInitialDistances()
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::computeInitialCaptures()
+void Movements::computeForwardCaptures(Square square, int captures[NumSquares]) const
 {
 	/* -- Initialize captures -- */
 
-	std::fill(_captures, _captures + NumSquares, hybrid ? -1 : 0);
-	_captures[initial] = 0;
+	std::fill(captures, captures + NumSquares, hybrid ? -1 : 0);
+	captures[square] = 0;
 
 	if (!hybrid)
 		return;
 
 	/* -- Initialize square priority queue -- */
 
-	_greater<int, NumSquares> priority(_captures);
+	_greater<int, NumSquares> priority(captures);
 	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
-	squares.push(initial);
+	squares.push(square);
 
 	/* -- Loop until every reachable square has been handled -- */
 
@@ -381,12 +474,12 @@ void Movements::computeInitialCaptures()
 
 			/* -- This square may have been attained with less captures -- */
 
-			if (_captures[to] >= 0)
+			if (captures[to] >= 0)
 				continue;
 
 			/* -- Set square number of required captures -- */
 
-			_captures[to] = _captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
+			captures[to] = captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
 
 			/* -- Add it to queue of reachable destinations -- */
 
@@ -396,7 +489,101 @@ void Movements::computeInitialCaptures()
 
 	/* -- Don't leave negative values in the table -- */
 
-	std::replace(_captures, _captures + NumSquares, -1, infinity);
+	std::replace(captures, captures + NumSquares, -1, infinity);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::computeReverseDistances(Square square, int distances[NumSquares]) const
+{
+	/* -- Initialize distances -- */
+
+	std::fill(distances, distances + NumSquares, infinity);
+	distances[square] = 0;
+	
+	/* -- Initialize square queue -- */
+
+	queue<Square> squares;
+	squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		Square to = squares.front(); squares.pop();
+
+		/* -- Handle every possible source square -- */
+
+		for (Square from = FirstSquare; from <= LastSquare; from++)
+		{
+			if (movements[from][to])
+				continue;
+
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[from] < infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[from] = distances[to] + 1;
+	
+			/* -- Add it to queue of source squares -- */
+
+			squares.push(from);
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::computeReverseCaptures(Square square, int captures[NumSquares]) const
+{
+	/* -- Initialize captures -- */
+
+	std::fill(captures, captures + NumSquares, hybrid ? -1 : 0);
+	captures[square] = 0;
+
+	if (!hybrid)
+		return;
+
+	/* -- Initialize square priority queue -- */
+
+	_greater<int, NumSquares> priority(captures);
+	priority_queue<Square, vector<Square>, _greater<int, NumSquares> > squares(priority);
+	squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		Square to = squares.top(); squares.pop();
+
+		/* -- Handle every possible source square -- */
+
+		for (Square from = FirstSquare; from <= LastSquare; from++)
+		{
+			if (movements[from][to])
+				continue;
+
+			/* -- This square may have been attained with less captures -- */
+
+			if (captures[from] >= 0)
+				continue;
+
+			/* -- Set square number of required captures -- */
+
+			captures[from] = captures[to] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0);
+
+			/* -- Add it to queue of source squares -- */
+
+			squares.push(from);
+		}
+	}
+
+	/* -- Don't leave negative values in the table -- */
+
+	std::replace(captures, captures + NumSquares, -1, infinity);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -515,6 +702,32 @@ int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) co
 
 /* -------------------------------------------------------------------------- */
 
+void Movements::block(Squares squares)
+{
+	assert(!squares.none());
+
+	Square square = FirstSquare;
+	while (!squares[square])
+		square++;
+
+	if (squares.count() == 1)
+		return block(square, false);
+
+	/* -- Find common obstructions -- */
+
+	Obstructions obstructions(*this->obstructions[square++]);
+
+	for ( ; square <= LastSquare; square++)
+		if (squares[square])
+			obstructions &= *this->obstructions[square];
+
+	/* -- Apply them -- */
+
+	obstructions.block(false);
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Movements::block(Square square, bool captured)
 {
 	assert(square.isValid());
@@ -523,10 +736,10 @@ void Movements::block(Square square, bool captured)
 
 	/* -- Handle castling -- */
 
-	if (distances[ksquare] != (castling + 1))
+	if (distances[ksquare] > (castling + 1))
 		ksquare = initial;
 
-	if (distances[qsquare] != (castling + 1))
+	if (distances[qsquare] > (castling + 1))
 		qsquare = initial;
 }
 
@@ -551,8 +764,118 @@ void Movements::unblock(Square square, bool captured)
 
 void Movements::optimize()
 {
+	/* -- Remove all useless obstructions -- */
+
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		obstructions[square]->optimize();
+
+	/* -- Count number of possible moves -- */
+
+	possibilities = 0;
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			if (movements[from][to] == 0)
+				possibilities++;
+
+	/* -- Recompute initial distances and captures -- */
+
+	computeInitialDistances();
+	computeInitialCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::reduce(Square square, int availableMoves, int availableCaptures)
+{
+	assert(square.isValid());
+	assert(availableMoves >= 0);
+	assert(availableCaptures >= 0);
+
+	/* -- Compute distances and required captures to given square -- */
+
+	int rdistances[NumSquares];
+	int rcaptures[NumSquares];
+
+	computeReverseDistances(square, rdistances);
+	computeReverseCaptures(square, rcaptures);
+
+	/* -- Eliminate unused movements given number of available moves -- */
+
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			if (movements[from][to] == 0)
+				if ((distances[from] + 1 + rdistances[to]) > availableMoves)
+					movements[from][to] = infinity;
+
+	/* -- Eliminate unused movements given number of available captures -- */
+
+	if (hybrid)
+		for (Square from = FirstSquare; from <= LastSquare; from++)
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+				if (movements[from][to] == 0)
+					if ((_captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0) + rcaptures[to]) > availableCaptures)
+						movements[from][to] = infinity;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::reduce(Squares squares, int availableMoves, int availableCaptures)
+{
+	assert(!squares.none());
+	assert(availableMoves >= 0);
+	assert(availableCaptures >= 0);
+
+	/* -- Let's not loose ourselves with too many computations -- */
+
+	if (squares.count() > 8)
+		return;
+
+	/* -- Compute distances and required captures to given set of squares -- */
+
+	int rdistances[NumSquares];
+	int rcaptures[NumSquares];
+
+	Square square = FirstSquare;
+	while (!squares[square])
+		square++;
+
+	computeReverseDistances(square, rdistances);
+	computeReverseCaptures(square, rcaptures);
+
+	for (square++; square <= LastSquare; square++)
+	{
+		if (!squares[square])
+			continue;
+
+		int _rdistances[NumSquares];
+		int _rcaptures[NumSquares];
+
+		computeReverseDistances(square, _rdistances);
+		computeReverseCaptures(square, _rcaptures);
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			rdistances[square] = std::min(rdistances[square], _rdistances[square]);
+		
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			rcaptures[square] = std::min(rcaptures[square], _rcaptures[square]);
+	}
+
+	/* -- Eliminate unused movements given number of available moves -- */
+
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			if (movements[from][to] == 0)
+				if ((distances[from] + 1 + rdistances[to]) > availableMoves)
+					movements[from][to] = infinity;
+
+	/* -- Eliminate unused movements given number of available captures -- */
+
+	if (hybrid)
+		for (Square from = FirstSquare; from <= LastSquare; from++)
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+				if (movements[from][to] == 0)
+					if ((_captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0) + rcaptures[to]) > availableCaptures)
+						movements[from][to] = infinity;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -584,23 +907,40 @@ bool Movements::locked() const
 }
 
 /* -------------------------------------------------------------------------- */
+
+int Movements::moves() const
+{
+	return possibilities;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Squares Movements::squares() const
+{
+	int distances[NumSquares];
+	computeForwardDistances(initial, distances);
+
+	Squares squares;
+
+	for (Square square = FirstSquare; square < LastSquare; square++)
+		if (distances[square] < infinity)
+			squares[square] = true;
+
+	return squares;
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 Board::Board()
 {
-	modified = false;
+	optimized = true;
 
 	/* -- Initialize movement tables -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			movements[superman][color] = new Movements(superman, color);
-
-	/* -- Initialize lock table -- */
-
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Man man = FirstMan; man <= LastMan; man++)
-			locks[man][color] = false;
+			movements[color][superman] = new Movements(superman, color);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -611,7 +951,7 @@ Board::~Board()
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			delete movements[superman][color];
+			delete movements[color][superman];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -625,12 +965,12 @@ int Board::distance(Man man, Superman superman, Color color, Square from, Square
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return movements[man][color]->distance(from, to);
+		return movements[color][man]->distance(from, to);
 
-	/* -- Handle promoted men -- */
+	/* -- Handle promotions -- */
 
 	Square square = superman.square(color);
-	return movements[man][color]->distance(from, square) + movements[superman][color]->distance(square, to);
+	return movements[color][man]->distance(from, square) + movements[color][superman]->distance(square, to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -643,17 +983,17 @@ int Board::distance(Man man, Superman superman, Color color, Square to) const
 
 	/* -- Use extended algorithms if board movements have been altered -- */
 
-	if (modified)
+	if (!optimized)
 		return distance(man, superman, color, man.square(color), to);
 			
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return movements[man][color]->distance(to);
+		return movements[color][man]->distance(to);
 
-	/* -- Handle promoted men -- */
+	/* -- Handle promotions -- */
 
-	return movements[man][color]->distance(superman.square(color)) + movements[superman][color]->distance(to);
+	return movements[color][man]->distance(superman.square(color)) + movements[color][superman]->distance(to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -667,12 +1007,12 @@ int Board::captures(Man man, Superman superman, Color color, Square from, Square
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return movements[man][color]->captures(from, to);
+		return movements[color][man]->captures(from, to);
 
-	/* -- Handle promoted men -- */
+	/* -- Handle promotions -- */
 
 	Square square = superman.square(color);
-	return movements[man][color]->captures(from, square) + movements[superman][color]->captures(square, to);
+	return movements[color][man]->captures(from, square) + movements[color][superman]->captures(square, to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -685,17 +1025,17 @@ int Board::captures(Man man, Superman superman, Color color, Square to) const
 
 	/* -- Use extended algorithms if board movements have been altered -- */
 
-	if (modified)
+	if (!optimized)
 		return captures(man, superman, color, man.square(color), to);
 			
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return movements[man][color]->captures(to);
+		return movements[color][man]->captures(to);
 
-	/* -- Handle promoted men -- */
+	/* -- Handle promotions -- */
 
-	return movements[man][color]->captures(superman.square(color)) + movements[superman][color]->captures(to);
+	return movements[color][man]->captures(superman.square(color)) + movements[color][superman]->captures(to);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -709,15 +1049,15 @@ int Board::getCaptures(Man man, Superman superman, Color color, Square from, Squ
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return movements[man][color]->getCaptures(from, to, captures);
+		return movements[color][man]->getCaptures(from, to, captures);
 
-	/* -- Handle promoted men -- */
+	/* -- Handle promotions -- */
 
 	Square square = superman.square(color);
 	vector<Squares> _captures;
 	
-	movements[man][color]->getCaptures(from, square, captures);
-	movements[superman][color]->getCaptures(square, to, _captures);
+	movements[color][man]->getCaptures(from, square, captures);
+	movements[color][superman]->getCaptures(square, to, _captures);
 
 	captures.insert(captures.end(), _captures.begin(), _captures.end());
 	return (int)captures.size();
@@ -725,64 +1065,269 @@ int Board::getCaptures(Man man, Superman superman, Color color, Square from, Squ
 
 /* -------------------------------------------------------------------------- */
 
-void Board::block(Glyph glyph, Square square, bool captured)
-{
-	assert(glyph.isValid());
-	assert(square.isValid());
-
-	modified = true;
-
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			movements[superman][color]->block(square, captured && (color != glyph.color()));
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Board::block(Glyph glyph, Square from, Square to, bool captured)
-{
-	unblock(glyph, from);
-	block(glyph, to, captured);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Board::unblock(Glyph glyph, Square square, bool captured)
-{
-	assert(glyph.isValid());
-	assert(square.isValid());
-	
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			movements[superman][color]->unblock(square, captured && (color != glyph.color()));
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Board::lock(Man man, Color color)
+void Board::block(Superman man, Color color, Square square, bool captured)
 {
 	assert(man.isValid());
 	assert(color.isValid());
+	assert(square.isValid());
 
-	Square initial = man.square(color);
-	Glyph glyph = man.glyph(color);
+	optimized = false;
 
-	/* -- Check if it was already locked -- */
+	/* -- Block movements for our side -- */
 
-	if (locks[man][color])
-		return false;
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		if (superman != man)
+			movements[color][superman]->block(square, false);
 
-	/* -- Check if we can reach the initial square -- */
+	/* -- Block movements for opponent pieces -- */
 
-	if (!movements[man][color]->locked())
-		return false;
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		movements[!color][superman]->block(square, captured);
 
-	/* -- Lock the square -- */
+}
 
-	block(glyph, initial);
-	locks[man][color] = true;
+/* -------------------------------------------------------------------------- */
 
-	return true;
+void Board::unblock(Superman man, Color color, Square square, bool captured)
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(square.isValid());
+
+	optimized = false;
+
+	/* -- Unblock movements for our side -- */
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		if (superman != man)
+			movements[color][superman]->unblock(square, false);
+
+	/* -- Unblock movements for opponent pieces -- */
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		movements[!color][superman]->unblock(square, captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::transblock(Superman superman, Color color, Square from, Square to, bool captured)
+{
+	unblock(superman, color, from);
+	block(superman, color, to, captured);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::block(Man man, Superman superman, Color color)
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	/* -- Find squares on which the piece must lie -- */
+
+	Squares squares = movements[color][man]->squares();
+
+	if (man != superman)
+		squares |= movements[color][superman]->squares();
+
+	block(man, superman, color, squares);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::block(Man man, Superman _superman, Color color, const Squares& squares)
+{
+	assert(man.isValid());
+	assert(_superman.isValid());
+
+	optimized = false;
+	
+	/* -- Block movements for our side -- */
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		if ((superman != man) && (superman != _superman))
+			movements[color][superman]->block(squares);
+
+	/* -- Block movements for opponent pieces -- */
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		movements[!color][superman]->block(squares);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::reduce(Man man, Superman superman, Color color, Square square, int availableMoves, int availableCaptures)
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		movements[color][man]->reduce(square, availableMoves, availableCaptures);
+
+	/* -- Handle promotions -- */
+
+	else
+	{
+		Square promotion = superman.square(color);
+
+		int requiredMoves = movements[color][man]->distance(promotion);
+		int requiredCaptures = movements[color][man]->captures(promotion);
+
+		int promotionMoves = movements[color][superman]->distance(square);
+		int promotionCaptures = movements[color][superman]->captures(square);
+
+		movements[color][man]->reduce(promotion, availableMoves - promotionMoves, availableCaptures - promotionCaptures);
+		movements[color][superman]->reduce(square, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::reduce(Man man, Superman superman, Color color, const Squares& squares, int availableMoves, int availableCaptures)
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		movements[color][man]->reduce(squares, availableMoves, availableCaptures);
+
+	/* -- Handle promotions -- */
+
+	else
+	{
+		Square promotion = superman.square(color);
+
+		int requiredMoves = movements[color][man]->distance(promotion);
+		int requiredCaptures = movements[color][man]->captures(promotion);
+		int promotionMoves = movements[color][superman]->distance(squares);
+		int promotionCaptures = movements[color][superman]->captures(squares);
+
+		movements[color][man]->reduce(promotion, availableMoves - promotionMoves, availableCaptures - promotionCaptures);
+		movements[color][superman]->reduce(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures)
+{
+	/* -- Initialize information tied with each man -- */
+
+	struct 
+	{
+		int availableMoves;
+		int availableCaptures;
+
+		Squares msquares;
+		Squares squares;
+
+		Supermen supermen;
+		Superman superman;
+
+		bool block;
+			
+	} men[NumMen];
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+	{
+		men[man].availableMoves = 0;
+		men[man].availableCaptures = 0;
+
+		men[man].block = true;
+	}
+
+	/* -- Compute free moves and captures -- */
+
+	int freeMoves = availableMoves - pieces.getRequiredMoves();
+	int freeCaptures = availableCaptures - pieces.getRequiredCaptures();
+
+	/* -- Loop through partitions, targets and destinations to collect the information -- */
+
+	for	(Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+	{
+		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
+		{
+			for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
+			{
+				Man man = destination->man();
+				Superman superman = destination->superman();
+				Square square = destination->square();
+
+				maximize(men[man].availableMoves, target->getRequiredMoves() + freeMoves);
+				maximize(men[man].availableCaptures, target->getRequiredCaptures() + freeCaptures);
+
+				men[man].squares[square] = true;
+				if (superman == man)
+					men[man].msquares[square] = true;
+				else
+					men[man].msquares[superman.square(color)] = true;
+
+				men[man].superman = superman;
+				men[man].supermen[superman] = true;
+
+				if (destination->captured())
+					men[man].block = false;
+			}
+		}
+	}
+
+	/* -- Count men to supermen links -- */
+
+	array<int, NumSupermen> supermen(0);
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			if (men[man].supermen[superman])
+				supermen[superman]++;
+
+	/* -- Apply path reductions and obstructions for each man -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+	{
+		/* -- Handle case where the promotion piece is known and appears only once -- */
+
+		if ((men[man].supermen.count() == 1) && (supermen[men[man].superman] == 1))
+		{
+			reduce(man, men[man].superman, color, men[man].squares, men[man].availableMoves, men[man].availableCaptures);
+
+			if (men[man].block)
+				block(man, men[man].superman, color);
+		}
+
+		/* -- Leave out promotion -- */
+
+		else
+			reduce(man, man, color, men[man].msquares, men[man].availableMoves, men[man].availableCaptures);
+	}
+
+	/* -- Handle supermen that never came to be -- */
+
+	for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+		if (!supermen[superman])
+			movements[color][superman]->reduce(superman.square(color), 0, 0);
+
+	/* -- Complete optimization -- */
+
+	if (!optimized)
+		optimize();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::optimize()
+{
+	optimized = true;
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			movements[color][superman]->optimize();
 }
 
 /* -------------------------------------------------------------------------- */

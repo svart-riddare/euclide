@@ -72,9 +72,9 @@ Partition::Partition(Partition& partition, const Men& men, const bitset<NumMen>&
 
 	/* -- Update state -- */
 
-	updateRequiredMoves();
-	updateRequiredCaptures();
-	updatePossibleSquares();
+	updatePossibleSquares(true);
+	updateRequiredMoves(true);
+	updateRequiredCaptures(true);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -233,9 +233,9 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 
 	/* -- Update state -- */
 
-	updateRequiredMoves();
-	updateRequiredCaptures();
-	updatePossibleSquares();
+	updatePossibleSquares(true);
+	updateRequiredMoves(true);
+	updateRequiredCaptures(true);
 
 	return true;
 }
@@ -266,48 +266,48 @@ int Partition::computeRequiredCaptures(const Board& board)
 
 /* -------------------------------------------------------------------------- */
 
-int Partition::updateRequiredMoves()
+int Partition::updateRequiredMoves(bool recursive)
 {
 	int requiredMoves = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredMoves += target->updateRequiredMoves();
+		requiredMoves += recursive ? target->updateRequiredMoves() : target->getRequiredMoves();
 
 	return maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Partition::updateRequiredCaptures()
+int Partition::updateRequiredCaptures(bool recursive)
 {
 	int requiredCaptures = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		requiredCaptures += target->updateRequiredCaptures();
+		requiredCaptures += recursive ? target->updateRequiredCaptures() : target->getRequiredCaptures();
 
 	return maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-const Men& Partition::updatePossibleMen()
+const Men& Partition::updatePossibleMen(bool recursive)
 {
 	_men.reset();
 
 	for (iterator target = begin(); target != end(); target++)
-		_men |= target->updatePossibleMen();
+		_men |= recursive ? target->updatePossibleMen() : target->men();
 
 	return _men;
 }
 
 /* -------------------------------------------------------------------------- */
 
-const Squares& Partition::updatePossibleSquares()
+const Squares& Partition::updatePossibleSquares(bool recursive)
 {
 	_squares.reset();
 
 	for (iterator target = begin(); target != end(); target++)
-		_squares |= target->updatePossibleSquares();
+		_squares |= recursive ? target->updatePossibleSquares() : target->squares();
 
 	return _squares;
 }
@@ -332,9 +332,9 @@ bool Partition::setPossibleMen(const Men& men)
 	if (!modified)
 		return false;
 
-	updatePossibleSquares();
-	updateRequiredMoves();
-	updateRequiredCaptures();
+	updatePossibleSquares(false);
+	updateRequiredMoves(false);
+	updateRequiredCaptures(false);
 
 	return true;
 }
@@ -359,51 +359,51 @@ bool Partition::setPossibleSquares(const Squares& squares)
 	if (modified)
 		return false;
 
-	updatePossibleMen();
-	updateRequiredMoves();
-	updateRequiredCaptures();
+	updatePossibleMen(false);
+	updateRequiredMoves(false);
+	updateRequiredCaptures(false);
 
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::setAvailableMoves(int numAvailableMoves)
+bool Partition::setAvailableMoves(int availableMoves)
 {
-	int numFreeMoves = numAvailableMoves - getRequiredMoves();
+	int freeMoves = availableMoves - getRequiredMoves();
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if (target->setAvailableMoves(target->getRequiredMoves() + numFreeMoves))
+		if (target->setAvailableMoves(target->getRequiredMoves() + freeMoves))
 			modified = true;
 
 	if (!modified)
 		return false;
 
-	updatePossibleMen();
-	updatePossibleSquares();
-	updateRequiredCaptures();
+	updatePossibleMen(false);
+	updatePossibleSquares(false);
+	updateRequiredCaptures(false);
 
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::setAvailableCaptures(int numAvailableCaptures)
+bool Partition::setAvailableCaptures(int availableCaptures)
 {
-	int numFreeCaptures = numAvailableCaptures - getRequiredCaptures();
+	int freeCaptures = availableCaptures - getRequiredCaptures();
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if (target->setAvailableCaptures(target->getRequiredCaptures() + numFreeCaptures))
+		if (target->setAvailableCaptures(target->getRequiredCaptures() + freeCaptures))
 			modified = true;
 
 	if (!modified)
 		return false;
 
-	updatePossibleMen();
-	updatePossibleSquares();
-	updateRequiredMoves();
+	updatePossibleMen(false);
+	updatePossibleSquares(false);
+	updateRequiredMoves(false);
 
 	return true;
 }

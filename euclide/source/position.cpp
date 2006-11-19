@@ -54,7 +54,6 @@ bool Pieces::analyseMoveConstraints(int availableMoves)
 	if (!modified)
 		return false;
 
-	updateRequiredCaptures();
 	return true;
 }
 
@@ -72,13 +71,12 @@ bool Pieces::analyseCaptureConstraints(int availableCaptures)
 	if (!modified)
 		return false;
 
-	updateRequiredMoves();
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
+bool Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 {
 	/* -- Scan opponent targets for required captures -- */
 
@@ -146,75 +144,51 @@ void Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
 		}
 	}
 
-	updateRequiredMoves();
-	updateRequiredCaptures();
+	updateRequiredMoves(true);
+	updateRequiredCaptures(true);
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseStaticPieces(Board& board)
-{
-	bool modified = false;
-
-	/* -- Lock pieces that have not moved -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-	{
-		Glyph glyph = man.glyph(_color);
-		Square square = man.square(_color);
-
-		if (glyphs[square] == glyph)
-			modified = board.lock(man, _color);	
-	}
-
-	/* -- Recursive deductions -- */
-
-	if (modified)
-		analyseStaticPieces(board);
-
-	return modified;
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Pieces::computeRequiredMoves(const Board& board)
+void Pieces::computeRequiredMoves(const Board& board)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
 		requiredMoves += partition->computeRequiredMoves(board);
 
-	return maximize(this->requiredMoves, requiredMoves);
+	maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::computeRequiredCaptures(const Board& board)
+void Pieces::computeRequiredCaptures(const Board& board)
 {
 	int requiredCaptures = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
 		requiredCaptures += partition->computeRequiredCaptures(board);
 
-	return maximize(this->requiredCaptures, requiredCaptures);
+	maximize(this->requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::updateRequiredMoves()
+int Pieces::updateRequiredMoves(bool recursive)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
-		requiredMoves += partition->updateRequiredMoves();
+		requiredMoves += recursive ? partition->updateRequiredMoves(true) : partition->getRequiredMoves();
 
 	return maximize(this->requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::updateRequiredCaptures()
+int Pieces::updateRequiredCaptures(bool recursive)
 {
 	int requiredCaptures = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
-		requiredCaptures += partition->updateRequiredCaptures();
+		requiredCaptures += recursive ? partition->updateRequiredCaptures(true) : partition->getRequiredCaptures();
 
 	return maximize(this->requiredCaptures, requiredCaptures);
 }

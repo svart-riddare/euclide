@@ -20,19 +20,24 @@ class Pieces : public Partitions
 		bool analyseMoveConstraints(int availableMoves);
 		bool analyseCaptureConstraints(int availableCaptures);
 
-		void analyseCaptures(const Board& board, const Pieces& pieces);
-		bool analyseStaticPieces(Board& board);
+		bool analyseCaptures(const Board& board, const Pieces& pieces);
 
-		int computeRequiredMoves(const Board& board);
-		int computeRequiredCaptures(const Board& board);
-		int updateRequiredMoves();
-		int updateRequiredCaptures();
-		
+		void computeRequiredMoves(const Board& board);
+		void computeRequiredCaptures(const Board& board);
+		void computePossiblePaths(const Board& board, int availableMoves, int availableCaptures);
+
+		int updateRequiredMoves(bool recursive);
+		int updateRequiredCaptures(bool recursive);
+
 	public :
 		inline int getRequiredMoves() const
 			{ return requiredMoves; }
 		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
+
+	public :
+		inline Color color() const
+			{ return _color; }
 		
 	private :
 		array<Glyph, NumSquares> glyphs;
@@ -40,7 +45,7 @@ class Pieces : public Partitions
 
 	private :
 		int requiredMoves;
-		int requiredCaptures;
+		int requiredCaptures;		
 };
 
 /* -------------------------------------------------------------------------- */
