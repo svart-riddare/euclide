@@ -24,15 +24,15 @@ class Partition : public vector_ptr<Target>
 		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
 		
-		int updateRequiredMoves();
-		int updateRequiredCaptures();
-		const Men& updatePossibleMen();
-		const Squares& updatePossibleSquares();
+		int updateRequiredMoves(bool recursive);
+		int updateRequiredCaptures(bool recursive);
+		const Men& updatePossibleMen(bool recursive);
+		const Squares& updatePossibleSquares(bool recursive);
 
 		bool setPossibleMen(const Men& men);
 		bool setPossibleSquares(const Squares& squares);
-		bool setAvailableMoves(int numAvailableMoves);
-		bool setAvailableCaptures(int numAvailableCaptures);
+		bool setAvailableMoves(int availableMoves);
+		bool setAvailableCaptures(int availableCaptures);
 
 	public :
 		inline const Men& men() const

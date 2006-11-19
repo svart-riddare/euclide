@@ -30,6 +30,10 @@ Target::Target(Glyph glyph, Square square)
 		if (superman.glyph(_color) == glyph)
 			for (Man man = FirstPawn; man <= LastPawn; man++)
 				push_back(Destination(square, _color, man, superman, false));
+
+	/* -- Update list of possible men -- */
+
+	updatePossibleMen();
 }
 
 /* -------------------------------------------------------------------------- */

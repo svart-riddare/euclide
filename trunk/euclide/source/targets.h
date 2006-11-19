@@ -90,7 +90,7 @@ class Target : public vector<Destination>
 
 /* -------------------------------------------------------------------------- */
 
-typedef vector<Target> Targets;
+typedef vector_ptr<Target> Targets;
 
 /* -------------------------------------------------------------------------- */
 
