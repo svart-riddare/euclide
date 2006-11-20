@@ -27,8 +27,10 @@ static const WORD blackCaptures = FOREGROUND_RED | FOREGROUND_GREEN;
 
 static const WORD numWhiteMoves = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 static const WORD numWhiteSquares = FOREGROUND_RED;
+static const WORD numWhiteExtraMoves = FOREGROUND_RED;
 static const WORD numBlackMoves = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;;
 static const WORD numBlackSquares = FOREGROUND_RED;
+static const WORD numBlackExtraMoves = FOREGROUND_RED;
 
 /* -------------------------------------------------------------------------- */
 

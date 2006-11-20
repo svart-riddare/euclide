@@ -166,6 +166,8 @@ void Console::displayCopyright(const wchar_t *copyright)
 	if (x < 0)
 		return;
 
+	SetConsoleTitleW(copyright);
+
 #ifdef _UNICODE
 	write(copyright, x, 0, colors::copyright);
 #else
@@ -322,6 +324,31 @@ void Console::displayDeductions(const EUCLIDE_Deductions *deductions)
 				characters[23].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
 				characters[24].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
 			}
+
+			/* -- Print number of possible moves -- */
+
+			if (deduction->requiredMoves < deduction->numMoves)
+			{
+				int numExtraMoves = deduction->numMoves - deduction->requiredMoves;
+
+				if (numExtraMoves >= 10000)
+					characters[27].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 10000) % 10);
+				if (numExtraMoves >= 1000)
+					characters[28].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 1000) % 10);
+				if (numExtraMoves >= 100)
+					characters[29].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 100) % 10);
+				if (numExtraMoves >= 10)
+					characters[30].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 10) % 10);
+				if (numExtraMoves >= 1)
+					characters[31].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 1) % 10);
+
+				characters[27].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+				characters[28].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+				characters[29].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+				characters[30].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+				characters[31].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+			}
+
 
 			/* -- Move on -- */
 

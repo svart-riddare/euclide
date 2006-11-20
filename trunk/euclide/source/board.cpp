@@ -880,34 +880,6 @@ void Movements::reduce(Squares squares, int availableMoves, int availableCapture
 
 /* -------------------------------------------------------------------------- */
 
-bool Movements::locked() const
-{
-	Square initial = superman.square(color);
-
-	if (!possibilities)
-		return true;
-
-	/* -- Check whether the piece may leave it's home square -- */
-
-	bool isLocked = true;
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (!movements[initial][square])
-			isLocked = false;
-
-	if (isLocked)
-		return true;
-
-	/* -- Check whether the piece may return to it's home square -- */
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (!movements[square][initial])
-			return false;
-
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
 int Movements::moves() const
 {
 	return possibilities;
@@ -952,6 +924,22 @@ Board::~Board()
 	for (Color color = FirstColor; color <= LastColor; color++)
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 			delete movements[color][superman];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::moves(Man man, Superman superman, Color color) const
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(superman.isValid());
+
+	int moves = movements[color][man]->moves();
+
+	if (superman != man)
+		moves += movements[color][superman]->moves();
+
+	return moves;
 }
 
 /* -------------------------------------------------------------------------- */

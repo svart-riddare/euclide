@@ -14,6 +14,7 @@ extern "C" {
 typedef enum
 {
 	EUCLIDE_STATUS_OK,
+	EUCLIDE_STATUS_KO,
 
 	EUCLIDE_STATUS_INCORRECT_INPUT_ERROR = -1,
 	EUCLIDE_STATUS_INTERNAL_LOGIC_ERROR = -2,
@@ -74,6 +75,7 @@ typedef struct
 	
 	int requiredMoves;
 	int numSquares;
+	int numMoves;
 
 	_Bool captured;
 
