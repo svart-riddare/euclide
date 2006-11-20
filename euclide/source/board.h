@@ -59,8 +59,6 @@ class Movements
 
 		void optimize();
 
-		bool locked() const;
-
 	public :
 		int moves() const;
 		Squares squares() const;
@@ -105,6 +103,8 @@ class Board
 	public :
 		Board();
 		~Board();
+
+		int moves(Man man, Superman superman, Color color) const;
 
 		int distance(Man man, Superman superman, Color color, Square from, Square to) const;
 		int distance(Man man, Superman superman, Color color, Square to) const;

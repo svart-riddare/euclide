@@ -185,6 +185,9 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 		while (blackPieces->analysePartitions());
 	}
 
+	board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
+	board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+
 	deductions = *this;
 
 	if (callbacks.displayFreeMoves)
@@ -219,6 +222,7 @@ Euclide::operator EUCLIDE_Deductions() const
 
 			deduction->requiredMoves = INT_MAX;
 			deduction->numSquares = 0;
+			deduction->numMoves = board->moves(man, man, color);
 
 			deduction->captured = false;
 		}

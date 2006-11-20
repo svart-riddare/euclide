@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "winresrc.h"
+#include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -66,11 +66,10 @@ LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
 
 STRINGTABLE 
 BEGIN
-    IDS_ERROR_NOSOLUTION    "Problème insoluble"
-    IDS_ERROR_BUSY          "Impossible de résoudre plusieurs problèmes simultanément"
-    IDS_ERROR_INCORRECTINPUT "Problème invalide"
-    IDS_ERROR_INTERNALLOGIC "Erreur algorithmique interne - Contactez l'auteur"
     IDS_ERROR_OUTOFMEMORY   "Mémoire insuffisante"
+    IDS_ERROR_INTERNALLOGIC "Erreur algorithmique interne - Contactez l'auteur"
+    IDS_ERROR_INCORRECTINPUT "Problème invalide"
+    IDS_ERROR_NOSOLUTION    "Problème insoluble"
 END
 
 STRINGTABLE 

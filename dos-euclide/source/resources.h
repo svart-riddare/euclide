@@ -1,13 +1,13 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by WinEuclide.rc
+// Used by dos-euclide.rc
 //
 #define IDS_FORSYTHE                    1
+#define IDS_ERROR_OUTOFMEMORY           997
+#define IDS_ERROR_INTERNALLOGIC         998
+#define IDS_ERROR_INCORRECTINPUT        999
 #define IDS_ERROR_NOSOLUTION            1001
 #define IDS_ERROR_BUSY                  1002
-#define IDS_ERROR_INCORRECTINPUT        999
-#define IDS_ERROR_INTERNALLOGIC         998
-#define IDS_ERROR_OUTOFMEMORY           997
 #define IDS_MESSAGE_INITIALANALYSIS     2000
 #define IDS_TEXT_GLYPHSYMBOLS           3000
 #define IDS_TEXT_MOVES                  3001
