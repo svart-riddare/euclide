@@ -208,6 +208,8 @@ Euclide::operator EUCLIDE_Deductions() const
 		const Pieces *pieces = (color == White) ? whitePieces : blackPieces;
 		EUCLIDE_Deduction *deductions = (color == White) ? _deductions.whitePieces : _deductions.blackPieces;
 
+		Supermen supermen[NumMen];
+
 		/* -- Initialize deductions for each man -- */
 		
 		for (Man man = FirstMan; man <= LastMan; man++)
@@ -222,7 +224,7 @@ Euclide::operator EUCLIDE_Deductions() const
 
 			deduction->requiredMoves = INT_MAX;
 			deduction->numSquares = 0;
-			deduction->numMoves = board->moves(man, man, color);
+			deduction->numMoves = board->moves(man, color);
 
 			deduction->captured = false;
 		}
@@ -248,6 +250,7 @@ Euclide::operator EUCLIDE_Deductions() const
 					EUCLIDE_Deduction *deduction = &deductions[destination->man()];
 
 					minimize(deduction->requiredMoves, destination->getRequiredMoves());
+					supermen[destination->man()][destination->superman()] = true;
 					
 					if (++deduction->numSquares == 1)
 					{
@@ -264,6 +267,13 @@ Euclide::operator EUCLIDE_Deductions() const
 				}
 			}
 		}
+
+		/* -- Compute sum of possible moves -- */
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+				if (supermen[man][superman])
+						deductions[man].numMoves += board->moves(superman, color);
 	}
 
 	_deductions.freeWhiteMoves = problem->moves(White) - whitePieces->getRequiredMoves();
