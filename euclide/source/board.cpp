@@ -959,6 +959,16 @@ Board::~Board()
 
 /* -------------------------------------------------------------------------- */
 
+int Board::moves(Superman superman, Color color) const
+{
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	return movements[color][superman]->moves();
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Board::moves(Man man, Superman superman, Color color) const
 {
 	assert(man.isValid());
