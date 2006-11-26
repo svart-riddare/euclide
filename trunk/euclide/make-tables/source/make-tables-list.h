@@ -7,6 +7,7 @@
 
 void makeObstructions(void);
 void makeMovements(void);
+void makeChecks(void);
 
 // ----------------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ const makefunction MakeFunctions[] =
 {
 	makeObstructions,
 	makeMovements,
+	makeChecks,
 	NULL
 };
 

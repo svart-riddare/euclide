@@ -33,6 +33,8 @@ void makeObstructions(void)
 				for (Square to = FirstSquare; to <= LastSquare; to++)
 				{
 					bool blocked = false;
+					bool royal = false;
+					bool check = false;
 
 					int horizontalDelta = to.column() - from.column();
 					int horizontalDistance = abs(horizontalDelta);
@@ -53,7 +55,7 @@ void makeObstructions(void)
 							if (verticalDistance <= 1)
 								if ((square == to) || (square == from))
 									blocked = true;
-						
+				
 					if (glyph.isRook() || glyph.isQueen())
 						if (!horizontalDistance)
 							if (column == minColumn)
@@ -91,11 +93,70 @@ void makeObstructions(void)
 								if ((square == from) || (square == to) || (square == (from + to) / 2))
 									blocked = true;
 
+					if (!blocked)
+					{
+						if (glyph.isKing())
+							if ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1))
+								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (glyph.isQueen())
+							if ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1))
+								if ((horizontalDistance == verticalDistance) || !horizontalDistance || !verticalDistance)
+									blocked = true;
+
+						if (glyph.isRook())
+							if ((abs(column - from.column()) + abs(row - from.row())) == 1)
+								if (!horizontalDistance || !verticalDistance)
+									blocked = true;
+
+						if (glyph.isBishop())
+							if ((abs(column - from.column()) == 1) && (abs(row - from.row()) == 1))
+								if (horizontalDistance == verticalDistance)
+									blocked = true;
+
+						if (glyph.isKnight())
+							if ((abs(column - from.column()) * abs(row - from.row())) == 2)
+								if (horizontalDistance * verticalDistance == 2)
+									blocked = true;
+
+						if (glyph == WhitePawn)
+							if ((abs(column - from.column()) == 1) && ((row - from.row()) == 1))
+								if (from.row() != One)
+									if (((horizontalDistance <= 1) && (verticalDelta == 1)) || ((from.row() == Two) && !horizontalDistance && (verticalDelta == 2)))
+										blocked = true;
+
+						if (glyph == BlackPawn)
+							if ((abs(column - from.column()) == 1) && ((row - from.row()) == -1))
+								if (from.row() != Eight)
+									if (((horizontalDistance <= 1) && (verticalDelta == -1)) || ((from.row() == Seven) && !horizontalDistance && (verticalDelta == -2)))
+										blocked = true;
+
+						if (blocked)
+							royal = true;
+					}
+
+					if (!blocked)
+					{
+						if (glyph.isKing())
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (glyph.isKing())
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (blocked)
+							check = true;
+					}
+
 					if (from == to)
 						blocked = false;
 
 					if (blocked)
-						fprintf(file, "\t{ %s, %s },\n", strings::squares[from], strings::squares[to]), numObstructions[glyph][square]++;
+						fprintf(file, "\t{ %s, %s, %s, %s },\n", strings::squares[from], strings::squares[to], royal ? " true" : "false", check ? " true" : "false"), numObstructions[glyph][square]++;
 				}
 			}
 		}

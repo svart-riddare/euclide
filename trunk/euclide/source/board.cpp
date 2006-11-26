@@ -6,18 +6,21 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Obstructions::Obstructions(Superman superman, Color color, Square square, int movements[NumSquares][NumSquares])
+Obstructions::Obstructions(Superman superman, Color color, Square square, Glyph glyph, int movements[NumSquares][NumSquares])
 {
 	assert(superman.isValid());
 	assert(color.isValid());
 	assert(square.isValid());
 
-	Glyph glyph = superman.glyph(color);
+	/* -- The blocking glyph is unimportant if of the same color than the blocked man -- */
+
+	if (glyph.color() == color)
+		glyph = NoGlyph;
 
 	/* -- Allocate obstruction table from precomputed table -- */
 
-	const tables::Obstruction *_obstructions = tables::obstructions[glyph][square].obstructions;
-	int numObstructions = tables::obstructions[glyph][square].numObstructions;
+	const tables::Obstruction *_obstructions = tables::obstructions[superman.glyph(color)][square].obstructions;
+	int numObstructions = tables::obstructions[superman.glyph(color)][square].numObstructions;
 	
 	obstructions = new int *[numObstructions];
 
@@ -26,7 +29,9 @@ Obstructions::Obstructions(Superman superman, Color color, Square square, int mo
 	numSoftObstructions = 0;
 	for (int k = 0; k < numObstructions; k++)
 		if (_obstructions[k].to != square)
-			obstructions[numSoftObstructions++] = &movements[_obstructions[k].from][_obstructions[k].to];
+			if (!_obstructions[k].royal || glyph.isKing())
+				if (!_obstructions[k].check || tables::checks[_obstructions[k].to][glyph][square])
+					obstructions[numSoftObstructions++] = &movements[_obstructions[k].from][_obstructions[k].to];
 
 	/* -- Hard obstructions are suitable only if the obstructing piece is not captured -- */
 
@@ -188,15 +193,36 @@ Movements::Movements(Superman superman, Color color)
 	/* -- Initialize obstruction tables -- */
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
-		obstructions[square] = new Obstructions(superman, color, square, movements);
+	{
+		obstructions[square][NoGlyph] = new Obstructions(superman, color, square, NoGlyph, movements);
+		validObstructions[NoGlyph] = true;
+
+		for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+		{
+			if ((superman.isKing() || glyph.isKing()) && (glyph.color() == !color))
+			{
+				obstructions[square][glyph] = new Obstructions(superman, color, square, glyph, movements);
+				validObstructions[glyph] = true;
+			}
+			else
+			{
+				obstructions[square][glyph] = obstructions[square][NoGlyph];
+			}
+		}
+
+	}
 }
 
 /* -------------------------------------------------------------------------- */
 
 Movements::~Movements()
 {
+	/* -- Delete obstruction tables -- */
+
 	for (Square square = FirstSquare; square <= LastSquare; square++)
-		delete obstructions[square];
+		for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+			if (validObstructions[glyph])
+				delete obstructions[square][glyph];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -702,24 +728,25 @@ int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) co
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::block(Squares squares)
+void Movements::block(Squares squares, Glyph glyph)
 {
 	assert(!squares.none());
+	assert(glyph.isValid());
 
 	Square square = FirstSquare;
 	while (!squares[square])
 		square++;
 
 	if (squares.count() == 1)
-		return block(square, false);
+		return block(square, glyph, false);
 
 	/* -- Find common obstructions -- */
 
-	Obstructions obstructions(*this->obstructions[square++]);
+	Obstructions obstructions(*this->obstructions[square++][glyph]);
 
 	for ( ; square <= LastSquare; square++)
 		if (squares[square])
-			obstructions &= *this->obstructions[square];
+			obstructions &= *this->obstructions[square][glyph];
 
 	/* -- Apply them -- */
 
@@ -728,11 +755,12 @@ void Movements::block(Squares squares)
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::block(Square square, bool captured)
+void Movements::block(Square square, Glyph glyph, bool captured)
 {
 	assert(square.isValid());
+	assert(glyph.isValid());
 
-	obstructions[square]->block(captured);
+	obstructions[square][glyph]->block(captured);
 
 	/* -- Handle castling -- */
 
@@ -745,11 +773,12 @@ void Movements::block(Square square, bool captured)
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::unblock(Square square, bool captured)
+void Movements::unblock(Square square, Glyph glyph, bool captured)
 {
 	assert(square.isValid());
+	assert(glyph.isValid());
 
-	obstructions[square]->unblock(captured);
+	obstructions[square][glyph]->unblock(captured);
 
 	/* -- Handle castling -- */
 
@@ -766,8 +795,10 @@ void Movements::optimize()
 {
 	/* -- Remove all useless obstructions -- */
 
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		obstructions[square]->optimize();
+	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+		if (validObstructions[glyph])
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+				obstructions[square][glyph]->optimize();
 
 	/* -- Count number of possible moves -- */
 
@@ -1059,18 +1090,19 @@ void Board::block(Superman man, Color color, Square square, bool captured)
 	assert(color.isValid());
 	assert(square.isValid());
 
+	Glyph glyph = man.glyph(color);
 	optimized = false;
 
 	/* -- Block movements for our side -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 		if (superman != man)
-			movements[color][superman]->block(square, false);
+			movements[color][superman]->block(square, glyph, false);
 
 	/* -- Block movements for opponent pieces -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-		movements[!color][superman]->block(square, captured);
+		movements[!color][superman]->block(square, glyph, captured);
 
 }
 
@@ -1082,18 +1114,19 @@ void Board::unblock(Superman man, Color color, Square square, bool captured)
 	assert(color.isValid());
 	assert(square.isValid());
 
+	Glyph glyph = man.glyph(color);
 	optimized = false;
 
 	/* -- Unblock movements for our side -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 		if (superman != man)
-			movements[color][superman]->unblock(square, false);
+			movements[color][superman]->unblock(square, glyph, false);
 
 	/* -- Unblock movements for opponent pieces -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-		movements[!color][superman]->unblock(square, captured);
+		movements[!color][superman]->unblock(square, glyph, captured);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1129,18 +1162,19 @@ void Board::block(Man man, Superman _superman, Color color, const Squares& squar
 	assert(man.isValid());
 	assert(_superman.isValid());
 
+	Glyph glyph = (man == _superman) ? man.glyph(color) : NoGlyph;
 	optimized = false;
 	
 	/* -- Block movements for our side -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 		if ((superman != man) && (superman != _superman))
-			movements[color][superman]->block(squares);
+			movements[color][superman]->block(squares, glyph);
 
 	/* -- Block movements for opponent pieces -- */
 
 	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-		movements[!color][superman]->block(squares);
+		movements[!color][superman]->block(squares, glyph);
 }
 
 /* -------------------------------------------------------------------------- */
