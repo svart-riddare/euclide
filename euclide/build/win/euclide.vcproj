@@ -403,6 +403,10 @@
 			Name="Table Files"
 			>
 			<File
+				RelativePath="..\..\source\tables\checks.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\tables\movements.cpp"
 				>
 			</File>

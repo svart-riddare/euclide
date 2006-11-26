@@ -9,6 +9,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 typedef std::bitset<NumMen> Men;
+typedef std::bitset<NumGlyphs> Glyphs;
 typedef std::bitset<NumSquares> Squares;
 typedef std::bitset<NumSupermen> Supermen;
 

@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\make-checks.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\make-movements.cpp"
 				>
 			</File>

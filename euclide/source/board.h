@@ -13,7 +13,7 @@ class Pieces;
 class Obstructions
 {
 	public :
-		Obstructions(Superman superman, Color color, Square square, int movements[NumSquares][NumSquares]);
+		Obstructions(Superman superman, Color color, Square square, Glyph glyph, int movements[NumSquares][NumSquares]);
 		Obstructions(const Obstructions& obstructions);
 		~Obstructions();
 
@@ -50,9 +50,9 @@ class Movements
 
 		int getCaptures(Square from, Square to, vector<Squares>& captures) const;
 
-		void block(Squares squares);
-		void block(Square square, bool captured);
-		void unblock(Square square, bool captured);
+		void block(Squares squares, Glyph glyph);
+		void block(Square square, Glyph glyph, bool captured);
+		void unblock(Square square, Glyph glyph, bool captured);
 
 		void reduce(Square square, int availableMoves, int availableCaptures);
 		void reduce(Squares squares, int availableMoves, int availableCaptures);
@@ -93,7 +93,8 @@ class Movements
 		int distances[NumSquares];
 		int _captures[NumSquares];
 
-		Obstructions *obstructions[NumSquares];
+		Obstructions *obstructions[NumSquares][NumGlyphs];
+		Glyphs validObstructions;
 };
 
 /* -------------------------------------------------------------------------- */
