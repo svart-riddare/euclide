@@ -1275,15 +1275,13 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 		men[man].block = true;
 	}
 
-	/* -- Compute free moves and captures -- */
-
-	int freeMoves = availableMoves - pieces.getRequiredMoves();
-	int freeCaptures = availableCaptures - pieces.getRequiredCaptures();
-
 	/* -- Loop through partitions, targets and destinations to collect the information -- */
 
 	for	(Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
 	{
+		int unassignedMoves = availableMoves - pieces.getRequiredMoves() + partition->getRequiredMoves() - partition->getAssignedMoves();
+		int unassignedCaptures = availableCaptures - pieces.getRequiredCaptures() + partition->getRequiredCaptures() - partition->getAssignedCaptures();
+
 		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
 			for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
@@ -1292,8 +1290,8 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 				Superman superman = destination->superman();
 				Square square = destination->square();
 
-				maximize(men[man].availableMoves, target->getRequiredMoves() + freeMoves);
-				maximize(men[man].availableCaptures, target->getRequiredCaptures() + freeCaptures);
+				maximize(men[man].availableMoves, target->getRequiredMoves() + unassignedMoves);
+				maximize(men[man].availableCaptures, target->getRequiredCaptures() + unassignedCaptures);
 
 				men[man].squares[square] = true;
 				if (superman == man)

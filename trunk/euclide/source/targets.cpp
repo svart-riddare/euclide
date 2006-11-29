@@ -18,6 +18,9 @@ Target::Target(Glyph glyph, Square square)
 	requiredMoves = 0;
 	requiredCaptures = 0;
 
+	menRequiredMoves.assign(0);
+	menRequiredCaptures.assign(0);
+
 	/* -- List possible destinations -- */
 
 	for (Man man = FirstMan; man <= LastMan; man++)
@@ -46,6 +49,9 @@ Target::Target(Color color, const Squares& squares)
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
+
+	menRequiredMoves.assign(0);
+	menRequiredCaptures.assign(0);
 
 	/* -- List possible destinations -- */
 
@@ -87,14 +93,32 @@ int Target::computeRequiredCaptures(const Board& board)
 
 int Target::updateRequiredMoves()
 {
-	return requiredMoves = std::min_element(begin(), end(), Destination::lessMoves)->getRequiredMoves();
+	requiredMoves = infinity;
+	menRequiredMoves.assign(infinity);
+
+	for (const_iterator destination = begin(); destination != end(); destination++)
+	{
+		minimize(requiredMoves, destination->getRequiredMoves());
+		minimize(menRequiredMoves[destination->man()], destination->getRequiredMoves());
+	}
+
+	return requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Target::updateRequiredCaptures()
 {
-	return requiredCaptures = std::min_element(begin(), end(), Destination::lessCaptures)->getRequiredCaptures();
+	requiredCaptures = infinity;
+	menRequiredCaptures.assign(infinity);
+
+	for (const_iterator destination = begin(); destination != end(); destination++)
+	{
+		minimize(requiredCaptures, destination->getRequiredCaptures());
+		minimize(menRequiredCaptures[destination->man()], destination->getRequiredCaptures());
+	}
+
+	return requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -48,6 +48,11 @@ class Partition : public vector_ptr<Target>
 		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
 
+		inline int getAssignedMoves() const
+			{ return assignedMoves; }
+		inline int getAssignedCaptures() const
+			{ return assignedCaptures; }
+
 	protected :
 		static inline bool lessCandidates(const Target *targetA, const Target *targetB)
 			{ return targetA->candidates() < targetB->candidates(); }
@@ -60,6 +65,9 @@ class Partition : public vector_ptr<Target>
 	private :
 		int requiredMoves;
 		int requiredCaptures;
+
+		int assignedMoves;
+		int assignedCaptures;
 };
 
 /* -------------------------------------------------------------------------- */

@@ -72,6 +72,11 @@ class Target : public vector<Destination>
 		inline int getRequiredCaptures() const
 			{ return requiredCaptures; }
 
+		inline int getRequiredMoves(Man man) const
+			{ return menRequiredMoves[man]; }
+		inline int getRequiredCaptures(Man man) const
+			{ return menRequiredCaptures[man]; }
+
 	private :
 		Man _man;
 		Glyph _glyph;
@@ -86,6 +91,9 @@ class Target : public vector<Destination>
 	private :
 		int requiredMoves;
 		int requiredCaptures;
+
+		array<int, NumMen> menRequiredMoves;
+		array<int, NumMen> menRequiredCaptures;
 };
 
 /* -------------------------------------------------------------------------- */
