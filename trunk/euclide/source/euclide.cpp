@@ -105,15 +105,15 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	do
 	{
-		whitePieces->analyseMoveConstraints(problem->moves(White));
-		whitePieces->analyseCaptureConstraints(problem->captures(White));
+		whitePieces->analyseMoveConstraints(problem->moves(White), true);
+		whitePieces->analyseCaptureConstraints(problem->captures(White), true);
 	}
 	while (whitePieces->analysePartitions());
 
 	do
 	{
-		blackPieces->analyseMoveConstraints(problem->moves(Black));
-		blackPieces->analyseCaptureConstraints(problem->captures(Black));
+		blackPieces->analyseMoveConstraints(problem->moves(Black), true);
+		blackPieces->analyseCaptureConstraints(problem->captures(Black), true);
 	}
 	while (blackPieces->analysePartitions());
 

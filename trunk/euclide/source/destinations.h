@@ -50,10 +50,14 @@ class Destination
 			{ return destinationA.requiredCaptures < destinationB.requiredCaptures; }
 
 	public :
-		inline bool isInMoves(int numAvailableMoves) const
-			{ return requiredMoves <= numAvailableMoves; }
-		inline bool isInCaptures(int numAvailableCaptures) const
-			{ return requiredCaptures <= numAvailableCaptures; }
+		inline bool isInManMoves(const array<int, NumMen>& availableMoves) const
+			{ return requiredMoves <= availableMoves[_man]; }
+		inline bool isInManCaptures(const array<int, NumMen>& availableCaptures) const
+			{ return requiredCaptures <= availableCaptures[_man]; }
+		inline bool isInMoves(int availableMoves) const
+			{ return requiredMoves <= availableMoves; }
+		inline bool isInCaptures(int availableCaptures) const
+			{ return requiredCaptures <= availableCaptures; }
 		inline bool isInSquares(const Squares& squares) const
 			{ return squares[_square]; }
 		inline bool isInMen(const Men& men) const

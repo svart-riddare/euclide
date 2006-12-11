@@ -435,6 +435,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\utilities\matrix.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\utilities\predicates.h"
 				>
 			</File>

@@ -49,6 +49,7 @@ using boost::logic::indeterminate;
 #include "utilities/array.h"
 #include "utilities/algorithm.h"
 #include "utilities/bitset.h"
+#include "utilities/matrix.h"
 #include "utilities/predicates.h"
 #include "utilities/vector.h"
 

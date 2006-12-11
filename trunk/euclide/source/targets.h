@@ -30,8 +30,10 @@ class Target : public vector<Destination>
 
 		bool setPossibleMen(const Men& men);
 		bool setPossibleSquares(const Squares& squares);
-		bool setAvailableMoves(int numAvailableMoves);
-		bool setAvailableCaptures(int numAvailableCaptures);
+		bool setAvailableMoves(int availableMoves);
+		bool setAvailableCaptures(int availableCaptures);
+		bool setAvailableMoves(const array<int, NumMen>& availableMoves);
+		bool setAvailableCaptures(const array<int, NumMen>& availableCaptures);
 
 		void setCause(const Cause& cause);
 

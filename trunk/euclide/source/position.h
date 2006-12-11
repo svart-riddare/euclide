@@ -17,8 +17,8 @@ class Pieces : public Partitions
 		Pieces(const Problem& problem, Color color);
 
 		bool analysePartitions();
-		bool analyseMoveConstraints(int availableMoves);
-		bool analyseCaptureConstraints(int availableCaptures);
+		bool analyseMoveConstraints(int availableMoves, bool quick = false);
+		bool analyseCaptureConstraints(int availableCaptures, bool quick = false);
 
 		bool analyseCaptures(const Board& board, const Pieces& pieces);
 
