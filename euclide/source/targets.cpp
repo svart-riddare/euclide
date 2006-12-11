@@ -215,9 +215,9 @@ bool Target::setPossibleSquares(const Squares& squares)
 
 /* -------------------------------------------------------------------------- */
 
-bool Target::setAvailableMoves(int numAvailableMoves)
+bool Target::setAvailableMoves(int availableMoves)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInMoves, _1, numAvailableMoves));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInMoves, _1, availableMoves));
 	if (last == end())
 		return false;
 
@@ -234,9 +234,47 @@ bool Target::setAvailableMoves(int numAvailableMoves)
 
 /* -------------------------------------------------------------------------- */
 
-bool Target::setAvailableCaptures(int numAvailableCaptures)
+bool Target::setAvailableCaptures(int availableCaptures)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInCaptures, _1, numAvailableCaptures));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInCaptures, _1, availableCaptures));
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredMoves();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setAvailableMoves(const array<int, NumMen>& availableMoves)
+{
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInManMoves, _1, cref(availableMoves)));
+	if (last == end())
+		return false;
+
+	erase(last, end());
+	if (empty())
+		abort(NoSolution);
+
+	updatePossibleMen();
+	updatePossibleSquares();
+	updateRequiredCaptures();
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Target::setAvailableCaptures(const array<int, NumMen>& availableCaptures)
+{
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInManCaptures, _1, cref(availableCaptures)));
 	if (last == end())
 		return false;
 

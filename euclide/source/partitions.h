@@ -34,6 +34,12 @@ class Partition : public vector_ptr<Target>
 		bool setAvailableMoves(int availableMoves);
 		bool setAvailableCaptures(int availableCaptures);
 
+		bool analyseAvailableMoves(int availableMoves);
+		bool analyseAvailableCaptures(int availableCaptures);
+
+	protected :
+		static int analysePermutations(array<int, NumMen>& permutation, int size, int root, const matrix<int, NumMen, NumMen>& required, int maximum, matrix<int, NumMen, NumMen>& available);
+
 	public :
 		inline const Men& men() const
 			{ return _men; }

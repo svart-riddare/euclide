@@ -461,4 +461,111 @@ bool Partition::setAvailableCaptures(int availableCaptures)
 
 /* -------------------------------------------------------------------------- */
 
+int Partition::analysePermutations(array<int, NumMen>& permutation, int size, int root, const matrix<int, NumMen, NumMen>& required, int maximum, matrix<int, NumMen, NumMen>& available)
+{
+	int minimum = 0;
+
+	for (int k = 0; k < size; k++)
+		minimum += required[k][permutation[k]];
+
+	for (int k = 0; k < size; k++)
+		maximize(available[k][permutation[k]], maximum - minimum + required[k][permutation[k]]);
+
+	for (int s = root; s < size; s++)
+	{
+		if (required[root][permutation[s]] <= maximum)
+		{
+			std::swap(permutation[root], permutation[s]);
+			minimize(minimum, analysePermutations(permutation, size, root + 1, required, maximum, available));
+			std::swap(permutation[root], permutation[s]);
+		}
+	}
+
+	return minimum;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::analyseAvailableMoves(int availableMoves)
+{
+	matrix<int, NumMen, NumMen> minimumMoves(infinity);
+	matrix<int, NumMen, NumMen> maximumMoves(-1);
+
+	/* -- Leave out extreme cases -- */
+
+	if ((_men.count() < 3) || (_men.count() > 10))
+		return setAvailableMoves(availableMoves);
+
+	/* -- Fetch matrix of required moves -- */
+
+	for (int target = 0; target < (int)size(); target++)
+		for (Target::const_iterator destination = at(target)->begin(); destination != at(target)->end(); destination++)
+			minimize(minimumMoves[target][destination->man()], destination->getRequiredMoves());
+
+	/* -- Loop through all permutations -- */
+
+	array<int, NumMen> permutation(UndefinedMan);
+	int m = 0;
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (_men[man])
+			permutation[m++] = man;
+
+	maximize(requiredMoves, analysePermutations(permutation, m, 0, minimumMoves, availableMoves, maximumMoves));
+
+	/* -- Apply deductions -- */
+
+	bool modified = false;
+	for (int target = 0; target < (int)size(); target++)
+		if (at(target)->setAvailableMoves(maximumMoves[target]))
+			modified = true;
+
+	/* -- Done -- */
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::analyseAvailableCaptures(int availableCaptures)
+{
+	matrix<int, NumMen, NumMen> minimumCaptures(infinity);
+	matrix<int, NumMen, NumMen> maximumCaptures(-1);
+
+	/* -- Leave out extreme cases -- */
+
+	if ((_men.count() < 3) || (_men.count() > 8))
+		return setAvailableCaptures(availableCaptures);
+
+	/* -- Fetch matrix of required captures -- */
+
+	for (int target = 0; target < (int)size(); target++)
+		for (Target::const_iterator destination = at(target)->begin(); destination != at(target)->end(); destination++)
+			minimize(minimumCaptures[target][destination->man()], destination->getRequiredCaptures());
+
+	/* -- Loop through all permutations -- */
+
+	array<int, NumMen> permutation(UndefinedMan);
+	int m = 0;
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (_men[man])
+			permutation[m++] = man;
+
+	maximize(requiredCaptures, analysePermutations(permutation, m, 0, minimumCaptures, availableCaptures, maximumCaptures));
+
+	/* -- Apply deductions -- */
+
+	bool modified = false;
+	for (int target = 0; target < (int)size(); target++)
+		if (at(target)->setAvailableCaptures(maximumCaptures[target]))
+			modified = true;
+
+	/* -- Done -- */
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 }

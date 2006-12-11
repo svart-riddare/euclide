@@ -42,7 +42,7 @@ bool Pieces::analysePartitions()
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseMoveConstraints(int availableMoves)
+bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 {
 	int freeMoves = availableMoves - getRequiredMoves();
 	
@@ -50,6 +50,11 @@ bool Pieces::analyseMoveConstraints(int availableMoves)
 	for (iterator partition = begin(); partition != end(); partition++)
 		if (partition->setAvailableMoves(partition->getRequiredMoves() + freeMoves))
 			modified = true;
+
+	if (!quick && !modified)
+		for (iterator partition = begin(); partition != end(); partition++)
+			if (partition->analyseAvailableMoves(partition->getRequiredMoves() + freeMoves))
+				modified = true;
 
 	if (!modified)
 		return false;
@@ -59,7 +64,7 @@ bool Pieces::analyseMoveConstraints(int availableMoves)
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseCaptureConstraints(int availableCaptures)
+bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 {
 	int freeCaptures = availableCaptures - getRequiredCaptures();
 
@@ -67,6 +72,11 @@ bool Pieces::analyseCaptureConstraints(int availableCaptures)
 	for (iterator partition = begin(); partition != end(); partition++)
 		if (partition->setAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
 			modified = true;
+
+	if (!quick && !modified)
+		for (iterator partition = begin(); partition != end(); partition++)
+			if (partition->setAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
+				modified = true;
 
 	if (!modified)
 		return false;
