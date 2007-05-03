@@ -26,6 +26,20 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 /* -------------------------------------------------------------------------- */
 
+Pieces& Pieces::operator+=(const Pieces& pieces)
+{
+	assert(pieces.color() != _color);
+
+	for (const_iterator partition = begin(); partition != end(); partition++)
+		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
+			if (!target->isOccupied())
+				captures.push_back(Capture(*target));
+
+	return *this;
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Pieces::analysePartitions()
 {
 	bool modified = false;
@@ -86,76 +100,53 @@ bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseCaptures(const Board& board, const Pieces& pieces)
+bool Pieces::analyseCaptures(const Board& board, Pieces& pieces)
 {
-	/* -- Scan opponent targets for required captures -- */
+	bool modified = false;
 
-	for (const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+	/* -- List required captures -- */
+
+	for (const_iterator partition = begin(); partition != end(); partition++)
 	{
 		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
 			if (!target->getRequiredCaptures())
 				continue;
 
-			vector<Squares> captures(target->getRequiredCaptures());
+			vector<Squares> captures(NumMen);
 
 			for (Target::const_iterator destination = target->begin(); destination != target->end(); destination++)
 			{
 				assert(destination->getRequiredCaptures() >= target->getRequiredCaptures());
-
-				/* -- We seek the minimal number of captures -- */
-
-				if (destination->getRequiredCaptures() > target->getRequiredCaptures())
-					continue;
 
 				/* -- Find squares for required captures -- */
 
 				board.getCaptures(destination->man(), destination->superman(), destination->color(), destination->man().square(destination->color()), destination->square(), captures);
 			}
 
-			/* -- These captures will constitute a target for the captured piece -- */
-		
+			captures.resize(target->getRequiredCaptures());
+
+			/* -- Reserve captures -- */
+
 			for (int k = 0; k < (int)captures.size(); k++)
 			{
-				Target::Cause cause(*target, k);
+				Capture *capture = &*std::find_if(pieces.captures.begin(), pieces.captures.end(), !boost::bind(&Capture::assigned, _1));
+				if (!capture)
+					abort(NoSolution);
 
-				/* -- Find target which is dedicated to this capture, if any -- */
-
-				Target *dedicated = NULL;
-				Target *candidate = NULL;
-
-				for (const_iterator partition = begin(); partition != end(); partition++)
-				{
-					for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
-					{
-						if (target->cause() == cause)
-							dedicated = *target;
-
-						if (target->isGeneric())
-							candidate = *target;
-					}
-				}
-
-				/* -- If there is no dedicated target, create one -- */
-
-				if (!dedicated)
-				{
-					if (!candidate)
-						abort(NoSolution);
-
-					candidate->setCause(cause);
-					dedicated = candidate;
-				}
-
-				/* -- Update list of possible squares for dedicated target -- */
-					
-				dedicated->setPossibleSquares(captures[k]);
+				capture->setPossibleSquares(captures[k]);
+				capture->assign(*target, true);
+				modified = true;
 			}
 		}
 	}
 
+	if (!modified)
+		return false;
+
 	updateRequiredMoves(true);
 	updateRequiredCaptures(true);
+
 	return true;
 }
 

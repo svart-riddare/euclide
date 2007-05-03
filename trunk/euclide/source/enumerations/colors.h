@@ -44,6 +44,19 @@ class Color
 			{ ++(int&)color; return *this; }
 		inline Color& operator--()
 			{ --(int&)color; return *this; }
+
+		/* ---------------------------------- */
+
+		inline Color operator!() const
+		{
+			if (color == White)
+				return Black;
+
+			if (color == Black)
+				return White;
+
+			return UndefinedColor;
+		}
 		
 		/* ---------------------------------- */
 

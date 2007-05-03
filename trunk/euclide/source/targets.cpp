@@ -7,7 +7,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Glyph glyph, Square square)
-	: _man(UndefinedMan), _glyph(glyph), _color(glyph.color()), _square(square), _cause(NULL, 0)
+	: _man(UndefinedMan), _glyph(glyph), _color(glyph.color()), _square(square)
 {
 	assert(glyph.isValid());
 	assert(square.isValid());
@@ -42,7 +42,7 @@ Target::Target(Glyph glyph, Square square)
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Color color, const Squares& squares)
-	: _man(UndefinedMan), _glyph(NoGlyph), _color(color), _square(UndefinedSquare), _cause(NULL, 0)
+	: _man(UndefinedMan), _glyph(NoGlyph), _color(color), _square(UndefinedSquare)
 {
 	_squares = squares;
 	_men.set();
@@ -287,19 +287,6 @@ bool Target::setAvailableCaptures(const array<int, NumMen>& availableCaptures)
 	updateRequiredMoves();
 
 	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Target::setCause(const Cause& cause)
-{
-	if (cause != _cause)
-	{
-		assert(_cause == Cause(NULL, 0));
-		assert(_glyph == NoGlyph);
-		
-		_cause = cause;
-	}
 }
 
 /* -------------------------------------------------------------------------- */

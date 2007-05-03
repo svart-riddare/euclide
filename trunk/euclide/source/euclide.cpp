@@ -88,6 +88,9 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	whitePieces = new Pieces(*problem, White);
 	blackPieces = new Pieces(*problem, Black);
 
+	*whitePieces += *blackPieces;
+	*blackPieces += *whitePieces;
+
 	/* -- Make initial non-ubiquity deduction (for kings) -- */
 
 	whitePieces->analysePartitions();
@@ -233,18 +236,8 @@ Euclide::operator EUCLIDE_Deductions() const
 
 		for (Partitions::const_iterator partition = pieces->begin(); partition != pieces->end(); partition++)
 		{
-			bool generic = false;
-
 			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 			{
-				if (target->isGeneric())
-				{
-					if (generic)
-						continue;
-
-					generic = true;
-				}
-
 				for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
 				{
 					EUCLIDE_Deduction *deduction = &deductions[destination->man()];

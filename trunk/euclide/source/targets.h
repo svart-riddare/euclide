@@ -8,14 +8,12 @@ namespace euclide
 {
 
 class Pieces;
+class Capture;
 
 /* -------------------------------------------------------------------------- */
 
 class Target : public vector<Destination>
 {
-	public:
-		typedef std::pair<const Target *, int> Cause;
-
 	public :
 		Target(Glyph glyph, Square square);
 		Target(Color color, const Squares& squares);
@@ -35,13 +33,9 @@ class Target : public vector<Destination>
 		bool setAvailableMoves(const array<int, NumMen>& availableMoves);
 		bool setAvailableCaptures(const array<int, NumMen>& availableCaptures);
 
-		void setCause(const Cause& cause);
-
 	public :
 		inline bool isOccupied() const
 			{ return (_glyph != NoGlyph); }
-		inline bool isGeneric() const
-			{ return (_glyph == NoGlyph) && !_cause.first; }
 
 	public :
 		inline Man man() const
@@ -65,9 +59,6 @@ class Target : public vector<Destination>
 		inline bool isSquare(Square square) const
 			{ return _squares[square]; }
 
-		inline const Cause& cause() const
-			{ return _cause; }
-
 	public :
 		inline int getRequiredMoves() const
 			{ return requiredMoves; }
@@ -88,14 +79,15 @@ class Target : public vector<Destination>
 		Squares _squares;
 		Men _men;
 
-		Cause _cause;
-
 	private :
 		int requiredMoves;
 		int requiredCaptures;
 
 		array<int, NumMen> menRequiredMoves;
 		array<int, NumMen> menRequiredCaptures;
+
+	private :
+		vector_ptr<Capture> captures;
 };
 
 /* -------------------------------------------------------------------------- */
