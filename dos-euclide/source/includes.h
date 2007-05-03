@@ -20,6 +20,7 @@ using std::list;
 
 #include <windows.h>
 #include <tchar.h>
+#include <crtdbg.h>
 
 #undef min
 #undef max
