@@ -50,6 +50,7 @@ using boost::logic::indeterminate;
 #include "utilities/algorithm.h"
 #include "utilities/bitset.h"
 #include "utilities/matrix.h"
+#include "utilities/pointer.h"
 #include "utilities/predicates.h"
 #include "utilities/vector.h"
 

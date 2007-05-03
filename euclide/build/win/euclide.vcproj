@@ -122,7 +122,6 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -256,6 +255,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\source\captures.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\destinations.cpp"
 				>
 			</File>
@@ -320,6 +323,10 @@
 			>
 			<File
 				RelativePath="..\..\source\board.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\captures.h"
 				>
 			</File>
 			<File
@@ -436,6 +443,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\utilities\matrix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\utilities\pointer.h"
 				>
 			</File>
 			<File

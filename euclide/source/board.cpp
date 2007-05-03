@@ -679,7 +679,7 @@ int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) co
 
 	if (distances[to] > 0)
 	{
-		captures.resize(distances[to]);
+		assert((int)captures.size() >= distances[to]);
 
 		/* -- Start from destination square to build all possible minimal paths -- */
 
