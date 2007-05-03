@@ -90,7 +90,11 @@ int main(int numArguments, char *arguments[], char *environment[])
 			break;
 	}
 
+#ifndef NDEBUG
+	return _CrtDumpMemoryLeaks();
+#else
 	return 0;
+#endif
 }
 
 
