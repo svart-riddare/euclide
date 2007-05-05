@@ -925,7 +925,7 @@ Squares Movements::squares() const
 
 	Squares squares;
 
-	for (Square square = FirstSquare; square < LastSquare; square++)
+	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (distances[square] < infinity)
 			squares[square] = true;
 
