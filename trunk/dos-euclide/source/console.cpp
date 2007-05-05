@@ -28,7 +28,7 @@ Console::Console()
 		return;
 
 	GetConsoleScreenBufferInfo(output, &initialState);
-	width = 2 * (std::min((int)initialState.dwSize.X, 80) / 2);
+	width = 2 * (std::min((int)initialState.dwSize.X, 120) / 2);
 	height = std::min((int)initialState.dwSize.Y, 25);
 
 	if ((width < 64) || (height < 25))
@@ -49,7 +49,9 @@ Console::Console()
 	window.Right = (SHORT)(width - 1);
 	window.Left = 0;
 	window.Top = 0;
-	SetConsoleWindowInfo(output, TRUE, &window);
+
+	if ((initialState.srWindow.Bottom < window.Bottom) || (initialState.srWindow.Right < window.Right) || (initialState.srWindow.Left > window.Left) || (initialState.srWindow.Top > window.Top))
+		SetConsoleWindowInfo(output, TRUE, &window);
 
 	/* -- Allocate output buffer -- */
 
@@ -71,6 +73,9 @@ Console::~Console()
 
 	COORD cursor = { 0, 8 };
 	SetConsoleCursorPosition(output, cursor);
+
+	int width = initialState.dwSize.X;
+	int height = initialState.dwSize.Y;
 
 	DWORD written;
 	FillConsoleOutputAttribute(output, initialState.wAttributes, width * (height - 8), cursor, &written);
@@ -109,6 +114,9 @@ void Console::clear()
 {
 	COORD cursor = { 0, 0 };
 	SetConsoleCursorPosition(output, cursor);
+
+	int width = initialState.dwSize.X;
+	int height = initialState.dwSize.Y;
 
 	DWORD written;
 	FillConsoleOutputAttribute(output, colors::standard, width * height, cursor, &written);
