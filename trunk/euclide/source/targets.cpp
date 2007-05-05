@@ -291,4 +291,29 @@ bool Target::setAvailableCaptures(const array<int, NumMen>& availableCaptures)
 
 /* -------------------------------------------------------------------------- */
 
+bool Target::operator==(const Target& target) const
+{
+	if (_man != target.man())
+		return false;
+
+	if (_glyph != target.glyph())
+		return false;
+
+	if (_color != target.color())
+		return false;
+
+	if (_square != target.square())
+		return false;
+
+	if (_squares != target.squares())
+		return false;
+
+	if  (_men != target.men())
+		return false;
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 }

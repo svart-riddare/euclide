@@ -236,8 +236,16 @@ Euclide::operator EUCLIDE_Deductions() const
 
 		for (Partitions::const_iterator partition = pieces->begin(); partition != pieces->end(); partition++)
 		{
+			Target *previous = NULL;
+
 			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 			{
+				if (previous)
+					if (*previous == **target)
+						continue;
+
+				previous = *target;
+
 				for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
 				{
 					EUCLIDE_Deduction *deduction = &deductions[destination->man()];

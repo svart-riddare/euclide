@@ -34,6 +34,9 @@ class Target : public vector<Destination>
 		bool setAvailableCaptures(const array<int, NumMen>& availableCaptures);
 
 	public :
+		bool operator==(const Target& target) const;
+
+	public :
 		inline bool isOccupied() const
 			{ return (_glyph != NoGlyph); }
 
