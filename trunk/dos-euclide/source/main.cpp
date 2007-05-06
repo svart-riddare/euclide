@@ -11,7 +11,7 @@ bool solveProblem(Console& console, const char *forsytheString, int numHalfMoves
 	ForsytheString problem(forsytheString, numHalfMoves);
 	if (!problem)
 		return false;
-	
+
 	console.reset();
 
 	EUCLIDE_Status status = EUCLIDE_solve(NULL, problem, console);
@@ -37,7 +37,7 @@ bool solveProblems(Console& console, const char *file)
 	int problems = 0;
 
 	fgets(bufferA, bufferSize, input);
-	while (fgets(bufferB, bufferSize, input))
+	while (fgets(bufferB, bufferSize, input) && !!console)
 	{
 		int numHalfMoves;
 
