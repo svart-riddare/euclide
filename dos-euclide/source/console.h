@@ -43,6 +43,7 @@ class Console
 		HANDLE output;
 		HANDLE input;
 		bool valid;
+		bool abort;
 
 		int width;
 		int height;

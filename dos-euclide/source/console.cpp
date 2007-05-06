@@ -23,6 +23,7 @@ Console::Console()
 	output = GetStdHandle(STD_OUTPUT_HANDLE);
 	input = GetStdHandle(STD_INPUT_HANDLE);
 	valid = false;
+	abort = false;
 
 	if ((output == INVALID_HANDLE_VALUE) || (input == INVALID_HANDLE_VALUE))
 		return;
@@ -139,7 +140,9 @@ bool Console::wait()
 	ReadConsole(input, characters, 1, &read, NULL);
 
 	write(_T(""), width - 1, true, 0, height - 1, colors::standard);
-	return (*characters == VK_ESCAPE) || (*characters == 'x') || (*characters == 'X');
+	
+	abort = ((*characters == VK_ESCAPE) || (*characters == 'x') || (*characters == 'X')) ? true : false;
+	return !abort;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -386,7 +389,7 @@ Console::operator const EUCLIDE_Callbacks *() const
 
 bool Console::operator!() const
 {
-	return !valid;
+	return !valid || abort;
 }
 
 /* -------------------------------------------------------------------------- */
