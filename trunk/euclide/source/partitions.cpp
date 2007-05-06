@@ -195,7 +195,7 @@ bool Partition::refine(Partitions& partitions, int maxDepth)
 			/* -- Move on to the next subset having the same size -- */
 
 			for ( ; n >= 0; n--)
-				if (k[n] <= numTargets - (depth - n))
+				if (k[n] < numTargets - (depth - n))
 					break;
 
 			if (n < 0)
