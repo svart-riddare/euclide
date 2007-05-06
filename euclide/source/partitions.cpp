@@ -493,7 +493,7 @@ bool Partition::analyseAvailableMoves(int availableMoves)
 
 	/* -- Leave out extreme cases -- */
 
-	if ((_men.count() < 3) || (_men.count() > 10))
+	if ((_men.count() < 2) || (_men.count() > 10))
 		return setAvailableMoves(availableMoves);
 
 	/* -- Fetch matrix of required moves -- */
@@ -534,7 +534,7 @@ bool Partition::analyseAvailableCaptures(int availableCaptures)
 
 	/* -- Leave out extreme cases -- */
 
-	if ((_men.count() < 3) || (_men.count() > 8))
+	if ((_men.count() < 2) || (_men.count() > 8))
 		return setAvailableCaptures(availableCaptures);
 
 	/* -- Fetch matrix of required captures -- */
