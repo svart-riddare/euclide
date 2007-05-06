@@ -55,7 +55,8 @@ class Movements
 		void unblock(Square square, Glyph glyph, bool captured);
 
 		void reduce(Square square, int availableMoves, int availableCaptures);
-		void reduce(Squares squares, int availableMoves, int availableCaptures);
+		void reduce(const Squares& squares, int availableMoves, int availableCaptures);
+		void reduceCaptures(const Squares& captures);
 
 		void optimize();
 
@@ -125,6 +126,8 @@ class Board
 
 		void reduce(Man man, Superman superman, Color color, Square square, int availableMoves, int availableCaptures);
 		void reduce(Man man, Superman superman, Color color, const Squares& squares, int availableMoves, int availableCaptures);
+		void reduce(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures);
+		void reduceCaptures(Man man, Superman superman, Color color, const Squares& captures);
 		
 		void optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures);
 		void optimize();
