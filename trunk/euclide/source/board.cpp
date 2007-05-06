@@ -850,7 +850,7 @@ void Movements::reduce(Square square, int availableMoves, int availableCaptures)
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::reduce(Squares squares, int availableMoves, int availableCaptures)
+void Movements::reduce(const Squares& squares, int availableMoves, int availableCaptures)
 {
 	assert(!squares.none());
 	assert(availableMoves >= 0);
@@ -907,6 +907,27 @@ void Movements::reduce(Squares squares, int availableMoves, int availableCapture
 				if (movements[from][to] == 0)
 					if ((_captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0) + rcaptures[to]) > availableCaptures)
 						movements[from][to] = infinity;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::reduceCaptures(const Squares& captures)
+{
+	if (!hybrid)
+		return;
+
+	/* -- Eliminate impossible captures given possible capture squares -- */
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+	{
+		if (captures[square])
+			continue;
+
+		for (Square from = FirstSquare; from <= LastSquare; from++)
+			if (movements[from][square] == 0)
+				if (tables::captures[glyph][from][square] && !tables::movements[glyph][from][square])
+					movements[from][square] = infinity;
+	}		
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1195,6 +1216,8 @@ void Board::reduce(Man man, Superman superman, Color color, Square square, int a
 	assert(superman.isValid());
 	assert(color.isValid());
 
+	optimized = false;
+
 	/* -- No promotion case -- */
 
 	if (man == superman)
@@ -1225,6 +1248,8 @@ void Board::reduce(Man man, Superman superman, Color color, const Squares& squar
 	assert(superman.isValid());
 	assert(color.isValid());
 
+	optimized = false;
+
 	/* -- No promotion case -- */
 
 	if (man == superman)
@@ -1244,6 +1269,82 @@ void Board::reduce(Man man, Superman superman, Color color, const Squares& squar
 		movements[color][man]->reduce(promotion, availableMoves - promotionMoves, availableCaptures - promotionCaptures);
 		movements[color][superman]->reduce(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
 	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::reduce(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures)
+{
+	assert(man.isValid());
+	assert(color.isValid());
+	assert(supermen.count() >= 1);
+
+	optimized = false;
+
+	/* -- Single promotion case -- */
+
+	if (supermen.count() == 1)
+	{
+		Superman superman = man;
+		while (!supermen[superman])
+			superman++;
+
+		reduce(man, superman, color, squares, availableMoves, availableCaptures);
+	}
+
+	/* -- Handle promotions -- */
+
+	else
+	{
+		/* -- Compute available moves/captures before promotion -- */
+
+		Squares promotions;
+		if (supermen[man])
+			promotions = squares;
+
+		int promotionMoves = supermen[man] ? 0 : infinity;
+		int promotionCaptures = supermen[man] ? 0 : infinity;
+
+		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+		{
+			if (supermen[superman])
+			{
+				promotions[superman.square(color)] = true;
+				minimize(promotionMoves, movements[color][superman]->distance(squares));
+				minimize(promotionCaptures, movements[color][superman]->captures(squares));
+			}
+		}
+
+		movements[color][man]->reduce(promotions, availableMoves - promotionMoves, availableCaptures - promotionCaptures); 
+
+		/* -- Handle each possible promotion -- */
+
+		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
+		{
+			Square promotion = superman.square(color);
+
+			int requiredMoves = movements[color][man]->distance(promotion);
+			int requiredCaptures = movements[color][man]->captures(promotion);
+
+			movements[color][superman]->reduce(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::reduceCaptures(Man man, Superman superman, Color color, const Squares& captures)
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+
+	optimized = false;
+
+	movements[color][man]->reduceCaptures(captures);
+
+	if (man != superman)
+		movements[color][superman]->reduceCaptures(captures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1311,11 +1412,28 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 	/* -- Count men to supermen links -- */
 
 	array<int, NumSupermen> supermen(0);
+	bool complex = false;
 
 	for (Man man = FirstMan; man <= LastMan; man++)
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 			if (men[man].supermen[superman])
 				supermen[superman]++;
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		if (supermen[superman] > 1)
+			complex = true;
+
+	/* -- Find possible capture squares -- */
+
+	Squares captures;
+	for (Man man = FirstMan; man <= LastMan; man++)
+		if (!men[man].block)
+			captures |= men[man].squares;
+
+	/* -- Apply capture restrictions -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+		reduceCaptures(man, man, !color, captures);
 
 	/* -- Apply path reductions and obstructions for each man -- */
 
@@ -1330,6 +1448,12 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 			if (men[man].block)
 				block(man, men[man].superman, color);
 		}
+
+		/* -- Handle case were each promotion piece appears only once -- */
+
+		else
+		if (!complex)
+			reduce(man, men[man].supermen, color, men[man].squares, men[man].availableMoves, men[man].availableCaptures);
 
 		/* -- Leave out promotion -- */
 
