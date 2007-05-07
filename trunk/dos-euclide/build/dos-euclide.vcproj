@@ -66,6 +66,7 @@
 				AdditionalDependencies="user32.lib"
 				OutputFile="../bin/dos-euclide-debug.exe"
 				LinkIncremental="2"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/dos-euclide.pdb"
 				SubSystem="1"
@@ -76,6 +77,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -150,7 +152,7 @@
 				AdditionalDependencies="user32.lib"
 				OutputFile="../bin/dos-euclide.exe"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				GenerateManifest="false"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -161,6 +163,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
