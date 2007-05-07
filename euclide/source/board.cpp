@@ -64,30 +64,38 @@ Obstructions::~Obstructions()
 Obstructions& Obstructions::operator&=(const Obstructions& obstructions)
 {
 	int k = 0;
-		
-	if (this->numSoftObstructions && obstructions.numSoftObstructions)
+	
+	/* -- Find common obstructions -- */
+
+	int m = 0;
+	int n = obstructions.numSoftObstructions;
+
+	for (int i = 0; i < this->numHardObstructions; i++)
 	{
-		for (int m = 0, n = 0; ; )
+		if (i == this->numSoftObstructions)
 		{
-			if (this->obstructions[m] < obstructions.obstructions[n])
-			{
-				if (++m >= this->numSoftObstructions)
-					break;
-			}
-			else
-			if (this->obstructions[m] > obstructions.obstructions[n])
-			{
-				if (++n >= obstructions.numSoftObstructions)
-					break;
-			}
-			else
-			{
-				this->obstructions[k++] = this->obstructions[n++, m++];
-			}
+			m = 0;
+			n = obstructions.numSoftObstructions;
 		}
+
+		while ((m < obstructions.numSoftObstructions) && (this->obstructions[i] > obstructions.obstructions[m]))
+			m++;
+
+		while ((n < obstructions.numHardObstructions) && (this->obstructions[i] > obstructions.obstructions[n]))
+			n++;
+
+		if (m < obstructions.numSoftObstructions)
+			if (this->obstructions[i] == obstructions.obstructions[m])
+				this->obstructions[k++] = obstructions.obstructions[m++];
+
+		if (n < obstructions.numHardObstructions)
+			if (this->obstructions[i] == obstructions.obstructions[n])
+				this->obstructions[k++] = obstructions.obstructions[n++];
 	}
 
-	numSoftObstructions = k;
+	/* -- Common obstructions are labelled as 'hard' -- */
+
+	numSoftObstructions = 0;
 	numHardObstructions = k;
 	return *this;
 }
