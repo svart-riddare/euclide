@@ -1329,12 +1329,15 @@ void Board::reduce(Man man, const Supermen& supermen, Color color, const Squares
 
 		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
 		{
-			Square promotion = superman.square(color);
+			if (supermen[superman])
+			{
+				Square promotion = superman.square(color);
 
-			int requiredMoves = movements[color][man]->distance(promotion);
-			int requiredCaptures = movements[color][man]->captures(promotion);
+				int requiredMoves = movements[color][man]->distance(promotion);
+				int requiredCaptures = movements[color][man]->captures(promotion);
 
-			movements[color][superman]->reduce(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+				movements[color][superman]->reduce(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+			}
 		}
 	}
 }

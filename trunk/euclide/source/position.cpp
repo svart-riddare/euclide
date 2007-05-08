@@ -89,7 +89,7 @@ bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 
 	if (!quick && !modified)
 		for (iterator partition = begin(); partition != end(); partition++)
-			if (partition->setAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
+			if (partition->analyseAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
 				modified = true;
 
 	if (!modified)
