@@ -988,6 +988,33 @@ Board::~Board()
 
 /* -------------------------------------------------------------------------- */
 
+int Board::moves() const
+{
+	int moves = 0;
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			moves += movements[color][superman]->moves();
+
+	return moves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Board::moves(Color color) const
+{
+	assert(color.isValid());
+
+	int moves = 0;
+
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		moves += movements[color][superman]->moves();
+
+	return moves;
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Board::moves(Superman superman, Color color) const
 {
 	assert(superman.isValid());
