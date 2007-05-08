@@ -13,6 +13,7 @@ class Euclide
 		~Euclide();
 
 		void solve(const EUCLIDE_Problem *problem);
+		void analyseBasicConstraints();
 
 		operator EUCLIDE_Deductions() const;
 
@@ -91,51 +92,36 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	*whitePieces += *blackPieces;
 	*blackPieces += *whitePieces;
 
-	/* -- Make initial non-ubiquity deduction (for kings) -- */
+	/* -- Initial partition split (for kings) -- */
 
 	whitePieces->analysePartitions();
 	blackPieces->analysePartitions();
 
-	/* -- Compute initial number of required moves and captures -- */
+	/* -- Analyse movements -- */
 
-	whitePieces->computeRequiredMoves(*board);
-	whitePieces->computeRequiredCaptures(*board);
+	analyseBasicConstraints();
 
-	blackPieces->computeRequiredMoves(*board);
-	blackPieces->computeRequiredCaptures(*board);
+	/* -- Analyse captures -- */
 
-	/* -- Make recursive deductions based on these results -- */
-
-	do
-	{
-		whitePieces->analyseMoveConstraints(problem->moves(White), true);
-		whitePieces->analyseCaptureConstraints(problem->captures(White), true);
-	}
-	while (whitePieces->analysePartitions());
-
-	do
-	{
-		blackPieces->analyseMoveConstraints(problem->moves(Black), true);
-		blackPieces->analyseCaptureConstraints(problem->captures(Black), true);
-	}
-	while (blackPieces->analysePartitions());
-
-	/* -- Display actual deductions -- */
+	whitePieces->analyseCaptures(*board, *blackPieces);
+	blackPieces->analyseCaptures(*board, *whitePieces);
 	
-	EUCLIDE_Deductions deductions = *this;
+	analyseBasicConstraints();
+}
 
-	if (callbacks.displayFreeMoves)
-		(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
+/* -------------------------------------------------------------------------- */
 
-	if (callbacks.displayDeductions)
-		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
+void Euclide::analyseBasicConstraints()
+{
+	/* -- Analyse movements until there is no more deductions to be made -- */
 
-	/* -- Analyse paths -- */
-
-	for (int n = 0; n < 2; n++)
+	bool modified = true;
+	while (modified)
 	{
-		board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
-		board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+		int moves = board->moves();
+		modified = false;
+
+		/* -- Compute number of required moves and captures -- */
 
 		whitePieces->computeRequiredMoves(*board);
 		whitePieces->computeRequiredCaptures(*board);
@@ -143,6 +129,8 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 		blackPieces->computeRequiredMoves(*board);
 		blackPieces->computeRequiredCaptures(*board);
 
+		/* -- Analyse constraints given moves and captures -- */
+
 		do
 		{
 			whitePieces->analyseMoveConstraints(problem->moves(White));
@@ -156,48 +144,27 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 			blackPieces->analyseCaptureConstraints(problem->captures(Black));
 		}
 		while (blackPieces->analysePartitions());
+
+		/* -- Optimize board movements -- */
+
+		board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
+		board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+
+		/* -- Output current deductions -- */
+	
+		EUCLIDE_Deductions deductions = *this;
+
+		if (callbacks.displayFreeMoves)
+			(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
+
+		if (callbacks.displayDeductions)
+			(*callbacks.displayDeductions)(callbacks.handle, &deductions);
+
+		/* -- Check for modifications -- */
+
+		if (moves != board->moves())
+			modified = true;
 	}
-
-	deductions = *this;
-
-	if (callbacks.displayFreeMoves)
-		(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
-
-	if (callbacks.displayDeductions)
-		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
-
-	/* -- Analyse captures -- */
-
-	if (whitePieces->analyseCaptures(*board, *blackPieces))
-	{
-		do
-		{
-			whitePieces->analyseMoveConstraints(problem->moves(White));
-			whitePieces->analyseCaptureConstraints(problem->captures(White));
-		}
-		while (whitePieces->analysePartitions());
-	}
-
-	if (blackPieces->analyseCaptures(*board, *whitePieces))
-	{
-		do
-		{
-			blackPieces->analyseMoveConstraints(problem->moves(Black));
-			blackPieces->analyseCaptureConstraints(problem->captures(Black));
-		}
-		while (blackPieces->analysePartitions());
-	}
-
-	board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
-	board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
-
-	deductions = *this;
-
-	if (callbacks.displayFreeMoves)
-		(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
-
-	if (callbacks.displayDeductions)
-		(*callbacks.displayDeductions)(callbacks.handle, &deductions);
 }
 
 /* -------------------------------------------------------------------------- */

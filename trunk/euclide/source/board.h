@@ -106,6 +106,8 @@ class Board
 		Board();
 		~Board();
 
+		int moves() const;
+		int moves(Color color) const;
 		int moves(Superman superman, Color color) const;
 		int moves(Man man, Superman superman, Color color) const;
 
