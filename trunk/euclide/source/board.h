@@ -51,18 +51,20 @@ class Movements
 		int getCaptures(Square from, Square to, vector<Squares>& captures) const;
 
 		void block(Squares squares, Glyph glyph);
+		void block(const vector<Squares>& xsquares);
 		void block(Square square, Glyph glyph, bool captured);
 		void unblock(Square square, Glyph glyph, bool captured);
 
 		void reduce(Square square, int availableMoves, int availableCaptures);
 		void reduce(const Squares& squares, int availableMoves, int availableCaptures);
+		void reduce(const vector<Squares>& xsquares, Square destination, int availableMoves, int availableCaptures);
 		void reduceCaptures(const Squares& captures);
 
 		void optimize();
 
 	public :
 		int moves() const;
-		Squares squares() const;
+		const Squares& squares() const;
 
 	protected :
 		void computeInitialDistances();
@@ -93,6 +95,8 @@ class Movements
 
 		int distances[NumSquares];
 		int _captures[NumSquares];
+
+		Squares _squares;
 
 		Obstructions *obstructions[NumSquares][NumGlyphs];
 		Glyphs validObstructions;
@@ -131,7 +135,8 @@ class Board
 		void reduce(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures);
 		void reduceCaptures(Man man, Superman superman, Color color, const Squares& captures);
 		
-		void optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures);
+		void optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures, const vector<Squares> *xsquares = NULL);
+		void optimize(const Pieces& whitePieces, const Pieces& blackPieces, int availableWhiteMoves, int availableBlackMoves, int availableWhiteCaptures, int availableBlackCaptures);
 		void optimize();
 
 	private :

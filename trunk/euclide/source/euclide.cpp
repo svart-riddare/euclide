@@ -107,6 +107,13 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	blackPieces->analyseCaptures(*board, *whitePieces);
 	
 	analyseBasicConstraints();
+
+	/* -- Analyse movements -- */
+
+	board->optimize(*whitePieces, *blackPieces, problem->moves(White), problem->moves(Black), problem->captures(White), problem->captures(Black));
+
+	analyseBasicConstraints();
+
 }
 
 /* -------------------------------------------------------------------------- */
