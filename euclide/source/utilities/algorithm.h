@@ -20,6 +20,20 @@ T& minimize(T& variable, const T& value)
 	return variable = std::min(variable, value);
 }
 
+template <class T>
+void maximize(T *variables, const T *values, int size)
+{
+	for (int k = 0; k < size; k++)
+		variables[k] = std::max(variables[k], values[k]);
+}
+
+template <class T>
+void minimize(T *variables, const T *values, int size)
+{
+	for (int k = 0; k < size; k++)
+		variables[k] = std::min(variables[k], values[k]);
+}
+
 /* -------------------------------------------------------------------------- */
 
 }
