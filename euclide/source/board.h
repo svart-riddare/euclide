@@ -59,6 +59,7 @@ class Movements
 		void reduce(const Squares& squares, int availableMoves, int availableCaptures);
 		void reduce(const vector<Squares>& xsquares, Square destination, int availableMoves, int availableCaptures);
 		void reduceCaptures(const Squares& captures);
+		void reduceCastling(Movements& krook, Movements& qrook);
 
 		void optimize();
 
@@ -76,6 +77,9 @@ class Movements
 		void computeReverseDistances(Square square, int distances[NumSquares]) const;
 		void computeReverseCaptures(Square square, int captures[NumSquares]) const;
 
+		bool mayLeave(Square square) const;
+		bool mayReach(Square square) const;
+
 	private :
 		int movements[NumSquares][NumSquares];
 		int possibilities;
@@ -87,9 +91,10 @@ class Movements
 		Square initial;
 		Square ksquare;
 		Square qsquare;
-		Square _ksquare;
-		Square _qsquare;
 		int castling;
+
+		tribool kcastling;
+		tribool qcastling;
 
 		bool hybrid;
 

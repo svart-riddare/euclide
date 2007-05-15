@@ -168,8 +168,8 @@ Movements::Movements(Superman superman, Color color)
 	if (superman == QueenRook)
 		qsquare = Square((column_t)(initial.column() + 3), initial.row());
 
-	_ksquare = ksquare;
-	_qsquare = qsquare;
+	kcastling = (ksquare != initial) ? indeterminate : tribool(false);
+	qcastling = (qsquare != initial) ? indeterminate : tribool(false);
 
 	/* -- Initialize table of allowed movements -- */
 
@@ -430,25 +430,29 @@ void Movements::computeForwardDistances(Square square, int distances[NumSquares]
 	/* -- Initialize distances -- */
 
 	std::fill(distances, distances + NumSquares, infinity);
-	
+	distances[square] = 0;
+
 	if (square == initial)
 	{
-		distances[ksquare] = castling;
-		distances[qsquare] = castling;
-	}
-	
-	distances[square] = 0;
+		if (kcastling || qcastling)
+			distances[initial] = infinity;
+		if (kcastling || indeterminate(kcastling))
+			distances[ksquare] = castling;
+		if (qcastling || indeterminate(qcastling))
+			distances[qsquare] = castling;
+	}		
 	
 	/* -- Initialize square queue -- */
 
 	queue<Square> squares;
-	squares.push(square);
-
+	if (!distances[square])
+		squares.push(square);
+	
 	if (square == initial)
 	{
-		if (ksquare != initial)
+		if (kcastling || indeterminate(kcastling))
 			squares.push(ksquare);
-		if (qsquare != initial)
+		if (qcastling || indeterminate(qcastling))
 			squares.push(qsquare);
 	}
 
@@ -624,6 +628,28 @@ void Movements::computeReverseCaptures(Square square, int captures[NumSquares]) 
 	/* -- Don't leave negative values in the table -- */
 
 	std::replace(captures, captures + NumSquares, -1, infinity);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Movements::mayLeave(Square square) const
+{
+	for (Square s = FirstSquare; s <= LastSquare; s++)
+		if (movements[square][s] == 0)
+			return true;
+
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Movements::mayReach(Square square) const
+{
+	for (Square s = FirstSquare; s <= LastSquare; s++)
+		if (movements[s][square] == 0)
+			return true;
+
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -833,14 +859,6 @@ void Movements::block(Square square, Glyph glyph, bool captured)
 	assert(glyph.isValid());
 
 	obstructions[square][glyph]->block(captured);
-
-	/* -- Handle castling -- */
-
-	if (distances[ksquare] > (castling + 1))
-		ksquare = initial;
-
-	if (distances[qsquare] > (castling + 1))
-		qsquare = initial;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -851,14 +869,6 @@ void Movements::unblock(Square square, Glyph glyph, bool captured)
 	assert(glyph.isValid());
 
 	obstructions[square][glyph]->unblock(captured);
-
-	/* -- Handle castling -- */
-
-	if (distances[_ksquare] == (castling + 1))
-		ksquare = _ksquare;
-
-	if (distances[_qsquare] == (castling + 1))
-		qsquare = _qsquare;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -880,6 +890,30 @@ void Movements::optimize()
 			if (movements[from][to] == 0)
 				possibilities++;
 
+	/* -- Handle castling -- */
+
+	if (indeterminate(kcastling) && (possibilities > 0))
+		if (!mayLeave(ksquare))
+			kcastling = false;
+
+	if (indeterminate(qcastling) && (possibilities > 0))
+		if (!mayLeave(qsquare))
+			qcastling = false;
+
+	if ((indeterminate(kcastling) || indeterminate(qcastling)) && (possibilities > 0))
+		if (!mayLeave(initial) && ((possibilities > 1) || !mayReach(initial)))
+			if (!qcastling || !mayLeave(qsquare) && !movements[ksquare][initial])
+				kcastling = true;
+			else
+			if (!kcastling || !mayLeave(ksquare))
+				qcastling = true;
+
+	if (kcastling)
+		qcastling = false;
+
+	if (qcastling)
+		kcastling = false;
+
 	/* -- Recompute initial distances and captures -- */
 
 	computeInitialDistances();
@@ -888,6 +922,8 @@ void Movements::optimize()
 	/* -- Tabulate list of possible destination squares -- */
 
 	_squares.reset();
+	_squares[initial] = true;
+
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (distances[square] < infinity)
 			_squares[square] = true;
@@ -1094,6 +1130,25 @@ void Movements::reduceCaptures(const Squares& captures)
 				if (tables::captures[glyph][from][square] && !tables::movements[glyph][from][square])
 					movements[from][square] = infinity;
 	}		
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::reduceCastling(Movements& krook, Movements& qrook)
+{
+	assert(superman.isKing());
+
+	/* -- Synchronize castling deductions between king and rooks -- */
+
+	if (!indeterminate(kcastling))
+		krook.kcastling = kcastling;
+	if (!indeterminate(qcastling))
+		qrook.qcastling = qcastling;
+	
+	if (!indeterminate(krook.kcastling))
+		kcastling = krook.kcastling;
+	if (!indeterminate(qrook.qcastling))
+		qcastling = qrook.qcastling;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1621,6 +1676,10 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 
 	for (Man man = FirstMan; man <= LastMan; man++)
 		reduceCaptures(man, man, !color, captures);
+
+	/* -- Synchronize castling -- */
+
+	movements[color][King]->reduceCastling(*movements[color][KingRook], *movements[color][QueenRook]);
 
 	/* -- Apply path reductions and obstructions for each man -- */
 
