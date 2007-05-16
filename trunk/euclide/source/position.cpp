@@ -13,15 +13,10 @@ Pieces::Pieces(const Problem& problem, Color color)
 	requiredMoves = 0;
 	requiredCaptures = 0;
 
-	/* -- Copy problem glyphs -- */
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		glyphs[square] = problem[square];
-
 	/* -- Create single partition -- */
 
 	reserve(NumMen);
-	push_back(Partition(problem, color));
+	push_back(new Partition(problem, color));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -32,10 +27,18 @@ Pieces& Pieces::operator+=(const Pieces& pieces)
 
 	for (const_iterator partition = begin(); partition != end(); partition++)
 		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
-			if (!target->isOccupied())
+			if (!target->alive())
 				captures.push_back(Capture(*target));
 
 	return *this;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Pieces::~Pieces()
+{
+	for (iterator partition = begin(); partition != end(); partition++)
+		delete *partition;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,7 +51,7 @@ bool Pieces::analysePartitions()
 	/* -- Refine (split) partitions is possible -- */
 
 	for (int k = 0; k < partitions; k++)
-		while (at(k).refine(*this, NumMen))
+		while (at(k)->refine(*this, NumMen))
 			modified = true;
 	
 	return modified;

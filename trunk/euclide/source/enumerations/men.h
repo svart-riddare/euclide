@@ -17,10 +17,12 @@ typedef enum
 	
 	NumMen, UndefinedMan = -1,
 	FirstMan = King, LastMan = HPawn,
-	FirstRook = QueenRook, LastRook = KingRook,
-	FirstBishop = QueenBishop, LastBishop = KingBishop,
-	FirstKnight = QueenKnight, LastKnight = KingKnight,
-	FirstPawn = APawn, LastPawn = HPawn
+	FirstKing = King, LastKing = King, NumKings = LastKing - FirstKing + 1,
+	FirstQueen = Queen, LastQueen = Queen, NumQueens = LastQueen - FirstQueen + 1,
+	FirstRook = QueenRook, LastRook = KingRook, NumRooks = LastRook - FirstRook + 1,
+	FirstBishop = QueenBishop, LastBishop = KingBishop, NumBishops = LastBishop - FirstBishop + 1,
+	FirstKnight = QueenKnight, LastKnight = KingKnight, NumKnights = LastKnight - FirstKnight + 1,
+	FirstPawn = APawn, LastPawn = HPawn, NumPawns = LastPawn - FirstPawn + 1
 
 } man_t;
 
@@ -34,11 +36,11 @@ typedef enum
 	NumSupermen, UndefinedSuperman = -1,
 	FirstSuperman = King, LastSuperman = HKnight,
 	
-	FirstPromotedMan = AQueen, LastPromotedMan = HKnight,
-	FirstPromotedQueen = AQueen, LastPromotedQueen = HQueen,
-	FirstPromotedRook = ARook, LastPromotedRook = HRook,
-	FirstPromotedBishop = ABishop, LastPromotedBishop = HBishop,
-	FirstPromotedKnight = AKnight, LastPromotedKnight = HKnight,
+	FirstPromotedMan = AQueen, LastPromotedMan = HKnight, NumPromotedMen = LastPromotedMan - FirstPromotedMan + 1,
+	FirstPromotedQueen = AQueen, LastPromotedQueen = HQueen, NumPromotedQueens = LastPromotedQueen - FirstPromotedQueen + 1,
+	FirstPromotedRook = ARook, LastPromotedRook = HRook, NumPromotedRooks = LastPromotedRook - FirstPromotedRook + 1,
+	FirstPromotedBishop = ABishop, LastPromotedBishop = HBishop, NumPromotedBishops = LastPromotedBishop - FirstPromotedBishop + 1,
+	FirstPromotedKnight = AKnight, LastPromotedKnight = HKnight, NumPromotedKnights = LastPromotedKnight - FirstPromotedKnight + 1
 	
 } superman_t;
 

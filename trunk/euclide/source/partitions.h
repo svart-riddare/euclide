@@ -11,7 +11,24 @@ class Partitions;
 
 /* -------------------------------------------------------------------------- */
 
-class Partition : public vector_ptr<Target>
+/**
+ * \class Partition
+ * A partition is a list of targets that may be fullfilled by the same subset of
+ * pieces. At initialization, there is a single partition made of sixteen (the 
+ * initial number of pieces on the board) targets. As solving goes on, this 
+ * partition is split into distinct partitions with non-intersecting subsets
+ * of pieces. The ultimate goal is to reach sixteen partitions composed of a
+ * single target.
+ */
+
+/**
+ * \class Partitions
+ * Partition set.
+ */
+
+/* -------------------------------------------------------------------------- */
+
+class Partition : public Targets
 {
 	public :
 		Partition(const Problem& problem, Color color);
@@ -28,6 +45,7 @@ class Partition : public vector_ptr<Target>
 		int updateRequiredCaptures(bool recursive);
 		const Men& updatePossibleMen(bool recursive);
 		const Squares& updatePossibleSquares(bool recursive);
+		const Supermen& updatePossibleSupermen(bool recursive);
 
 		bool setPossibleMen(const Men& men);
 		bool setPossibleSquares(const Squares& squares);
@@ -43,6 +61,8 @@ class Partition : public vector_ptr<Target>
 	public :
 		inline const Men& men() const
 			{ return _men; }
+		inline const Supermen& supermen() const
+			{ return _supermen; }
 		inline const Squares& square() const
 			{ return _squares; }
 		inline Color color() const
@@ -64,21 +84,22 @@ class Partition : public vector_ptr<Target>
 			{ return targetA->candidates() < targetB->candidates(); }
 
 	private :
-		Men _men;
-		Squares _squares;
-		Color _color;
+		Men _men;                /**< Pieces that may fullfill partition targets. The number of pieces must equal the number of targets. */
+		Supermen _supermen;      /**< Promotion pieces involved by partition targets. */
+		Squares _squares;        /**< Final destination squares for partition targets. */
+		Color _color;            /**< Partition color. */
 
 	private :
-		int requiredMoves;
-		int requiredCaptures;
+		int requiredMoves;       /**< Required numner of moves to fullfill all partition targets. */
+		int requiredCaptures;    /**< Required number of captures to fullfill all partition targets. */
 
-		int assignedMoves;
-		int assignedCaptures;
+		int assignedMoves;       /**< Number of required moves that were assigned to a specific target within the partition. */
+		int assignedCaptures;    /**< Number of required captures that were assigned to a specific target within the partition. */
 };
 
 /* -------------------------------------------------------------------------- */
 
-class Partitions : public vector<Partition> {};
+class Partitions : public vector_ptr<Partition> {};
 
 /* -------------------------------------------------------------------------- */
 

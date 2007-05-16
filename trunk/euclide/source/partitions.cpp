@@ -12,6 +12,7 @@ Partition::Partition(const Problem& problem, Color color)
 
 	_men.set();
 	_squares.set();
+	_supermen.set();
 	
 	requiredMoves = 0;
 	requiredCaptures = 0;
@@ -40,10 +41,6 @@ Partition::Partition(const Problem& problem, Color color)
 
 	while (size() < NumMen)
 		push_back(new Target(color, captures));
-
-	/* -- This single partition groups all men -- */
-
-	_men.set();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -78,6 +75,7 @@ Partition::Partition(Partition& partition, const Men& men, const bitset<NumMen>&
 
 	/* -- Update state -- */
 
+	updatePossibleSupermen(true);
 	updatePossibleSquares(true);
 	updateRequiredMoves(true);
 	updateRequiredCaptures(true);
@@ -87,10 +85,8 @@ Partition::Partition(Partition& partition, const Men& men, const bitset<NumMen>&
 
 Partition::~Partition()
 {
-#if 0
 	for (iterator target = begin(); target != end(); target++)
 		delete (Target *)(*target);
-#endif
 }
 
 /* -------------------------------------------------------------------------- */
@@ -222,7 +218,7 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 {
 	/* -- Create new partition -- */
 
-	partitions.push_back(Partition(*this, men, targets));
+	partitions.push_back(new Partition(*this, men, targets));
 
 	/* -- Update some state variable -- */
 
@@ -242,6 +238,7 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 
 	/* -- Update state -- */
 
+	updatePossibleSupermen(true);
 	updatePossibleSquares(true);
 	updateRequiredMoves(true);
 	updateRequiredCaptures(true);
@@ -346,6 +343,8 @@ const Men& Partition::updatePossibleMen(bool recursive)
 	for (iterator target = begin(); target != end(); target++)
 		_men |= recursive ? target->updatePossibleMen() : target->men();
 
+	updatePossibleSupermen(false);
+
 	return _men;
 }
 
@@ -359,6 +358,18 @@ const Squares& Partition::updatePossibleSquares(bool recursive)
 		_squares |= recursive ? target->updatePossibleSquares() : target->squares();
 
 	return _squares;
+}
+
+/* -------------------------------------------------------------------------- */
+
+const Supermen& Partition::updatePossibleSupermen(bool recursive)
+{
+	_supermen.reset();
+
+	for (iterator target = begin(); target != end(); target++)
+		_supermen |= recursive ? target->updatePossibleSupermen() : target->supermen();
+
+	return _supermen;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -381,6 +392,7 @@ bool Partition::setPossibleMen(const Men& men)
 	if (!modified)
 		return false;
 
+	updatePossibleSupermen(false);
 	updatePossibleSquares(false);
 	updateRequiredMoves(false);
 	updateRequiredCaptures(false);
