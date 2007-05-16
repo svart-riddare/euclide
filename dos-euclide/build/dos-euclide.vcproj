@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\euclide\interface"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_SECURE_SCL=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_SECURE_SCL=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;DOS_EUCLIDE_CHECK_MEMORY_LEAKS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

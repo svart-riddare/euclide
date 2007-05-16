@@ -795,64 +795,6 @@ void Movements::block(Squares squares, Glyph glyph)
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::block(const vector<Squares>& xsquares)
-{
-	Squares _squares = squares();
-	bool ourself = false;
-
-	/* -- If we can't move, don't bother going on -- */
-
-	if (!moves())
-		return;
-
-	/* -- Process each set of squares in the list -- */
-
-	for (vector<Squares>::const_iterator S = xsquares.begin(); S != xsquares.end(); S++)
-	{
-		Squares squares = *S;
-
-		/* -- Ensure we do not block ourself ! -- */
-
-		if (!ourself && (squares == _squares))
-		{
-			ourself = true;
-			continue;
-		}
-
-		/* -- Find minimum distances assuming at least one of these squares are blocked -- */
-
-		int distances[NumSquares];
-		int captures[NumSquares];
-		std::fill(distances, distances + NumSquares, infinity);
-		std::fill(captures, captures + NumSquares, infinity);
-
-		for (Square square = FirstSquare; square <= LastSquare; square++)
-		{
-			if (!squares[square])
-				continue;
-
-			block(square, NoGlyph, false);
-
-			int _distances[NumSquares];
-			computeForwardDistances(initial, _distances);
-			minimize(distances, _distances, NumSquares);
-
-			int _captures[NumSquares];
-			computeForwardCaptures(initial, _captures);
-			minimize(captures, _captures, NumSquares);
-
-			unblock(square, NoGlyph, false);
-		}
-
-		/* -- Blocked squares may have increased distances -- */
-
-		maximize(this->distances, distances, NumSquares);
-		maximize(this->_captures, captures, NumSquares);
-	}
-}
-
-/* -------------------------------------------------------------------------- */
-
 void Movements::block(Square square, Glyph glyph, bool captured)
 {
 	assert(square.isValid());
@@ -1023,97 +965,7 @@ void Movements::reduce(const Squares& squares, int availableMoves, int available
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::reduce(const vector<Squares>& xsquares, Square destination, int availableMoves, int availableCaptures)
-{
-	assert(destination.isValid());
-	assert(availableMoves >= 0);
-	assert(availableCaptures >= 0);
-
-	/* -- Define local variables -- */
-
-	int distances[NumSquares], rdistances[NumSquares];
-	int captures[NumSquares], rcaptures[NumSquares];
-
-	Squares _squares = squares();
-	bool ourself = false;
-
-	/* -- If we can't move, exit -- */
-
-	if (!moves())
-		return;
-
-	/* -- Process each set of squares -- */
-
-	for (vector<Squares>::const_iterator S = xsquares.begin(); S != xsquares.end(); S++)
-	{
-		Squares squares = *S;
-
-		/* -- Let's try not to block ourself -- */
-
-		if (!ourself && (squares == _squares))
-		{
-			ourself = true;
-			continue;
-		}
-
-		/* -- Initialize table of possible moves -- */
-
-		bool possible[NumSquares][NumSquares];
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-				possible[from][to] = false;
-
-		/* -- Block each square and perform reduction -- */
-
-		for (Square square = FirstSquare; square <= LastSquare; square++)
-		{
-			if (!squares[square])
-				continue;
-
-			/* -- Block square -- */
-
-			block(square, NoGlyph, false);
-
-			/* -- Compute distances and reverse distances given block -- */
-
-			computeForwardDistances(initial, distances);
-			computeForwardCaptures(initial, captures);
-
-			computeReverseDistances(destination, rdistances);
-			computeReverseCaptures(destination, rcaptures);
-
-			/* -- Eliminate unused movements given number of available moves -- */
-
-			for (Square from = FirstSquare; from <= LastSquare; from++)
-				for (Square to = FirstSquare; to <= LastSquare; to++)
-					if ((distances[from] + 1 + rdistances[to]) <= availableMoves)
-						possible[from][to] = true;
-
-			/* -- Eliminate unused movements given number of available captures -- */
-
-			if (hybrid)
-				for (Square from = FirstSquare; from <= LastSquare; from++)
-					for (Square to = FirstSquare; to <= LastSquare; to++)
-						if ((_captures[from] + ((tables::captures[glyph][from][to] && !tables::movements[glyph][from][to]) ? 1 : 0) + rcaptures[to]) <= availableCaptures)
-							possible[from][to] = true;
-
-			/* -- Unblock squares -- */
-
-			unblock(square, NoGlyph, false);
-		}
-
-		/* -- Eliminate impossible movements -- */
-
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if (!possible[from][to])
-					movements[from][to] = infinity;
-	}
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Movements::reduceCaptures(const Squares& captures)
+void Movements::setCaptureSquares(const Squares& squares)
 {
 	if (!hybrid)
 		return;
@@ -1122,7 +974,7 @@ void Movements::reduceCaptures(const Squares& captures)
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 	{
-		if (captures[square])
+		if (squares[square])
 			continue;
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
@@ -1134,7 +986,7 @@ void Movements::reduceCaptures(const Squares& captures)
 
 /* -------------------------------------------------------------------------- */
 
-void Movements::reduceCastling(Movements& krook, Movements& qrook)
+void Movements::synchronizeCastling(Movements& krook, Movements& qrook)
 {
 	assert(superman.isKing());
 
@@ -1575,7 +1427,7 @@ void Board::reduce(Man man, const Supermen& supermen, Color color, const Squares
 
 /* -------------------------------------------------------------------------- */
 
-void Board::reduceCaptures(Man man, Superman superman, Color color, const Squares& captures)
+void Board::setCaptureSquares(Man man, Superman superman, Color color, const Squares& squares)
 {
 	assert(man.isValid());
 	assert(superman.isValid());
@@ -1583,15 +1435,15 @@ void Board::reduceCaptures(Man man, Superman superman, Color color, const Square
 
 	optimized = false;
 
-	movements[color][man]->reduceCaptures(captures);
+	movements[color][man]->setCaptureSquares(squares);
 
 	if (man != superman)
-		movements[color][superman]->reduceCaptures(captures);
+		movements[color][superman]->setCaptureSquares(squares);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures, const vector<Squares> *xsquares)
+void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures)
 {
 	/* -- Initialize information tied with each man -- */
 
@@ -1675,11 +1527,11 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 	/* -- Apply capture restrictions -- */
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		reduceCaptures(man, man, !color, captures);
+		setCaptureSquares(man, man, !color, captures);
 
 	/* -- Synchronize castling -- */
 
-	movements[color][King]->reduceCastling(*movements[color][KingRook], *movements[color][QueenRook]);
+	movements[color][King]->synchronizeCastling(*movements[color][KingRook], *movements[color][QueenRook]);
 
 	/* -- Apply path reductions and obstructions for each man -- */
 
@@ -1707,36 +1559,6 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 			reduce(man, man, color, men[man].msquares, men[man].availableMoves, men[man].availableCaptures);
 	}
 
-	/* -- Handle list of partially blocked squares for simple cases -- */
-
-	if (xsquares)
-	{
-		for (Pieces::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
-		{
-			if (partition->size() > 1)
-				continue;
-
-			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
-			{
-				Man man = target->man();
-
-				if (!target->isOccupied())
-					continue;
-
-				if (target->size() > 1)
-					continue;
-
-				const Destination *destination = &target->front();
-				if (destination->superman() != man)
-					continue;
-
-				/* -- Perform advanced reduction given list of partially blocked squares -- */
-				
-				movements[color][man]->reduce(*xsquares, destination->square(), men[man].availableMoves, men[man].availableCaptures);
-			}
-		}
-	}
-
 	/* -- Handle supermen that never came to be -- */
 
 	for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
@@ -1747,75 +1569,6 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 
 	if (!optimized)
 		optimize();
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Board::optimize(const Pieces& whitePieces, const Pieces& blackPieces, int availableWhiteMoves, int availableBlackMoves, int availableWhiteCaptures, int availableBlackCaptures)
-{
-	vector<Squares> xsquares;
-
-	/* -- List, for each man, the squares it has visited -- */
-	
-	for (Color color = FirstColor; color <= LastColor; color++)
-	{
-		const Pieces& pieces = (color == White) ? whitePieces : blackPieces;
-
-		for (Pieces::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
-		{
-			bool block = true;
-
-			/* -- Find out if this partition man induce blocks -- */
-
-			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
-			{
-				if (target->man() == UndefinedMan)
-					block = false;
-
-				if (!target->isOccupied())
-					block = false;
-
-				for (Target::const_iterator destination = target->begin(); destination != target->end(); destination++)
-					if (destination->superman() != destination->man())
-						block = false;
-			}
-
-			if (!block)
-				continue;
-
-			/* -- List squares for blocks -- */
-
-			for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
-			{
-				Squares squares = movements[color][target->man()]->squares();
-
-				/* -- If there is only one possible square, it will already have been blocked -- */
-
-				if (squares.count() <= 1)
-					continue;
-
-				/* -- If there is too many squares, there is a very low probability to block anything -- */
-
-				if (squares.count() >= 8)
-					continue;
-
-				/* -- Keep these squares -- */
-
-				xsquares.push_back(squares);
-			}
-		}
-	}
-
-	/* -- Optimize given partial blocks -- */
-
-	optimize(whitePieces, White, availableWhiteMoves, availableWhiteCaptures, &xsquares);
-	optimize(blackPieces, Black, availableBlackMoves, availableBlackCaptures, &xsquares);
-
-	/* -- Apply blocks -- */
-
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			movements[color][superman]->block(xsquares);
 }
 
 /* -------------------------------------------------------------------------- */

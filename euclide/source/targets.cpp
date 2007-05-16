@@ -7,19 +7,24 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Glyph glyph, Square square)
-	: _man(UndefinedMan), _glyph(glyph), _color(glyph.color()), _square(square)
+	: _man(UndefinedMan), _glyph(glyph), _color(glyph.color()), _square(square), _superman(UndefinedSuperman)
 {
 	assert(glyph.isValid());
 	assert(square.isValid());
 
-	_squares.set(square);
 	_men.set();
+	_supermen.set();
+	_squares.set(square);
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
 
 	menRequiredMoves.assign(0);
 	menRequiredCaptures.assign(0);
+
+	/* -- Reserve some memory -- */
+
+	reserve(glyph.isPawn() ? NumPawns : (NumMen - NumPawns + NumColumns * NumPawns));
 
 	/* -- List possible destinations -- */
 
@@ -52,6 +57,10 @@ Target::Target(Color color, const Squares& squares)
 
 	menRequiredMoves.assign(0);
 	menRequiredCaptures.assign(0);
+
+	/* -- Reserve memory -- */
+
+	reserve(squares.count() * (NumMen + NumPawns * NumPromotedMen));
 
 	/* -- List possible destinations -- */
 
@@ -125,11 +134,13 @@ int Target::updateRequiredCaptures()
 
 const Men& Target::updatePossibleMen()
 {
+	updatePossibleSupermen();
+
 	if (_man != UndefinedMan)
 		return _men;
 
 	_men.reset();
-	for (vector<Destination>::const_iterator destination = begin(); destination != end(); destination++)
+	for (Destinations::const_iterator destination = begin(); destination != end(); destination++)
 		_men.set(destination->man());
 
 	if (_men.count() == 1)
@@ -148,7 +159,7 @@ const Squares& Target::updatePossibleSquares()
 		return _squares;
 
 	_squares.reset();
-	for (vector<Destination>::const_iterator destination = begin(); destination != end(); destination++)
+	for (Destinations::const_iterator destination = begin(); destination != end(); destination++)
 		_squares.set(destination->square());
 
 	if (_squares.count() == 1)
@@ -157,6 +168,25 @@ const Squares& Target::updatePossibleSquares()
 				_square = square;
 
 	return _squares;
+}
+
+/* -------------------------------------------------------------------------- */
+
+const Supermen& Target::updatePossibleSupermen()
+{
+	if (_superman != UndefinedSuperman)
+		return _supermen;
+
+	_supermen.reset();
+	for (Destinations::const_iterator destination = begin(); destination != end(); destination++)
+		_supermen.set(destination->superman());
+
+	if (_supermen.count() == 1)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			if (_supermen[superman])
+				_superman = superman;
+
+	return _supermen;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -179,6 +209,7 @@ bool Target::setPossibleMen(const Men& men)
 	if (empty())
 		abort(NoSolution);
 
+	updatePossibleSupermen();
 	updatePossibleSquares();
 	updateRequiredMoves();
 	updateRequiredCaptures();
@@ -206,7 +237,7 @@ bool Target::setPossibleSquares(const Squares& squares)
 	if (empty())
 		abort(NoSolution);
 
-	updatePossibleMen();
+	updatePossibleSupermen();
 	updateRequiredMoves();
 	updateRequiredCaptures();
 
@@ -305,10 +336,16 @@ bool Target::operator==(const Target& target) const
 	if (_square != target.square())
 		return false;
 
-	if (_squares != target.squares())
+	if (_superman != target.superman())
 		return false;
 
 	if  (_men != target.men())
+		return false;
+
+	if (_squares != target.squares())
+		return false;
+
+	if (_supermen != target.supermen())
 		return false;
 
 	return true;

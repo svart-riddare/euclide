@@ -301,6 +301,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\source\moves.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\partitions.cpp"
 				>
 			</File>
@@ -335,6 +339,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\includes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\moves.h"
 				>
 			</File>
 			<File

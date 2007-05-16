@@ -12,11 +12,20 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * \class Pieces
+ * Static information (Partitions, Targets) associated with all pieces of a
+ * given color.
+ */
+
+/* -------------------------------------------------------------------------- */
+
 class Pieces : public Partitions
 {
 	public :
 		Pieces(const Problem& problem, Color color);
 		Pieces& operator+=(const Pieces& pieces);
+		~Pieces();
 		
 		bool analysePartitions();
 		bool analyseMoveConstraints(int availableMoves, bool quick = false);
@@ -42,14 +51,14 @@ class Pieces : public Partitions
 			{ return _color; }
 		
 	private :
-		array<Glyph, NumSquares> glyphs;
-		Color _color;
+		Color _color;            /**< Player color. */
 
+	private :
 		Captures captures;
 
 	private :
-		int requiredMoves;
-		int requiredCaptures;		
+		int requiredMoves;       /**< Total number of moves required to meet all targets for this player. */
+		int requiredCaptures;    /**< Total number of captures required to meet all targets for this player. */
 };
 
 /* -------------------------------------------------------------------------- */

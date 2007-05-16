@@ -8,6 +8,19 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * \class Destination
+ * Possible final square for a given piece, including eventual promotion type
+ * and whether it has been captured or not.
+ */
+
+/**
+ * \class Destinations
+ * List of possible \link Destination destinations\endlink.
+ */
+
+/* -------------------------------------------------------------------------- */
+
 class Destination
 {
 	public :
@@ -64,15 +77,15 @@ class Destination
 			{ return men[_man]; }
 
 	private :
-		Square _square;
-		Color _color;
-		Man _man;
-		Superman _superman;
-		bool _captured;
+		Square _square;          /**< Destination final square. */
+		Color _color;            /**< Piece's color. */
+		Man _man;                /**< Piece. */
+		Superman _superman;      /**< Promotion piece, if any. */
+		bool _captured;          /**< True if piece has been captured on destination square. */
 
 	private :
-		int requiredMoves;
-		int requiredCaptures;
+		int requiredMoves;       /**< Required moves for this destination. */
+		int requiredCaptures;    /**< Required captures for this destination. */
 };
 
 /* -------------------------------------------------------------------------- */

@@ -425,6 +425,7 @@ void Console::write(LPCTSTR string, int maxLength, bool fillWithBlanks, int x, i
 			text[k] = ' ';
 
 	write(text, x, y, color);
+	delete[] text;
 }
 
 /* -------------------------------------------------------------------------- */

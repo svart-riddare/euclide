@@ -58,11 +58,11 @@ bool solveProblems(Console& console, const char *file)
 
 /* -------------------------------------------------------------------------- */
 
-int main(int numArguments, char *arguments[], char *environment[])
+int _main(int numArguments, char *arguments[], char *environment[])
 {
 	Console console;
 	if (!console)
-		return -1;  // Il faudrait au moins un message d'erreur !
+		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
 
 	switch (numArguments)
 	{
@@ -90,13 +90,25 @@ int main(int numArguments, char *arguments[], char *environment[])
 			break;
 	}
 
-#ifndef NDEBUG
-	return _CrtDumpMemoryLeaks();
-#else
 	return 0;
-#endif
 }
-
 
 /* -------------------------------------------------------------------------- */
 
+int main(int numArguments, char *arguments[], char *environment[])
+{
+#ifdef DOS_EUCLIDE_CHECK_MEMORY_LEAKS
+	_CrtMemState state;
+	_CrtMemCheckpoint(&state);
+#endif
+
+	int result = _main(numArguments, arguments, environment);
+
+#ifdef DOS_EUCLIDE_CHECK_MEMORY_LEAKS
+	_CrtMemDumpAllObjectsSince(&state);
+#endif
+
+	return result;
+}
+
+/* -------------------------------------------------------------------------- */
