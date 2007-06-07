@@ -37,7 +37,8 @@ Target::Target(Glyph glyph, Square square)
 	for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
 		if (superman.glyph(_color) == glyph)
 			for (Man man = FirstPawn; man <= LastPawn; man++)
-				push_back(Destination(square, _color, man, superman, false));
+				if (superman.man() == man)
+					push_back(Destination(square, _color, man, superman, false));
 
 	/* -- Update list of possible men -- */
 
@@ -47,10 +48,11 @@ Target::Target(Glyph glyph, Square square)
 /* -------------------------------------------------------------------------- */
 
 Target::Target(Color color, const Squares& squares)
-	: _man(UndefinedMan), _glyph(NoGlyph), _color(color), _square(UndefinedSquare)
+	: _man(UndefinedMan), _glyph(NoGlyph), _color(color), _square(UndefinedSquare), _superman(UndefinedSuperman)
 {
-	_squares = squares;
 	_men.set();
+	_supermen.set();
+	_squares = squares;
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
@@ -78,7 +80,8 @@ Target::Target(Color color, const Squares& squares)
 
 		for (Man man = FirstPawn; man <= LastPawn; man++)
 			for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
-				push_back(Destination(square, color, man, superman, true));
+				if (superman.man() == man)
+					push_back(Destination(square, color, man, superman, true));
 	}
 }
 
