@@ -28,19 +28,49 @@ typedef enum
 
 typedef enum
 {
-	AQueen = NumMen, BQueen, CQueen, DQueen, EQueen, FQueen, GQueen, HQueen,
-	ARook, BRook, CRook, DRook, ERook, FRook, GRook, HRook,
-	ABishop, BBishop, CBishop, DBishop, EBishop, FBishop, GBishop, HBishop,
-	AKnight, BKnight, CKnight, DKnight, EKnight, FKnight, GKnight, HKnight,
+	UnpromotedKing = King, UnpromotedQueen = Queen, UnpromotedKingRook = KingRook, UnpromotedQueenBishop = QueenBishop, UnpromotedKingBishop = KingBishop, UnpromotedQueenKnight = QueenKnight, UnpromotedKingKnight = KingKnight,
+	UnpromotedAPawn = APawn, UnpromotedBPawn = BPawn, UnpromotedCPawn = CPawn, UnpromotedDPawn = DPawn, UnpromotedEPawn = EPawn, UnpromotedFPawn = FPawn, UnpromotedGPawn = GPawn, UnpromotedHPawn = HPawn,
+
+	PromotedAPawnToAQueen, PromotedBPawnToAQueen, PromotedCPawnToAQueen, PromotedDPawnToAQueen, PromotedEPawnToAQueen, PromotedFPawnToAQueen, PromotedGPawnToAQueen, PromotedHPawnToAQueen, 
+	PromotedAPawnToBQueen, PromotedBPawnToBQueen, PromotedCPawnToBQueen, PromotedDPawnToBQueen, PromotedEPawnToBQueen, PromotedFPawnToBQueen, PromotedGPawnToBQueen, PromotedHPawnToBQueen,
+	PromotedAPawnToCQueen, PromotedBPawnToCQueen, PromotedCPawnToCQueen, PromotedDPawnToCQueen, PromotedEPawnToCQueen, PromotedFPawnToCQueen, PromotedGPawnToCQueen, PromotedHPawnToCQueen, 
+	PromotedAPawnToDQueen, PromotedBPawnToDQueen, PromotedCPawnToDQueen, PromotedDPawnToDQueen, PromotedEPawnToDQueen, PromotedFPawnToDQueen, PromotedGPawnToDQueen, PromotedHPawnToDQueen, 
+	PromotedAPawnToEQueen, PromotedBPawnToEQueen, PromotedCPawnToEQueen, PromotedDPawnToEQueen, PromotedEPawnToEQueen, PromotedFPawnToEQueen, PromotedGPawnToEQueen, PromotedHPawnToEQueen, 
+	PromotedAPawnToFQueen, PromotedBPawnToFQueen, PromotedCPawnToFQueen, PromotedDPawnToFQueen, PromotedEPawnToFQueen, PromotedFPawnToFQueen, PromotedGPawnToFQueen, PromotedHPawnToFQueen, 
+	PromotedAPawnToGQueen, PromotedBPawnToGQueen, PromotedCPawnToGQueen, PromotedDPawnToGQueen, PromotedEPawnToGQueen, PromotedFPawnToGQueen, PromotedGPawnToGQueen, PromotedHPawnToGQueen, 
+	PromotedAPawnToHQueen, PromotedBPawnToHQueen, PromotedCPawnToHQueen, PromotedDPawnToHQueen, PromotedEPawnToHQueen, PromotedFPawnToHQueen, PromotedGPawnToHQueen, PromotedHPawnToHQueen, 
+	PromotedAPawnToARook, PromotedBPawnToARook, PromotedCPawnToARook, PromotedDPawnToARook, PromotedEPawnToARook, PromotedFPawnToARook, PromotedGPawnToARook, PromotedHPawnToARook, 
+	PromotedAPawnToBRook, PromotedBPawnToBRook, PromotedCPawnToBRook, PromotedDPawnToBRook, PromotedEPawnToBRook, PromotedFPawnToBRook, PromotedGPawnToBRook, PromotedHPawnToBRook,
+	PromotedAPawnToCRook, PromotedBPawnToCRook, PromotedCPawnToCRook, PromotedDPawnToCRook, PromotedEPawnToCRook, PromotedFPawnToCRook, PromotedGPawnToCRook, PromotedHPawnToCRook, 
+	PromotedAPawnToDRook, PromotedBPawnToDRook, PromotedCPawnToDRook, PromotedDPawnToDRook, PromotedEPawnToDRook, PromotedFPawnToDRook, PromotedGPawnToDRook, PromotedHPawnToDRook, 
+	PromotedAPawnToERook, PromotedBPawnToERook, PromotedCPawnToERook, PromotedDPawnToERook, PromotedEPawnToERook, PromotedFPawnToERook, PromotedGPawnToERook, PromotedHPawnToERook, 
+	PromotedAPawnToFRook, PromotedBPawnToFRook, PromotedCPawnToFRook, PromotedDPawnToFRook, PromotedEPawnToFRook, PromotedFPawnToFRook, PromotedGPawnToFRook, PromotedHPawnToFRook, 
+	PromotedAPawnToGRook, PromotedBPawnToGRook, PromotedCPawnToGRook, PromotedDPawnToGRook, PromotedEPawnToGRook, PromotedFPawnToGRook, PromotedGPawnToGRook, PromotedHPawnToGRook, 
+	PromotedAPawnToHRook, PromotedBPawnToHRook, PromotedCPawnToHRook, PromotedDPawnToHRook, PromotedEPawnToHRook, PromotedFPawnToHRook, PromotedGPawnToHRook, PromotedHPawnToHRook, 
+	PromotedAPawnToABishop, PromotedBPawnToABishop, PromotedCPawnToABishop, PromotedDPawnToABishop, PromotedEPawnToABishop, PromotedFPawnToABishop, PromotedGPawnToABishop, PromotedHPawnToABishop, 
+	PromotedAPawnToBBishop, PromotedBPawnToBBishop, PromotedCPawnToBBishop, PromotedDPawnToBBishop, PromotedEPawnToBBishop, PromotedFPawnToBBishop, PromotedGPawnToBBishop, PromotedHPawnToBBishop,
+	PromotedAPawnToCBishop, PromotedBPawnToCBishop, PromotedCPawnToCBishop, PromotedDPawnToCBishop, PromotedEPawnToCBishop, PromotedFPawnToCBishop, PromotedGPawnToCBishop, PromotedHPawnToCBishop, 
+	PromotedAPawnToDBishop, PromotedBPawnToDBishop, PromotedCPawnToDBishop, PromotedDPawnToDBishop, PromotedEPawnToDBishop, PromotedFPawnToDBishop, PromotedGPawnToDBishop, PromotedHPawnToDBishop, 
+	PromotedAPawnToEBishop, PromotedBPawnToEBishop, PromotedCPawnToEBishop, PromotedDPawnToEBishop, PromotedEPawnToEBishop, PromotedFPawnToEBishop, PromotedGPawnToEBishop, PromotedHPawnToEBishop, 
+	PromotedAPawnToFBishop, PromotedBPawnToFBishop, PromotedCPawnToFBishop, PromotedDPawnToFBishop, PromotedEPawnToFBishop, PromotedFPawnToFBishop, PromotedGPawnToFBishop, PromotedHPawnToFBishop, 
+	PromotedAPawnToGBishop, PromotedBPawnToGBishop, PromotedCPawnToGBishop, PromotedDPawnToGBishop, PromotedEPawnToGBishop, PromotedFPawnToGBishop, PromotedGPawnToGBishop, PromotedHPawnToGBishop, 
+	PromotedAPawnToHBishop, PromotedBPawnToHBishop, PromotedCPawnToHBishop, PromotedDPawnToHBishop, PromotedEPawnToHBishop, PromotedFPawnToHBishop, PromotedGPawnToHBishop, PromotedHPawnToHBishop, 
+	PromotedAPawnToAKnight, PromotedBPawnToAKnight, PromotedCPawnToAKnight, PromotedDPawnToAKnight, PromotedEPawnToAKnight, PromotedFPawnToAKnight, PromotedGPawnToAKnight, PromotedHPawnToAKnight, 
+	PromotedAPawnToBKnight, PromotedBPawnToBKnight, PromotedCPawnToBKnight, PromotedDPawnToBKnight, PromotedEPawnToBKnight, PromotedFPawnToBKnight, PromotedGPawnToBKnight, PromotedHPawnToBKnight,
+	PromotedAPawnToCKnight, PromotedBPawnToCKnight, PromotedCPawnToCKnight, PromotedDPawnToCKnight, PromotedEPawnToCKnight, PromotedFPawnToCKnight, PromotedGPawnToCKnight, PromotedHPawnToCKnight, 
+	PromotedAPawnToDKnight, PromotedBPawnToDKnight, PromotedCPawnToDKnight, PromotedDPawnToDKnight, PromotedEPawnToDKnight, PromotedFPawnToDKnight, PromotedGPawnToDKnight, PromotedHPawnToDKnight, 
+	PromotedAPawnToEKnight, PromotedBPawnToEKnight, PromotedCPawnToEKnight, PromotedDPawnToEKnight, PromotedEPawnToEKnight, PromotedFPawnToEKnight, PromotedGPawnToEKnight, PromotedHPawnToEKnight, 
+	PromotedAPawnToFKnight, PromotedBPawnToFKnight, PromotedCPawnToFKnight, PromotedDPawnToFKnight, PromotedEPawnToFKnight, PromotedFPawnToFKnight, PromotedGPawnToFKnight, PromotedHPawnToFKnight, 
+	PromotedAPawnToGKnight, PromotedBPawnToGKnight, PromotedCPawnToGKnight, PromotedDPawnToGKnight, PromotedEPawnToGKnight, PromotedFPawnToGKnight, PromotedGPawnToGKnight, PromotedHPawnToGKnight, 
+	PromotedAPawnToHKnight, PromotedBPawnToHKnight, PromotedCPawnToHKnight, PromotedDPawnToHKnight, PromotedEPawnToHKnight, PromotedFPawnToHKnight, PromotedGPawnToHKnight, PromotedHPawnToHKnight, 
 
 	NumSupermen, UndefinedSuperman = -1,
-	FirstSuperman = King, LastSuperman = HKnight,
-	
-	FirstPromotedMan = AQueen, LastPromotedMan = HKnight, NumPromotedMen = LastPromotedMan - FirstPromotedMan + 1,
-	FirstPromotedQueen = AQueen, LastPromotedQueen = HQueen, NumPromotedQueens = LastPromotedQueen - FirstPromotedQueen + 1,
-	FirstPromotedRook = ARook, LastPromotedRook = HRook, NumPromotedRooks = LastPromotedRook - FirstPromotedRook + 1,
-	FirstPromotedBishop = ABishop, LastPromotedBishop = HBishop, NumPromotedBishops = LastPromotedBishop - FirstPromotedBishop + 1,
-	FirstPromotedKnight = AKnight, LastPromotedKnight = HKnight, NumPromotedKnights = LastPromotedKnight - FirstPromotedKnight + 1
+	FirstSuperman = FirstMan, LastSuperman = NumSupermen - 1,
+	FirstPromotedMan = NumMen, LastPromotedMan = LastSuperman, NumPromotedMen = LastPromotedMan - FirstPromotedMan + 1,
+	FirstPromotedQueen = PromotedAPawnToAQueen, LastPromotedQueen = PromotedHPawnToHQueen, NumPromotedQueens = LastPromotedQueen - FirstPromotedQueen - 1,
+	FirstPromotedRook = PromotedAPawnToARook, LastPromotedRook = PromotedHPawnToHRook, NumPromotedRooks = LastPromotedRook - FirstPromotedRook - 1,
+	FirstPromotedBishop = PromotedAPawnToABishop, LastPromotedBishop = PromotedHPawnToHBishop, NumPromotedBishops = LastPromotedBishop - FirstPromotedBishop - 1,
+	FirstPromotedKnight = PromotedAPawnToAKnight, LastPromotedKnight = PromotedHPawnToHKnight, NumPromotedKnights = LastPromotedKnight - FirstPromotedKnight - 1
 	
 } superman_t;
 
@@ -177,6 +207,14 @@ class Superman
 			return (man_t)superman;
 		}
 
+		inline Man man() const
+		{
+			if (superman >= FirstPromotedMan)
+				return (man_t)(FirstPawn + ((superman - FirstPromotedMan) % NumPawns));
+
+			return (man_t)superman;
+		}
+
 		/* ---------------------------------- */
 
 		inline Superman operator++(int)
@@ -207,8 +245,36 @@ class Superman
 				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
 				{ WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn }, { WhitePawn, BlackPawn },
 				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen }, { WhiteQueen, BlackQueen },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
+				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
 				{ WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook }, { WhiteRook, BlackRook },
 				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop }, { WhiteBishop, BlackBishop },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
+				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight },
 				{ WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }, { WhiteKnight, BlackKnight }
 			};
 
@@ -224,10 +290,38 @@ class Superman
 			{
 				{ E1, E8 }, { D1, D8 }, { A1, A8 }, { H1, H8 }, { C1, C8 }, { F1, F8 }, { B1, B8 }, { G1, G8 },
 				{ A2, A7 }, { B2, B7 }, { C2, C7 }, { D2, D7 }, { E2, E7 }, { F2, F7 }, { G2, G7 }, { H2, H7 },
-				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
-				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
-				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 },
-				{ A8, A1 }, { B8, B1 }, { C8, C1 }, { D8, D1 }, { E8, E1 }, { F8, F1 }, { G8, G1 }, { H8, H1 }
+				{ A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 },
+				{ B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 },
+				{ C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 },
+				{ D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 },
+				{ E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 },
+				{ F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 },
+				{ G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 },
+				{ H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 },
+				{ A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 },
+				{ B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 },
+				{ C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 },
+				{ D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 },
+				{ E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 },
+				{ F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 },
+				{ G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 },
+				{ H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 },
+				{ A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 },
+				{ B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 },
+				{ C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 },
+				{ D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 },
+				{ E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 },
+				{ F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 },
+				{ G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 },
+				{ H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 },
+				{ A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 }, { A8, A1 },
+				{ B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 }, { B8, B1 },
+				{ C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 }, { C8, C1 },
+				{ D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 }, { D8, D1 },
+				{ E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 }, { E8, E1 },
+				{ F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 }, { F8, F1 },
+				{ G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 }, { G8, G1 },
+				{ H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 }, { H8, H1 },
 			};
 
 			assert(color.isValid());

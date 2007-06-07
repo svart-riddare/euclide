@@ -12,6 +12,7 @@ Destination::Destination(Square square, Color color, Man man, Superman superman,
 	assert(color.isValid());
 	assert(man.isValid());
 	assert(superman.isValid());
+	assert(superman.man() == man);
 
 	requiredMoves = 0;
 	requiredCaptures = 0;
