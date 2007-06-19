@@ -20,6 +20,20 @@ Destination::Destination(Square square, Color color, Man man, Superman superman,
 
 /* -------------------------------------------------------------------------- */
 
+Destination::Destination(const Destination& destination)
+{
+	_square = destination.square();
+	_color = destination.color();
+	_man = destination.man();
+	_superman = destination.superman();
+	_captured = destination.captured();
+
+	requiredMoves = destination.getRequiredMoves();
+	requiredCaptures = destination.getRequiredCaptures();
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Destination::computeRequiredMoves(const Board& board)
 {
 	int distance = board.distance(_man, _superman, _color, _square);
