@@ -25,6 +25,7 @@ class Destination
 {
 	public :
 		Destination(Square square, Color color, Man man, Superman superman, bool captured);
+		Destination(const Destination& destination);
 
 		int computeRequiredMoves(const Board& board);
 		int computeRequiredCaptures(const Board& board);
