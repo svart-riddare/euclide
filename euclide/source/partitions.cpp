@@ -255,7 +255,11 @@ int Partition::computeRequiredMoves(const Board& board)
 	for (iterator target = begin(); target != end(); target++)
 		assignedMoves += target->computeRequiredMoves(board);
 
-	return maximize(requiredMoves, assignedMoves);
+	maximize(requiredMoves, assignedMoves);
+	if (requiredMoves >= infinity)
+		abort(NoSolution);
+
+	return requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -267,7 +271,11 @@ int Partition::computeRequiredCaptures(const Board& board)
 	for (iterator target = begin(); target != end(); target++)
 		assignedCaptures += target->computeRequiredCaptures(board);
 
-	return maximize(requiredCaptures, assignedCaptures);
+	maximize(requiredCaptures, assignedCaptures);
+	if (requiredCaptures >= infinity)
+		abort(NoSolution);
+
+	return requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -282,6 +290,8 @@ int Partition::updateRequiredMoves(bool recursive)
 		assignedMoves += recursive ? target->updateRequiredMoves() : target->getRequiredMoves();
 
 	maximize(requiredMoves, assignedMoves);
+	if (requiredMoves >= infinity)
+		abort(NoSolution);
 
 	/* -- Sum moves required for each man -- */
 
@@ -299,6 +309,9 @@ int Partition::updateRequiredMoves(bool recursive)
 	}
 
 	maximize(this->requiredMoves, requiredMoves);
+	if (this->requiredMoves >= infinity)
+		abort(NoSolution);
+
 	return this->requiredMoves;
 }
 
@@ -314,6 +327,8 @@ int Partition::updateRequiredCaptures(bool recursive)
 		assignedCaptures += recursive ? target->updateRequiredCaptures() : target->getRequiredCaptures();
 
 	maximize(requiredCaptures, assignedCaptures);
+	if (requiredCaptures >= infinity)
+		abort(NoSolution);
 
 	/* -- Sum captures required for each man -- */
 
@@ -331,6 +346,9 @@ int Partition::updateRequiredCaptures(bool recursive)
 	}
 
 	maximize(this->requiredCaptures, requiredCaptures);
+	if (this->requiredCaptures >= infinity)
+		abort(NoSolution);
+
 	return this->requiredCaptures;
 }
 

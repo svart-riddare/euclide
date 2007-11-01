@@ -32,12 +32,17 @@ using std::pair;
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 #include <boost/logic/tribool.hpp>
+#include <boost/tuple/tuple.hpp>
 
 using boost::ref;
 using boost::cref;
 
 using boost::logic::tribool;
 using boost::logic::indeterminate;
+
+using boost::tuples::get;
+using boost::tuples::tuple;
+using boost::tuples::make_tuple;
 
 /* -------------------------------------------------------------------------- */
 
