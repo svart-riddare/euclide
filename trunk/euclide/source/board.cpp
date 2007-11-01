@@ -138,6 +138,13 @@ void Obstructions::optimize()
 }
 
 /* -------------------------------------------------------------------------- */
+
+int Obstructions::numObstructions(bool soft) const
+{
+	return soft ? numSoftObstructions : numHardObstructions;
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 Movements::Movements(Superman superman, Color color)
@@ -421,6 +428,129 @@ void Movements::computeInitialDistances()
 void Movements::computeInitialCaptures()
 {
 	computeForwardCaptures(initial, _captures);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::updateInitialDistances()
+{
+	int distances[NumSquares];
+
+	computeForwardDistances(initial, distances);
+	updateInitialDistances(distances);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::updateInitialCaptures()
+{
+	int captures[NumSquares];
+
+	computeForwardCaptures(initial, captures);
+	updateInitialCaptures(captures);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::updateInitialDistances(const int distances[NumSquares])
+{
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		maximize(this->distances[square], distances[square]);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::updateInitialCaptures(const int captures[NumSquares])
+{
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		maximize(this->_captures[square], captures[square]);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Movements::obstrusive(const vector<Square>& squares, Glyph glyph) const
+{
+	bool obstrusive = false;
+
+	for (vector<Square>::const_iterator square = squares.begin(); square != squares.end(); square++)
+		if (obstructions[*square][glyph]->numObstructions(false))
+			obstrusive = true;
+
+	return obstrusive;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::computeForwardDistances(Square square, const vector<Square>& obstructions, Glyph glyph, int distances[NumSquares])
+{
+	/* -- Start by blocking first square -- */
+
+	if (obstructions.size() > 0)
+		block(obstructions[0], glyph, false);
+
+	/* -- Compute initial distances -- */
+
+	computeForwardDistances(square, distances);
+
+	/* -- Unblock first square -- */
+
+	if (obstructions.size() > 0)
+		unblock(obstructions[0], glyph, false);
+
+	/* -- Perhaps we are done ? -- */
+
+	if ((obstructions.size() < 2) || !obstrusive(obstructions, glyph))
+		return;
+
+	/* -- List of squares, ordered by distance -- */
+
+	array<Square, NumSquares> squares;
+	for (Square square = FirstSquare; square < NumSquares; square++)
+		squares[square] = square;
+
+	std::sort(squares.begin(), squares.end(), _smaller<int, NumSquares>(distances));
+
+	/* -- Block each square of the obstructing path and refine distances -- */
+
+	for (int obstruction = 1; obstruction < (int)obstructions.size(); obstruction++)
+	{
+		block(obstructions[obstruction], glyph, false);
+
+		/* -- Handle each square, by increasing distance -- */
+
+		for (int s = 0; s < NumSquares; s++)
+		{
+			Square from = squares[s];
+			bool modified = false;
+
+			/* -- Handle every possible immediate destination -- */
+
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+			{
+				if (movements[from][to])
+					continue;
+
+				int distance = distances[from] + 1;
+			
+				/* -- Is it a quicker path ? -- */
+
+				if (distance > distances[to])
+					continue;
+
+				distances[to] = distance;
+				modified = true;
+			}
+
+			/* -- Sort array of squares given new distances -- */
+
+			if (modified)
+				std::sort(squares.begin() + s, squares.end(), _smaller<int, NumSquares>(distances));
+		}
+
+		/* -- Prepare for next iteration -- */
+
+		unblock(obstructions[obstruction], glyph, false);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -768,6 +898,73 @@ int Movements::getCaptures(Square from, Square to, vector<Squares>& captures) co
 
 /* -------------------------------------------------------------------------- */
 
+bool Movements::getUniquePath(Square from, Square to, vector<Square>& squares) const
+{
+	assert(from.isValid());
+	assert(to.isValid());
+
+	/* -- Check castling -- */
+
+	if (from == initial)
+		if (indeterminate(kcastling) || indeterminate(qcastling))
+			return false;
+		
+	/* -- Initialize list of squares -- */
+
+	squares.clear();
+
+	if (from == initial) 
+	{
+		if (kcastling)
+			squares.push_back(ksquare);
+		else
+		if (qcastling)
+			squares.push_back(qsquare);
+	}
+
+	squares.push_back(from);
+
+	/* -- Follow path(s) and build square lite -- */
+
+	while (squares.size() <= NumSquares)
+	{
+		Square current = squares.back();
+		Square next = UndefinedSquare;
+
+		/* -- Find immediate destinations from current square -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			if (movements[current][square])
+				continue;
+
+			/* -- Return if path is not unique -- */
+
+			if (next != UndefinedSquare)
+				return false;
+
+			next = square;
+		}
+
+		/* -- Return if we can go elsewere than our target -- */
+
+		if (current == to)
+			return (next == UndefinedSquare) ? true : false;
+
+		/* -- Add square to path -- */
+
+		assert(next != UndefinedSquare);
+		squares.push_back(next);		
+	}
+
+	/* -- We should not be here -- */
+
+	assert(squares.back() == to);
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Movements::block(Squares squares, Glyph glyph)
 {
 	assert(!squares.none());
@@ -858,8 +1055,8 @@ void Movements::optimize()
 
 	/* -- Recompute initial distances and captures -- */
 
-	computeInitialDistances();
-	computeInitialCaptures();
+	updateInitialDistances();
+	updateInitialCaptures();
 
 	/* -- Tabulate list of possible destination squares -- */
 
@@ -869,6 +1066,38 @@ void Movements::optimize()
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (distances[square] < infinity)
 			_squares[square] = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Movements::optimize(const vector<tuple<Man, Color, vector<Square> > >& paths)
+{
+	if (!possibilities)
+		return;
+
+	/* -- For each given path -- */
+
+	for (vector<tuple<Man, Color, vector<Square> > >::const_iterator path = paths.begin(); path != paths.end(); path++)
+	{
+		Man man = get<0>(*path);
+		Color color = get<1>(*path);
+		const vector<Square>& squares = get<2>(*path);
+
+		/* -- Let's not block ourself -- */
+
+		if ((man == this->superman) && (color == this->color))
+			continue;
+
+		/* -- Compute distances taking into account the path of another piece -- */
+
+		int distances[NumSquares];
+		computeForwardDistances(initial, squares, man.glyph(color), distances);
+		updateInitialDistances(distances);
+	}
+
+	/* -- Finish optimization -- */
+
+	optimize();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1231,6 +1460,34 @@ int Board::getCaptures(Man man, Superman superman, Color color, Square from, Squ
 
 /* -------------------------------------------------------------------------- */
 
+bool Board::getUniquePath(Man man, Superman superman, Color color, Square to, vector<Square>& squares) const
+{
+	assert(man.isValid());
+	assert(superman.isValid());
+	assert(color.isValid());
+	assert(movements[color][superman] != NULL);
+
+	/* -- No promotion case -- */
+
+	if (man == superman)
+		return movements[color][man]->getUniquePath(man.square(color), to, squares);
+
+	/* -- Handle promotion -- */
+
+	Square square = superman.square(color);
+	vector<Square> _squares;
+
+	if (!movements[color][man]->getUniquePath(man.square(color), square, squares))
+		return false;
+	if (!movements[color][superman]->getUniquePath(square, to, _squares))
+		return false;
+
+	squares.insert(squares.end(), _squares.begin(), _squares.end());
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Board::block(Superman man, Color color, Square square, bool captured)
 {
 	assert(man.isValid());
@@ -1477,7 +1734,7 @@ void Board::setCaptureSquares(Man man, Superman superman, Color color, const Squ
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures)
+void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMoves, int availableCaptures)
 {
 	/* -- Initialize information tied with each man -- */
 
@@ -1593,19 +1850,67 @@ void Board::optimize(const Pieces& pieces, Color color, int availableMoves, int 
 	/* -- Complete optimization -- */
 
 	if (!optimized)
-		optimize();
+		optimize(color);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimize()
+void Board::optimizeLevelTwo(const Pieces& whitePieces, const Pieces& blackPieces)
+{
+	vector<tuple<Man, Color, vector<Square> > > paths;
+
+	/* -- List men that were not captured and have a definite target -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		const Pieces& pieces = (color == White) ? whitePieces : blackPieces;
+
+		for (Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+		{
+			Targets::const_iterator target = partition->begin();
+
+			if (partition->size() > 1)
+				continue;
+
+			if (!target->alive())
+				continue;
+
+			if (target->man() == UndefinedMan)
+				continue;
+
+			if (target->superman() == UndefinedSuperman)
+				continue;
+			
+			if (target->square() == UndefinedSquare)
+				continue;
+
+			/* -- Is there a definite path to reach this target ? -- */
+
+			vector<Square> path;
+			if (getUniquePath(target->man(), target->superman(), color, target->square(), path))
+				if (path.size() > 1)
+					paths.push_back(make_tuple(target->man(), color, path));
+		}
+	}
+
+	/* -- Use the list of well determined paths to find eventual obstructions -- */
+
+	if (!paths.empty())
+		for (Color color = FirstColor; color <= LastColor; color++)
+			for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+				if (movements[color][superman])
+					movements[color][superman]->optimize(paths);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Board::optimize(Color color)
 {
 	optimized = true;
 
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			if (movements[color][superman])
-				movements[color][superman]->optimize();
+	for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+		if (movements[color][superman])
+			movements[color][superman]->optimize();
 }
 
 /* -------------------------------------------------------------------------- */

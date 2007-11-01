@@ -147,8 +147,10 @@ void Euclide::analyseBasicConstraints()
 
 		/* -- Optimize board movements -- */
 
-		board->optimize(*whitePieces, White, problem->moves(White), problem->captures(White));
-		board->optimize(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+		board->optimizeLevelOne(*whitePieces, White, problem->moves(White), problem->captures(White));
+		board->optimizeLevelOne(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+
+		board->optimizeLevelTwo(*whitePieces, *blackPieces);
 
 		/* -- Output current deductions -- */
 	

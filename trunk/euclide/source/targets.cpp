@@ -212,7 +212,7 @@ bool Target::setPossibleMen(const Men& men)
 	if (empty())
 		abort(NoSolution);
 
-	updatePossibleSupermen();
+	updatePossibleMen();
 	updatePossibleSquares();
 	updateRequiredMoves();
 	updateRequiredCaptures();
@@ -240,7 +240,8 @@ bool Target::setPossibleSquares(const Squares& squares)
 	if (empty())
 		abort(NoSolution);
 
-	updatePossibleSupermen();
+	updatePossibleMen();
+	updatePossibleSquares();
 	updateRequiredMoves();
 	updateRequiredCaptures();
 

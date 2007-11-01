@@ -47,6 +47,9 @@ class Obstructions
 
 		void optimize();
 
+	public :
+		int numObstructions(bool soft) const;
+
 	private :
 		int numHardObstructions;    /**< Number of obstructions, except moves by a piece of opposite color that ends on the obstruction square (thus allowing capture of the blocking figure). */
 		int numSoftObstructions;    /**< Total number of obstructions. */
@@ -72,6 +75,7 @@ class Movements
 		int captures(Square from, Square to) const;
 
 		int getCaptures(Square from, Square to, vector<Squares>& captures) const;
+		bool getUniquePath(Square from, Square to, vector<Square>& squares) const;
 
 		void block(Squares squares, Glyph glyph);
 		void block(Square square, Glyph glyph, bool captured);
@@ -84,6 +88,9 @@ class Movements
 		void synchronizeCastling(Movements& krook, Movements& qrook);
 
 		void optimize();
+		void optimize(const vector<tuple<Man, Color, vector<Square> > >& paths);
+
+		bool obstrusive(const vector<Square>& squares, Glyph glyph) const;
 
 	public :
 		int moves() const;
@@ -93,8 +100,16 @@ class Movements
 		void computeInitialDistances();
 		void computeInitialCaptures();
 
+		void updateInitialDistances();
+		void updateInitialCaptures();
+
+		void updateInitialDistances(const int distances[NumSquares]);
+		void updateInitialCaptures(const int captures[NumSquares]);
+
 		void computeForwardDistances(Square square, int distances[NumSquares]) const;
 		void computeForwardCaptures(Square square, int captures[NumSquares]) const;
+
+		void computeForwardDistances(Square square, const vector<Square>& obstructions, Glyph glyph, int distances[NumSquares]);
 
 		void computeReverseDistances(Square square, int distances[NumSquares]) const;
 		void computeReverseCaptures(Square square, int captures[NumSquares]) const;
@@ -151,6 +166,8 @@ class Board
 		int getCaptures(Glyph glyph, Square from, Square to, vector<Squares>& captures) const;
 		int getCaptures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const;
 
+		bool getUniquePath(Man man, Superman superman, Color color, Square to, vector<Square>& squares) const;
+
 		void block(Superman superman, Color color, Square square, bool captured = false);
 		void unblock(Superman superman, Color color, Square square, bool captured = false);
 		void transblock(Superman superman, Color color, Square from, Square to, bool captured = false);
@@ -163,8 +180,9 @@ class Board
 		
 		void setCaptureSquares(Man man, Superman superman, Color color, const Squares& squares);
 		
-		void optimize(const Pieces& pieces, Color color, int availableMoves, int availableCaptures);
-		void optimize();
+		void optimizeLevelOne(const Pieces& pieces, Color color, int availableMoves, int availableCaptures);
+		void optimizeLevelTwo(const Pieces& whitePieces, const Pieces& blackPieces);
+		void optimize(Color color);
 
 	private :
 		Movements *movements[NumColors][NumSupermen];    /**< Movement descriptors for each piece type. */
