@@ -120,8 +120,8 @@ void Console::clear()
 	int height = initialState.dwSize.Y;
 
 	DWORD written;
-	FillConsoleOutputAttribute(output, colors::standard, width * height, cursor, &written);
 	FillConsoleOutputCharacter(output, ' ', width * height, cursor, &written);
+	FillConsoleOutputAttribute(output, colors::standard, width * height, cursor, &written);
 
 	SetConsoleTextAttribute(output, initialState.wAttributes);
 	SetConsoleCursorPosition(output, cursor);
