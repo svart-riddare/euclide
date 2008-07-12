@@ -922,7 +922,8 @@ bool Movements::getUniquePath(Square from, Square to, vector<Square>& squares) c
 			squares.push_back(qsquare);
 	}
 
-	squares.push_back(from);
+	if (squares.empty())
+		squares.push_back(from);
 
 	/* -- Follow path(s) and build square lite -- */
 
@@ -1029,14 +1030,6 @@ void Movements::optimize()
 			if (movements[from][to] == 0)
 				possibilities++;
 
-	/* -- Handle castling -- */
-
-	if (indeterminate(kcastling) && (possibilities > 0))
-		if (!mayLeave(ksquare))
-			kcastling = false;
-
-	if (indeterminate(qcastling) && (possibilities > 0))
-		if (!mayLeave(qsquare))
 			qcastling = false;
 
 	if ((indeterminate(kcastling) || indeterminate(qcastling)) && (possibilities > 0))
@@ -1046,13 +1039,6 @@ void Movements::optimize()
 			else
 			if (!kcastling || !mayLeave(ksquare))
 				qcastling = true;
-
-	if (kcastling)
-		qcastling = false;
-
-	if (qcastling)
-		kcastling = false;
-
 	/* -- Recompute initial distances and captures -- */
 
 	updateInitialDistances();
@@ -1108,7 +1094,15 @@ void Movements::reduce(Square square, int availableMoves, int availableCaptures)
 	assert(availableMoves >= 0);
 	assert(availableCaptures >= 0);
 
-	/* -- If we can't move, there's nothing to do -- */
+	/* -- Handle castling -- */
+
+	if (!possibilities && indeterminate(kcastling))
+		kcastling = (square == ksquare) ? true : false;
+
+	if (!possibilities && indeterminate(qcastling))
+		qcastling = (square == qsquare) ? true : false;
+
+	/* -- If we can't move, we're done -- */
 
 	if (!possibilities)
 		return;
@@ -1129,6 +1123,20 @@ void Movements::reduce(Square square, int availableMoves, int availableCaptures)
 				if ((distances[from] + 1 + rdistances[to]) > availableMoves)
 					movements[from][to] = infinity;
 
+	/* -- Handle castling -- */
+
+	if (indeterminate(kcastling) || indeterminate(qcastling))
+	{
+		if ((square != initial) && !mayLeave(initial))
+		{
+			if ((square != qsquare) && !mayLeave(qsquare))
+				kcastling = true;
+
+			if ((square != ksquare) && !mayLeave(ksquare))
+				qcastling = true;
+		}
+	}
+
 	/* -- Eliminate unused movements given number of available captures -- */
 
 	if (hybrid)
@@ -1146,6 +1154,16 @@ void Movements::reduce(const Squares& squares, int availableMoves, int available
 	assert(!squares.none());
 	assert(availableMoves >= 0);
 	assert(availableCaptures >= 0);
+
+	/* -- Handle castling -- */
+
+	if (!possibilities && indeterminate(kcastling))
+		if ((!squares[initial] && !squares[qsquare]) || !squares[ksquare])
+			kcastling = squares[ksquare];
+
+	if (!possibilities && indeterminate(qcastling))
+		if ((!squares[initial] && !squares[ksquare]) || !squares[qsquare])
+			qcastling = squares[qsquare];
 
 	/* -- If we can't move, there's nothing to do -- */
 
@@ -1198,6 +1216,21 @@ void Movements::reduce(const Squares& squares, int availableMoves, int available
 			if (movements[from][to] == 0)
 				if ((distances[from] + 1 + rdistances[to]) > availableMoves)
 					movements[from][to] = infinity;
+
+	/* -- Handle castling -- */
+
+	if (indeterminate(kcastling) || indeterminate(qcastling))
+	{
+		if (!squares[initial] && !mayLeave(initial))
+		{
+			if (!squares[qsquare] && !mayLeave(qsquare))
+				kcastling = true;
+
+			if (!squares[ksquare] && !mayLeave(ksquare))
+				qcastling = true;
+		}
+	}
+
 
 	/* -- Eliminate unused movements given number of available captures -- */
 
