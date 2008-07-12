@@ -133,15 +133,20 @@ bool Console::wait()
 {
 	write(strings::load(strings::PressAnyKey), width - 1, true, 0, height - 1, colors::question);
 
-	DWORD read;
-	TCHAR characters[2];
 	FlushConsoleInputBuffer(input);
-	WaitForSingleObject(input, INFINITE);
-	ReadConsole(input, characters, 1, &read, NULL);
+
+	DWORD records;
+	INPUT_RECORD record;
+	record.EventType = 0;
+
+	while (record.EventType != KEY_EVENT)
+		if (!ReadConsoleInput(input, &record, 1, &records))
+			return !(abort = true);
+	
+	if (record.Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
+		abort = true;
 
 	write(_T(""), width - 1, true, 0, height - 1, colors::standard);
-	
-	abort = ((*characters == VK_ESCAPE) || (*characters == 'x') || (*characters == 'X')) ? true : false;
 	return !abort;
 }
 
