@@ -1030,15 +1030,6 @@ void Movements::optimize()
 			if (movements[from][to] == 0)
 				possibilities++;
 
-			qcastling = false;
-
-	if ((indeterminate(kcastling) || indeterminate(qcastling)) && (possibilities > 0))
-		if (!mayLeave(initial) && ((possibilities > 1) || !mayReach(initial)))
-			if (!qcastling || !mayLeave(qsquare) && !movements[ksquare][initial])
-				kcastling = true;
-			else
-			if (!kcastling || !mayLeave(ksquare))
-				qcastling = true;
 	/* -- Recompute initial distances and captures -- */
 
 	updateInitialDistances();
