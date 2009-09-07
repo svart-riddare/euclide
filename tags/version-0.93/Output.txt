@@ -1,0 +1,22 @@
+
+#############################################
+## Euclide 0.92, ©2000-2002 Étienne Dupuis ##
+#############################################
+
+Problème analysé :
+	t1f2tc1/ppppfpr1/3p2cd/7p/8/8/PPPPPPP1/TCFDRFC1
+	24
+
+
+Solution #1 :
+---------------------------------------------------------------------
+ 1. Ph2-h4   Cb8-c6     2. Th1-h3   Cc6-e5     3. Th3-d3   Ce5-g6    
+ 4. Td3-d6   Pe7xd6     5. Ph4-h5   Dd8-g5     6. Ph5-h6   Cg8-f6    
+ 7. Ph6xg7   Ph7-h5     8. Pg7-g8=T Dg5-h6     9. Tg8-g7   Ff8-e7    
+10. Tg7-h7   0-0       11. Th7-h8   Rg8-g7    12. Th8-g8   Cf6xg8    
+
+
+Verdict :
+	Solution unique
+	7.69 secondes
+
