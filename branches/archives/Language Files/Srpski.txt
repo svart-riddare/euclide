@@ -1,0 +1,58 @@
+ PSLLTDK
+,
+poteza
+Pritisni neku tipku za nastavak...
+Interna greska! Molimo Vas da kontaktirate autora.
+Analiza je zavrsena.
+Resenje nije pronadjeno
+Jedno resenje
+Jedinstveno resenje
+Resenja
+Razlicita resenja
+Problem ima nuzresenja
+
+Analiza pesacke strukture
+Brojanje figura
+Oznacavanje mrtvih polja
+Analiza kretanja
+Pronalazenje putanje
+Analiza lovca
+Odbacivanje putanja
+Brza analiza uzimanja 
+Pronalazenje putanja za uzete figure
+Analiza rokade
+Analiza promovisanih figura
+Generisanje permutacija
+Priprema za pretrazivanje svih mogucih strategija 
+Istrazivanje strategije
+Analiza strategije
+Ponovno pokretanje analiza
+
+Previse pesaka!
+Previse figura!
+Previse promovisanih figura!
+Svaka strana mora imati samo jednog kralja!
+Ilegalna pesacka struktura.
+Jezicka nejasnoca prilikom dekodiranja EPD stringa.
+Greska u EPD stringu.
+Nedostatak u broju poteza da bi se ostvarila pozicija. 
+Pojedine figure ne mogu biti tamo gde jesu.
+Pojedina uzimanja figura se ne mogu objasniti.
+Pojedine promocije figura se ne mogu objasniti.
+Ovaj problem nema resenja!
+Analiza je prekinuta od strane korisnika.
+Greska u citanju!
+[Euclide.exe] Neispravnost argumenata u komandnoj liniji.
+Nije pronadjen problem.
+Dokazna partija je previse dugacka za analizu.
+
+Analizirao se problem:
+Resenje
+Rezultat:
+sekundi
+Analiza je prekinuta
+<Preskocena> Strategija
+
+Analiza je pocela od strategije
+
+Zoran Sibinovic
