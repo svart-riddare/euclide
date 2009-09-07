@@ -219,7 +219,7 @@ bool WaitForInput()
 
 /*************************************************************/
 
-bool IsEscape()
+int IsEscape()
 {
 	DWORD Events = 0;
 	GetNumberOfConsoleInputEvents(InputConsole, &Events);
@@ -234,15 +234,20 @@ bool IsEscape()
 				if (InputRecords[k].Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE) {
 					OutputMessageErreur(MESSAGE_UTILISATEUR);
 					delete[] InputRecords;
-					return true;
+					return ESCAPE_ESCAPE;
 				}
+				
+				if ((InputRecords[k].Event.KeyEvent.wVirtualKeyCode == 's') || (InputRecords[k].Event.KeyEvent.wVirtualKeyCode == 'S')) {
+					delete[] InputRecords;
+					return ESCAPE_SKIP;
+				}				
 			}
 		}
 
 		delete[] InputRecords;
 	}
 
-	return false;
+	return ESCAPE_NO;
 }
 
 /*************************************************************/

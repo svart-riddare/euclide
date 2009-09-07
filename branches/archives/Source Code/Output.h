@@ -98,7 +98,11 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie);
 void OutputDebutPartie(deplacement **Deplacements);
 
 bool WaitForInput();
-bool IsEscape();
+int IsEscape();
+
+#define ESCAPE_NO     0
+#define ESCAPE_ESCAPE 1
+#define ESCAPE_SKIP   2
 
 /*************************************************************/
 

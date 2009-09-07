@@ -349,7 +349,9 @@ unsigned int MeilleureTrajectoire(pieces Piece, cases De, cases Vers, couleurs C
 			if (CasesMortes[Sink])
 				continue;
 
-			if (!Coups[Sink]) {
+			if (!Coups[Sink] && (Sink != De)) {
+				Verifier(Push < MaxCases);
+
 				Coups[Sink] = Longueur;
 				File[Push++] = Sink;
 
@@ -507,6 +509,8 @@ void CalculDesDeplacementsPossibles(cases De, _tablemouvements *TableMouvements,
 				continue;
 
 			if (Coups[Sink] == UINT_MAX) {
+				Verifier(Push < MaxCases);
+
 				Coups[Sink] = Longueur;
 				File[Push++] = Sink;
 			}
@@ -546,6 +550,8 @@ void CalculDesDeplacementsPossiblesBis(cases De, _tablebloqueurs *TableBloqueurs
 				continue;
 
 			if (Coups[Sink] == UINT_MAX) {
+				Verifier(Push < MaxCases);
+
 				Coups[Sink] = Longueur;
 				File[Push++] = Sink;
 			}

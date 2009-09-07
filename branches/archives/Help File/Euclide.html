@@ -6,7 +6,7 @@
 <META HTTP-EQUIV = "Content-Type" CONTENT = "text/html; charset=iso-8859-1">
 <META NAME = author CONTENT = "&Eacute;tienne Dupuis">
 <META NAME = copyright CONTENT = "Copyright 2000-2001, &Eacute;tienne Dupuis">
-<TITLE>Euclide 0.90 - Help File</TITLE>
+<TITLE>Euclide 0.91 - Help File</TITLE>
 </HEAD>
 
 <BODY>
@@ -29,15 +29,25 @@ It has not been designed to do anything else, where <I>anything else</I> even in
 <P>
 It is distributed as freeware in the hope that it will help proofgame composers check the validity of their problems, i.e. verify the uniqueness of the intended solution.
 </P>
+
+<!-- *********************************************************************** -->
+
+<H2>2. What's New</H2>
+
+<P>
+Version 0.91 traps the <CODE>S</CODE> key to skip the current strategy. See section 5.
+All bug fixes since the original release of version 0.90 are of course included.
+</P>
  
 <!-- *********************************************************************** -->
 
-<H2>2. Setup</H2>
+<H2>3. Setup</H2>
 
 <P>
 Execute <CODE>euclide-setup.exe</CODE> to install the software.
 A folder will be created in your startup menu with everything needed to run Euclide.
 You may choose the language of the software by executing one of the script in the <CODE>Language Files</CODE> subfolder.
+If installing over a previous version, the setup program will prompt you before overwriting the input file.
 </P>
 
 <P>
@@ -46,7 +56,7 @@ Translators are welcome!
 
 <!-- *********************************************************************** -->
 
-<H2>3. Creating an input file</H2>
+<H2>4. Creating an input file</H2>
 
 <P>
 <EM>Euclide</EM> accepts as input a text file containing one or more problems.
@@ -65,7 +75,7 @@ Probleemblad, Mai-juin 1999
 The input file can contain comments or additionnal information.
 <EM>Euclide</EM> will ignore them as long as the next line does not start by a digit (or white spaces followed by a digit).
 <EM>Natch</EM>'s input file can thus be fed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
-However, note that <EM>Euclide</EM> does not do strong typechecking, a position containing an error may be interpreted as correct and thus analysed. 
+However, note that <EM>Euclide</EM> does not perform strong typechecking; a position containing an error may be interpreted as correct and thus analysed. 
 </P>
 
 <P>
@@ -95,20 +105,12 @@ The input can be specified in one of four languages :
 
 <!-- *********************************************************************** -->
 
-<H2>4. Running the program</H2>
+<H2>5. Running the program</H2>
 
 <P>
 The program can be run directly from Windows by using the shortcuts created in the start menu. 
-Assuming you have not changed Euclide's installation folder, the input file is
-<CODE><NOBR>
-C:\Program Files\Euclide\Input.txt
-</NOBR></CODE>
-and the output file 	
-<CODE><NOBR>
-C:\Program Files\Euclide\Output.txt
-</NOBR></CODE>
-.
-They can be edit with Notepad or any text editor.
+Assuming you have not changed Euclide's installation folder, the input file is <CODE><NOBR>C:\Program Files\Euclide\Input.txt</NOBR></CODE> and the output file <CODE><NOBR>C:\Program Files\Euclide\Output.txt</NOBR></CODE>.
+They can be edited with Notepad or any text editor.
 </P>
 
 <P>
@@ -121,9 +123,11 @@ From the DOS command prompt, the program can be run in two ways:
 </P>
 
 <P>
-When solving a problem, <EM>Euclide</EM> can be interrupted by pressing <CODE>Escape</CODE> or the character <CODE>X</CODE>.
-If <EM>Euclide</EM> is searching deeply into permutation trees or move trees, you may need to press
-<CODE>Ctrl-F4</CODE> to interrupt the program by brutally closing the DOS window.
+When solving a problem, <EM>Euclide</EM> can be interrupted by pressing <CODE>Escape</CODE>. 
+Alternatively, if Euclide is deeply searching the move tree of a strategy which you think will yield no solution, you may press <CODE>S</CODE> to skip the current strategy.
+<EM>Euclide</EM> will stop working on the strategy and move on the next one.
+Note that the software may take some time before responding to key presses, hence do not hit <CODE>Escape</CODE> or <CODE>S</CODE> more than once before getting any reaction.
+If <EM>Euclide</EM> is searching very deeply into permutation trees or move trees, you may need to press <CODE>Ctrl-F4</CODE> to interrupt the program by brutally closing the DOS window.
 </P>
 
 <P>
@@ -146,7 +150,7 @@ You may of course open it with any text editor and paste it's content in your em
 
 <!-- *********************************************************************** -->
 
-<H2>5. Bugs</H2>
+<H2>6. Bugs</H2>
 
 <P>
 <EM>Euclide</EM> has fairly complex builtin algorithms, hence bugs will certainly show up.
@@ -178,7 +182,7 @@ Please note that I do not have a home computer, hence it may take time before I 
 
 <!-- *********************************************************************** -->
 
-<H2>6. Random notes</H2>
+<H2>7. Random notes</H2>
 
 <P>
 <EM>Euclide</EM> is divided in four major parts.
@@ -214,7 +218,7 @@ Note also that the code has <B>not</B> been speed optimized at all, and that thi
 
 <!-- *********************************************************************** -->
 
-<H2>7. Acknowledgments</H2>
+<H2>8. Acknowledgments</H2>
 
 <P>
 Pascal Wassong deserves the first place, as <EM>Euclide</EM> has been inspired by carefully watching <EM>Natch</EM> working.
@@ -225,7 +229,7 @@ Pascal also sent many test problems and bug reports when I completed the third p
 </P>
 
 <P>
-Peter van den Heuvel, Joost de Heer, Gianni Donati &amp; Michel Caillaud carefully tested the program and (unfortunately!) sent many bug reports.
+Peter van den Heuvel, Joost de Heer, Gianni Donati, Reto Aschwanden &amp; Michel Caillaud carefully tested the program and (unfortunately!) sent many bug reports.
 Joost de Heer (Dutch) and Thomas Brand (German) provided translations.
 </P>
 
