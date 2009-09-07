@@ -1,0 +1,57 @@
+ pPLLTDK
+,
+zetten
+Druk een toets om verder te gaan...
+Interne fout! Neem aub contact op met de auteur.
+Analyse compleet
+Geen oplossing gevonden
+Een oplossing
+Unieke oplossing
+oplossingen
+verschillende oplossinen
+Gecookt
+
+Analyse van pionnenstructuur
+Stukken worden geteld
+Markeren van dode velden
+Analyse van de bewegingen
+Bezig paden te vinden
+Analyse van de lopers
+Afwijzen van paden
+Snelle analyse van de slagen
+Paden vinden van geslagen stukken
+Analyse van rokade
+Analyse van gepromoveerde stukken
+Genereren van permutaties
+Voorbereiden van het zoeken naar alle mogelijke strategieën
+Zoeken naar een strategie
+Analyse van strategie
+Herstart van de analyse
+
+Teveel pionnen!
+Teveel stukken!
+Teveel gepromoveerde stukken!
+Iedere kleur moet een en precies een koning hebben
+Illegale pionnenstructuur.
+Taalverwarring bij het decoderen van EPD tekst.
+Fout in EPD tekst.
+Onvoldoende zetten om de stelling te bereiken.
+Sommige stukken kunnen niet zijn waar ze zijn.
+Sommige slagen kunnen niet verklaard worden.
+Sommige gepromoveerde stukken kunnen niet verklaard worden.
+Dit probleem heeft geen oplossing!
+Analyse onderbroken door gebruiker.
+Leesfout!
+[Euclide.exe] Incorrecte argumenten op de commandoregel.
+Geen probleem gevonden.
+Bewijspartij te lang voor analyse.
+
+Probleem geanalyseerd:
+Oplossing
+Resultaat:
+seconden
+Analyse onderbroken
+<Overgeslagen> Strategie
+Analyse gestart vanuit strategie
+
+Joost de Heer
