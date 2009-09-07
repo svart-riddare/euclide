@@ -5,9 +5,10 @@ Appuyez sur une touche pour continuer...
 Erreur de conception! Communiquez avec l'auteur.
 Analyse terminée.
 Aucune solution
-Solution
+Une solution
 Solution unique
 solutions
+solutions distinctes
 Problème démoli
 
 Analyse de la structure des pions
@@ -25,6 +26,7 @@ Examen des pièces de promotion
 Préparation du balayage de toutes les stratégies plausibles
 Recherche d'une stratégie
 Analyse de la stratégie
+Reprise de l'analyse
 
 Trop de pions!
 Trop de pieces!
@@ -43,5 +45,13 @@ Erreur de lecture!
 [Euclide.exe] Arguments incorrects.
 Aucun énoncé n'a pu être identifié.
 Euclide ne peut analyser une partie aussi longue.
+
+Problème analysé :
+Solution
+Verdict :
+secondes
+Analyse interrompue
+<Omise> Stratégie
+Reprise de l'analyse à partir de la stratégie
 
 Étienne Dupuis

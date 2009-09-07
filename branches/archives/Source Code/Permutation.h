@@ -124,9 +124,13 @@ typedef struct _strategies {
 } strategies;
 
 /*************************************************************/
+/* On a un gros problème avec l'inclusion de output.h        */
+/*************************************************************/
 
-strategies *ExamenDesStrategies(const position *Position);
-bool ProchaineStrategie(strategies *Strategies, bool PremiereFois = false);
+typedef enum _texte;
+
+strategies *ExamenDesStrategies(const position *Position, _texte Texte);
+bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois = false);
 void Delete(strategies *Strategies);
 
 /*************************************************************/

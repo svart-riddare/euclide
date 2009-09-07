@@ -124,7 +124,7 @@ bool AnalysePhaseD(pseudopartie *Partie, unsigned int DemiCoups)
 		return false;
 
 	Partie->Strategie->IDPhaseE++;
-	Partie->Strategie->IDFinal++;
+	Partie->Strategie->IDFinal = Partie->Strategie->IDPhaseE;
 	return true;
 }
 
@@ -805,17 +805,22 @@ void DeterminerLesCoups(vie *Piece, const vie PiecesAdverses[MaxHommes], coup *C
 
 		if (!Unique) {
 			if ((De != Vers) || (j < Piece->NombreAssassinats) || Piece->Switchback) {
-				Coups[k].Type = Piece->Scenario->Piece;
-				Coups[k].Piece = Piece;
-				Coups[k].De = De;
-				Coups[k].Vers = MaxCases;
-				k++;
-				Coups[k].Type = Piece->Scenario->Piece;
-				Coups[k].Piece = Piece;
-				Coups[k].De = MaxCases;
-				Coups[k].Vers = Vers;
-				Coups[k].Victime = (j < Piece->NombreAssassinats) ? Piece->Assassinats[j] : NULL;
-				k++;
+				if (Piece->Switchback && Piece->NombreAssassinats && (j >= Piece->NombreAssassinats) && (Coups[k - 1].Vers == Piece->Depart)) {
+					Unique = false;
+				}
+				else {
+					Coups[k].Type = Piece->Scenario->Piece;
+					Coups[k].Piece = Piece;
+					Coups[k].De = De;
+					Coups[k].Vers = MaxCases;
+					k++;
+					Coups[k].Type = Piece->Scenario->Piece;
+					Coups[k].Piece = Piece;
+					Coups[k].De = MaxCases;
+					Coups[k].Vers = Vers;
+					Coups[k].Victime = (j < Piece->NombreAssassinats) ? Piece->Assassinats[j] : NULL;
+					k++;
+				}
 			}
 		}
 		else {
@@ -1012,7 +1017,8 @@ void CalculDesLiensDePriorite(pseudopartie *Partie)
 
 						if (IsEnEchecImparable(Coup->Vers, BloqueurTypeVers, Bloqueur->Vers, CouleurBloqueur)) {
 							if (Bloqueur->Dernier && !Bloqueur->Assassin)
-								Coup->DoitPreceder[Coup->NombreDoitPreceder++] = Bloqueur;
+								if (!Bloqueur->Promotion || (CoupsLibresBloqueur < 2))
+									Coup->DoitPreceder[Coup->NombreDoitPreceder++] = Bloqueur;
 
 							if (Coup->Dernier && !Bloqueur->Dernier)
 								Bloqueur->DoitPreceder[Bloqueur->NombreDoitPreceder++] = Coup;

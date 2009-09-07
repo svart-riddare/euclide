@@ -5,9 +5,10 @@ Druk een toets om verder te gaan...
 Interne fout! Neem aub contact op met de auteur.
 Analyse compleet
 Geen oplossing gevonden
-Oplossing
+Een oplossing
 Unieke oplossing
 oplossingen
+verschillende oplossinen
 Gecookt
 
 Analyse van pionnenstructuur
@@ -25,6 +26,7 @@ Genereren van permutaties
 Voorbereiden van het zoeken naar alle mogelijke strategieën
 Zoeken naar een strategie
 Analyse van strategie
+Herstart van de analyse
 
 Teveel pionnen!
 Teveel stukken!
@@ -43,5 +45,13 @@ Leesfout!
 [Euclide.exe] Incorrecte argumenten op de commandoregel.
 Geen probleem gevonden.
 Bewijspartij te lang voor analyse.
+
+Probleem geanalyseerd:
+Oplossing
+Resultaat:
+seconden
+Analyse onderbroken
+<Overgeslagen> Strategie
+Analyse gestart vanuit strategie
 
 Joost de Heer

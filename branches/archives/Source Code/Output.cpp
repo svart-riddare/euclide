@@ -6,6 +6,7 @@
 #include "Output.h"
 #include "Partie.h"
 #include "Timer.h"
+#include "Version.h"
 
 /*************************************************************/
 
@@ -185,7 +186,7 @@ void OutputMessageErreur(texte Message)
 
 /*************************************************************/
 
-void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals)
+void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals, bool Final)
 {
 	if (Duals) {
 		OutputResultat(GetTexte(MESSAGE_COOKED, 32, false));
@@ -194,13 +195,13 @@ void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals)
 		OutputResultat(GetTexte(MESSAGE_ZEROSOLUTION, 32, false));
 	}
 	else if (NombreSolutions == 1) {
-		OutputResultat(GetTexte(MESSAGE_UNESOLUTION, 32, false));
+		OutputResultat(GetTexte(Final ? MESSAGE_UNESOLUTIONUNIQUE : MESSAGE_UNESOLUTION, 32, false));
 	}
 	else {
 		Verifier(NombreSolutions < 10000);
 
 		char Texte[32];
-		sprintf(Texte, "%u %s", NombreSolutions, GetTexte(MESSAGE_NSOLUTIONS, 27, false));
+		sprintf(Texte, "%u %s", NombreSolutions, GetTexte(Final ? MESSAGE_NSOLUTIONSDISTINCTES : MESSAGE_NSOLUTIONS, 27, false));
 		OutputResultat(Texte);
 	}
 
@@ -222,19 +223,108 @@ void OutputMessage(texte Message, unsigned int Compte)
 
 /*************************************************************/
 
-void OutputSolution(const solution *Solution, unsigned int Numero)
+static FILE *Output = NULL;
+
+/*************************************************************/
+
+void OutputEntete(const char *PositionEPD, unsigned int DemiCoups) 
 {
-	static FILE *Output = NULL;
 	if (!Output)
 		Output = fopen("Output.txt", "w");
 
 	if (!Output)
 		return;
 
-	if (Numero == 1)
-		fprintf(Output, "\n********************************************************************************\n\n");
+	char Tampon[1024];
+	unsigned int NombreDieses = strlen(EUCLIDE_VERSION) + 6;
+	memset(Tampon, '#', NombreDieses);
+	Tampon[NombreDieses] = '\0';
 
-	fprintf(Output, "%s #%u :\n", GetTexte(MESSAGE_SOLUTION, 64, false), Numero);
+	fprintf(Output, "\n%s\n## %s ##\n%s\n\n", Tampon, EUCLIDE_VERSION, Tampon);
+	
+	unsigned int i = 0;
+	unsigned int k = 0;
+	do {
+		if (i >= sizeof(Tampon) - 1)
+			break;
+
+		if (!isspace(PositionEPD[k]))
+			Tampon[i++] = PositionEPD[k];
+	
+	} while (PositionEPD[++k]);
+
+	Tampon[i] = '\0';		
+	fprintf(Output, "%s\n\t%s\n\t%u\n\n", GetTexte(MESSAGE_PROBLEMEANALYSE, 256, false), Tampon, DemiCoups);
+	fflush(Output);
+}
+
+/*************************************************************/
+
+void OutputStrategieOmise(const strategie *Strategie)
+{
+	if (!Output)
+		return;
+
+	fprintf(Output, "%s #%u\n", GetTexte(MESSAGE_STRATEGIEOMISE, 32, false), Strategie->IDFinal);
+	fflush(Output);
+}
+
+/*************************************************************/
+
+void OutputContinuerDe(unsigned int ContinuerDe)
+{
+	if (!Output)
+		return;
+
+	if (ContinuerDe <= 1)
+		return;
+
+	fprintf(Output, "%s #%u\n", GetTexte(MESSAGE_REPRISE, 64, false), ContinuerDe);
+	fflush(Output);
+}	
+
+/*************************************************************/
+
+void OutputPiedDePage(unsigned int NombreSolutions, bool Duals, bool Escape)
+{
+	if (!Output)
+		return;
+
+	fprintf(Output, "\n%s\n", GetTexte(MESSAGE_VERDICT, 32, false));
+	
+	if (Duals) {
+		fprintf(Output, "\t%s\n", GetTexte(MESSAGE_COOKED, 32, false));
+	}
+	else if (Escape) {
+		fprintf(Output, "\t%s\n", GetTexte(MESSAGE_ANALYSEINTERROMPUE, 32, false));
+	}
+	else if (NombreSolutions == 0) {
+		fprintf(Output, "\t%s\n", GetTexte(MESSAGE_ZEROSOLUTION, 32, false));
+	}
+	else if (NombreSolutions == 1) {
+	fprintf(Output, "\t%s\n", GetTexte(MESSAGE_UNESOLUTIONUNIQUE, 32, false));
+	}
+	else {
+		fprintf(Output, "\t%u %s\n", NombreSolutions, GetTexte(MESSAGE_NSOLUTIONSDISTINCTES, 32, false));
+	}
+
+	fprintf(Output, "\t%s %s\n\n", GetElapsedTime(), GetTexte(MESSAGE_SECONDES, 32, false));
+	fflush(Output);
+}
+
+/*************************************************************/
+
+const solution *SolutionReference = NULL;
+
+void OutputSolution(const solution *Solution, unsigned int Numero, bool Dual)
+{
+	if (!Output)
+		return;
+
+	if (!Dual)
+		SolutionReference = Solution;
+
+	fprintf(Output, "\n%s #%u :\n", GetTexte(MESSAGE_SOLUTION, 64, false), Numero);
 	fprintf(Output, "---------------------------------------------------------------------\n");
 
 	for (unsigned int k = 0; k < Solution->DemiCoups; k++) {
@@ -243,7 +333,10 @@ void OutputSolution(const solution *Solution, unsigned int Numero)
 		if ((k % 2) == 0)
 			fprintf(Output, "%2u. ", (k / 2) + 1);
 
-		if (Deplacement->Roque) {
+		if (Dual && (memcmp(Deplacement, &SolutionReference->Deplacements[k], sizeof(deplacement)) == 0)) {
+			fprintf(Output, "...      ");
+		}
+		else if (Deplacement->Roque) {
 			if (QuelleColonne(Deplacement->Vers) == C)
 				fprintf(Output, "0-0-0    ");
 			else

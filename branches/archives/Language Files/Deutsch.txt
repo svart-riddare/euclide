@@ -5,9 +5,10 @@ Beliebige Taste ...
 Interner Fehler, bitte den Autor kontaktieren.
 Analyse beendet.
 Keine Lösung gefunden
-Lösung
+eine Lösung
 eindeutige Lösung
 Lösungen
+verschiedene Lösungen
 gekocht
 
 Analyse der Bauernstruktur
@@ -25,6 +26,7 @@ Generier Permutationen
 Bereite Suche der möglichen Strategien vor
 Suche Strategie
 Strategieanalyse
+Wiederaufnahme der Analyse
 
 Zu viele Bauern!
 Zu viele Steine!
@@ -43,6 +45,14 @@ Lesefehler!
 [Euclide.exe] Ungültige Argumente in der Kommandozeile.
 Kein Problem gefunden.
 Beweispartie zu lang für die Analyse.
+
+Problem analysiert:
+Lösung
+Ergebnis:
+Sekunden
+Analyse unterbrochen
+<übersprungene> Strategie
+Analyse gestartet von Strategie
 
 Thomas Brand
 

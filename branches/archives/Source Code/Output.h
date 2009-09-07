@@ -17,9 +17,10 @@ typedef enum {
 	MESSAGE_ERREURINTERNE,
 	MESSAGE_FIN,
 	MESSAGE_ZEROSOLUTION,
-	MESSAGE_SOLUTION,
 	MESSAGE_UNESOLUTION,
+	MESSAGE_UNESOLUTIONUNIQUE,
 	MESSAGE_NSOLUTIONS,
+	MESSAGE_NSOLUTIONSDISTINCTES,
 	MESSAGE_COOKED,
 	NUL_1,
 // Messages marquant le progrès des déductions
@@ -38,6 +39,7 @@ typedef enum {
 	MESSAGE_PREPARATION,
 	MESSAGE_RECHERCHE,
 	MESSAGE_ANALYSE,
+	MESSAGE_SUITE,
 	NUL_2,
 // Erreurs
 	MESSAGE_TROPDEPIONS,
@@ -56,7 +58,16 @@ typedef enum {
 	MESSAGE_ERREURLECTURE,
 	MESSAGE_MAUVAISARGUMENTS,
 	MESSAGE_AUCUNPROBLEME,
-	MESSAGE_TROPDECOUPS,	
+	MESSAGE_TROPDECOUPS,
+	NUL_3,
+// Fichier de sortie
+	MESSAGE_PROBLEMEANALYSE,
+	MESSAGE_SOLUTION,
+	MESSAGE_VERDICT,
+	MESSAGE_SECONDES,
+	MESSAGE_ANALYSEINTERROMPUE,
+	MESSAGE_STRATEGIEOMISE,
+	MESSAGE_REPRISE,
 	MaxTextes
 } texte;
 
@@ -73,10 +84,14 @@ char RangeeToChar(rangees Rangee);
 const char *CaseToString(cases Case);
 
 void OutputMessage(texte Message, unsigned int Compte = 0);
-void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals);
+void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals, bool Final);
 void OutputMessageErreur(texte Message);
 
-void OutputSolution(const solution *Solution, unsigned int Numero);
+void OutputEntete(const char *PositionEPD, unsigned int DemiCoups);
+void OutputSolution(const solution *Solution, unsigned int Numero, bool Dual);
+void OutputPiedDePage(unsigned int NombreSolutions, bool Duals, bool Escape);
+void OutputStrategieOmise(const strategie *Strategie);
+void OutputContinuerDe(unsigned int ContinuerDe);
 
 /*************************************************************/
 /* Platform dependent functions...                           */

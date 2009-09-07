@@ -27,9 +27,14 @@ void OutputClear()
 {
 	char Tampon[128];
 	strcpy(Tampon, EUCLIDE_VERSION);
+
 	char *CopySign = strchr(Tampon, '©');
 	if (CopySign)
 		 *CopySign = 'c';
+
+	char *EAcute = strchr(Tampon, 'É');
+	if (EAcute)
+		*EAcute = 'E';
 
 	printf("%s\n", Tampon);
 }
@@ -136,7 +141,7 @@ void OutputResultat(const char *Resultat)
 
 /*************************************************************/
 
-void OutputStrategie(const strategie *Strategie)
+void OutputStrategie(const strategie *Strategie, const pseudopartie * /**/)
 {
 	OutputCoupsLibres(Strategie->CoupsLibresBlancs, Strategie->CoupsLibresNoirs);
 	OutputStrategieId(Strategie->IDFinal);

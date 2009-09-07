@@ -5,7 +5,7 @@
 #include <time.h>
 #include "Timer.h"
 
-static clock_t TimerStart;
+static clock_t TimerStart = (clock_t)(-1);
 
 /*************************************************************/
 
@@ -18,13 +18,24 @@ void StartTimer()
 
 const char *GetElapsedTime()
 {
+	clock_t Timer = clock();
+
 	double Seconds = 0.0;
-	double Elapsed = (double)(clock() - TimerStart) / CLOCKS_PER_SEC;
+	double Elapsed = (double)(Timer - TimerStart) / CLOCKS_PER_SEC;
+
+	if (Elapsed < 0.0)
+		return "?.??";
+
+	if ((Timer == (clock_t)(-1)) || (TimerStart == (clock_t)(-1)))
+		return "?.??";
 
 	unsigned int Centiemes = (unsigned int)floor(100.0 * modf(Elapsed, &Seconds));
 	unsigned int Secondes = (unsigned int)Seconds % 60;
 	unsigned int Minutes = (unsigned int)floor(Seconds / 60) % 60;
 	unsigned int Heures = (unsigned int)floor(Seconds / 3600);
+
+	if (Heures > (24 * 366))
+		return "-:--:--.--";
 
 	static char Tampon[32];
 

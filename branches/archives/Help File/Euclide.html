@@ -5,8 +5,8 @@
 <HEAD>
 <META HTTP-EQUIV = "Content-Type" CONTENT = "text/html; charset=iso-8859-1">
 <META NAME = author CONTENT = "&Eacute;tienne Dupuis">
-<META NAME = copyright CONTENT = "Copyright 2000-2001, &Eacute;tienne Dupuis">
-<TITLE>Euclide 0.91 - Help File</TITLE>
+<META NAME = copyright CONTENT = "Copyright 2000-2002, &Eacute;tienne Dupuis">
+<TITLE>Euclide 0.92 - Help File</TITLE>
 </HEAD>
 
 <BODY>
@@ -23,7 +23,7 @@
 
 <P>
 <EM>Euclide</EM> is a software designed to solve exactly orthodox proofgames given a position and a number of halfmoves.
-It has not been designed to do anything else, where <I>anything else</I> even includes user-frienliness.
+It has not been designed to do anything else, where <I>anything else</I> even includes user-friendliness.
 </P>
 
 <P>
@@ -35,7 +35,14 @@ It is distributed as freeware in the hope that it will help proofgame composers 
 <H2>2. What's New</H2>
 
 <P>
-Version 0.91 traps the <CODE>S</CODE> key to skip the current strategy. See section 5.
+Version 0.92 has the following improvements over the initial version 0.90 :
+<UL>
+	<LI>The <CODE>S</CODE> key is trapped to skip the current strategy.
+	<LI>Euclide can be ran in batch mode.
+	<LI>Euclide can restart an interrupted analysis.
+	<LI>The output file has been made more readable.
+</UL>
+See section 5 to use these new functionalities.  
 All bug fixes since the original release of version 0.90 are of course included.
 </P>
  
@@ -65,17 +72,17 @@ Here is a simple example, my first proofgame :
 </P>
 
 <PRE>
-Étienne Dupuis
+&Eacute;tienne Dupuis
 Probleemblad, Mai-juin 1999
 1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
 22
 </PRE>
 
 <P>
-The input file can contain comments or additionnal information.
+The input file can contain comments or additional information.
 <EM>Euclide</EM> will ignore them as long as the next line does not start by a digit (or white spaces followed by a digit).
-<EM>Natch</EM>'s input file can thus be fed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
-However, note that <EM>Euclide</EM> does not perform strong typechecking; a position containing an error may be interpreted as correct and thus analysed. 
+<EM>Natch</EM>'s input file can thus be feed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
+However, note that <EM>Euclide</EM> does not perform strong typechecking; a position containing an error may be interpreted as correct and thus analyzed. 
 </P>
 
 <P>
@@ -116,11 +123,16 @@ They can be edited with Notepad or any text editor.
 <P>
 From the DOS command prompt, the program can be run in two ways:
 <PRE>
-  Euclide <I>&lt;inputfile&gt;</I>
+  Euclide <I>[option]</I> <I>&lt;inputfile&gt;</I>
 
-  Euclide <I>&lt;position&gt;</I> <I>&lt;halfmoves&gt;</I>
+  Euclide <I>[option]</I> <I>&lt;position&gt;</I> <I>&lt;halfmoves&gt;</I>
 </PRE>
 </P>
+
+<P>
+Option is at most one of the following : <CODE>-batch</CODE> will instruct Euclide not to wait for user input between problems while <CODE>-s<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to start solving from the <I>nth</I> strategy.
+Note that reaching this strategy may take a substantial amount of time.
+</P> 
 
 <P>
 When solving a problem, <EM>Euclide</EM> can be interrupted by pressing <CODE>Escape</CODE>. 
@@ -129,6 +141,11 @@ Alternatively, if Euclide is deeply searching the move tree of a strategy which 
 Note that the software may take some time before responding to key presses, hence do not hit <CODE>Escape</CODE> or <CODE>S</CODE> more than once before getting any reaction.
 If <EM>Euclide</EM> is searching very deeply into permutation trees or move trees, you may need to press <CODE>Ctrl-F4</CODE> to interrupt the program by brutally closing the DOS window.
 </P>
+
+<P>
+If Euclide is interrupted while solving a problem, for any reason whatsoever, relaunch <EM>Euclide</EM> with the same problem to continue the resolution where it was stopped.
+It is in fact an automatic use of option <CODE>-s</CODE>.
+</P> 
 
 <P>
 <EM>Euclide</EM> stops solving a problem either when it has been cooked (one or a few duals were found) or when it has been verified to have one, two or more unique solutions.
@@ -158,7 +175,7 @@ Moreover, it has not been extensively tested.
 </P>
 
 <P>
-User interface bugs should not occur, has <EM>Euclide</EM> has very limited input/ouput.
+User interface bugs should not occur, as <EM>Euclide</EM> has very limited input/ouput.
 However, I have already noted that the <CODE>Escape</CODE> key is not correctly trapped under Windows NT.
 Use <CODE>X</CODE> instead.
 </P>
@@ -197,7 +214,7 @@ The reason why <EM>Euclide</EM> is so slow at finding strategies for problems in
 <P>
 Then, for each strategy found, we apply the third and fourth part of the analysis.
 The third part, unique to <EM>Euclide</EM>, consists in the partial analysis of move dependencies.
-The sofware is sometimes able to reconstruct pieces of the proofgame and order moves within these fragments.
+The sofwtare is sometimes able to reconstruct pieces of the proofgame and order moves within these fragments.
 The underlying code is fairly tricky, and can certainly be improved tremendously.
 You may think as this part as being <EM>Natch</EM>'s option <CODE>-k</CODE> builtin.
 Finally, the fourth part simply plays, from the initial position, moves until solutions are found or the move tree is exhausted.
@@ -208,12 +225,12 @@ However, if not much was deduced from the third part, a great deal of speed is l
 
 <P>
 Most of the development of <EM>Euclide</EM> took place at the end of summer 2000, when I was (eagerly) waiting for my VISA for France.
-A second burst of activity to finish the third part occured in January 2001, between two projects at the company where I was working then, before moving on to Cryo Networks and the <A HREF = "http://www.dunegenerations.com/">Dune Generations</A> team at the end of January.
+A second burst of activity to finish the third part occurred in January 2001, between two projects at the company where I was working then, before moving on to Cryo Networks and the <A HREF = "http://www.dunegenerations.com/">Dune Generations</A> team at the end of January.
 The easier fourth part was programmed sporadically, maybe one Sunday each three week, from February to May 2001.
 </P>
 
 <P>
-Note also that the code has <B>not</B> been speed optimized at all, and that this version will never be optimized; it would be a waste of time, as some crucial deduction algoritms (in particular the first two parts) must be entirely rewritten.
+Note also that the code has <B>not</B> been speed optimized at all, and that this version will never be optimized; it would be a waste of time, as some crucial deduction algorithms (in particular the first two parts) must be entirely rewritten.
 </P>
 
 <!-- *********************************************************************** -->
@@ -222,7 +239,7 @@ Note also that the code has <B>not</B> been speed optimized at all, and that thi
 
 <P>
 Pascal Wassong deserves the first place, as <EM>Euclide</EM> has been inspired by carefully watching <EM>Natch</EM> working.
-I met him in December in Paris (I moved from Hull, Québec to Paris in October) to discuss of how we built our software.
+I met him in December in Paris (I moved from Hull, Qu&eacute;bec to Paris in October) to discuss of how we built our software.
 It is then for example that in one sentence from Pascal I understood what the hashtables were for.
 Who knows if I would have thought of them otherwise?
 Pascal also sent many test problems and bug reports when I completed the third part.
@@ -230,23 +247,23 @@ Pascal also sent many test problems and bug reports when I completed the third p
 
 <P>
 Peter van den Heuvel, Joost de Heer, Gianni Donati, Reto Aschwanden &amp; Michel Caillaud carefully tested the program and (unfortunately!) sent many bug reports.
-Joost de Heer (Dutch) and Thomas Brand (German) provided translations.
+Joost de Heer (Dutch), Thomas Brand (German), Juraj L&ouml;rinc (Slovak) provided translations.
 </P>
 
 <P>
-Christian Poisson then provided hundreds of proofgames taken from WinChloé's database.
+Christian Poisson then provided hundreds of proofgames taken from WinChlo&eacute;'s database.
 It provided an invaluable reference set to find one terrible bug and a few minor ones.
 </P>
 
 <P>
-The installation program was created with <A HREF = "http://www.innosetup.com/">Inno Setup</A> 2.0.11 (b), by Russel Jordan, and with <A HREF = "http://www.bhenden.org/istool/">ISTool</A> 1.1.8, by Bjømar Hender.
+The installation program was created with <A HREF = "http://www.innosetup.com/">Inno Setup</A> 2.0.19, by Russel Jordan, and with <A HREF = "http://www.bhenden.org/istool/">ISTool</A> 1.1.8, by Bj&oslash;mar Hender.
 </P>
 
 <!-- *********************************************************************** -->
 
 <BR>
 <BR>
-Étienne Dupuis, <A HREF = "mailto:lestourtereaux@free.fr">lestourtereaux@free.fr</A>
+&Eacute;tienne Dupuis, <A HREF = "mailto:lestourtereaux@free.fr">lestourtereaux@free.fr</A>
 
 </BODY>
 </HTML>

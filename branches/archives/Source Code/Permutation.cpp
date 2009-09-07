@@ -19,7 +19,7 @@ bool ChoisirLesRoques(permutations *Permutations, vie Pieces[MaxHommes], couleur
 bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCases], vie Pieces[MaxHommes], unsigned int NombreDePieces, unsigned int *CoupsLibres, unsigned int *CapturesLibres, couleurs Couleur, bool PremiereFois);
 unsigned int NombreDeCoupsNecessaires(cases CaseFinale, hommes Homme, cases Depart, promotions PiecePromotion = MaxPromotions, colonnes ColonnePromotion = MaxColonnes);
 unsigned int NombreDeCapturesNecessaires(cases CaseFinale, hommes Homme, cases Depart);
-bool PremiereStrategie(strategies *Strategies);
+bool PremiereStrategie(strategies *Strategies, _texte Texte);
 void InitialisationDesStrategies(strategies *Strategies, const position *Position);
 int TriDesScenarios(const void *DataA, const void *DataB);
 void ConstructionDesScenarios(destin Destins[MaxHommes], const vie Pieces[MaxHommes], couleurs Couleur);
@@ -41,7 +41,7 @@ bool AutresSwitchbacks(vie PiecesBlanches[MaxHommes], vie PiecesNoires[MaxHommes
 
 /*************************************************************/
 
-strategies *ExamenDesStrategies(const position *Position)
+strategies *ExamenDesStrategies(const position *Position, _texte Texte)
 {
 	strategies *Strategies = &LaStrategie;
 	memset(Strategies, 0, sizeof(strategies));
@@ -61,8 +61,8 @@ strategies *ExamenDesStrategies(const position *Position)
 	DePositionAPermutation(Position->PiecesBlanches, &Strategies->PermutationsBlanches, BLANCS);
 	DePositionAPermutation(Position->PiecesNoires, &Strategies->PermutationsNoires, NOIRS);
 
-	OutputMessage(MESSAGE_RECHERCHE);
-	if (!PremiereStrategie(Strategies))
+	OutputMessage((texte)Texte);
+	if (!PremiereStrategie(Strategies, Texte))
 		return NULL;
 
 	return Strategies;
@@ -578,7 +578,7 @@ bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCas
 
 /*************************************************************/
 
-bool PremiereStrategie(strategies *Strategies)
+bool PremiereStrategie(strategies *Strategies, _texte Texte)
 {
 	strategie *Strategie = &Strategies->StrategieActuelle;
 
@@ -608,15 +608,15 @@ bool PremiereStrategie(strategies *Strategies)
 	for (cases Case = A1; Case < MaxCases; Case++)
 		Strategie->Prise[Case] = false;
 
-	return ProchaineStrategie(Strategies, true);
+	return ProchaineStrategie(Strategies, Texte, true);
 }
 
 /*************************************************************/
 
-bool ProchaineStrategie(strategies *Strategies, bool PremiereFois)
+bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois)
 {
 	strategie *Strategie = &Strategies->StrategieActuelle;
-	OutputMessage(MESSAGE_RECHERCHE);
+	OutputMessage((texte)Texte);
 
 	static const int MaxEtapes = 15;
 	int Etape = PremiereFois ? 0 : MaxEtapes;
@@ -802,6 +802,7 @@ bool ProchaineStrategie(strategies *Strategies, bool PremiereFois)
 					
 	} while (Etape < MaxEtapes);
 
+	Strategie->IDFinal = 0;
 	Strategie->IDPhaseA++;
 
 	unsigned int SommeCoupsBlancs = 0;
@@ -1343,18 +1344,20 @@ bool PiecesCaptureesParLePion(vie *Pion, const permutations *Permutations, vie P
 					}
 				}
 				else {
-					if (Scenario->Coups > *CoupsLibres)
+					if (Scenario->Coups >= UINT_MAX)
 						break;
 
-					if (!PiecesAdverses[Scenario->Homme].Assassin && (Scenario->Captures <= *CapturesLibres)) {
-						*CoupsLibres -= Scenario->Coups;
-						*CapturesLibres -= Scenario->Captures;
-						PiecesAdverses[Scenario->Homme].Scenario = Scenario;
-						PiecesAdverses[Scenario->Homme].Assassin = Pion;
-						PiecesAdverses[Scenario->Homme].Coups = Scenario->Coups;
-						PiecesAdverses[Scenario->Homme].Promue = (Scenario->Promotion < MaxColonnes) ? true : false;
-						Pion->ScenariosSiPion[k] = Scenario;
-						Possible = true;
+					if (Scenario->Coups <= *CoupsLibres) {
+						if (!PiecesAdverses[Scenario->Homme].Assassin && (Scenario->Captures <= *CapturesLibres)) {
+							*CoupsLibres -= Scenario->Coups;
+							*CapturesLibres -= Scenario->Captures;
+							PiecesAdverses[Scenario->Homme].Scenario = Scenario;
+							PiecesAdverses[Scenario->Homme].Assassin = Pion;
+							PiecesAdverses[Scenario->Homme].Coups = Scenario->Coups;
+							PiecesAdverses[Scenario->Homme].Promue = (Scenario->Promotion < MaxColonnes) ? true : false;
+							Pion->ScenariosSiPion[k] = Scenario;
+							Possible = true;
+						}
 					}
 				}
 
