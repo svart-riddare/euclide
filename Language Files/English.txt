@@ -5,9 +5,10 @@ Press any key to continue...
 Internal error! Please contact author.
 Analysis completed.
 No solution found
-Solution
+One solution
 Unique solution
 solutions
+distinct solutions
 Cooked
 
 Pawn structure analysis
@@ -25,6 +26,7 @@ Generating permutations
 Preparing for scan of all possible strategies
 Searching for a strategy
 Strategy analysis
+Relaunching analysis
 
 Too many pawns!
 Too many pieces!
@@ -43,5 +45,13 @@ Read error!
 [Euclide.exe] Incorrect command line arguments.
 No problem found.
 Proofgame too long for analysis.
+
+Problem analysed:
+Solution
+Result:
+seconds
+Analysis interrupted
+<Skipped> Strategy
+Analysis started from strategy
 
 Étienne Dupuis

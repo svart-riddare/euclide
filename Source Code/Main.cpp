@@ -10,21 +10,32 @@
 #include "Partie.h"
 #include "Permutation.h"
 #include "Position.h"
+#include "Save.h"
 #include "Timer.h"
 
 /*************************************************************/
 
-bool Main(const char *PositionEPD, unsigned int DemiCoups)
+bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsigned int ContinuerDe, bool ModeExpress)
 {
 	FILE *Debug = fopen("Debug.txt", "w");
 	fclose(Debug);
 
 	StartTimer();
+	OutputEntete(PositionEPD, DemiCoups);
 
 	try {
 		diagramme *Diagramme = EPDToDiagramme(PositionEPD, DemiCoups);
 		position *Position = ExamenDuDiagramme(Diagramme);
-		strategies *Strategies = ExamenDesStrategies(Position);
+
+		if (Continuer && !ContinuerDe)
+			ContinuerDe = GetSauvegarde(Diagramme);
+
+		OutputContinuerDe(ContinuerDe);
+		Sauvegarde(Diagramme, ContinuerDe);
+
+		texte Texte = (ContinuerDe > 1) ? MESSAGE_SUITE : MESSAGE_RECHERCHE;
+				
+		strategies *Strategies = ExamenDesStrategies(Position, (_texte)Texte);
 		pseudopartie *Partie = NULL;
 		unsigned int NombreSolutions = 0;
 		bool Duals = false;
@@ -33,6 +44,8 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 		if (Strategies) {
 			do {
 				bool Possible = true;
+
+				// RETO : Strategies->StrategieActuelle
 
 				//OutputStrategie(&Strategies->StrategieActuelle, NULL);
 				Possible &= AnalysePhaseA(&Strategies->StrategieActuelle);
@@ -53,37 +66,46 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 
 				if (Possible) {
 					OutputStrategie(&Strategies->StrategieActuelle, Partie);
-					OutputMessage(MESSAGE_ANALYSE);
+					
+					if (Strategies->StrategieActuelle.IDFinal >= ContinuerDe) {
+						OutputMessage(MESSAGE_ANALYSE);
+						Texte = MESSAGE_RECHERCHE;
 
-					solution Solutions[4];
-					unsigned int NouvellesSolutions = GenerationDesSolutions(Partie, Strategies->DemiCoups, Solutions, 4);
-					OutputDebutPartie(NULL);
+						solution Solutions[4];
+						unsigned int NouvellesSolutions = GenerationDesSolutions(Partie, Strategies->DemiCoups, Solutions, 4);
+						OutputDebutPartie(NULL);
 
-					if (NouvellesSolutions == UINT_MAX) {
-						NouvellesSolutions = 0;
-						Escape = true;
+						if (NouvellesSolutions == UINT_MAX) {
+							NouvellesSolutions = 0;
+							Escape = true;
+						}
+
+						if (NouvellesSolutions == (UINT_MAX - 1)) {
+							OutputStrategieOmise(&Strategies->StrategieActuelle);
+							NouvellesSolutions = 0;
+						}
+
+						for (unsigned int k = 0; k < NouvellesSolutions; k++)
+							OutputSolution(&Solutions[k], NombreSolutions + k + 1, k != 0);
+
+						NombreSolutions += NouvellesSolutions;
+						if (NouvellesSolutions > 1)
+							Duals = true;
+
+						if (NombreSolutions > 0)
+							OutputNombreSolutions(NombreSolutions, Duals, false);
+
+						if (!Escape)
+							SetSauvegarde(Strategies->StrategieActuelle.IDFinal);
 					}
-
-					if (NouvellesSolutions == (UINT_MAX - 1))
-						NouvellesSolutions = 0;
-
-					for (unsigned int k = 0; k < NouvellesSolutions; k++)
-						OutputSolution(&Solutions[k], NombreSolutions + k + 1);
-
-					NombreSolutions += NouvellesSolutions;
-					if (NouvellesSolutions > 1)
-						Duals = true;
-
-					if (NombreSolutions > 0)
-						OutputNombreSolutions(NombreSolutions, Duals);
 				}
 
 				AnalysePhaseX(&Strategies->StrategieActuelle);
 
 				if (IsEscape() == ESCAPE_ESCAPE)
 					Escape = true;
-
-			} while ((Escape != ESCAPE_ESCAPE) && !Duals && ProchaineStrategie(Strategies));
+				
+			} while (!Escape && !Duals && ProchaineStrategie(Strategies, (_texte)Texte));
 
 			Debug = fopen("Debug.txt", "a");
 			if (Debug) {
@@ -98,13 +120,16 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 			}
 
 			if (!Escape) {
-				OutputNombreSolutions(NombreSolutions, Duals);
+				OutputNombreSolutions(NombreSolutions, Duals, true);
 				OutputDebutPartie(NULL);
+				ClearSauvegarde();
 			}
 		}
 		else {
-			OutputNombreSolutions(0, false);
+			OutputNombreSolutions(0, false, true);
 		}
+
+		OutputPiedDePage(NombreSolutions, Duals, Escape);
 
 		Delete(Partie);
 		Delete(Strategies);
@@ -117,7 +142,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 	OutputMessage(GetTexte(MESSAGE_FIN, 256, false));
 	OutputChrono(GetElapsedTime());
 
-	bool Escape = WaitForInput();
+	bool Escape = ModeExpress ? false : WaitForInput();
 	OutputClear();
 
 	return !Escape;
