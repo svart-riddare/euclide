@@ -1,0 +1,48 @@
+ BSLLTDK
+,
+Züge
+Beliebige Taste ...
+Interner Fehler, bitte den Autor kontaktieren.
+Analyse beendet.
+Keine Lösung gefunden
+Lösung
+eindeutige Lösung
+Lösungen
+gekocht
+
+Analyse der Bauernstruktur
+Zähle Steine
+Markiere tote Felder
+Zuganalyse
+Finde Wege
+Läuferanalyse
+Verwerfe Wege
+Schnelle Schlaganalyse
+Finde Wege geschlagener Steine
+Rochadeanalyse
+Analyse der Umwandlungsfiguren
+Generier Permutationen
+Bereite Suche der möglichen Strategien vor
+Suche Strategie
+Strategieanalyse
+
+Zu viele Bauern!
+Zu viele Steine!
+Zu viele Umwandlungsfiguren
+Jede Seite muss genau einen König haben!
+Illegale Bauernstruktur.
+Sprachkonfusion im EPD String.
+Fehler im EPD String.
+Zu wenig Züge, um die Position zu erreichen.
+Einige Steine sind unmöglich platziert.
+Einige Schlagfälle können nicht erklärt werden.
+Einige Umwandlungssteine können nicht erklärt werden.
+Dieses Problem hat keine Lösung
+Analyse vom Nutzer abgebrochen.
+Lesefehler!
+[Euclide.exe] Ungültige Argumente in der Kommandozeile.
+Kein Problem gefunden.
+Beweispartie zu lang für die Analyse.
+
+Thomas Brand
+

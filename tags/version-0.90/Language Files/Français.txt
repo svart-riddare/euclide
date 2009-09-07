@@ -1,0 +1,47 @@
+ PCFFTDR
+,
+coups
+Appuyez sur une touche pour continuer...
+Erreur de conception! Communiquez avec l'auteur.
+Analyse terminée.
+Aucune solution
+Solution
+Solution unique
+solutions
+Problème démoli
+
+Analyse de la structure des pions
+Décompte des pièces
+Identification des cases infranchissables
+Restriction des mouvements
+Analyse des meilleures trajectoires possibles
+Analyse de la position des fous
+Rejet des trajectoires trop longues
+Analyse sommaire des captures
+Détermination des trajectoires des pièces capturées
+Analyse des roques
+Examen des pièces de promotion
+Étude des permutations pour chaque type de pièce
+Préparation du balayage de toutes les stratégies plausibles
+Recherche d'une stratégie
+Analyse de la stratégie
+
+Trop de pions!
+Trop de pieces!
+Trop de pieces de promotion!
+Chaque camp doit posséder un et un seul roi!
+La structure des pions est illégale.
+Confusion de langue lors du décodage EPD.
+Erreur lors du décodage EPD.
+Impossible d'atteindre la position dans le nombre de coups requis.
+Impossible de justifier la présence de certaines pièces.
+Impossible de justifier certaines captures.
+Impossible d'expliquer la présence de certaines pièces de promotion.
+Ce problème est insoluble! Vérifiez attentivement l'énoncé.
+Analyse interrompue par l'utilisateur.
+Erreur de lecture!
+[Euclide.exe] Arguments incorrects.
+Aucun énoncé n'a pu être identifié.
+Euclide ne peut analyser une partie aussi longue.
+
+Étienne Dupuis
