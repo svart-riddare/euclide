@@ -495,7 +495,7 @@ bool InitialisationDesBlocages(const strategie *Strategie)
 					if (((i != TOURDAME) || !GrandRoque) && ((i != TOURROI) || !PetitRoque))
 						BloquerLaCase(Piece->Scenario->CaseFinale, true, true);
 
-			if (!Piece->Coups && Piece->Capturee && (Piece->Scenario->CaseFinale == Piece->Assassin->Scenario->CaseFinale) && !Piece->Assassin->Capturee) {
+			if (!Piece->Coups && Piece->Capturee && (Piece->Scenario->CaseFinale == Piece->Assassin->Scenario->CaseFinale) && !Piece->Assassin->Capturee /* 28.02.2005 */ && (CoupsLibres < 2)) {
 				if (Piece->Assassin->NombreAssassinats && (Piece->Assassin->Assassinats[Piece->Assassin->NombreAssassinats - 1] == Piece)) {
 					if ((CoupsLibresAdverses < 2) && !Piece->Assassin->Capturee)
 						if (((i != TOURDAME) || !GrandRoque) && ((i != TOURROI) || !PetitRoque))
@@ -1331,6 +1331,10 @@ void PrioritesPourLesPions(pseudopartie *Partie)
 				CoupAdverse++;
 
 			if (!Coup->Victime)
+				continue;
+
+			// Ajout du 28.02.2005
+			if (CoupAdverse->Assassin)
 				continue;
 
 			cases CaseCritiqueAdverse = MaxCases;
