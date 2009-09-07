@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dos-euclide", "dos-euclide.vcproj", "{4FBA6E2A-47F7-4E5C-AA48-AFB1BF4F36BE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{79975B44-0FD3-46AA-8345-D6BE668A0865} = {79975B44-0FD3-46AA-8345-D6BE668A0865}
