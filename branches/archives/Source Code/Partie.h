@@ -34,6 +34,8 @@ typedef struct _contraintes {
 	cases PositionsFinalesBlanches[MaxHommes];
 	cases PositionsFinalesNoires[MaxHommes];
 
+	couleurs Couleurs[MaxCases];
+
 	unsigned int NombreCoupsBlancs;
 	unsigned int NombreCoupsNoirs;
 	unsigned int DemiCoups;

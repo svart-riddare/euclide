@@ -139,6 +139,10 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 			if (!Partie->PositionFinaleBlancheAtteinte[k] || !Partie->PositionFinaleNoireAtteinte[k])
 				Solution = false;
 
+		for (unsigned int k = 0; k < MaxCases; k++)
+			if (Partie->Couleurs[k] != Contraintes->Couleurs[k])
+				Solution = false;
+
 		if (Solution) {
 			Solutions[*NombreSolutions].DemiCoups = Partie->DemiCoups;
 			for (unsigned int k = 0; k < Partie->DemiCoups; k++)
@@ -796,6 +800,9 @@ contraintes *CreerContraintes(pseudopartie *PseudoPartie, unsigned int DemiCoups
 {
 	static contraintes Contraintes;
 
+	for (cases Case = A1; Case < MaxCases; Case++)
+		Contraintes.Couleurs[Case] = NEUTRE;
+
 	for (unsigned int k = 0; k < MaxHommes; k++) {
 		unsigned int IndexBlanc = PseudoPartie->IndexPremiersCoupsBlancs[k];
 		unsigned int IndexNoir = PseudoPartie->IndexPremiersCoupsNoirs[k];
@@ -849,6 +856,12 @@ contraintes *CreerContraintes(pseudopartie *PseudoPartie, unsigned int DemiCoups
 
 		Contraintes.PositionsFinalesBlanches[k] = PseudoPartie->Strategie->PiecesBlanches[k].Scenario->CaseFinale;
 		Contraintes.PositionsFinalesNoires[k] = PseudoPartie->Strategie->PiecesNoires[k].Scenario->CaseFinale;
+
+		if (!PseudoPartie->Strategie->PiecesBlanches[k].Capturee)
+			Contraintes.Couleurs[PseudoPartie->Strategie->PiecesBlanches[k].Scenario->CaseFinale] = BLANCS;
+
+		if (!PseudoPartie->Strategie->PiecesNoires[k].Capturee)
+			Contraintes.Couleurs[PseudoPartie->Strategie->PiecesNoires[k].Scenario->CaseFinale] = NOIRS;
 	}
 
 	Contraintes.CoupsLibresBlancs = PseudoPartie->Strategie->CoupsLibresBlancs;
