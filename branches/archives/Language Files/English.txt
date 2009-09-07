@@ -1,0 +1,47 @@
+ PNBBRQK
+,
+moves
+Press any key to continue...
+Internal error! Please contact author.
+Analysis completed.
+No solution found
+Solution
+Unique solution
+solutions
+Cooked
+
+Pawn structure analysis
+Counting pieces
+Tagging dead squares
+Movement analysis
+Finding paths
+Bishop analysis
+Rejecting paths
+Quick analysis of captures
+Finding paths of captured pieces
+Castling analysis
+Promoted pieces analysis
+Generating permutations
+Preparing for scan of all possible strategies
+Searching for a strategy
+Strategy analysis
+
+Too many pawns!
+Too many pieces!
+Too many promoted pieces!
+Each side must have one and only one king!
+Illegal pawn structure.
+Language confusion while decoding EPD string.
+EPD string error.
+Insufficient number of moves to reach position.
+Some pieces just can't be where they are.
+Some captures can't be explained.
+Some promoted pieces can't be explained.
+This problem has no solution!
+Analysis aborted by user.
+Read error!
+[Euclide.exe] Incorrect command line arguments.
+No problem found.
+Proofgame too long for analysis.
+
+Étienne Dupuis
