@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Euclide
-AppVerName=Euclide 0.90
+AppVerName=Euclide 0.91
 AppPublisher=Étienne Dupuis
 AppPublisherURL=http://lestourtereaux.free.fr/euclide/
 AppSupportURL=http://lestourtereaux.free.fr/euclide/
@@ -12,21 +12,21 @@ DefaultDirName={pf}\Euclide
 DefaultGroupName=Euclide
 AlwaysCreateUninstallIcon=true
 
-AppVersion=0.90
+AppVersion=0.91
 ; uncomment the following line if you want your installation to run on NT 3.51 too.
 ; MinVersion=4,3.51
 
 [Tasks]
 
 [Files]
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Euclide.exe; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Output.txt; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Input.txt; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Help File\Euclide.html; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Language Files\Nederlands.txt; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Language Files\Français.txt; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Language Files\English.txt; DestDir: {app}; CopyMode: alwaysoverwrite
-Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.90\Language Files\Deutsch.txt; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Euclide.exe; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Output.txt; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Input.txt; DestDir: {app}; CopyMode: alwaysoverwrite; Flags: confirmoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Help File\Euclide.html; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Language Files\Nederlands.txt; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Language Files\Français.txt; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Language Files\English.txt; DestDir: {app}; CopyMode: alwaysoverwrite
+Source: C:\Mes documents\Disque ZIP\Programmes\Euclide\Version 0.91\Language Files\Deutsch.txt; DestDir: {app}; CopyMode: alwaysoverwrite
 Source: Set Language.bat; DestDir: {app}
 Source: Euclide.txt; DestDir: {app}
 

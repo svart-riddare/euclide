@@ -64,6 +64,9 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 						Escape = true;
 					}
 
+					if (NouvellesSolutions == (UINT_MAX - 1))
+						NouvellesSolutions = 0;
+
 					for (unsigned int k = 0; k < NouvellesSolutions; k++)
 						OutputSolution(&Solutions[k], NombreSolutions + k + 1);
 
@@ -77,10 +80,10 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups)
 
 				AnalysePhaseX(&Strategies->StrategieActuelle);
 
-				if (IsEscape())
+				if (IsEscape() == ESCAPE_ESCAPE)
 					Escape = true;
 
-			} while (!Escape && !Duals && ProchaineStrategie(Strategies));
+			} while ((Escape != ESCAPE_ESCAPE) && !Duals && ProchaineStrategie(Strategies));
 
 			Debug = fopen("Debug.txt", "a");
 			if (Debug) {

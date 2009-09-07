@@ -502,12 +502,8 @@ bool InitialisationDesBlocages(const strategie *Strategie)
 							BloquerLaCase(Piece->Scenario->CaseFinale, true, false);
 				}
 				else if (Piece->Assassin->TrajetSiPion) {
-					if (!Piece->Assassin->Promue) {
+					if (!Piece->Assassin->Promue)
 						BloquerLaCase(Piece->Scenario->CaseFinale, true, false);
-					}
-					else if ((Piece->Assassin->Coups <= 6) && (CoupsLibresAdverses < 2)) {
-						BloquerLaCase(Piece->Scenario->CaseFinale, true, false);
-					}
 				}
 			}
 

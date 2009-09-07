@@ -127,8 +127,9 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		AfficherDebutPartie = false;
 		OutputDebutPartie(&Partie->Deplacements[0]);
 
-		if (IsEscape())
-			throw -1;
+		int escape = IsEscape();
+		if (escape)
+			throw -escape;
 	}
 
 	if (Partie->DemiCoups >= Contraintes->DemiCoups) {
@@ -197,6 +198,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		cases Vers = Deplacements[k].Vers;
 		bool PriseEnPassantAuProchainCoup = false;
 
+		Verifier(Qui < MaxHommes);
 		coup *Coup = PremiersCoups[Qui];
 
 		if (PriseEnPassantObligatoire && !Deplacements[k].EnPassant)
@@ -517,6 +519,8 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 			}
 		}
 
+		/* Jouer le coup retenu */
+
 		unsigned int NouvelleProchaineEcheance = *ProchaineEcheance;
 		while ((NouvelleProchaineEcheance < NombreCoupsRepertories) && (CoupsEnOrdre[NouvelleProchaineEcheance]->CoupJoue))
 			NouvelleProchaineEcheance++;
@@ -565,7 +569,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		}
 
 		colonnes NouvellePriseEnPassantPossible = MaxColonnes;
-		if (Qui >= PIONA)
+		if (Deplacements[k].TypePiece == PION)
 			if (abs((int)QuelleRangee(De) - (int)QuelleRangee(Vers)) == 2)
 				NouvellePriseEnPassantPossible = QuelleColonne(De);
 
@@ -1324,6 +1328,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = false;
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 						}
@@ -1351,6 +1356,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 								Deplacement->EnPassant = false;
 								Deplacement->Promotion = false;
 
+								Verifier(Deplacement->Qui < MaxHommes);
 								if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 									Deplacement++;
 							}
@@ -1380,6 +1386,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 								Deplacement->EnPassant = false;
 								Deplacement->Promotion = false;
 
+								Verifier(Deplacement->Qui < MaxHommes);
 								if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 									Deplacement++;
 							}
@@ -1416,6 +1423,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 									Deplacement->EnPassant = false;
 									Deplacement->Promotion = false;
 
+									Verifier(Deplacement->Qui < MaxHommes);
 									if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 										Deplacement++;
 								}
@@ -1441,6 +1449,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == SEPT);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 
@@ -1454,6 +1463,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 								Deplacement->EnPassant = false;
 								Deplacement->Promotion = false;
 
+								Verifier(Deplacement->Qui < MaxHommes);
 								if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 									Deplacement++;
 							}
@@ -1471,6 +1481,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == SEPT);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 						}
@@ -1487,6 +1498,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == SEPT);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 						}
@@ -1507,6 +1519,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 									Deplacement->EnPassant = true;
 									Deplacement->Promotion = false;
 
+									Verifier(Deplacement->Qui < MaxHommes);
 									if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 										Deplacement++;
 								}
@@ -1526,6 +1539,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == DEUX);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 
@@ -1539,6 +1553,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 								Deplacement->EnPassant = false;
 								Deplacement->Promotion = false;
 
+								Verifier(Deplacement->Qui < MaxHommes);
 								if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 									Deplacement++;
 							}
@@ -1556,6 +1571,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == DEUX);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 						}
@@ -1572,6 +1588,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 							Deplacement->EnPassant = false;
 							Deplacement->Promotion = (QuelleRangee(De) == DEUX);
 
+							Verifier(Deplacement->Qui < MaxHommes);
 							if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 								Deplacement++;
 						}
@@ -1592,6 +1609,7 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 									Deplacement->EnPassant = true;
 									Deplacement->Promotion = false;
 
+									Verifier(Deplacement->Qui < MaxHommes);
 									if (!AttentionRoiEnEchec || !IsEncoreEchec(Position, CaseDuRoi, Couleur, Deplacement))
 										Deplacement++;
 								}
