@@ -45,8 +45,6 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 			do {
 				bool Possible = true;
 
-				// RETO : Strategies->StrategieActuelle
-
 				//OutputStrategie(&Strategies->StrategieActuelle, NULL);
 				Possible &= AnalysePhaseA(&Strategies->StrategieActuelle);
 
@@ -63,6 +61,11 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 
 				if (Possible)
 					Possible &= AnalysePhaseD(Partie, Strategies->DemiCoups);
+
+				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
+
+				if (Possible)
+					Possible &= AnalysePhaseE(Partie);
 
 				if (Possible) {
 					OutputStrategie(&Strategies->StrategieActuelle, Partie);
@@ -115,6 +118,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 				fprintf(Debug, "Stratégies, phase C : %u\n", Strategies->StrategieActuelle.IDPhaseC);
 				fprintf(Debug, "Stratégies, phase D : %u\n", Strategies->StrategieActuelle.IDPhaseD);
 				fprintf(Debug, "Stratégies, phase E : %u\n", Strategies->StrategieActuelle.IDPhaseE);
+				fprintf(Debug, "Stratégies, phase F : %u\n", Strategies->StrategieActuelle.IDPhaseF);
 				fprintf(Debug, "\n");
 				fclose(Debug);
 			}

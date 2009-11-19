@@ -124,7 +124,35 @@ bool AnalysePhaseD(pseudopartie *Partie, unsigned int DemiCoups)
 		return false;
 
 	Partie->Strategie->IDPhaseE++;
-	Partie->Strategie->IDFinal = Partie->Strategie->IDPhaseE;
+	return true;
+}
+
+/*************************************************************/
+
+bool AnalysePhaseE(pseudopartie *Partie)
+{
+	strategie *Strategie = Partie->Strategie;
+
+	for (unsigned int i = PIONA; i < MaxHommes; i++)
+	{
+		vie *PionBlanc = &Strategie->PiecesBlanches[i];
+		vie *PionNoir = &Strategie->PiecesNoires[i];
+
+		cases CasePionBlanc = PionBlanc->TrajetSiPion->NombreDeCaptures ? QuelleCase(QuelleColonne(PionBlanc->Depart), QuelleRangee(PionBlanc->TrajetSiPion->Captures[0]) - 1) : PionBlanc->TrajetSiPion->CaseFinale;
+		cases CasePionNoir = PionNoir->TrajetSiPion->NombreDeCaptures ? QuelleCase(QuelleColonne(PionNoir->Depart), QuelleRangee(PionNoir->TrajetSiPion->Captures[0]) + 1) : PionNoir->TrajetSiPion->CaseFinale;
+
+		if ((PionNoir->Scenario->Piece == CAVALIER) && PionNoir->TrajetSiPion->NombreDeCaptures)
+			i = i;
+
+		bool InterceptionBlanche = (QuelleRangee(CasePionBlanc) >= SEPT);
+		bool InterceptionNoire = (QuelleRangee(CasePionNoir) <= DEUX);
+
+		if (InterceptionBlanche && InterceptionNoire)
+			return false;
+	}
+
+	Partie->Strategie->IDPhaseF++;
+	Partie->Strategie->IDFinal = Partie->Strategie->IDPhaseF;
 	return true;
 }
 
