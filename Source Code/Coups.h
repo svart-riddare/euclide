@@ -65,6 +65,7 @@ bool AnalysePhaseA(strategie *Strategie);
 pseudopartie *AnalysePhaseB(strategie *Strategie);
 bool AnalysePhaseC(pseudopartie *Partie);
 bool AnalysePhaseD(pseudopartie *Partie, unsigned int DemiCoups);
+bool AnalysePhaseE(pseudopartie *Partie);
 void AnalysePhaseX(strategie *Strategie);
 
 void Delete(pseudopartie *Partie);

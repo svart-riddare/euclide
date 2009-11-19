@@ -82,6 +82,7 @@ typedef struct _strategie {
 	unsigned int IDPhaseC;
 	unsigned int IDPhaseD;
 	unsigned int IDPhaseE;
+	unsigned int IDPhaseF;
 	unsigned int IDFinal;
 
 	vie PiecesBlanches[MaxHommes];
