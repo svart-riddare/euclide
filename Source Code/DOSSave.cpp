@@ -1,5 +1,6 @@
 #include <windows.h>
 #include "Position.h"
+#include "Version.h"
 
 /*************************************************************/
 
@@ -34,9 +35,10 @@ void Sauvegarde(const diagramme *Diagramme, unsigned int ContinuerDe)
 
 	LONG ReturnA = RegSetValueEx(Key, "Diagramme", NULL, REG_BINARY, (const BYTE *)Diagramme, sizeof(diagramme));
 	LONG ReturnB = RegSetValueEx(Key, "Stratégie", NULL, REG_DWORD, (const BYTE *)&ContinuerDe, sizeof(unsigned int));
+	LONG ReturnC = RegSetValueEx(Key, "Version", NULL, REG_SZ, (const BYTE *)EUCLIDE_VERSION, strlen(EUCLIDE_VERSION) + 1);
 	RegCloseKey(Key);
 	
-	if ((ReturnA != ERROR_SUCCESS) || (ReturnB != ERROR_SUCCESS))
+	if ((ReturnA != ERROR_SUCCESS) || (ReturnB != ERROR_SUCCESS) || (ReturnC != ERROR_SUCCESS))
 		return;
 
 	SauvegardeOk = true;
@@ -67,20 +69,27 @@ unsigned int GetSauvegarde(const diagramme *Diagramme)
 
 	unsigned int Strategie = 0;	
 	diagramme Sauvegarde;
+	char Version[128];
 	
+	DWORD SizeofVersion = sizeof(Version);
 	DWORD SizeofDiagramme = sizeof(diagramme);
 	DWORD SizeofUnsignedInt = sizeof(unsigned int);
 	LONG ResultA = RegQueryValueEx(Key, "Diagramme", NULL, NULL, (BYTE *)&Sauvegarde, &SizeofDiagramme);
 	LONG ResultB = RegQueryValueEx(Key, "Stratégie", NULL, NULL, (BYTE *)&Strategie, &SizeofUnsignedInt);
+	LONG ResultC = RegQueryValueEx(Key, "Version", NULL, NULL, (BYTE *)Version, &SizeofVersion);
 	RegCloseKey(Key);
 
-	if ((ResultA != ERROR_SUCCESS) || (ResultB != ERROR_SUCCESS))
+	if ((ResultA != ERROR_SUCCESS) || (ResultB != ERROR_SUCCESS) || (ResultC != ERROR_SUCCESS))
 		return 0;
 
 	if ((SizeofDiagramme != sizeof(diagramme)) || (SizeofUnsignedInt != sizeof(unsigned int)))
 		return 0;
 
 	if (memcmp(Diagramme, &Sauvegarde, sizeof(diagramme)) != 0)
+		return 0;
+
+	Version[127] = '\0';
+	if (strcmp(Version, EUCLIDE_VERSION) != 0)
 		return 0;
 
 	return Strategie + 1;
