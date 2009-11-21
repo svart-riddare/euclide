@@ -141,9 +141,6 @@ bool AnalysePhaseE(pseudopartie *Partie)
 		cases CasePionBlanc = PionBlanc->TrajetSiPion->NombreDeCaptures ? QuelleCase(QuelleColonne(PionBlanc->Depart), QuelleRangee(PionBlanc->TrajetSiPion->Captures[0]) - 1) : PionBlanc->TrajetSiPion->CaseFinale;
 		cases CasePionNoir = PionNoir->TrajetSiPion->NombreDeCaptures ? QuelleCase(QuelleColonne(PionNoir->Depart), QuelleRangee(PionNoir->TrajetSiPion->Captures[0]) + 1) : PionNoir->TrajetSiPion->CaseFinale;
 
-		if ((PionNoir->Scenario->Piece == CAVALIER) && PionNoir->TrajetSiPion->NombreDeCaptures)
-			i = i;
-
 		bool InterceptionBlanche = (QuelleRangee(CasePionBlanc) >= SEPT);
 		bool InterceptionNoire = (QuelleRangee(CasePionNoir) <= DEUX);
 
