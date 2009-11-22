@@ -133,8 +133,7 @@ bool AnalysePhaseE(pseudopartie *Partie)
 {
 	strategie *Strategie = Partie->Strategie;
 
-	for (unsigned int i = PIONA; i < MaxHommes; i++)
-	{
+	for (unsigned int i = PIONA; i < MaxHommes; i++) {
 		vie *PionBlanc = &Strategie->PiecesBlanches[i];
 		vie *PionNoir = &Strategie->PiecesNoires[i];
 
@@ -146,6 +145,37 @@ bool AnalysePhaseE(pseudopartie *Partie)
 
 		if (InterceptionBlanche && InterceptionNoire)
 			return false;
+	}
+
+	for (unsigned int i = PIONA; i < MaxHommes; i++) {
+		vie *PionBlanc = &Strategie->PiecesBlanches[i];
+		if (PionBlanc->Promue || PionBlanc->Capturee)
+			continue;
+
+		cases CaseDepartPionBlanc = PionBlanc->TrajetSiPion->NombreDeCaptures ? PionBlanc->TrajetSiPion->Captures[PionBlanc->TrajetSiPion->NombreDeCaptures - 1] : PionBlanc->TrajetSiPion->CaseDepart;
+		cases CaseFinalePionBlanc = PionBlanc->TrajetSiPion->CaseFinale;
+
+		for (unsigned int j = PIONA; j < MaxHommes; j++) {
+			vie *PionNoir = &Strategie->PiecesNoires[j];
+			if (PionNoir->Promue || PionNoir->Capturee)
+				continue;
+
+			cases CaseDepartPionNoir = PionNoir->TrajetSiPion->NombreDeCaptures ? PionNoir->TrajetSiPion->Captures[PionNoir->TrajetSiPion->NombreDeCaptures - 1] : PionNoir->TrajetSiPion->CaseDepart;
+			cases CaseFinalePionNoir = PionNoir->TrajetSiPion->CaseFinale;
+
+			if (QuelleColonne(CaseDepartPionBlanc) != QuelleColonne(CaseDepartPionNoir))
+				continue;
+
+			if (QuelleRangee(CaseDepartPionBlanc) <= QuelleRangee(CaseFinalePionNoir))
+				if (QuelleRangee(CaseFinalePionNoir) <= QuelleRangee(CaseFinalePionBlanc))
+					if (QuelleRangee(CaseFinalePionBlanc) <= QuelleRangee(CaseDepartPionNoir))
+						return false;
+
+			if (QuelleRangee(CaseDepartPionNoir) >= QuelleRangee(CaseFinalePionBlanc))
+				if (QuelleRangee(CaseFinalePionBlanc) >= QuelleRangee(CaseFinalePionNoir))
+					if (QuelleRangee(CaseFinalePionNoir) >= QuelleRangee(CaseDepartPionBlanc))
+						return false;
+		}
 	}
 
 	Partie->Strategie->IDPhaseF++;
