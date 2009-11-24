@@ -591,8 +591,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 	OutputStrategieId(Strategie->IDFinal);
 	OutputChrono(GetElapsedTime());
 
-	/* TEMPORAIRE */
-
+#ifndef NDEBUG
 	FILE *Debug = fopen("Debug.txt", "a");
 
 	if (Debug) {
@@ -650,8 +649,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 		fprintf(Debug, "\n");
 		fclose(Debug);
 	}
-
-	/* FIN DU TEMPORAIRE */
+#endif
 
 	delete[] Output;
 }

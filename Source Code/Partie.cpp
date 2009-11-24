@@ -108,9 +108,11 @@ static deplacement MemoireDeplacements[MaxCoups][MaxDeplacements];
 bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, undo *Undos, solution *Solutions, unsigned int MaxSolutions, unsigned int *NombreSolutions, bool PriseEnPassantObligatoire)
 {
 	static FILE *Debug = NULL;
-/*
+
+#ifndef NDEBUG
 	if (!Partie->DemiCoups)
-		Debug = fopen("Debug.txt", "a");*/
+		Debug = fopen("Debug.txt", "a");
+#endif
 
 	static unsigned int Bonjour = 0;
 	static unsigned int UseHashTables = true;
@@ -145,6 +147,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 
 			*NombreSolutions += 1;
 
+#ifndef NDEBUG
 			if (Debug) {
 				char Space[MaxCoups + 2];
 				memset(Space, ' ', Partie->DemiCoups + 1);
@@ -158,6 +161,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 				fprintf(Debug, "\n");
 				fflush(Debug);
 			}
+#endif
 
 			if (*NombreSolutions >= MaxSolutions)
 				throw (int)MaxSolutions;
@@ -646,6 +650,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		NombreUndos = 0;
 	}
 
+#ifndef NDEBUG
 	if (Partie->DemiCoups == 0) {
 		if (!Debug)
 			Debug = fopen("Debug.txt", "a");
@@ -654,6 +659,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		fclose(Debug);
 		Debug = NULL;
 	}
+#endif
 
 	return AuMoinsUneSolution;
 }
