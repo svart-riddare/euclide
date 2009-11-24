@@ -57,6 +57,8 @@ typedef struct _contraintes {
 /*************************************************************/
 
 typedef struct _etatdujeu {
+	unsigned int Strategie;
+
 	pieces Pieces[MaxCases];
 	hommes Hommes[MaxCases];
 	couleurs Couleurs[MaxCases];

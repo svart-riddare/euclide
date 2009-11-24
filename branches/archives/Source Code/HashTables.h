@@ -6,18 +6,27 @@
 
 /*************************************************************/
 
+typedef struct _hashheader {
+	unsigned int Strategie : 32;
+	unsigned int DemiCoups : 8;
+
+	unsigned int GrandRoqueBlanc : 1;
+	unsigned int PetitRoqueBlanc : 1;
+	unsigned int GrandRoqueNoir : 1;
+	unsigned int PetitRoqueNoir : 1;
+
+	unsigned int Zero : 20;
+} hashheader;
+
 typedef struct _hashdata {
-	unsigned __int8 Position[MaxCases / 2];
+	unsigned __int64 CasesOccupees;
+	unsigned __int8 Pieces[MaxHommes];
 } hashdata;
 
-typedef struct _hashtag {
-	unsigned int DemiCoups : 3;
-	bool GrandRoqueBlanc : 1;
-	bool PetitRoqueBlanc : 1;
-	bool GrandRoqueNoir : 1;
-	bool PetitRoqueNoir : 1;
-	bool Valide : 1;
-} hashtag;
+typedef struct _hashentry {
+	hashheader Entete;
+	hashdata Position;
+} hashentry;
 
 /*************************************************************/
 

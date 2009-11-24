@@ -16,7 +16,7 @@ static undo UndoTable[MaxUndos];
 
 /*************************************************************/
 
-etatdujeu *CreerPositionInitiale();
+etatdujeu *CreerPositionInitiale(unsigned int Strategie);
 contraintes *CreerContraintes(pseudopartie *PseudoPartie, unsigned int DemiCoups);
 void FigerCertainesPieces(const pseudopartie *PseudoPartie, etatdujeu *Position);
 int TriDesCoups(const void *A, const void *B);
@@ -35,10 +35,13 @@ void ModifyWithUndo(undo *Undos, unsigned int *Nombre, const vie **Pointeur, vie
 
 unsigned int GenerationDesSolutions(pseudopartie *PseudoPartie, unsigned int DemiCoups, solution *Solutions, unsigned int MaxSolutions)
 {
-	etatdujeu *PositionInitiale = CreerPositionInitiale();
+	etatdujeu *PositionInitiale = CreerPositionInitiale(PseudoPartie->Strategie->IDFinal);
 	contraintes *Contraintes = CreerContraintes(PseudoPartie, DemiCoups);
 	FigerCertainesPieces(PseudoPartie, PositionInitiale);
 	InitialisationDesTablesDeDeplacementsBis();
+
+	if (PositionInitiale->Strategie == 1)
+		InitHashTables();
 
 	unsigned int NombreSolutions = 0;
 
@@ -110,17 +113,9 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 		Debug = fopen("Debug.txt", "a");*/
 
 	static unsigned int Bonjour = 0;
-	static unsigned int UseHashTables = false;
+	static unsigned int UseHashTables = true;
 
-	if (!Partie->DemiCoups) {
-		UseHashTables = false;
-		Bonjour = 0;
-	}
-
-	if (++Bonjour == 3) {  // On peut mettre une valeur plus grande selon le temps d'initialisation des tables, genre 100 ou plus
-		InitHashTables();
-		UseHashTables = true;
-	}
+	Bonjour++;
 
 	static bool AfficherDebutPartie = false;
 	if (AfficherDebutPartie && (Partie->DemiCoups == 10)) {
@@ -702,10 +697,11 @@ void FigerCertainesPieces(const pseudopartie *PseudoPartie, etatdujeu *Position)
 
 /*************************************************************/
 
-etatdujeu *CreerPositionInitiale()
+etatdujeu *CreerPositionInitiale(unsigned int Strategie)
 {
 	static etatdujeu Position;
 
+	Position.Strategie = Strategie;
 	Position.DemiCoups = 0;
 	Position.Trait = BLANCS;
 
