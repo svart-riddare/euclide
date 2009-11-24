@@ -5,8 +5,9 @@
 
 /*************************************************************/
 
-static const unsigned int BITSFORMOVES = 4;
-static const unsigned int HASHSIZE = (1 << 16) * (1 << BITSFORMOVES);
+static const unsigned int BITSFORMOVES = 2;
+static const unsigned int HASHBITS = 2;
+static const unsigned int HASHSIZE = (1 << 16) * (1 << BITSFORMOVES) * (1 << HASHBITS);
 
 static hashentry *HashTables = NULL;
 
@@ -35,6 +36,10 @@ void InsertPosition(const etatdujeu *Position, unsigned int Index)
 	if (Index >= UINT_MAX)
 		Index = ComputeHashIndex(Position->Couleurs, Position->DemiCoups);
 
+	for (unsigned int Slot = 0; Slot < (1 << HASHBITS) - 1; Slot++, Index++)
+		if (HashTables[Index].Entete.Strategie != Position->Strategie)
+			break;
+
 	PositionToHashEntry(Position, &HashTables[Index]);
 }
 
@@ -51,9 +56,13 @@ bool IsPositionIn(const etatdujeu *Position, unsigned int Index)
 		Index = ComputeHashIndex(Position->Couleurs, Position->DemiCoups);
 
 	if (HashTables[Index].Entete.Strategie == Position->Strategie) {
-		if (HashTables[Index].Entete.DemiCoups == Position->DemiCoups) {
-			PositionToHashEntry(Position, &HashEntry);
-			if (memcmp(&HashTables[Index], &HashEntry, sizeof(hashentry)) == 0)
+		PositionToHashEntry(Position, &HashEntry);
+	
+		for (unsigned int Slot = 0; Slot < (1 << HASHBITS); Slot++) {
+			if (HashTables[Index + Slot].Entete.Strategie != Position->Strategie)
+				return false;
+
+			if (memcmp(&HashTables[Index + Slot], &HashEntry, sizeof(hashentry)) == 0)
 				return true;
 		}
 	}
@@ -212,6 +221,7 @@ unsigned int ComputeHashIndex(const couleurs *Couleurs, unsigned int DemiCoups)
 	Valeur = ValeurA ^ ValeurB ^ ValeurC ^ ValeurD;
 	HashIndex |= ((Valeur & 1) << 15);
 
+	HashIndex = HashIndex << HASHBITS;
 	Verifier(HashIndex < HASHSIZE);
 
 	return HashIndex;
