@@ -17,8 +17,10 @@
 
 bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsigned int ContinuerDe, bool ModeExpress)
 {
+#ifndef NDEBUG
 	FILE *Debug = fopen("Debug.txt", "w");
 	fclose(Debug);
+#endif
 
 	StartTimer();
 	OutputEntete(PositionEPD, DemiCoups);
@@ -110,6 +112,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 				
 			} while (!Escape && !Duals && ProchaineStrategie(Strategies, (_texte)Texte));
 
+#ifndef NDEBUG
 			Debug = fopen("Debug.txt", "a");
 			if (Debug) {
 				fprintf(Debug, "\n");
@@ -122,6 +125,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 				fprintf(Debug, "\n");
 				fclose(Debug);
 			}
+#endif
 
 			if (!Escape) {
 				OutputNombreSolutions(NombreSolutions, Duals, true);
