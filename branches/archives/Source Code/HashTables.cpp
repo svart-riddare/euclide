@@ -5,9 +5,10 @@
 
 /*************************************************************/
 
-static const unsigned int BITSFORMOVES = 2;
-static const unsigned int HASHBITS = 2;
-static const unsigned int HASHSIZE = (1 << 16) * (1 << BITSFORMOVES) * (1 << HASHBITS);
+static unsigned int BITSFORMOVES = 2;
+static unsigned int HASHBITS = 2;
+static unsigned int HASHSLOTS = 1 << HASHBITS;
+static unsigned int HASHSIZE = (1 << 16) * (1 << BITSFORMOVES) * (1 << HASHBITS);
 
 static hashentry *HashTables = NULL;
 
@@ -17,10 +18,34 @@ void PositionToHashEntry(const etatdujeu *Position, hashentry *HashEntry);
 
 /*************************************************************/
 
-void InitHashTables()
+void CreateHashTables(unsigned int MemoireDisponible)
 {
+	if (HashTables)
+		return;
+
+	if (MemoireDisponible < 25)
+		MemoireDisponible = 25;
+
+	if (MemoireDisponible > 30)
+		MemoireDisponible = 30;
+
+	BITSFORMOVES = (MemoireDisponible - 21) / 2;
+	HASHBITS = (MemoireDisponible - 20) / 2;
+	HASHSLOTS = 1 << HASHBITS;
+	HASHSIZE = 1 << (MemoireDisponible - 5);
+
 	if (!HashTables)
 		HashTables = new hashentry[HASHSIZE];
+
+	if (!HashTables && (MemoireDisponible > 25))
+		CreateHashTables(MemoireDisponible - 1);
+}
+
+/*************************************************************/
+
+void InitHashTables()
+{
+	CreateHashTables();
 
 	if (HashTables)
 		memset(HashTables, 0, HASHSIZE * sizeof(hashentry));
@@ -36,7 +61,7 @@ void InsertPosition(const etatdujeu *Position, unsigned int Index)
 	if (Index >= UINT_MAX)
 		Index = ComputeHashIndex(Position->Couleurs, Position->DemiCoups);
 
-	for (unsigned int Slot = 0; Slot < (1 << HASHBITS) - 1; Slot++, Index++)
+	for (unsigned int Slot = 0; Slot < HASHSLOTS - 1; Slot++, Index++)
 		if (HashTables[Index].Entete.Strategie != Position->Strategie)
 			break;
 
@@ -58,7 +83,7 @@ bool IsPositionIn(const etatdujeu *Position, unsigned int Index)
 	if (HashTables[Index].Entete.Strategie == Position->Strategie) {
 		PositionToHashEntry(Position, &HashEntry);
 	
-		for (unsigned int Slot = 0; Slot < (1 << HASHBITS); Slot++) {
+		for (unsigned int Slot = 0; Slot < HASHSLOTS; Slot++) {
 			if (HashTables[Index + Slot].Entete.Strategie != Position->Strategie)
 				return false;
 
