@@ -30,6 +30,7 @@ typedef struct _hashentry {
 
 /*************************************************************/
 
+void CreateHashTables(unsigned int MemoireDisponible = 0);
 void InitHashTables();
 
 void InsertPosition(const etatdujeu *Position, unsigned int Index = UINT_MAX);

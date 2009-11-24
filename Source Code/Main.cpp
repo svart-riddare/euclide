@@ -4,6 +4,7 @@
 #include "Coups.h"
 #include "Epd.h"
 #include "Erreur.h"
+#include "HashTables.h"
 #include "Main.h"
 #include "Mouvements.h"
 #include "Output.h"
@@ -158,11 +159,12 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 
 /*************************************************************/
 
-void MainStart()
+void MainStart(unsigned int MemoireDisponible)
 {
 	OutputCreate();
 	ChoixDeLangue();
 	CreationDesTablesDeMouvement();
+	CreateHashTables(MemoireDisponible);
 }
 
 /*************************************************************/
