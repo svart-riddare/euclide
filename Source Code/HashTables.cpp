@@ -8,57 +8,52 @@
 static const unsigned int BITSFORMOVES = 4;
 static const unsigned int HASHSIZE = (1 << 16) * (1 << BITSFORMOVES);
 
-static hashdata *AllHashData = NULL;
-static hashtag AllHashTags[HASHSIZE];
+static hashentry *HashTables = NULL;
 
 /*************************************************************/
 
-void PositionToHashData(const pieces *Pieces, const couleurs *Couleurs, hashdata *HashData);
-void PositionToHashTag(const etatdujeu *Position, hashtag *HashTag);
+void PositionToHashEntry(const etatdujeu *Position, hashentry *HashEntry);
 
 /*************************************************************/
 
 void InitHashTables()
 {
-	if (!AllHashData)
-		AllHashData = new hashdata[HASHSIZE];
+	if (!HashTables)
+		HashTables = new hashentry[HASHSIZE];
 
-	if (AllHashData)
-		memset(AllHashTags, 0, HASHSIZE * sizeof(hashtag));
+	if (HashTables)
+		memset(HashTables, 0, HASHSIZE * sizeof(hashentry));
 }
 
 /*************************************************************/
 
 void InsertPosition(const etatdujeu *Position, unsigned int Index)
 {
-	if (!AllHashData)
+	if (!HashTables)
 		return;
 
 	if (Index >= UINT_MAX)
 		Index = ComputeHashIndex(Position->Couleurs, Position->DemiCoups);
 
-	PositionToHashTag(Position, &AllHashTags[Index]);
-	PositionToHashData(Position->Pieces, Position->Couleurs, &AllHashData[Index]);
+	PositionToHashEntry(Position, &HashTables[Index]);
 }
 
 /*************************************************************/
 
 bool IsPositionIn(const etatdujeu *Position, unsigned int Index)
 {
-	static hashdata HashData;
-	static hashtag HashTag;
+	hashentry HashEntry;
 
-	if (!AllHashData)
+	if (!HashTables)
 		return false;
 
 	if (Index >= UINT_MAX)
 		Index = ComputeHashIndex(Position->Couleurs, Position->DemiCoups);
 
-	if (AllHashTags[Index].Valide) {
-		PositionToHashTag(Position, &HashTag);
-		if (memcmp(&HashTag, &AllHashTags[Index], sizeof(hashtag)) == 0) {
-			PositionToHashData(Position->Pieces, Position->Couleurs, &HashData);
-			if (memcmp(&AllHashData[Index], &HashData, sizeof(hashdata)) == 0)
+	if (HashTables[Index].Entete.Strategie == Position->Strategie) {
+		if (HashTables[Index].Entete.DemiCoups == Position->DemiCoups) {
+			PositionToHashEntry(Position, &HashEntry);
+			if (memcmp(&HashTables[Index], &HashEntry, sizeof(hashentry)) == 0)
 				return true;
 		}
 	}
@@ -68,30 +63,34 @@ bool IsPositionIn(const etatdujeu *Position, unsigned int Index)
 
 /*************************************************************/
 
-void PositionToHashData(const pieces *Pieces, const couleurs *Couleurs, hashdata *HashData)
+void PositionToHashEntry(const etatdujeu *Position, hashentry *HashEntry)
 {
-	for (unsigned int i = 0; i < MaxCases / 2; i++) {
-		unsigned __int8 Data = 0;
+	const pieces *Pieces = Position->Pieces;
+	const couleurs *Couleurs = Position->Couleurs;
+	unsigned int NombreDePieces = 0;
 
-		Data |= (unsigned __int8)(Pieces[i] & 0x07);
-		Data |= (unsigned __int8)((Pieces[MaxCases - i - 1] << 3) & 0x38);
-		Data |= (unsigned __int8)(((Couleurs[i] - 1) << 6) & 0x40);
-		Data |= (unsigned __int8)(((Couleurs[MaxCases - i - 1] - 1) << 7) & 0x80);
+	HashEntry->Entete.Strategie = Position->Strategie;
+	HashEntry->Entete.DemiCoups = Position->DemiCoups;
+	HashEntry->Entete.GrandRoqueBlanc = Position->GrandRoqueBlancPossible;
+	HashEntry->Entete.PetitRoqueBlanc = Position->PetitRoqueBlancPossible;
+	HashEntry->Entete.GrandRoqueNoir = Position->GrandRoqueNoirPossible;
+	HashEntry->Entete.PetitRoqueNoir = Position->PetitRoqueNoirPossible;
+	HashEntry->Entete.Zero = 0;
 
-		HashData->Position[i] = Data;
+	HashEntry->Position.CasesOccupees = 0;
+	for (unsigned int i = 0; i < MaxCases; i++) {
+		if (Pieces[i] != VIDE) {
+			HashEntry->Position.CasesOccupees |= ((unsigned __int64)1 << i);
+
+			if (NombreDePieces < MaxHommes)
+				HashEntry->Position.Pieces[NombreDePieces++] = (Pieces[i] << 1) | (Couleurs[i] - 1);
+			else
+				HashEntry->Position.Pieces[NombreDePieces++ % MaxHommes] |= ((Pieces[i] << 1) | (Couleurs[i] - 1)) << 4;
+		}
 	}
-}
 
-/*************************************************************/
-
-void PositionToHashTag(const etatdujeu *Position, hashtag *HashTag)
-{
-	HashTag->DemiCoups = Position->DemiCoups >> BITSFORMOVES;
-	HashTag->GrandRoqueBlanc = Position->GrandRoqueBlancPossible;
-	HashTag->PetitRoqueBlanc = Position->PetitRoqueBlancPossible;
-	HashTag->GrandRoqueNoir = Position->GrandRoqueNoirPossible;
-	HashTag->PetitRoqueNoir = Position->PetitRoqueNoirPossible;
-	HashTag->Valide = true;
+	for (unsigned int i = NombreDePieces; i < MaxHommes; i++)
+		HashEntry->Position.Pieces[i] = 0;
 }
 
 /*************************************************************/
@@ -219,4 +218,5 @@ unsigned int ComputeHashIndex(const couleurs *Couleurs, unsigned int DemiCoups)
 }
 
 /*************************************************************/
+
 
