@@ -12,6 +12,7 @@ FILES = \
 	Coups.cpp \
 	Epd.cpp \
 	Erreur.cpp \
+	Euclide.cpp \
 	HashTables.cpp \
 	Main.cpp \
 	Mouvements.cpp \
@@ -20,9 +21,9 @@ FILES = \
 	Permutation.cpp \
 	Position.cpp \
 	Timer.cpp \
-	UnixMain.cpp \
 	UnixOutput.cpp \
-	UnixSave.cpp
+	UnixSave.cpp \
+	UnixSystem.cpp
 
 HEADERS = \
 	Constantes.h \
@@ -38,6 +39,7 @@ HEADERS = \
 	Permutation.h \
 	Position.h \
 	Save.h \
+	System.h \
 	Timer.h \
 	Version.h
 
