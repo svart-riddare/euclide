@@ -1,0 +1,57 @@
+ PCAATDR
+,
+movimientos
+Pulse una tecla para continuar...
+¡Error interno! Por favor contacte con el autor.
+Análisis terminado.
+Solución no encontrada
+Una solución
+Solución única
+soluciones
+varias soluciones
+Problema demolido
+
+Análisis de la estructura de peones
+Recuento de piezas
+Identificación de las casillas infranqueables
+Análisis de los movimientos
+Buscando trayectorias
+Análisis de la posición de los alfiles
+Descarte de trayectorias demasiado largas
+Análisis rápido de capturas
+Determinación de trayectorias de piezas capturadas
+Análisis de enroques
+Análisis de piezas promocionadas
+Estudio de permutaciones por cada tipo de pieza
+Preparación de la búsqueda de todas las estrategias posibles
+Buscando una estrategia
+Análisis de estrategias
+Reanudando análisis
+
+¡Demasiados peones!
+¡Demasiadas piezas!
+¡Demasiadas piezas promocionadas!
+¡Cada bando debe tener uno y sólo un rey!
+Estructura de peones ilegal.
+Confusión de lenguaje decodificando la cadena EPD.
+Error en la cadena EPD.
+Imposible alcanzar la posición en el número de jugadas requerido.
+No se puede justificar la presencia de algunas piezas.
+No se pueden justificar algunas capturas.
+No se puede justificar la presencia de piezas promocionadas.
+¡Este problema no tiene solución!
+Análisis interrumpido por el usuario.
+¡Error de lectura!
+[Euclide.exe] Argumentos incorrectos en línea de comandos.
+Algún enunciado no pudo ser identificado.
+Partida demasiado larga para ser analizada.
+
+Problema analizado:
+Solución
+Resultado:
+segundos
+Análisis interrumpido
+<Omitida> Estrategia
+Comienzo del análisis a partir de la estrategia
+
+Salvador Bosch Pérez
