@@ -5,6 +5,7 @@
 #include "Epd.h"
 #include "Main.h"
 #include "Output.h"
+#include "System.h"
 
 /*************************************************************/
 
@@ -12,48 +13,83 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 
 /*************************************************************/
 /* Arguments :                                               */
-/*   <filename>        : Nom du fichier à analyser           */
+/*   <input> [<out>]   : Fichier à analyser et de résultat.  */
 /*   <epd> <halfmoves> : Problème à analyser.                */
 /*   -s25              : Débuter à la stratégie 25.          */
+/*   -batch            : Analyser tous les problèmes.        */
+/*   -m18              : Utiliser 2^18 octets de mémoire.    */
 /*************************************************************/
 
 int main(int NombreArguments, char *Arguments[])
 {
-	MainStart();
-	
 	bool Continuer = true;	
 	bool ModeExpress = false;
 	unsigned int ContinuerDe = 0;
 
-	if (NombreArguments > 1) {
-		if (memcmp(Arguments[1], "-s", strlen("-s")) == 0) {
-			ContinuerDe = atoi(&Arguments[1][strlen("-s")]);
-			if (!ContinuerDe)
-				Continuer = false;
+	unsigned int UtilisationMemoire = MemoireDisponible();
 
-			NombreArguments--;
-			Arguments++;
+	const char *PremierArgument = NULL;
+	const char *SecondArgument = NULL;
+	const char *TroisiemeArgument = NULL;
+
+	bool ModeFichier = true;
+
+	while (NombreArguments > 1)
+	{
+		if (memcmp(Arguments[1], "-s", strlen("-s")) == 0) {
+			if (strlen(Arguments[1]) > strlen("-s")) {
+				ContinuerDe = atoi(&Arguments[1][strlen("-s")]);
+				if (ContinuerDe <= 0)
+					Continuer = false;
+			}
 		}
 		else if (strcmp(Arguments[1], "-batch") == 0) {
 			ModeExpress = true;
-
-			NombreArguments--;
-			Arguments++;
 		}
+		else if (memcmp(Arguments[1], "-m", strlen("-m")) == 0) {
+			if (strlen(Arguments[1]) > strlen("-m"))
+				UtilisationMemoire = atoi(&Arguments[1][strlen("-m")]);
+		}
+		else {
+			if (SecondArgument)
+				TroisiemeArgument = Arguments[1];
+			else if (PremierArgument)
+				SecondArgument = Arguments[1];
+			else
+				PremierArgument = Arguments[1];
+
+			if (SecondArgument) {
+				if (atoi(SecondArgument) > 0)
+					ModeFichier = false;
+
+				char Nombre[32];
+				sprintf(Nombre, "%d", atoi(SecondArgument));
+				if (strcmp(SecondArgument, Nombre))
+					ModeFichier = true;
+			}
+		}
+
+		NombreArguments--;
+		Arguments++;
 	}
 
-	switch (NombreArguments) {
-		case 2 :
-			LireLeFichier(Arguments[1], Continuer, ContinuerDe, ModeExpress);
-			break;
-		case 3 :
-			Main(Arguments[1], atoi(Arguments[2]), Continuer, ContinuerDe, ModeExpress);
-			break;
-			
-		default :
-			OutputMessageErreur(MESSAGE_MAUVAISARGUMENTS);
-			WaitForInput();
-			break;
+	MainStart(UtilisationMemoire);
+
+	if (!PremierArgument)
+	{
+		OutputMessageErreur(MESSAGE_MAUVAISARGUMENTS);
+		WaitForInput();
+	}
+	else
+	if (ModeFichier)
+	{
+		OutputFile(SecondArgument);
+		LireLeFichier(PremierArgument, Continuer, ContinuerDe, ModeExpress);
+	}
+	else
+	{
+		OutputFile(TroisiemeArgument);
+		Main(PremierArgument, atoi(SecondArgument), Continuer, ContinuerDe, ModeExpress);
 	}
 
     MainEnd();
@@ -117,5 +153,3 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 }
 
 /*************************************************************/
-
-

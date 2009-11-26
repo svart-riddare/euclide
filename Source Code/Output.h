@@ -87,6 +87,7 @@ void OutputMessage(texte Message, unsigned int Compte = 0);
 void OutputNombreSolutions(unsigned int NombreSolutions, bool Duals, bool Final);
 void OutputMessageErreur(texte Message);
 
+void OutputFile(const char *Fichier);
 void OutputEntete(const char *PositionEPD, unsigned int DemiCoups);
 void OutputSolution(const solution *Solution, unsigned int Numero, bool Dual);
 void OutputPiedDePage(unsigned int NombreSolutions, bool Duals, bool Escape);

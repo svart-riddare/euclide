@@ -227,6 +227,14 @@ static FILE *Output = NULL;
 
 /*************************************************************/
 
+void OutputFile(const char *Fichier)
+{
+	if (!Output && Fichier)
+		Output = fopen(Fichier, "w");
+}
+
+/*************************************************************/
+
 void OutputEntete(const char *PositionEPD, unsigned int DemiCoups) 
 {
 	if (!Output)
