@@ -3,6 +3,7 @@
 
 #include <limits.h>
 #include "Constantes.h"
+#include "Entiers.h"
 
 /*************************************************************/
 
@@ -19,8 +20,8 @@ typedef struct _hashheader {
 } hashheader;
 
 typedef struct _hashdata {
-	unsigned __int64 CasesOccupees;
-	unsigned __int8 Pieces[MaxHommes];
+	uint64_t CasesOccupees;
+	uint8_t Pieces[MaxHommes];
 } hashdata;
 
 typedef struct _hashentry {

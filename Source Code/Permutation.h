@@ -62,7 +62,7 @@ typedef struct _vie {
 	bool Promue;
 	bool SwitchbackEvident;
 	bool Switchback;
-    cases CaseDuSwitchback;
+	cases CaseDuSwitchback;
 
 	unsigned int NombreAssassinats;
 	_vie *Assassinats[MaxHommes];
@@ -128,7 +128,7 @@ typedef struct _strategies {
 /* On a un gros problème avec l'inclusion de output.h        */
 /*************************************************************/
 
-typedef enum _texte;
+typedef enum { } _texte;
 
 strategies *ExamenDesStrategies(const position *Position, _texte Texte);
 bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois = false);
