@@ -1,5 +1,3 @@
-#pragma warning(disable: 4514)  // In Timer.h
-
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
