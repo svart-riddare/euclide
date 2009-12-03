@@ -1,7 +1,8 @@
 
 CC = g++
 DEBUG = -g
-CFLAGS = -Wall -O3 -DNDEBUG
+CFLAGS = -Wall -O3 -DNDEBUG -I/usr/include/ncursesw
+LFLAGS = -lncursesw
 TARGET = euclide
 
 SOURCE = ../Source\ Code
@@ -48,7 +49,7 @@ OBJECTS = $(patsubst %.cpp, %.o, $(FILES))
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $(OUTPUT)/$(TARGET)
+	$(CC) $(LFLAGS) $(OBJECTS) -o $(OUTPUT)/$(TARGET)
 
 $(OBJECTS) : %.o : $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) -c "$<" -o $@ 
