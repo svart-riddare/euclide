@@ -42,22 +42,23 @@ Euclide web page example :
 		36
 
 
-Timings on a 128Mb 1GHz machine running Win98 :
------------------------------------------------
+Timing required to solve above problems :
+-----------------------------------------
 
-Web page example : 9 minutes 34 seconds
 
-Messigny :
-1°    9.0 moves    17.58 seconds
-2°    9.5 moves    73 minutes
-3°   13.0 moves    13 hours  
-4°   15.5 moves    5.71 seconds
-5°   18.0 moves    Interrupted after 7 hours
-6°   20.5 moves    2.35 seconds
+                  | Euclide 0.90 (2000)       | Euclide 0.95 (2009)      |
+                  | 1GHz Pentium-IV           | 2.4 GHz P8600 Core 2 Duo |
+                  | 128 Mbytes of RAM         | 4 Gbytes of RAM          |
+                  | Windows 98                | Windows 7 64 bits        |
+                  |---------------------------|--------------------------|
+Web page example  | 9 minutes 34 seconds      | 1 minute 43 seconds      |
+                  |                           |                          |
+Messigny :        |                           |                          |
+1°    9.0 moves   | 17.58 seconds             | 2.22 seconds             |
+2°    9.5 moves   | 73 minutes                | 6 minutes 50 seconds     |
+3°   13.0 moves   | 13 hours                  | 3.37 seconds (!)         |
+4°   15.5 moves   | 5.71 seconds              | 0.63 seconds             |
+5°   18.0 moves   | Interrupted after 7 hours | 5 hours                  |
+6°   20.5 moves   | 2.35 seconds              | 0.70 seconds             |
 
-In the second problem, Euclide does not see that using the queen to capture the black pieces is impossible because of the proximity of the black king.
-In the third problem, Euclide fails to see that Pd7-d6 blocks the path of the black queen.
-In the fifth problem, Euclide again fails to see impossible paths caused by checks to the white king.
-
-Étienne
 

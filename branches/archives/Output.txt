@@ -1,6 +1,6 @@
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
@@ -23,11 +23,11 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	2:58.49 secondes
+	1:41.43 secondes
 
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
@@ -48,11 +48,11 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	0.69 secondes
+	0.70 secondes
 
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
@@ -72,11 +72,11 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	0.50 secondes
+	0.63 secondes
 
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
@@ -93,11 +93,11 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	4.48 secondes
+	2.22 secondes
 
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
@@ -115,19 +115,17 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	25:36.37 secondes
+	6:50.73 secondes
 
 
 #############################################
-## Euclide 0.94, ©2000-2009 Étienne Dupuis ##
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
 #############################################
 
 Problème analysé :
 	r3kbn1/pp2p1pn/1p1p1pr1/7p/7P/8/PPbPPPPq/RNBQKBN1
 	26
 
-<Omise> Stratégie #13
-<Omise> Stratégie #21
 
 Solution #1 :
 ---------------------------------------------------------------------
@@ -140,6 +138,29 @@ Solution #1 :
 
 Verdict :
 	Solution unique
-	1:15:30.37 secondes
+	3.37 secondes
 
+
+#############################################
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
+#############################################
+
+Problème analysé :
+	rn4n1/p7/bpppKpp1/k1r1p1qp/7b/5P1P/PPPPP1P1/RNBQ1BNR
+	36
+
+
+Solution #1 :
+---------------------------------------------------------------------
+ 1. Cg1-f3   Ph7-h5     2. Cf3-e5   Th8-h6     3. Pf2-f3   Th6-c6    
+ 4. Re1-f2   Pd7-d6     5. Ce5-d7   Pe7-e5     6. Rf2-e3   Ff8-e7    
+ 7. Re3-d3   Fe7-h4     8. Rd3-e4   Dd8-g5     9. Re4-d5   Pf7-f6    
+10. Rd5-e6   Re8-d8    11. Re6-f7   Tc6-c5    12. Cd7-f8   Pc7-c6    
+13. Cf8-g6   Rd8-c7    14. Cg6-f4   Rc7-b6    15. Cf4-h3   Rb6-a5    
+16. Ch3-g1   Pb7-b6    17. Ph2-h3   Fc8-a6    18. Rf7-e6   Pg7-g6    
+
+
+Verdict :
+	Solution unique
+	4:59:46.56 secondes
 

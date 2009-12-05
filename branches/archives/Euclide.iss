@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Euclide
-AppVerName=Euclide 0.94
+AppVerName=Euclide 0.95
 AppPublisher=Étienne Dupuis
 AppPublisherURL=http://lestourtereaux.free.fr/euclide/
 AppSupportURL=http://lestourtereaux.free.fr/euclide/
@@ -11,7 +11,7 @@ AppUpdatesURL=http://lestourtereaux.free.fr/euclide/
 DefaultDirName={pf}\Euclide
 DefaultGroupName=Euclide
 
-AppVersion=0.94
+AppVersion=0.95
 ; uncomment the following line if you want your installation to run on NT 3.51 too.
 ; MinVersion=4,3.51
 
@@ -19,8 +19,8 @@ AppVersion=0.94
 
 [Files]
 Source: Euclide.exe; DestDir: {app}; Flags: ignoreversion
-Source: Output.txt; DestDir: {app}; Flags: ignoreversion
-Source: Input.txt; DestDir: {app}; Flags: confirmoverwrite ignoreversion
+Source: Output.txt; DestDir: {app}; Flags: ignoreversion; Permissions: users-modify
+Source: Input.txt; DestDir: {app}; Flags: confirmoverwrite ignoreversion; Permissions: users-modify
 Source: Help File\Euclide.html; DestDir: {app}; Flags: ignoreversion
 Source: Help File\Uputstvo-Euclide.doc; DestDir: {app}; Flags: ignoreversion
 Source: Language Files\Slovencina.txt; DestDir: {app}; Flags: ignoreversion
@@ -31,12 +31,12 @@ Source: Language Files\English.txt; DestDir: {app}; Flags: ignoreversion
 Source: Language Files\Deutsch.txt; DestDir: {app}; Flags: ignoreversion
 Source: Language Files\Romana.txt; DestDir: {app}; Flags: ignoreversion
 Source: Language Files\Srpski.txt; DestDir: {app}; Flags: ignoreversion
-Source: Set Language.bat; DestDir: {app}
-Source: Euclide.txt; DestDir: {app}
+Source: Set Language.bat; DestDir: {app}; Flags: ignoreversion
+Source: Euclide.txt; DestDir: {app}; Flags: ignoreversion; Permissions: users-modify
 
 [Icons]
-Name: {group}\Euclide; Filename: {app}\Euclide.exe; Parameters: Input.txt; WorkingDir: {app}; IconIndex: 0
-Name: {group}\Euclide (Batch Mode); Filename: {app}\Euclide.exe; Parameters: -batch Input.txt; WorkingDir: {app}; IconIndex: 0
+Name: {group}\Euclide; Filename: {app}\Euclide.exe; Parameters: Input.txt Output.txt; WorkingDir: {app}; IconIndex: 0
+Name: {group}\Euclide (Batch Mode); Filename: {app}\Euclide.exe; Parameters: Input.txt Output.txt -batch; WorkingDir: {app}; IconIndex: 0
 Name: {group}\Input File; Filename: {app}\Input.txt; IconIndex: 0
 Name: {group}\Output File; Filename: {app}\Output.txt; IconIndex: 0
 Name: {group}\Help Files\Help; Filename: {app}\Euclide.html; IconIndex: 0
