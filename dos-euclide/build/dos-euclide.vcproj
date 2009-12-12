@@ -257,6 +257,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\bin\no-captures.txt"
+			>
+		</File>
+		<File
 			RelativePath="..\bin\sample-input.txt"
 			>
 		</File>
