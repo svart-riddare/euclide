@@ -62,6 +62,8 @@ bool Pieces::analysePartitions()
 bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 {
 	int freeMoves = availableMoves - getRequiredMoves();
+	if (freeMoves < 0)
+		abort(NoSolution);
 	
 	bool modified = false;
 	for (iterator partition = begin(); partition != end(); partition++)
@@ -84,6 +86,8 @@ bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 {
 	int freeCaptures = availableCaptures - getRequiredCaptures();
+	if (freeCaptures < 0)
+		abort(NoSolution);
 
 	bool modified = false;
 	for (iterator partition = begin(); partition != end(); partition++)
