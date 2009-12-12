@@ -6,7 +6,7 @@
 namespace euclide
 {
 
-class Pieces;
+class Position;
 
 /* -------------------------------------------------------------------------- */
 
@@ -180,8 +180,8 @@ class Board
 		
 		void setCaptureSquares(Man man, Superman superman, Color color, const Squares& squares);
 		
-		void optimizeLevelOne(const Pieces& pieces, Color color, int availableMoves, int availableCaptures);
-		void optimizeLevelTwo(const Pieces& whitePieces, const Pieces& blackPieces);
+		void optimizeLevelOne(const Position& position, Color color, int availableMoves, int availableCaptures);
+		void optimizeLevelTwo(const Position& whitePosition, const Position& blackPosition);
 		void optimize(Color color);
 
 	private :

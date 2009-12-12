@@ -24,8 +24,8 @@ class Euclide
 		Board *board;
 		Problem *problem;
 
-		Pieces *whitePieces;
-		Pieces *blackPieces;
+		Position *whitePosition;
+		Position *blackPosition;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -47,8 +47,8 @@ Euclide::Euclide(const EUCLIDE_Configuration *pConfiguration, const EUCLIDE_Call
 	board = NULL;
 	problem = NULL;
 
-	whitePieces = NULL;
-	blackPieces = NULL;
+	whitePosition = NULL;
+	blackPosition = NULL;
 
 	/* -- Display copyright string -- */
 
@@ -60,8 +60,8 @@ Euclide::Euclide(const EUCLIDE_Configuration *pConfiguration, const EUCLIDE_Call
 
 Euclide::~Euclide()
 {
-	delete whitePieces;
-	delete blackPieces;
+	delete whitePosition;
+	delete blackPosition;
 
 	delete problem;
 	delete board;
@@ -86,16 +86,16 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	/* -- Create position structures -- */
 
-	whitePieces = new Pieces(*problem, White);
-	blackPieces = new Pieces(*problem, Black);
+	whitePosition = new Position(*problem, White);
+	blackPosition = new Position(*problem, Black);
 
-	*whitePieces += *blackPieces;
-	*blackPieces += *whitePieces;
+	*whitePosition += *blackPosition;
+	*blackPosition += *whitePosition;
 
 	/* -- Initial partition split (for kings) -- */
 
-	whitePieces->analysePartitions();
-	blackPieces->analysePartitions();
+	whitePosition->analysePartitions();
+	blackPosition->analysePartitions();
 
 	/* -- Analyse movements -- */
 
@@ -103,8 +103,8 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	/* -- Analyse captures -- */
 
-	whitePieces->analyseCaptures(*board, *blackPieces);
-	blackPieces->analyseCaptures(*board, *whitePieces);
+	whitePosition->analyseCaptures(*board, *blackPosition);
+	blackPosition->analyseCaptures(*board, *whitePosition);
 	
 	analyseBasicConstraints();
 }
@@ -123,34 +123,34 @@ void Euclide::analyseBasicConstraints()
 
 		/* -- Compute number of required moves and captures -- */
 
-		whitePieces->computeRequiredMoves(*board);
-		whitePieces->computeRequiredCaptures(*board);
+		whitePosition->computeRequiredMoves(*board);
+		whitePosition->computeRequiredCaptures(*board);
 
-		blackPieces->computeRequiredMoves(*board);
-		blackPieces->computeRequiredCaptures(*board);
+		blackPosition->computeRequiredMoves(*board);
+		blackPosition->computeRequiredCaptures(*board);
 
 		/* -- Analyse constraints given moves and captures -- */
 
 		do
 		{
-			whitePieces->analyseMoveConstraints(problem->moves(White));
-			whitePieces->analyseCaptureConstraints(problem->captures(White));
+			whitePosition->analyseMoveConstraints(problem->moves(White));
+			whitePosition->analyseCaptureConstraints(problem->captures(White));
 		}
-		while (whitePieces->analysePartitions());
+		while (whitePosition->analysePartitions());
 
 		do
 		{
-			blackPieces->analyseMoveConstraints(problem->moves(Black));
-			blackPieces->analyseCaptureConstraints(problem->captures(Black));
+			blackPosition->analyseMoveConstraints(problem->moves(Black));
+			blackPosition->analyseCaptureConstraints(problem->captures(Black));
 		}
-		while (blackPieces->analysePartitions());
+		while (blackPosition->analysePartitions());
 
 		/* -- Optimize board movements -- */
 
-		board->optimizeLevelOne(*whitePieces, White, problem->moves(White), problem->captures(White));
-		board->optimizeLevelOne(*blackPieces, Black, problem->moves(Black), problem->captures(Black));
+		board->optimizeLevelOne(*whitePosition, White, problem->moves(White), problem->captures(White));
+		board->optimizeLevelOne(*blackPosition, Black, problem->moves(Black), problem->captures(Black));
 
-		board->optimizeLevelTwo(*whitePieces, *blackPieces);
+		board->optimizeLevelTwo(*whitePosition, *blackPosition);
 
 		/* -- Output current deductions -- */
 	
@@ -173,12 +173,12 @@ void Euclide::analyseBasicConstraints()
 
 Euclide::operator EUCLIDE_Deductions() const
 {
-	EUCLIDE_Deductions _deductions;
+	EUCLIDE_Deductions globalDeductions;
 	
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
-		const Pieces *pieces = (color == White) ? whitePieces : blackPieces;
-		EUCLIDE_Deduction *deductions = (color == White) ? _deductions.whitePieces : _deductions.blackPieces;
+		const Position *position = (color == White) ? whitePosition : blackPosition;
+		EUCLIDE_Deduction *deductions = (color == White) ? globalDeductions.whitePieces : globalDeductions.blackPieces;
 
 		Supermen supermen[NumMen];
 
@@ -203,7 +203,7 @@ Euclide::operator EUCLIDE_Deductions() const
 
 		/* -- Scan all destinations to fill deductions -- */
 
-		for (Partitions::const_iterator partition = pieces->begin(); partition != pieces->end(); partition++)
+		for (Partitions::const_iterator partition = position->begin(); partition != position->end(); partition++)
 		{
 			Target *previous = NULL;
 
@@ -246,10 +246,10 @@ Euclide::operator EUCLIDE_Deductions() const
 						deductions[man].numMoves += board->moves(superman, color);
 	}
 
-	_deductions.freeWhiteMoves = problem->moves(White) - whitePieces->requiredMoves();
-	_deductions.freeBlackMoves = problem->moves(Black) - blackPieces->requiredMoves();
+	globalDeductions.freeWhiteMoves = problem->moves(White) - whitePosition->requiredMoves();
+	globalDeductions.freeBlackMoves = problem->moves(Black) - blackPosition->requiredMoves();
 
-	return _deductions;
+	return globalDeductions;
 }
 
 /* -------------------------------------------------------------------------- */

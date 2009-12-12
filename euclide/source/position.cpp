@@ -5,7 +5,7 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Pieces::Pieces(const Problem& problem, Color color)
+Position::Position(const Problem& problem, Color color)
 	: _color(color)
 {
 	/* -- Initialize move and capture requirements -- */
@@ -21,9 +21,9 @@ Pieces::Pieces(const Problem& problem, Color color)
 
 /* -------------------------------------------------------------------------- */
 
-Pieces& Pieces::operator+=(const Pieces& pieces)
+Position& Position::operator+=(const Position& position)
 {
-	assert(pieces.color() != _color);
+	assert(position.color() != _color);
 
 	for (const_iterator partition = begin(); partition != end(); partition++)
 		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
@@ -35,7 +35,7 @@ Pieces& Pieces::operator+=(const Pieces& pieces)
 
 /* -------------------------------------------------------------------------- */
 
-Pieces::~Pieces()
+Position::~Position()
 {
 	for (iterator partition = begin(); partition != end(); partition++)
 		delete *partition;
@@ -43,7 +43,7 @@ Pieces::~Pieces()
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analysePartitions()
+bool Position::analysePartitions()
 {
 	bool modified = false;
 	int partitions = (int)size();
@@ -59,7 +59,7 @@ bool Pieces::analysePartitions()
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
+bool Position::analyseMoveConstraints(int availableMoves, bool quick)
 {
 	int freeMoves = availableMoves - requiredMoves();
 	if (freeMoves < 0)
@@ -83,7 +83,7 @@ bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
+bool Position::analyseCaptureConstraints(int availableCaptures, bool quick)
 {
 	int freeCaptures = availableCaptures - requiredCaptures();
 	if (freeCaptures < 0)
@@ -107,7 +107,7 @@ bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 
 /* -------------------------------------------------------------------------- */
 
-bool Pieces::analyseCaptures(const Board& board, Pieces& pieces)
+bool Position::analyseCaptures(const Board& board, Position& position)
 {
 	bool modified = false;
 
@@ -137,7 +137,7 @@ bool Pieces::analyseCaptures(const Board& board, Pieces& pieces)
 
 			for (int k = 0; k < (int)captures.size(); k++)
 			{
-				Capture *capture = &*std::find_if(pieces.captures.begin(), pieces.captures.end(), !boost::bind(&Capture::assigned, _1));
+				Capture *capture = &*std::find_if(position.captures.begin(), position.captures.end(), !boost::bind(&Capture::assigned, _1));
 				if (!capture)
 					abort(NoSolution);
 
@@ -159,7 +159,7 @@ bool Pieces::analyseCaptures(const Board& board, Pieces& pieces)
 
 /* -------------------------------------------------------------------------- */
 
-void Pieces::computeRequiredMoves(const Board& board)
+void Position::computeRequiredMoves(const Board& board)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
@@ -170,7 +170,7 @@ void Pieces::computeRequiredMoves(const Board& board)
 
 /* -------------------------------------------------------------------------- */
 
-void Pieces::computeRequiredCaptures(const Board& board)
+void Position::computeRequiredCaptures(const Board& board)
 {
 	int requiredCaptures = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
@@ -181,7 +181,7 @@ void Pieces::computeRequiredCaptures(const Board& board)
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::updateRequiredMoves(bool recursive)
+int Position::updateRequiredMoves(bool recursive)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
@@ -192,7 +192,7 @@ int Pieces::updateRequiredMoves(bool recursive)
 
 /* -------------------------------------------------------------------------- */
 
-int Pieces::updateRequiredCaptures(bool recursive)
+int Position::updateRequiredCaptures(bool recursive)
 {
 	int requiredCaptures = 0;
 	for (iterator partition = begin(); partition != end(); partition++)

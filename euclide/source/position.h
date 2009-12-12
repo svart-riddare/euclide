@@ -20,18 +20,18 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-class Pieces : public Partitions
+class Position : public Partitions
 {
 	public :
-		Pieces(const Problem& problem, Color color);
-		Pieces& operator+=(const Pieces& pieces);
-		~Pieces();
+		Position(const Problem& problem, Color color);
+		Position& operator+=(const Position& position);
+		~Position();
 		
 		bool analysePartitions();
 		bool analyseMoveConstraints(int availableMoves, bool quick = false);
 		bool analyseCaptureConstraints(int availableCaptures, bool quick = false);
 
-		bool analyseCaptures(const Board& board, Pieces& pieces);
+		bool analyseCaptures(const Board& board, Position& position);
 
 		void computeRequiredMoves(const Board& board);
 		void computeRequiredCaptures(const Board& board);
