@@ -53,25 +53,25 @@ class Destination
 			{ return _superman == superman; }
 
 	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
 
 		static inline bool lessMoves(const Destination& destinationA, const Destination& destinationB)
-			{ return destinationA.requiredMoves < destinationB.requiredMoves; }
+			{ return destinationA.requiredMoves() < destinationB.requiredMoves(); }
 		static inline bool lessCaptures(const Destination& destinationA, const Destination& destinationB)
-			{ return destinationA.requiredCaptures < destinationB.requiredCaptures; }
+			{ return destinationA.requiredCaptures() < destinationB.requiredCaptures(); }
 
 	public :
-		inline bool isInManMoves(const array<int, NumMen>& availableMoves) const
-			{ return requiredMoves <= availableMoves[_man]; }
-		inline bool isInManCaptures(const array<int, NumMen>& availableCaptures) const
-			{ return requiredCaptures <= availableCaptures[_man]; }
-		inline bool isInMoves(int availableMoves) const
-			{ return requiredMoves <= availableMoves; }
-		inline bool isInCaptures(int availableCaptures) const
-			{ return requiredCaptures <= availableCaptures; }
+		inline bool isEnoughManMoves(const array<int, NumMen>& availableMoves) const
+			{ return _requiredMoves <= availableMoves[_man]; }
+		inline bool isEnoughManCaptures(const array<int, NumMen>& availableCaptures) const
+			{ return _requiredCaptures <= availableCaptures[_man]; }
+		inline bool isEnoughMoves(int availableMoves) const
+			{ return _requiredMoves <= availableMoves; }
+		inline bool isEnoughCaptures(int availableCaptures) const
+			{ return _requiredCaptures <= availableCaptures; }
 		inline bool isInSquares(const Squares& squares) const
 			{ return squares[_square]; }
 		inline bool isInMen(const Men& men) const
@@ -85,8 +85,8 @@ class Destination
 		bool _captured;          /**< True if piece has been captured on destination square. */
 
 	private :
-		int requiredMoves;       /**< Required moves for this destination. */
-		int requiredCaptures;    /**< Required captures for this destination. */
+		int _requiredMoves;      /**< Required moves for this destination. */
+		int _requiredCaptures;   /**< Required captures for this destination. */
 };
 
 /* -------------------------------------------------------------------------- */

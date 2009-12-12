@@ -10,8 +10,8 @@ Pieces::Pieces(const Problem& problem, Color color)
 {
 	/* -- Initialize move and capture requirements -- */
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
 
 	/* -- Create single partition -- */
 
@@ -61,18 +61,18 @@ bool Pieces::analysePartitions()
 
 bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 {
-	int freeMoves = availableMoves - getRequiredMoves();
+	int freeMoves = availableMoves - requiredMoves();
 	if (freeMoves < 0)
 		abort(NoSolution);
 	
 	bool modified = false;
 	for (iterator partition = begin(); partition != end(); partition++)
-		if (partition->setAvailableMoves(partition->getRequiredMoves() + freeMoves))
+		if (partition->setAvailableMoves(partition->requiredMoves() + freeMoves))
 			modified = true;
 
 	if (!quick && !modified)
 		for (iterator partition = begin(); partition != end(); partition++)
-			if (partition->analyseAvailableMoves(partition->getRequiredMoves() + freeMoves))
+			if (partition->analyseAvailableMoves(partition->requiredMoves() + freeMoves))
 				modified = true;
 
 	if (!modified)
@@ -85,18 +85,18 @@ bool Pieces::analyseMoveConstraints(int availableMoves, bool quick)
 
 bool Pieces::analyseCaptureConstraints(int availableCaptures, bool quick)
 {
-	int freeCaptures = availableCaptures - getRequiredCaptures();
+	int freeCaptures = availableCaptures - requiredCaptures();
 	if (freeCaptures < 0)
 		abort(NoSolution);
 
 	bool modified = false;
 	for (iterator partition = begin(); partition != end(); partition++)
-		if (partition->setAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
+		if (partition->setAvailableCaptures(partition->requiredCaptures() + freeCaptures))
 			modified = true;
 
 	if (!quick && !modified)
 		for (iterator partition = begin(); partition != end(); partition++)
-			if (partition->analyseAvailableCaptures(partition->getRequiredCaptures() + freeCaptures))
+			if (partition->analyseAvailableCaptures(partition->requiredCaptures() + freeCaptures))
 				modified = true;
 
 	if (!modified)
@@ -117,21 +117,21 @@ bool Pieces::analyseCaptures(const Board& board, Pieces& pieces)
 	{
 		for (Partition::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
-			if (!target->getRequiredCaptures())
+			if (!target->requiredCaptures())
 				continue;
 
 			vector<Squares> captures(NumMen);
 
 			for (Target::const_iterator destination = target->begin(); destination != target->end(); destination++)
 			{
-				assert(destination->getRequiredCaptures() >= target->getRequiredCaptures());
+				assert(destination->requiredCaptures() >= target->requiredCaptures());
 
 				/* -- Find squares for required captures -- */
 
 				board.getCaptures(destination->man(), destination->superman(), destination->color(), destination->man().square(destination->color()), destination->square(), captures);
 			}
 
-			captures.resize(target->getRequiredCaptures());
+			captures.resize(target->requiredCaptures());
 
 			/* -- Reserve captures -- */
 
@@ -165,7 +165,7 @@ void Pieces::computeRequiredMoves(const Board& board)
 	for (iterator partition = begin(); partition != end(); partition++)
 		requiredMoves += partition->computeRequiredMoves(board);
 
-	maximize(this->requiredMoves, requiredMoves);
+	maximize(_requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -176,7 +176,7 @@ void Pieces::computeRequiredCaptures(const Board& board)
 	for (iterator partition = begin(); partition != end(); partition++)
 		requiredCaptures += partition->computeRequiredCaptures(board);
 
-	maximize(this->requiredCaptures, requiredCaptures);
+	maximize(_requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -185,9 +185,9 @@ int Pieces::updateRequiredMoves(bool recursive)
 {
 	int requiredMoves = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
-		requiredMoves += recursive ? partition->updateRequiredMoves(true) : partition->getRequiredMoves();
+		requiredMoves += recursive ? partition->updateRequiredMoves(true) : partition->requiredMoves();
 
-	return maximize(this->requiredMoves, requiredMoves);
+	return maximize(_requiredMoves, requiredMoves);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -196,9 +196,9 @@ int Pieces::updateRequiredCaptures(bool recursive)
 {
 	int requiredCaptures = 0;
 	for (iterator partition = begin(); partition != end(); partition++)
-		requiredCaptures += recursive ? partition->updateRequiredCaptures(true) : partition->getRequiredCaptures();
+		requiredCaptures += recursive ? partition->updateRequiredCaptures(true) : partition->requiredCaptures();
 
-	return maximize(this->requiredCaptures, requiredCaptures);
+	return maximize(_requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */

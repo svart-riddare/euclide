@@ -14,11 +14,11 @@ Partition::Partition(const Problem& problem, Color color)
 	_squares.set();
 	_supermen.set();
 	
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
 
-	assignedMoves = 0;
-	assignedCaptures = 0;
+	_assignedMoves = 0;
+	_assignedCaptures = 0;
 
 	/* -- Create list of targets -- */
 
@@ -53,11 +53,11 @@ Partition::Partition(Partition& partition, const Men& men, const bitset<NumMen>&
 	_men = men;
 	_squares = partition._squares;
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
 
-	assignedMoves = 0;
-	assignedCaptures = 0;
+	_assignedMoves = 0;
+	_assignedCaptures = 0;
 
 	/* -- Move some targets from the given partition to the new one -- */
 
@@ -222,11 +222,11 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 
 	/* -- Update some state variable -- */
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
 
-	assignedMoves = 0;
-	assignedCaptures = 0;
+	_assignedMoves = 0;
+	_assignedCaptures = 0;
 
 	/* -- Set possible men -- */
 
@@ -250,47 +250,47 @@ bool Partition::split(Partitions& partitions, const Men& men, const bitset<NumMe
 
 int Partition::computeRequiredMoves(const Board& board)
 {
-	assignedMoves = 0;
+	_assignedMoves = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		assignedMoves += target->computeRequiredMoves(board);
+		_assignedMoves += target->computeRequiredMoves(board);
 
-	maximize(requiredMoves, assignedMoves);
-	if (requiredMoves >= infinity)
+	maximize(_requiredMoves, _assignedMoves);
+	if (_requiredMoves >= infinity)
 		abort(NoSolution);
 
-	return requiredMoves;
+	return _requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Partition::computeRequiredCaptures(const Board& board)
 {
-	assignedCaptures = 0;
+	_assignedCaptures = 0;
 
 	for (iterator target = begin(); target != end(); target++)
-		assignedCaptures += target->computeRequiredCaptures(board);
+		_assignedCaptures += target->computeRequiredCaptures(board);
 
-	maximize(requiredCaptures, assignedCaptures);
-	if (requiredCaptures >= infinity)
+	maximize(_requiredCaptures, _assignedCaptures);
+	if (_requiredCaptures >= infinity)
 		abort(NoSolution);
 
-	return requiredCaptures;
+	return _requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Partition::updateRequiredMoves(bool recursive)
 {
-	assignedMoves = 0;
+	_assignedMoves = 0;
 
 	/* -- Sum moves required for each target -- */
 
 	for (iterator target = begin(); target != end(); target++)
-		assignedMoves += recursive ? target->updateRequiredMoves() : target->getRequiredMoves();
+		_assignedMoves += recursive ? target->updateRequiredMoves() : target->requiredMoves();
 
-	maximize(requiredMoves, assignedMoves);
-	if (requiredMoves >= infinity)
+	maximize(_requiredMoves, _assignedMoves);
+	if (_requiredMoves >= infinity)
 		abort(NoSolution);
 
 	/* -- Sum moves required for each man -- */
@@ -302,32 +302,32 @@ int Partition::updateRequiredMoves(bool recursive)
 
 		if (_men[man])
 			for (iterator target = begin(); target != end(); target++)
-				minimize(minRequiredMoves, target->getRequiredMoves(man));
+				minimize(minRequiredMoves, target->requiredMoves(man));
 
 		if (minRequiredMoves < infinity)
 			requiredMoves += minRequiredMoves;
 	}
 
-	maximize(this->requiredMoves, requiredMoves);
-	if (this->requiredMoves >= infinity)
+	maximize(_requiredMoves, requiredMoves);
+	if (_requiredMoves >= infinity)
 		abort(NoSolution);
 
-	return this->requiredMoves;
+	return _requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Partition::updateRequiredCaptures(bool recursive)
 {
-	assignedCaptures = 0;
+	_assignedCaptures = 0;
 
 	/* -- Sum captures required for each target -- */
 
 	for (iterator target = begin(); target != end(); target++)
-		assignedCaptures += recursive ? target->updateRequiredCaptures() : target->getRequiredCaptures();
+		_assignedCaptures += recursive ? target->updateRequiredCaptures() : target->requiredCaptures();
 
-	maximize(requiredCaptures, assignedCaptures);
-	if (requiredCaptures >= infinity)
+	maximize(_requiredCaptures, _assignedCaptures);
+	if (_requiredCaptures >= infinity)
 		abort(NoSolution);
 
 	/* -- Sum captures required for each man -- */
@@ -339,17 +339,17 @@ int Partition::updateRequiredCaptures(bool recursive)
 
 		if (_men[man])
 			for (iterator target = begin(); target != end(); target++)
-				minimize(minRequiredCaptures, target->getRequiredCaptures(man));
+				minimize(minRequiredCaptures, target->requiredCaptures(man));
 
 		if (minRequiredCaptures < infinity)
 			requiredCaptures += minRequiredCaptures;
 	}
 
-	maximize(this->requiredCaptures, requiredCaptures);
-	if (this->requiredCaptures >= infinity)
+	maximize(_requiredCaptures, requiredCaptures);
+	if (_requiredCaptures >= infinity)
 		abort(NoSolution);
 
-	return this->requiredCaptures;
+	return _requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -449,11 +449,11 @@ bool Partition::setPossibleSquares(const Squares& squares)
 
 bool Partition::setAvailableMoves(int availableMoves)
 {
-	int unassignedMoves = availableMoves - assignedMoves;
+	int unassignedMoves = availableMoves - assignedMoves();
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if (target->setAvailableMoves(target->getRequiredMoves() + unassignedMoves))
+		if (target->setAvailableMoves(target->requiredMoves() + unassignedMoves))
 			modified = true;
 
 	if (!modified)
@@ -470,13 +470,13 @@ bool Partition::setAvailableMoves(int availableMoves)
 
 bool Partition::setAvailableCaptures(int availableCaptures)
 {
-	int unassignedCaptures = availableCaptures - assignedCaptures;
+	int unassignedCaptures = availableCaptures - assignedCaptures();
 
 	/* -- Set available captures for each target -- */
 
 	bool modified = false;
 	for (iterator target = begin(); target != end(); target++)
-		if (target->setAvailableCaptures(target->getRequiredCaptures() + unassignedCaptures))
+		if (target->setAvailableCaptures(target->requiredCaptures() + unassignedCaptures))
 			modified = true;
 
 	if (!modified)
@@ -530,7 +530,7 @@ bool Partition::analyseAvailableMoves(int availableMoves)
 
 	for (int target = 0; target < (int)size(); target++)
 		for (Target::const_iterator destination = at(target)->begin(); destination != at(target)->end(); destination++)
-			minimize(minimumMoves[target][destination->man()], destination->getRequiredMoves());
+			minimize(minimumMoves[target][destination->man()], destination->requiredMoves());
 
 	/* -- Loop through all permutations -- */
 
@@ -541,7 +541,7 @@ bool Partition::analyseAvailableMoves(int availableMoves)
 		if (_men[man])
 			permutation[m++] = man;
 
-	maximize(requiredMoves, analysePermutations(permutation, m, 0, minimumMoves, availableMoves, maximumMoves));
+	maximize(_requiredMoves, analysePermutations(permutation, m, 0, minimumMoves, availableMoves, maximumMoves));
 
 	/* -- Apply deductions -- */
 
@@ -571,7 +571,7 @@ bool Partition::analyseAvailableCaptures(int availableCaptures)
 
 	for (int target = 0; target < (int)size(); target++)
 		for (Target::const_iterator destination = at(target)->begin(); destination != at(target)->end(); destination++)
-			minimize(minimumCaptures[target][destination->man()], destination->getRequiredCaptures());
+			minimize(minimumCaptures[target][destination->man()], destination->requiredCaptures());
 
 	/* -- Loop through all permutations -- */
 
@@ -582,7 +582,7 @@ bool Partition::analyseAvailableCaptures(int availableCaptures)
 		if (_men[man])
 			permutation[m++] = man;
 
-	maximize(requiredCaptures, analysePermutations(permutation, m, 0, minimumCaptures, availableCaptures, maximumCaptures));
+	maximize(_requiredCaptures, analysePermutations(permutation, m, 0, minimumCaptures, availableCaptures, maximumCaptures));
 
 	/* -- Apply deductions -- */
 

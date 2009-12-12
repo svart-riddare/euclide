@@ -16,11 +16,11 @@ Target::Target(Glyph glyph, Square square)
 	_supermen.set();
 	_squares.set(square);
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_minRequiredMoves = 0;
+	_minRequiredCaptures = 0;
 
-	menRequiredMoves.assign(0);
-	menRequiredCaptures.assign(0);
+	_requiredMoves.assign(0);
+	_requiredCaptures.assign(0);
 
 	/* -- Reserve some memory -- */
 
@@ -54,11 +54,11 @@ Target::Target(Color color, const Squares& squares)
 	_supermen.set();
 	_squares = squares;
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_minRequiredMoves = 0;
+	_minRequiredCaptures = 0;
 
-	menRequiredMoves.assign(0);
-	menRequiredCaptures.assign(0);
+	_requiredMoves.assign(0);
+	_requiredCaptures.assign(0);
 
 	/* -- Reserve memory -- */
 
@@ -105,32 +105,32 @@ int Target::computeRequiredCaptures(const Board& board)
 
 int Target::updateRequiredMoves()
 {
-	requiredMoves = infinity;
-	menRequiredMoves.assign(infinity);
+	_minRequiredMoves = infinity;
+	_requiredMoves.assign(infinity);
 
 	for (const_iterator destination = begin(); destination != end(); destination++)
 	{
-		minimize(requiredMoves, destination->getRequiredMoves());
-		minimize(menRequiredMoves[destination->man()], destination->getRequiredMoves());
+		minimize(_minRequiredMoves, destination->requiredMoves());
+		minimize(_requiredMoves[destination->man()], destination->requiredMoves());
 	}
 
-	return requiredMoves;
+	return _minRequiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Target::updateRequiredCaptures()
 {
-	requiredCaptures = infinity;
-	menRequiredCaptures.assign(infinity);
+	_minRequiredCaptures = infinity;
+	_requiredCaptures.assign(infinity);
 
 	for (const_iterator destination = begin(); destination != end(); destination++)
 	{
-		minimize(requiredCaptures, destination->getRequiredCaptures());
-		minimize(menRequiredCaptures[destination->man()], destination->getRequiredCaptures());
+		minimize(_minRequiredCaptures, destination->requiredCaptures());
+		minimize(_requiredCaptures[destination->man()], destination->requiredCaptures());
 	}
 
-	return requiredCaptures;
+	return _minRequiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -252,7 +252,7 @@ bool Target::setPossibleSquares(const Squares& squares)
 
 bool Target::setAvailableMoves(int availableMoves)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInMoves, _1, availableMoves));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughMoves, _1, availableMoves));
 	if (last == end())
 		return false;
 
@@ -271,7 +271,7 @@ bool Target::setAvailableMoves(int availableMoves)
 
 bool Target::setAvailableCaptures(int availableCaptures)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInCaptures, _1, availableCaptures));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughCaptures, _1, availableCaptures));
 	if (last == end())
 		return false;
 
@@ -290,7 +290,7 @@ bool Target::setAvailableCaptures(int availableCaptures)
 
 bool Target::setAvailableMoves(const array<int, NumMen>& availableMoves)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInManMoves, _1, cref(availableMoves)));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughManMoves, _1, cref(availableMoves)));
 	if (last == end())
 		return false;
 
@@ -309,7 +309,7 @@ bool Target::setAvailableMoves(const array<int, NumMen>& availableMoves)
 
 bool Target::setAvailableCaptures(const array<int, NumMen>& availableCaptures)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isInManCaptures, _1, cref(availableCaptures)));
+	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughManCaptures, _1, cref(availableCaptures)));
 	if (last == end())
 		return false;
 

@@ -219,7 +219,7 @@ Euclide::operator EUCLIDE_Deductions() const
 				{
 					EUCLIDE_Deduction *deduction = &deductions[destination->man()];
 
-					minimize(deduction->requiredMoves, destination->getRequiredMoves());
+					minimize(deduction->requiredMoves, destination->requiredMoves());
 					supermen[destination->man()][destination->superman()] = true;
 					
 					if (++deduction->numSquares == 1)
@@ -246,8 +246,8 @@ Euclide::operator EUCLIDE_Deductions() const
 						deductions[man].numMoves += board->moves(superman, color);
 	}
 
-	_deductions.freeWhiteMoves = problem->moves(White) - whitePieces->getRequiredMoves();
-	_deductions.freeBlackMoves = problem->moves(Black) - blackPieces->getRequiredMoves();
+	_deductions.freeWhiteMoves = problem->moves(White) - whitePieces->requiredMoves();
+	_deductions.freeBlackMoves = problem->moves(Black) - blackPieces->requiredMoves();
 
 	return _deductions;
 }
