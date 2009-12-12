@@ -41,24 +41,24 @@ class Pieces : public Partitions
 		int updateRequiredCaptures(bool recursive);
 
 	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
 
 	public :
 		inline Color color() const
 			{ return _color; }
 		
 	private :
-		Color _color;            /**< Player color. */
+		Color _color;             /**< Player color. */
 
 	private :
 		Captures captures;
 
 	private :
-		int requiredMoves;       /**< Total number of moves required to meet all targets for this player. */
-		int requiredCaptures;    /**< Total number of captures required to meet all targets for this player. */
+		int _requiredMoves;       /**< Total number of moves required to meet all targets for this player. */
+		int _requiredCaptures;    /**< Total number of captures required to meet all targets for this player. */
 };
 
 /* -------------------------------------------------------------------------- */

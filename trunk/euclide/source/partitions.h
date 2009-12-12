@@ -69,32 +69,32 @@ class Partition : public Targets
 			{ return _color; }
 
 	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
 
-		inline int getAssignedMoves() const
-			{ return assignedMoves; }
-		inline int getAssignedCaptures() const
-			{ return assignedCaptures; }
+		inline int assignedMoves() const
+			{ return _assignedMoves; }
+		inline int assignedCaptures() const
+			{ return _assignedCaptures; }
 
 	protected :
 		static inline bool lessCandidates(const Target *targetA, const Target *targetB)
 			{ return targetA->candidates() < targetB->candidates(); }
 
 	private :
-		Men _men;                /**< Pieces that may fullfill partition targets. The number of pieces must equal the number of targets. */
-		Supermen _supermen;      /**< Promotion pieces involved by partition targets. */
-		Squares _squares;        /**< Final destination squares for partition targets. */
-		Color _color;            /**< Partition color. */
+		Men _men;                 /**< Pieces that may fullfill partition targets. The number of pieces must equal the number of targets. */
+		Supermen _supermen;       /**< Promotion pieces involved by partition targets. */
+		Squares _squares;         /**< Final destination squares for partition targets. */
+		Color _color;             /**< Partition color. */
 
 	private :
-		int requiredMoves;       /**< Required numner of moves to fullfill all partition targets. */
-		int requiredCaptures;    /**< Required number of captures to fullfill all partition targets. */
+		int _requiredMoves;       /**< Required numner of moves to fullfill all partition targets. */
+		int _requiredCaptures;    /**< Required number of captures to fullfill all partition targets. */
 
-		int assignedMoves;       /**< Number of required moves that were assigned to a specific target within the partition. */
-		int assignedCaptures;    /**< Number of required captures that were assigned to a specific target within the partition. */
+		int _assignedMoves;       /**< Number of required moves that were assigned to a specific target within the partition. */
+		int _assignedCaptures;    /**< Number of required captures that were assigned to a specific target within the partition. */
 };
 
 /* -------------------------------------------------------------------------- */

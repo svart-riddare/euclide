@@ -88,36 +88,36 @@ class Target : public Destinations
 			{ return _supermen[superman]; }
 
 	public :
-		inline int getRequiredMoves() const
-			{ return requiredMoves; }
-		inline int getRequiredCaptures() const
-			{ return requiredCaptures; }
+		inline int requiredMoves() const
+			{ return _minRequiredMoves; }
+		inline int requiredCaptures() const
+			{ return _minRequiredCaptures; }
 
-		inline int getRequiredMoves(Man man) const
-			{ return menRequiredMoves[man]; }
-		inline int getRequiredCaptures(Man man) const
-			{ return menRequiredCaptures[man]; }
-
-	private :
-		Man _man;                                  /**< Piece that fullfills the target, if known. */
-		Glyph _glyph;                              /**< Target figure, if not captured. */
-		Color _color;                              /**< Color to which the target belongs. */
-		Square _square;                            /**< Target destination square, if known. */
-		Superman _superman;                        /**< Promotion type of piece that fullfills the target, if known. */
-
-		Men _men;                                  /**< Pieces that may fullfill this target. */
-		Squares _squares;                          /**< Possible destination squares for this target. */
-		Supermen _supermen;                        /**< Promotion pieces involved by pieces that may fullfill this target. */
+		inline int requiredMoves(Man man) const
+			{ return _requiredMoves[man]; }
+		inline int requiredCaptures(Man man) const
+			{ return _requiredCaptures[man]; }
 
 	private :
-		int requiredMoves;                         /**< Required moves for this target. */
-		int requiredCaptures;                      /**< Required captures for this target. */
+		Man _man;                                /**< Piece that fullfills the target, if known. */
+		Glyph _glyph;                            /**< Target figure, if not captured. */
+		Color _color;                            /**< Color to which the target belongs. */
+		Square _square;                          /**< Target destination square, if known. */
+		Superman _superman;                      /**< Promotion type of piece that fullfills the target, if known. */
 
-		array<int, NumMen> menRequiredMoves;       /**< Required moves, by piece type, to fullfill this target. */
-		array<int, NumMen> menRequiredCaptures;    /**< Required captures, by piece type, to fullfill this target. */
+		Men _men;                                /**< Pieces that may fullfill this target. */
+		Squares _squares;                        /**< Possible destination squares for this target. */
+		Supermen _supermen;                      /**< Promotion pieces involved by pieces that may fullfill this target. */
 
 	private :
-		vector_ptr<Capture> captures;
+		mutable int _minRequiredMoves;           /**< Required moves for this target. Minimum value of following array. */
+		mutable int _minRequiredCaptures;        /**< Required captures for this target. Minimum value of following array. */
+
+		array<int, NumMen> _requiredMoves;       /**< Required moves, by piece type, to fullfill this target. */
+		array<int, NumMen> _requiredCaptures;    /**< Required captures, by piece type, to fullfill this target. */
+
+	private :
+		vector_ptr<Capture> _captures;
 };
 
 /* -------------------------------------------------------------------------- */

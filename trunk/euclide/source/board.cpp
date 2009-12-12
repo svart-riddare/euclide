@@ -1793,8 +1793,8 @@ void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMov
 
 	for	(Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
 	{
-		int unassignedMoves = availableMoves - pieces.getRequiredMoves() + partition->getRequiredMoves() - partition->getAssignedMoves();
-		int unassignedCaptures = availableCaptures - pieces.getRequiredCaptures() + partition->getRequiredCaptures() - partition->getAssignedCaptures();
+		int unassignedMoves = availableMoves - pieces.requiredMoves() + partition->requiredMoves() - partition->assignedMoves();
+		int unassignedCaptures = availableCaptures - pieces.requiredCaptures() + partition->requiredCaptures() - partition->assignedCaptures();
 
 		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
@@ -1804,8 +1804,8 @@ void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMov
 				Superman superman = destination->superman();
 				Square square = destination->square();
 
-				maximize(men[man].availableMoves, target->getRequiredMoves() + unassignedMoves);
-				maximize(men[man].availableCaptures, target->getRequiredCaptures() + unassignedCaptures);
+				maximize(men[man].availableMoves, target->requiredMoves() + unassignedMoves);
+				maximize(men[man].availableCaptures, target->requiredCaptures() + unassignedCaptures);
 
 				men[man].squares[square] = true;
 

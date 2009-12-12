@@ -14,8 +14,8 @@ Destination::Destination(Square square, Color color, Man man, Superman superman,
 	assert(superman.isValid());
 	assert(superman.man() == man);
 
-	requiredMoves = 0;
-	requiredCaptures = 0;
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -28,8 +28,8 @@ Destination::Destination(const Destination& destination)
 	_superman = destination.superman();
 	_captured = destination.captured();
 
-	requiredMoves = destination.getRequiredMoves();
-	requiredCaptures = destination.getRequiredCaptures();
+	_requiredMoves = destination.requiredMoves();
+	_requiredCaptures = destination.requiredCaptures();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -37,10 +37,9 @@ Destination::Destination(const Destination& destination)
 int Destination::computeRequiredMoves(const Board& board)
 {
 	int distance = board.distance(_man, _superman, _color, _square);
-	if (distance > requiredMoves)
-		requiredMoves = distance;
+	maximize(_requiredMoves, distance);
 
-	return requiredMoves;
+	return _requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,10 +47,9 @@ int Destination::computeRequiredMoves(const Board& board)
 int Destination::computeRequiredCaptures(const Board& board)
 {
 	int captures = board.captures(_man, _superman, _color, _square);
-	if (captures > requiredCaptures)
-		requiredCaptures = captures;
+	maximize(_requiredCaptures, captures);
 
-	return requiredCaptures;
+	return _requiredCaptures;
 }
 
 /* -------------------------------------------------------------------------- */
