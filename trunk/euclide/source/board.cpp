@@ -1758,7 +1758,7 @@ void Board::setCaptureSquares(Man man, Superman superman, Color color, const Squ
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMoves, int availableCaptures)
+void Board::optimizeLevelOne(const Position& position, Color color, int availableMoves, int availableCaptures)
 {
 	/* -- Initialize information tied with each man -- */
 
@@ -1791,10 +1791,10 @@ void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMov
 
 	/* -- Loop through partitions, targets and destinations to collect the information -- */
 
-	for	(Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+	for	(Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
 	{
-		int unassignedMoves = availableMoves - pieces.requiredMoves() + partition->requiredMoves() - partition->assignedMoves();
-		int unassignedCaptures = availableCaptures - pieces.requiredCaptures() + partition->requiredCaptures() - partition->assignedCaptures();
+		int unassignedMoves = availableMoves - position.requiredMoves() + partition->requiredMoves() - partition->assignedMoves();
+		int unassignedCaptures = availableCaptures - position.requiredCaptures() + partition->requiredCaptures() - partition->assignedCaptures();
 
 		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
 		{
@@ -1879,7 +1879,7 @@ void Board::optimizeLevelOne(const Pieces& pieces, Color color, int availableMov
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimizeLevelTwo(const Pieces& whitePieces, const Pieces& blackPieces)
+void Board::optimizeLevelTwo(const Position& whitePosition, const Position& blackPosition)
 {
 	vector<tuple<Man, Color, vector<Square> > > paths;
 
@@ -1887,9 +1887,9 @@ void Board::optimizeLevelTwo(const Pieces& whitePieces, const Pieces& blackPiece
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
-		const Pieces& pieces = (color == White) ? whitePieces : blackPieces;
+		const Position& position = (color == White) ? whitePosition : blackPosition;
 
-		for (Partitions::const_iterator partition = pieces.begin(); partition != pieces.end(); partition++)
+		for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
 		{
 			Targets::const_iterator target = partition->begin();
 
