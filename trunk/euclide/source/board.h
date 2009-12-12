@@ -130,7 +130,7 @@ class Movements
 		Square qsquare;                                       /**< Piece's initial square after performing queen side castling. */
 		int castling;                                         /**< Number of moves required for castling (1 for king, 0 for rooks). */
 
-		tribool kcastling;                                    /**< Has piece performed king side castling? */
+		tribool kcastling;                                    /**< Has piece performed king side castling ? */
 		tribool qcastling;                                    /**< Has piece performed queen side castling ? */
 
 		bool hybrid;                                          /**< Hybrid pieces are pieces that captures differently than they move, like pawns. */
