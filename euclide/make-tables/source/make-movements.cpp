@@ -10,7 +10,7 @@ using namespace euclide;
 
 void makeMovements(void)
 {	
-	CodeFile file("movements.cpp");
+	CodeFile file("movement-tables.cpp");
 
 	fprintf(file, "const bool movements[NumGlyphs][NumSquares][NumSquares] =\n{\n");
 
