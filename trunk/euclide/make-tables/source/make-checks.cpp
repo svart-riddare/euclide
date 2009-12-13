@@ -10,7 +10,7 @@ using namespace euclide;
 
 void makeChecks(void)
 {	
-	CodeFile file("checks.cpp");
+	CodeFile file("check-tables.cpp");
 
 	fprintf(file, "const bool checks[NumSquares][NumGlyphs][NumSquares] =\n{\n");
 

@@ -13,7 +13,7 @@ using namespace constants;
 
 void makeObstructions(void)
 {	
-	CodeFile file("obstructions.cpp");
+	CodeFile file("obstruction-tables.cpp");
 
 	int numObstructions[NumGlyphs][NumSquares];
 

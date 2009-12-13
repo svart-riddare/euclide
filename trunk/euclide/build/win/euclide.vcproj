@@ -303,7 +303,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\obstructions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\partitions.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\pieces.cpp"
 				>
 			</File>
 			<File
@@ -344,7 +352,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\obstructions.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\partitions.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\pieces.h"
 				>
 			</File>
 			<File
@@ -416,15 +432,15 @@
 			Name="Table Files"
 			>
 			<File
-				RelativePath="..\..\source\tables\checks.cpp"
+				RelativePath="..\..\source\tables\check-tables.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\tables\movements.cpp"
+				RelativePath="..\..\source\tables\movement-tables.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\source\tables\obstructions.cpp"
+				RelativePath="..\..\source\tables\obstruction-tables.cpp"
 				>
 			</File>
 			<File
