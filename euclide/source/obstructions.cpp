@@ -135,6 +135,8 @@ void Obstructions::optimize()
 
 	for ( ; k < _numHardObstructions; n += _obstructions[k++]->possible() ? 1 : 0)
 		_obstructions[n] = _obstructions[k];
+
+	_numHardObstructions = n;
 }
 
 /* -------------------------------------------------------------------------- */
