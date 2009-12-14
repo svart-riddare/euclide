@@ -22,7 +22,7 @@ class Piece;
 class Board
 {
 	public :
-		Board();
+		Board(int numWhiteMoves, int numBlackMoves);
 		~Board();
 
 		int moves() const;

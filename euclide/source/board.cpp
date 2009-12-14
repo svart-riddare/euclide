@@ -7,7 +7,7 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Board::Board()
+Board::Board(int numWhiteMoves, int numBlackMoves)
 {
 	optimized = true;
 
@@ -15,7 +15,7 @@ Board::Board()
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			pieces[color][superman] = new Piece(superman, color);
+			pieces[color][superman] = new Piece(superman, color, (color == White) ? numWhiteMoves : numBlackMoves);
 }
 
 /* -------------------------------------------------------------------------- */

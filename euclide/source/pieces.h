@@ -2,6 +2,7 @@
 #define __EUCLIDE_PIECES_H
 
 #include "includes.h"
+#include "moves.h"
 
 namespace euclide
 {
@@ -22,7 +23,7 @@ class Obstructions;
 class Piece
 {
 	public :
-		Piece(Superman superman, Color color);
+		Piece(Superman superman, Color color, int moves);
 		~Piece();
 
 		int distance(Square square) const;
@@ -78,8 +79,14 @@ class Piece
 		bool mayReach(Square square) const;
 
 	private :
-		int _movements[NumSquares][NumSquares];                /**< Valid movements. Zero when a move is valid, positive if the move is not possible (blocked), infinity if the move is not legal or possible given the problem to solve. */
-		int _possibilities;                                    /**< Number of valid movements in legal/valid movements table. */
+		static inline bool isMovePossible(const Move *move)
+			{ return move->possible(); }
+		static inline bool isMoveImpossible(const Move *move)
+			{ return !move->possible(); }
+
+	private :
+		Move _movements[NumSquares][NumSquares];               /**< All piece movements, one for each departure and arrival square. */
+		Moves _moves;                                          /**< Possible piece movements. */
 
 		Superman _superman;                                    /**< Piece type. */
 		Glyph _glyph;                                          /**< Piece's figure. */
