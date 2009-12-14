@@ -82,7 +82,7 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	/* -- Create board structure -- */
 
-	board = new Board();
+	board = new Board(problem->moves(White), problem->moves(Black));
 
 	/* -- Create position structures -- */
 

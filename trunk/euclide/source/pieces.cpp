@@ -1,17 +1,17 @@
 #include "pieces.h"
+#include "moves.h"
 #include "obstructions.h"
 
 namespace euclide
 {
 
-
 /* -------------------------------------------------------------------------- */
 
-Piece::Piece(Superman superman, Color color)
+Piece::Piece(Superman superman, Color color, int moves)
 	: _superman(superman), _color(color), _glyph(superman.glyph(color))
 {
 	assert(superman.isValid());
-	assert(color.isValid());	
+	assert(color.isValid());
 
 	/* -- Initialize initial squares -- */
 
@@ -38,27 +38,25 @@ Piece::Piece(Superman superman, Color color)
 	_kcastling = (_ksquare != _initial) ? indeterminate : tribool(false);
 	_qcastling = (_qsquare != _initial) ? indeterminate : tribool(false);
 
-	/* -- Initialize table of allowed movements -- */
+	/* -- Initialize movement tables -- */
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			_movements[from][to] = (tables::movements[_glyph][from][to] || tables::captures[_glyph][from][to]) ? 0 : infinity;
+			_movements[from][to].initialize(from, to, superman, color, moves);
 
-	/* -- Count number of possible movements -- */
+	/* -- List valid movements -- */
 
-	_possibilities = 0;
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to] == 0)
-				_possibilities++;
+			if (_movements[from][to].possible())
+				_moves.push_back(&_movements[from][to]);
 
 	/* -- Check if some moves require captures -- */
 
 	_hybrid = false;
-	for (Square from = FirstSquare; from <= LastSquare; from++)
-		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to])
-				_hybrid = true;
+	for (Moves::const_iterator move = _moves.begin(); move != _moves.end(); move++)
+		if (move->capture())
+			_hybrid = true;
 
 	/* -- Fill in initial distances and required captures -- */
 
@@ -90,7 +88,6 @@ Piece::Piece(Superman superman, Color color)
 				_obstructions[square][glyph] = _obstructions[square][NoGlyph];
 			}
 		}
-
 	}
 }
 
@@ -104,6 +101,14 @@ Piece::~Piece()
 		for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 			if (_validObstructions[glyph])
 				delete _obstructions[square][glyph];
+
+	/* -- Delete moves -- */
+
+	_moves.clear();
+/*
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		for (Square to = FirstSquare; to <= LastSquare; to++)
+			delete _movements[from][to];*/
 }
 
 /* -------------------------------------------------------------------------- */
@@ -187,7 +192,7 @@ int Piece::distance(Square from, Square to) const
 		{
 			/* -- Check whether this movement is possible -- */
 
-			if (_movements[from][square])
+			if (!_movements[from][square].possible())
 				continue;
 
 			/* -- Check if the square has been attained by a quicker path -- */
@@ -253,7 +258,7 @@ int Piece::captures(Square from, Square to) const
 		{
 			/* -- Check whether this movement is forbiden -- */
 
-			if (_movements[from][square])
+			if (!_movements[from][square].possible())
 				continue;
 
 			/* -- Check if the square has been attained by a quicker path -- */
@@ -263,7 +268,7 @@ int Piece::captures(Square from, Square to) const
 			
 			/* -- Add square to queue -- */
 
-			distances[square] = distance + ((tables::captures[_glyph][from][square] && !tables::movements[_glyph][from][square]) ? 1 : 0);
+			distances[square] = distance + (_movements[from][square].capture() ? 1 : 0);
 			squares.push(square);
 			
 			/* -- Have we reached our destination? -- */
@@ -387,7 +392,7 @@ void Piece::computeForwardDistances(Square square, const vector<Square>& obstruc
 
 			for (Square to = FirstSquare; to <= LastSquare; to++)
 			{
-				if (_movements[from][to])
+				if (!_movements[from][to].possible())
 					continue;
 
 				int distance = distances[from] + 1;
@@ -456,7 +461,7 @@ void Piece::computeForwardDistances(Square square, int distances[NumSquares]) co
 
 		for (Square to = FirstSquare; to <= LastSquare; to++)
 		{
-			if (_movements[from][to])
+			if (!_movements[from][to].possible())
 				continue;
 
 			/* -- This square may have been attained by a quicker path -- */
@@ -503,7 +508,7 @@ void Piece::computeForwardCaptures(Square square, int captures[NumSquares]) cons
 
 		for (Square to = FirstSquare; to <= LastSquare; to++)
 		{
-			if (_movements[from][to])
+			if (!_movements[from][to].possible())
 				continue;
 
 			/* -- This square may have been attained with less captures -- */
@@ -513,7 +518,7 @@ void Piece::computeForwardCaptures(Square square, int captures[NumSquares]) cons
 
 			/* -- Set square number of required captures -- */
 
-			captures[to] = captures[from] + ((tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to]) ? 1 : 0);
+			captures[to] = captures[from] + (_movements[from][to].capture() ? 1 : 0);
 
 			/* -- Add it to queue of reachable destinations -- */
 
@@ -550,7 +555,7 @@ void Piece::computeReverseDistances(Square square, int distances[NumSquares]) co
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 		{
-			if (_movements[from][to])
+			if (!_movements[from][to].possible())
 				continue;
 
 			/* -- This square may have been attained by a quicker path -- */
@@ -597,7 +602,7 @@ void Piece::computeReverseCaptures(Square square, int captures[NumSquares]) cons
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 		{
-			if (_movements[from][to])
+			if (!_movements[from][to].possible())
 				continue;
 
 			/* -- This square may have been attained with less captures -- */
@@ -607,7 +612,7 @@ void Piece::computeReverseCaptures(Square square, int captures[NumSquares]) cons
 
 			/* -- Set square number of required captures -- */
 
-			captures[from] = captures[to] + ((tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to]) ? 1 : 0);
+			captures[from] = captures[to] + (_movements[from][to].capture() ? 1 : 0);
 
 			/* -- Add it to queue of source squares -- */
 
@@ -625,7 +630,7 @@ void Piece::computeReverseCaptures(Square square, int captures[NumSquares]) cons
 bool Piece::mayLeave(Square square) const
 {
 	for (Square s = FirstSquare; s <= LastSquare; s++)
-		if (_movements[square][s] == 0)
+		if (_movements[square][s].possible())
 			return true;
 
 	return false;
@@ -636,7 +641,7 @@ bool Piece::mayLeave(Square square) const
 bool Piece::mayReach(Square square) const
 {
 	for (Square s = FirstSquare; s <= LastSquare; s++)
-		if (_movements[s][square] == 0)
+		if (_movements[s][square].possible())
 			return true;
 
 	return false;
@@ -683,12 +688,12 @@ int Piece::getCaptures(Square from, Square to, vector<Squares>& captures) const
 		{
 			/* -- Check whether this movement is forbiden -- */
 
-			if (_movements[from][square])
+			if (!_movements[from][square].possible())
 				continue;
 
 			/* -- Compute distance (number of captures) -- */
 
-			int distance = distances[from] + ((tables::captures[_glyph][from][square] && !tables::movements[_glyph][from][square]) ? 1 : 0);
+			int distance = distances[from] + (_movements[from][square].capture() ? 1 : 0);
 
 			if (distance > distances[square])
 				continue;
@@ -739,7 +744,7 @@ int Piece::getCaptures(Square from, Square to, vector<Squares>& captures) const
 		{
 			for (list<Square>::const_iterator I = moves[square].begin(); I != moves[square].end(); I++)
 			{
-				if (!tables::captures[_glyph][*I][square])
+				if (!_movements[*I][square].capture())
 					continue;
 
 				if (!visited[*I] || !visited[square])
@@ -796,7 +801,7 @@ bool Piece::getUniquePath(Square from, Square to, vector<Square>& squares) const
 
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 		{
-			if (_movements[current][square])
+			if (!_movements[current][square].possible())
 				continue;
 
 			/* -- Return if path is not unique -- */
@@ -882,13 +887,9 @@ void Piece::optimize()
 			for (Square square = FirstSquare; square <= LastSquare; square++)
 				_obstructions[square][glyph]->optimize();
 
-	/* -- Count number of possible moves -- */
+	/* -- Keep only possible moves -- */
 
-	_possibilities = 0;
-	for (Square from = FirstSquare; from <= LastSquare; from++)
-		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to] == 0)
-				_possibilities++;
+	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
 
 	/* -- Recompute initial distances and captures -- */
 
@@ -909,7 +910,7 @@ void Piece::optimize()
 
 void Piece::optimize(const vector<tuple<Man, Color, vector<Square> > >& paths)
 {
-	if (!_possibilities)
+	if (!moves())
 		return;
 
 	/* -- For each given path -- */
@@ -947,15 +948,15 @@ void Piece::reduce(Square square, int availableMoves, int availableCaptures)
 
 	/* -- Handle castling -- */
 
-	if (!_possibilities && indeterminate(_kcastling))
+	if (!moves() && indeterminate(_kcastling))
 		_kcastling = (square == _ksquare) ? true : false;
 
-	if (!_possibilities && indeterminate(_qcastling))
+	if (!moves() && indeterminate(_qcastling))
 		_qcastling = (square == _qsquare) ? true : false;
 
 	/* -- If we can't move, we're done -- */
 
-	if (!_possibilities)
+	if (!moves())
 		return;
 
 	/* -- Compute distances and required captures to given square -- */
@@ -970,9 +971,9 @@ void Piece::reduce(Square square, int availableMoves, int availableCaptures)
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to] == 0)
+			if (_movements[from][to].possible())
 				if ((_distances[from] + 1 + rdistances[to]) > availableMoves)
-					_movements[from][to] = infinity;
+					_movements[from][to].invalidate();
 
 	/* -- Handle castling -- */
 
@@ -993,9 +994,9 @@ void Piece::reduce(Square square, int availableMoves, int availableCaptures)
 	if (_hybrid)
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if (_movements[from][to] == 0)
-					if ((_captures[from] + ((tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to]) ? 1 : 0) + rcaptures[to]) > availableCaptures)
-						_movements[from][to] = infinity;
+				if (_movements[from][to].possible())
+					if ((_captures[from] + (_movements[from][to].capture() ? 1 : 0) + rcaptures[to]) > availableCaptures)
+						_movements[from][to].invalidate();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1008,17 +1009,17 @@ void Piece::reduce(const Squares& squares, int availableMoves, int availableCapt
 
 	/* -- Handle castling -- */
 
-	if (!_possibilities && indeterminate(_kcastling))
+	if (!moves() && indeterminate(_kcastling))
 		if ((!squares[_initial] && !squares[_qsquare]) || !squares[_ksquare])
 			_kcastling = squares[_ksquare];
 
-	if (!_possibilities && indeterminate(_qcastling))
+	if (!moves() && indeterminate(_qcastling))
 		if ((!squares[_initial] && !squares[_ksquare]) || !squares[_qsquare])
 			_qcastling = squares[_qsquare];
 
 	/* -- If we can't move, there's nothing to do -- */
 
-	if (!_possibilities)
+	if (!moves())
 		return;
 
 	/* -- Remove obvious possibilities given number of moves -- */
@@ -1026,7 +1027,7 @@ void Piece::reduce(const Squares& squares, int availableMoves, int availableCapt
 	for (Square to = FirstSquare; to <= LastSquare; to++)
 		if ((_distances[to] > availableMoves) || (_captures[to] > availableCaptures))
 			for (Square from = FirstSquare; from <= LastSquare; from++)
-				_movements[from][to] = infinity;
+				_movements[from][to].invalidate();
 
 	/* -- Let's not loose ourselves with too many computations -- */
 
@@ -1064,9 +1065,9 @@ void Piece::reduce(const Squares& squares, int availableMoves, int availableCapt
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to] == 0)
+			if (_movements[from][to].possible())
 				if ((_distances[from] + 1 + rdistances[to]) > availableMoves)
-					_movements[from][to] = infinity;
+					_movements[from][to].invalidate();
 
 	/* -- Handle castling -- */
 
@@ -1088,9 +1089,9 @@ void Piece::reduce(const Squares& squares, int availableMoves, int availableCapt
 	if (_hybrid)
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if (_movements[from][to] == 0)
-					if ((_captures[from] + ((tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to]) ? 1 : 0) + rcaptures[to]) > availableCaptures)
-						_movements[from][to] = infinity;
+				if (_movements[from][to].possible())
+					if ((_captures[from] + (_movements[from][to].capture() ? 1 : 0) + rcaptures[to]) > availableCaptures)
+						_movements[from][to].invalidate();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1108,9 +1109,9 @@ void Piece::setCaptureSquares(const Squares& squares)
 			continue;
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
-			if (_movements[from][square] == 0)
-				if (tables::captures[_glyph][from][square] && !tables::movements[_glyph][from][square])
-					_movements[from][square] = infinity;
+			if (_movements[from][square].possible())
+				if (_movements[from][square].capture())
+					_movements[from][square].invalidate();
 	}		
 }
 
@@ -1137,7 +1138,7 @@ void Piece::synchronizeCastling(Piece& krook, Piece& qrook)
 
 int Piece::moves() const
 {
-	return _possibilities;
+	return (int)_moves.size();
 }
 
 /* -------------------------------------------------------------------------- */

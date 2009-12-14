@@ -5,16 +5,91 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Move::Move(Square from, Square to, Color color, Man man, Superman superman)
-	: _from(from), _to(to), _color(color), _man(man), _superman(superman)
+Move::Move()
 {
-	assert(from.isValid() || (from == UndefinedSquare));
-	assert(to.isValid() || (to == UndefinedSquare));
-	assert(from.isValid() || to.isValid());
+	_from = UndefinedSquare;
+	_to = UndefinedSquare;
+	_superman = UndefinedSuperman;
+	_glyph = UndefinedGlyph;
+	_color = UndefinedColor;
 
-	assert(color.isValid());
-	assert(man.isValid());
+	_mandatory = indeterminate;
+	_capture = indeterminate;
+
+	_earliest = 0;
+	_latest = 0;
+
+	_obstructions = infinity;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Move::Move(Square from, Square to, Superman superman, Color color, int moves)
+{
+	initialize(from, to, superman, color, moves);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Move::initialize(Square from, Square to, Superman superman, Color color, int moves)
+{
+	assert(from.isValid());
+	assert(to.isValid());
 	assert(superman.isValid());
+	assert(color.isValid());
+
+	_from = from;
+	_to = to;
+	_superman = superman;
+	_glyph = superman.glyph(color);
+	_color = color;
+	
+	_mandatory = indeterminate;
+	_capture = indeterminate;
+
+	_earliest = 1;
+	_latest = moves;
+
+	/* -- Is this a valid move or not ? -- */
+
+	_obstructions = (tables::movements[_glyph][from][to] || tables::captures[_glyph][from][to]) ? 0 : infinity;
+
+	/* -- If so, is capture possible or mandatory ? -- */
+
+	if (tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to])
+		_capture = true;
+	else
+	if (!tables::captures[_glyph][from][to] && tables::movements[_glyph][from][to])
+		_capture = false;
+
+	/* -- ... -- */
+
+	// Squares = ???
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Move::invalidate()
+{
+	_obstructions = infinity;
+
+	if (_mandatory)
+		abort(NoSolution);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Move::block()
+{
+	_obstructions += 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Move::unblock()
+{
+	assert(_obstructions >= 1);
+	_obstructions -= 1;
 }
 
 /* -------------------------------------------------------------------------- */
