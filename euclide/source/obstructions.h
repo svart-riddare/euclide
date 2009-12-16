@@ -29,13 +29,13 @@ class Obstructions
 
 		Obstructions& operator&=(const Obstructions& obstructions);
 
-		void block(bool soft) const;
-		void unblock(bool soft) const;
+		int block(bool captured = false) const;
+		int unblock(bool captured = false) const;
 
 		void optimize();
 
 	public :
-		int numObstructions(bool soft) const;
+		int obstructions(bool captured = false) const;
 
 	private :
 		int _numHardObstructions;    /**< Number of obstructions, except moves by a piece of opposite color that ends on the obstruction square (thus allowing capture of the blocking figure). */

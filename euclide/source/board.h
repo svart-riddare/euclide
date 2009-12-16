@@ -22,7 +22,7 @@ class Piece;
 class Board
 {
 	public :
-		Board(int numWhiteMoves, int numBlackMoves);
+		Board(const Position& whitePosition, const Position& blackPosition, const Problem& problem);
 		~Board();
 
 		int moves() const;
@@ -44,22 +44,24 @@ class Board
 		void block(Superman superman, Color color, Square square, bool captured = false);
 		void unblock(Superman superman, Color color, Square square, bool captured = false);
 		void transblock(Superman superman, Color color, Square from, Square to, bool captured = false);
+		
 		void block(Man man, Superman superman, Color color);
+		void block(Man man, const Supermen& supermen, Color color);
 		void block(Man man, Superman superman, Color color, const Squares& squares);
+		void block(Man man, const Supermen& supermen, Color color, const Squares& squares);
 
-		void reduce(Man man, Superman superman, Color color, Square square, int availableMoves, int availableCaptures);
-		void reduce(Man man, Superman superman, Color color, const Squares& squares, int availableMoves, int availableCaptures);
-		void reduce(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures);
-		
-		void setCaptureSquares(Man man, Superman superman, Color color, const Squares& squares);
-		
-		void optimizeLevelOne(const Position& position, Color color, int availableMoves, int availableCaptures);
-		void optimizeLevelTwo(const Position& whitePosition, const Position& blackPosition);
-		void optimize(Color color);
+		void setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures);
+		void setPossibleCaptures(Man man, Superman superman, Color color, const Squares& squares);
+
+		void optimizeLevelOne();
+		void optimizeLevelTwo();
+		void optimize();
 
 	private :
-		Piece *pieces[NumColors][NumSupermen];    /**< Movement descriptors for each piece type. */
-		bool optimized;                           /**< True when pieces have been optimized and distances precomputed. */
+		Piece *_pieces[NumColors][NumSupermen];   /**< Movement descriptors for each piece type. */
+		
+		const Position *_positions[NumColors];    /**< Positional deductions. */
+		const Problem *_problem;                  /**< Problem definition. */
 };
 
 /* -------------------------------------------------------------------------- */

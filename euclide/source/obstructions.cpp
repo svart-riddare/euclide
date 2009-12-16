@@ -102,22 +102,26 @@ Obstructions& Obstructions::operator&=(const Obstructions& obstructions)
 
 /* -------------------------------------------------------------------------- */
 
-void Obstructions::block(bool soft) const
+int Obstructions::block(bool captured) const
 {
-	int numObstructions = soft ? _numSoftObstructions : _numHardObstructions;
+	int numObstructions = obstructions(captured);
 
 	for (int k = 0; k < numObstructions; k++)
 		_obstructions[k]->block();
+
+	return numObstructions;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Obstructions::unblock(bool soft) const
+int Obstructions::unblock(bool captured) const
 {
-	int numObstructions = soft ? _numSoftObstructions : _numHardObstructions;
+	int numObstructions = obstructions(captured);
 
 	for (int k = 0; k < numObstructions; k++)
 		_obstructions[k]->unblock();
+
+	return numObstructions;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -141,9 +145,9 @@ void Obstructions::optimize()
 
 /* -------------------------------------------------------------------------- */
 
-int Obstructions::numObstructions(bool soft) const
+int Obstructions::obstructions(bool captured) const
 {
-	return soft ? _numSoftObstructions : _numHardObstructions;
+	return captured ? _numSoftObstructions : _numHardObstructions;
 }
 
 /* -------------------------------------------------------------------------- */
