@@ -69,6 +69,18 @@ Piece::Piece(Superman superman, Color color, int moves)
 		if (_distances[square] < infinity)
 			_squares[square] = true;
 
+	/* -- Restrictions will be filled later -- */
+
+	_possibleSquares.set();
+	_possibleCaptures.set();
+
+	_availableMoves = infinity;
+	_availableCaptures = infinity;
+
+	/* -- Optimization will be performed when movements are blocked or constraints are updated -- */
+
+	_optimized = true;
+
 	/* -- Initialize obstruction tables -- */
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
@@ -105,10 +117,6 @@ Piece::~Piece()
 	/* -- Delete moves -- */
 
 	_moves.clear();
-/*
-	for (Square from = FirstSquare; from <= LastSquare; from++)
-		for (Square to = FirstSquare; to <= LastSquare; to++)
-			delete _movements[from][to];*/
 }
 
 /* -------------------------------------------------------------------------- */
@@ -338,7 +346,7 @@ bool Piece::obstrusive(const vector<Square>& squares, Glyph glyph) const
 	bool obstrusive = false;
 
 	for (vector<Square>::const_iterator square = squares.begin(); square != squares.end(); square++)
-		if (_obstructions[*square][glyph]->numObstructions(false))
+		if (_obstructions[*square][glyph]->obstructions())
 			obstrusive = true;
 
 	return obstrusive;
@@ -831,7 +839,7 @@ bool Piece::getUniquePath(Square from, Square to, vector<Square>& squares) const
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::block(Squares squares, Glyph glyph)
+void Piece::block(Squares squares, Glyph glyph, bool definitive)
 {
 	assert(!squares.none());
 	assert(glyph.isValid());
@@ -841,7 +849,7 @@ void Piece::block(Squares squares, Glyph glyph)
 		square++;
 
 	if (squares.count() == 1)
-		return block(square, glyph, false);
+		return block(square, glyph, false, definitive);
 
 	/* -- Find common obstructions -- */
 
@@ -853,17 +861,29 @@ void Piece::block(Squares squares, Glyph glyph)
 
 	/* -- Apply them -- */
 
-	obstructions.block(false);
+	int blocked = obstructions.block(false);
+
+	/* -- Have any movements been definitively blocked ? -- */
+
+	if (definitive && blocked)
+		_optimized = false;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::block(Square square, Glyph glyph, bool captured)
+void Piece::block(Square square, Glyph glyph, bool captured, bool definitive)
 {
 	assert(square.isValid());
 	assert(glyph.isValid());
 
-	_obstructions[square][glyph]->block(captured);
+	/* -- Apply obstructions -- */
+
+	int blocked = _obstructions[square][glyph]->block(captured);
+
+	/* -- Have any movements been definitively blocked ? -- */
+
+	if (definitive && blocked)
+		_optimized = false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -873,6 +893,8 @@ void Piece::unblock(Square square, Glyph glyph, bool captured)
 	assert(square.isValid());
 	assert(glyph.isValid());
 
+	/* -- Undo obstructions -- */
+
 	_obstructions[square][glyph]->unblock(captured);
 }
 
@@ -880,16 +902,37 @@ void Piece::unblock(Square square, Glyph glyph, bool captured)
 
 void Piece::optimize()
 {
-	/* -- Remove all useless obstructions -- */
+	/* -- Don't bother if there is nothing to do -- */
 
-	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
-		if (_validObstructions[glyph])
-			for (Square square = FirstSquare; square <= LastSquare; square++)
-				_obstructions[square][glyph]->optimize();
+	if (_optimized)
+		return;
+
+	/* -- Eliminate impossible captures given possible capture squares -- */
+
+	if (_hybrid && (_possibleCaptures.count() < NumSquares))
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			if (move->capture() && !_possibleCaptures[move->to()])
+				move->invalidate();
+
+	/* -- Remove obvious possibilities given number of moves and captures -- */
+
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+		if ((_distances[move->to()] > _availableMoves) || (_captures[move->to()] > _availableCaptures))
+			move->invalidate();
 
 	/* -- Keep only possible moves -- */
 
 	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+
+	/* -- Obvious castling deductions -- */
+
+	if (!moves() && indeterminate(_kcastling))
+		if ((!_possibleSquares[_initial] && !_possibleSquares[_qsquare]) || !_possibleSquares[_ksquare])
+			_kcastling = _possibleSquares[_ksquare] ? true : false;
+
+	if (!moves() && indeterminate(_qcastling))
+		if ((!_possibleSquares[_initial] && !_possibleSquares[_ksquare]) || !_possibleSquares[_qsquare])
+			_qcastling = _possibleSquares[_qsquare] ? true : false;
 
 	/* -- Recompute initial distances and captures -- */
 
@@ -904,6 +947,78 @@ void Piece::optimize()
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (_distances[square] < infinity)
 			_squares[square] = true;
+
+	/* -- Eliminate unused movements without making too much computations -- */
+
+	if (_possibleSquares.count() < 8)
+	{
+		/* -- Compute distances and required captures to given set of possible destination squares -- */
+
+		int rdistances[NumSquares];
+		int rcaptures[NumSquares];
+
+		Square square = FirstSquare;
+		while (!_possibleSquares[square])
+			square++;
+
+		computeReverseDistances(square, rdistances);
+		computeReverseCaptures(square, rcaptures);
+
+		for (square++; square <= LastSquare; square++)
+		{
+			if (_possibleSquares[square])
+			{
+				int trdistances[NumSquares];
+				int trcaptures[NumSquares];
+	
+				computeReverseDistances(square, trdistances);
+				computeReverseCaptures(square, trcaptures);
+
+				minimize(rdistances, trdistances, NumSquares);
+				minimize(rcaptures, trcaptures, NumSquares);
+			}
+		}
+
+		/* -- Eliminate unused movements given number of available moves and captures -- */
+
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			if ((_distances[move->from()] + 1 + rdistances[move->to()]) > _availableMoves)
+				move->invalidate();
+
+		if (_hybrid)
+			for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+				if ((_captures[move->from()] + (move->capture() ? 1 : 0) + rcaptures[move->to()]) > _availableCaptures)
+					move->invalidate();
+
+		/* -- Keep only possible moves -- */
+
+		_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+	}
+
+	/* -- Further castling deductions -- */
+
+	if (indeterminate(_kcastling) || indeterminate(_qcastling))
+	{
+		if (!_possibleSquares[_initial] && !mayLeave(_initial))
+		{
+			if (!_possibleSquares[_qsquare] && !mayLeave(_qsquare))
+				_kcastling = true;
+
+			if (!_possibleSquares[_ksquare] && !mayLeave(_ksquare))
+				_qcastling = true;
+		}
+	}
+
+	/* -- Remove all useless obstructions -- */
+
+	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
+		if (_validObstructions[glyph])
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+				_obstructions[square][glyph]->optimize();
+
+	/* -- All done -- */
+
+	_optimized = true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -940,179 +1055,48 @@ void Piece::optimize(const vector<tuple<Man, Color, vector<Square> > >& paths)
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::reduce(Square square, int availableMoves, int availableCaptures)
-{
-	assert(square.isValid());
-	assert(availableMoves >= 0);
-	assert(availableCaptures >= 0);
-
-	/* -- Handle castling -- */
-
-	if (!moves() && indeterminate(_kcastling))
-		_kcastling = (square == _ksquare) ? true : false;
-
-	if (!moves() && indeterminate(_qcastling))
-		_qcastling = (square == _qsquare) ? true : false;
-
-	/* -- If we can't move, we're done -- */
-
-	if (!moves())
-		return;
-
-	/* -- Compute distances and required captures to given square -- */
-
-	int rdistances[NumSquares];
-	int rcaptures[NumSquares];
-
-	computeReverseDistances(square, rdistances);
-	computeReverseCaptures(square, rcaptures);
-
-	/* -- Eliminate unused movements given number of available moves -- */
-
-	for (Square from = FirstSquare; from <= LastSquare; from++)
-		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to].possible())
-				if ((_distances[from] + 1 + rdistances[to]) > availableMoves)
-					_movements[from][to].invalidate();
-
-	/* -- Handle castling -- */
-
-	if (indeterminate(_kcastling) || indeterminate(_qcastling))
-	{
-		if ((square != _initial) && !mayLeave(_initial))
-		{
-			if ((square != _qsquare) && !mayLeave(_qsquare))
-				_kcastling = true;
-
-			if ((square != _ksquare) && !mayLeave(_ksquare))
-				_qcastling = true;
-		}
-	}
-
-	/* -- Eliminate unused movements given number of available captures -- */
-
-	if (_hybrid)
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if (_movements[from][to].possible())
-					if ((_captures[from] + (_movements[from][to].capture() ? 1 : 0) + rcaptures[to]) > availableCaptures)
-						_movements[from][to].invalidate();
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Piece::reduce(const Squares& squares, int availableMoves, int availableCaptures)
+void Piece::setPossibleSquares(const Squares& squares, int availableMoves, int availableCaptures)
 {
 	assert(!squares.none());
 	assert(availableMoves >= 0);
 	assert(availableCaptures >= 0);
 
-	/* -- Handle castling -- */
+	/* -- Return if we already have this knowledge -- */
 
-	if (!moves() && indeterminate(_kcastling))
-		if ((!squares[_initial] && !squares[_qsquare]) || !squares[_ksquare])
-			_kcastling = squares[_ksquare];
+	if (squares.count() >= _possibleSquares.count())
+		if (availableMoves >= _availableMoves)
+			if (availableCaptures >= _availableCaptures)
+				return;
 
-	if (!moves() && indeterminate(_qcastling))
-		if ((!squares[_initial] && !squares[_ksquare]) || !squares[_qsquare])
-			_qcastling = squares[_qsquare];
+	/* -- Update state -- */
 
-	/* -- If we can't move, there's nothing to do -- */
+	_possibleSquares = squares;
 
-	if (!moves())
-		return;
+	_availableMoves = availableMoves;
+	_availableCaptures = availableCaptures;
 
-	/* -- Remove obvious possibilities given number of moves -- */
+	/* -- Schedule for optimization -- */
 
-	for (Square to = FirstSquare; to <= LastSquare; to++)
-		if ((_distances[to] > availableMoves) || (_captures[to] > availableCaptures))
-			for (Square from = FirstSquare; from <= LastSquare; from++)
-				_movements[from][to].invalidate();
-
-	/* -- Let's not loose ourselves with too many computations -- */
-
-	if (squares.count() > 8)
-		return;
-
-	/* -- Compute distances and required captures to given set of squares -- */
-
-	int rdistances[NumSquares];
-	int rcaptures[NumSquares];
-
-	Square square = FirstSquare;
-	while (!squares[square])
-		square++;
-
-	computeReverseDistances(square, rdistances);
-	computeReverseCaptures(square, rcaptures);
-
-	for (square++; square <= LastSquare; square++)
-	{
-		if (!squares[square])
-			continue;
-
-		int _rdistances[NumSquares];
-		int _rcaptures[NumSquares];
-
-		computeReverseDistances(square, _rdistances);
-		computeReverseCaptures(square, _rcaptures);
-
-		minimize(rdistances, _rdistances, NumSquares);
-		minimize(rcaptures, _rcaptures, NumSquares);
-	}
-
-	/* -- Eliminate unused movements given number of available moves -- */
-
-	for (Square from = FirstSquare; from <= LastSquare; from++)
-		for (Square to = FirstSquare; to <= LastSquare; to++)
-			if (_movements[from][to].possible())
-				if ((_distances[from] + 1 + rdistances[to]) > availableMoves)
-					_movements[from][to].invalidate();
-
-	/* -- Handle castling -- */
-
-	if (indeterminate(_kcastling) || indeterminate(_qcastling))
-	{
-		if (!squares[_initial] && !mayLeave(_initial))
-		{
-			if (!squares[_qsquare] && !mayLeave(_qsquare))
-				_kcastling = true;
-
-			if (!squares[_ksquare] && !mayLeave(_ksquare))
-				_qcastling = true;
-		}
-	}
-
-
-	/* -- Eliminate unused movements given number of available captures -- */
-
-	if (_hybrid)
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if (_movements[from][to].possible())
-					if ((_captures[from] + (_movements[from][to].capture() ? 1 : 0) + rcaptures[to]) > availableCaptures)
-						_movements[from][to].invalidate();
+	_optimized = false;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::setCaptureSquares(const Squares& squares)
+void Piece::setPossibleCaptures(const Squares& captures)
 {
-	if (!_hybrid)
+	/* -- Return if we already have this knowledge -- */
+
+	if (captures.count() >= _possibleCaptures.count())
 		return;
 
-	/* -- Eliminate impossible captures given possible capture squares -- */
+	/* -- Update state -- */
 
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-	{
-		if (squares[square])
-			continue;
+	_possibleCaptures = captures;
 
-		for (Square from = FirstSquare; from <= LastSquare; from++)
-			if (_movements[from][square].possible())
-				if (_movements[from][square].capture())
-					_movements[from][square].invalidate();
-	}		
+	/* -- Schedule for optimisation -- */
+
+	if (_hybrid)
+		_optimized = false;
 }
 
 /* -------------------------------------------------------------------------- */

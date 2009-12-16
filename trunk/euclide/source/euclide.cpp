@@ -80,10 +80,6 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 	if (callbacks.displayProblem)
 		(*callbacks.displayProblem)(callbacks.handle, inputProblem);
 
-	/* -- Create board structure -- */
-
-	board = new Board(problem->moves(White), problem->moves(Black));
-
 	/* -- Create position structures -- */
 
 	whitePosition = new Position(*problem, White);
@@ -91,6 +87,10 @@ void Euclide::solve(const EUCLIDE_Problem *inputProblem)
 
 	*whitePosition += *blackPosition;
 	*blackPosition += *whitePosition;
+
+	/* -- Create board structure -- */
+
+	board = new Board(*whitePosition, *blackPosition, *problem);
 
 	/* -- Initial partition split (for kings) -- */
 
@@ -147,10 +147,8 @@ void Euclide::analyseBasicConstraints()
 
 		/* -- Optimize board movements -- */
 
-		board->optimizeLevelOne(*whitePosition, White, problem->moves(White), problem->captures(White));
-		board->optimizeLevelOne(*blackPosition, Black, problem->moves(Black), problem->captures(Black));
-
-		board->optimizeLevelTwo(*whitePosition, *blackPosition);
+		board->optimizeLevelOne();
+		board->optimizeLevelTwo();
 
 		/* -- Output current deductions -- */
 	
