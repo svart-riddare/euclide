@@ -69,6 +69,13 @@ void Move::initialize(Square from, Square to, Superman superman, Color color, in
 
 /* -------------------------------------------------------------------------- */
 
+void Move::validate()
+{
+	_mandatory = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Move::invalidate()
 {
 	_obstructions = infinity;
@@ -90,6 +97,17 @@ void Move::unblock()
 {
 	assert(_obstructions >= 1);
 	_obstructions -= 1;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Move::bound(int earliest, int latest)
+{
+	maximize(_earliest, earliest);
+	minimize(_latest, latest);
+
+	if (_earliest > _latest)
+		invalidate();
 }
 
 /* -------------------------------------------------------------------------- */

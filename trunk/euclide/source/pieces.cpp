@@ -58,6 +58,19 @@ Piece::Piece(Superman superman, Color color, int moves)
 		if (move->capture())
 			_hybrid = true;
 
+	/* -- Earliest and latest moves -- */
+
+	_earliest = 1;
+	_latest = moves;
+
+	/* -- Restrictions will be filled later -- */
+
+	_possibleSquares.set();
+	_possibleCaptures.set();
+
+	_availableMoves = infinity;
+	_availableCaptures = infinity;
+
 	/* -- Fill in initial distances and required captures -- */
 
 	computeInitialDistances();
@@ -68,14 +81,6 @@ Piece::Piece(Superman superman, Color color, int moves)
 	for (Square square = FirstSquare; square <= LastSquare; square++)
 		if (_distances[square] < infinity)
 			_squares[square] = true;
-
-	/* -- Restrictions will be filled later -- */
-
-	_possibleSquares.set();
-	_possibleCaptures.set();
-
-	_availableMoves = infinity;
-	_availableCaptures = infinity;
 
 	/* -- Optimization will be performed when movements are blocked or constraints are updated -- */
 
@@ -294,6 +299,7 @@ int Piece::captures(Square from, Square to) const
 void Piece::computeInitialDistances()
 {
 	computeForwardDistances(_initial, _distances);
+	computeReverseDistances(_possibleSquares, _rdistances);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -301,6 +307,7 @@ void Piece::computeInitialDistances()
 void Piece::computeInitialCaptures()
 {
 	computeForwardCaptures(_initial, _captures);
+	computeReverseCaptures(_possibleSquares, _rcaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -310,7 +317,10 @@ void Piece::updateInitialDistances()
 	int distances[NumSquares];
 
 	computeForwardDistances(_initial, distances);
-	updateInitialDistances(distances);
+	updateInitialDistances(distances, false);
+
+	computeReverseDistances(_possibleSquares, distances);
+	updateInitialDistances(distances, true);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -320,23 +330,24 @@ void Piece::updateInitialCaptures()
 	int captures[NumSquares];
 
 	computeForwardCaptures(_initial, captures);
-	updateInitialCaptures(captures);
+	updateInitialCaptures(captures, false);
+
+	computeReverseCaptures(_possibleSquares, captures);
+	updateInitialCaptures(captures, true);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::updateInitialDistances(const int distances[NumSquares])
+void Piece::updateInitialDistances(const int distances[NumSquares], bool reverse)
 {
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		maximize(_distances[square], distances[square]);
+	maximize(reverse ? _rdistances : _distances, distances, NumSquares);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::updateInitialCaptures(const int captures[NumSquares])
+void Piece::updateInitialCaptures(const int captures[NumSquares], bool reverse)
 {
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		maximize(_captures[square], captures[square]);
+	maximize(reverse ? _rcaptures : _captures, captures, NumSquares);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -631,6 +642,87 @@ void Piece::computeReverseCaptures(Square square, int captures[NumSquares]) cons
 	/* -- Don't leave negative values in the table -- */
 
 	std::replace(captures, captures + NumSquares, -1, infinity);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::computeReverseDistances(const Squares& squares, int distances[NumSquares]) const
+{
+	assert(squares.any());
+
+	/* -- Let's make detailed computation only if there is not too many possibilites -- */
+
+	if (squares.count() < 8)
+	{
+		bool initialize = true;
+
+		/* -- Compute minimum distances to reach given squares -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			if (squares[square])
+			{
+				if (initialize)
+				{
+					computeReverseDistances(square, distances);
+					initialize = false;
+				}
+				else
+				{
+					int rdistances[NumSquares];
+					computeReverseDistances(square, rdistances);
+					minimize(distances, rdistances, NumSquares);
+				}
+			}
+		}
+	}
+	else
+	{
+		/* -- Fallback case, assume we need one move to reach any destination square -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			distances[square] = squares[square] ? 0 : 1;
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::computeReverseCaptures(const Squares& squares, int captures[NumSquares]) const
+{
+	assert(squares.any());
+
+	/* -- Let's make detailed computation only if there is not too many possibilites -- */
+
+	if ((squares.count() < 8) && _hybrid)
+	{
+		bool initialize = true;
+
+		/* -- Compute minimum distances to reach given squares -- */
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			if (squares[square])
+			{
+				if (initialize)
+				{
+					computeReverseCaptures(square, captures);
+					initialize = false;
+				}
+				else
+				{
+					int rcaptures[NumSquares];
+					computeReverseCaptures(square, rcaptures);
+					minimize(captures, rcaptures, NumSquares);
+				}
+			}
+		}
+	}
+	else
+	{
+		/* -- Fallback case, assume we do not need any captures to reach destination squares -- */
+
+		std::fill(captures, captures + NumSquares, 0);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -948,52 +1040,40 @@ void Piece::optimize()
 		if (_distances[square] < infinity)
 			_squares[square] = true;
 
-	/* -- Eliminate unused movements without making too much computations -- */
+	/* -- Eliminate unused movements given number of available moves and captures -- */
 
-	if (_possibleSquares.count() < 8)
-	{
-		/* -- Compute distances and required captures to given set of possible destination squares -- */
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+		if ((_distances[move->from()] + 1 + _rdistances[move->to()]) > _availableMoves)
+			move->invalidate();
 
-		int rdistances[NumSquares];
-		int rcaptures[NumSquares];
-
-		Square square = FirstSquare;
-		while (!_possibleSquares[square])
-			square++;
-
-		computeReverseDistances(square, rdistances);
-		computeReverseCaptures(square, rcaptures);
-
-		for (square++; square <= LastSquare; square++)
-		{
-			if (_possibleSquares[square])
-			{
-				int trdistances[NumSquares];
-				int trcaptures[NumSquares];
-	
-				computeReverseDistances(square, trdistances);
-				computeReverseCaptures(square, trcaptures);
-
-				minimize(rdistances, trdistances, NumSquares);
-				minimize(rcaptures, trcaptures, NumSquares);
-			}
-		}
-
-		/* -- Eliminate unused movements given number of available moves and captures -- */
-
+	if (_hybrid)
 		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-			if ((_distances[move->from()] + 1 + rdistances[move->to()]) > _availableMoves)
+			if ((_captures[move->from()] + (move->capture() ? 1 : 0) + _rcaptures[move->to()]) > _availableCaptures)
 				move->invalidate();
 
-		if (_hybrid)
-			for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-				if ((_captures[move->from()] + (move->capture() ? 1 : 0) + rcaptures[move->to()]) > _availableCaptures)
-					move->invalidate();
+	/* -- Keep only possible moves -- */
 
-		/* -- Keep only possible moves -- */
+	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
 
-		_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
-	}
+	/* -- Get earliest and latest moves -- */
+
+	int earliest = infinity;
+	int latest = 0;
+
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+		minimize(earliest, move->earliest()), maximize(latest, move->latest());
+
+	maximize(_earliest, earliest);
+	minimize(_latest, latest);
+
+	/* -- Set obvious lower and upper bounds for move order -- */
+
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+		move->bound(_earliest + _distances[move->from()], _latest - _rdistances[move->to()]);
+
+	/* -- Keep only possible moves -- */
+
+	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
 
 	/* -- Further castling deductions -- */
 

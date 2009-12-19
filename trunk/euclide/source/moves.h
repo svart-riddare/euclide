@@ -15,10 +15,13 @@ class Move
 		Move(Square from, Square to, Superman superman, Color color, int moves = infinity);
 		void initialize(Square from, Square to, Superman superman, Color color, int moves = infinity);
 		
+		void validate();
 		void invalidate();
 
 		void block();
 		void unblock();
+
+		void bound(int earliest, int latest);
 
 	public :
 		inline Square from() const
@@ -39,6 +42,12 @@ class Move
 			{ return _capture; }
 		inline tribool mandatory() const
 			{ return _mandatory; }
+
+	public :
+		inline int earliest() const
+			{ return _earliest; }
+		inline int latest() const
+			{ return _latest; }
 	
 	public :
 		inline bool isFromSquare(Square square) const
@@ -67,7 +76,7 @@ class Move
 		int _earliest;                   /**< Earliest time at which this move can be played in proof game. Move numbering starts from 1. */
 		int _latest;                     /**< Latest time at which this move can be played in proof game. Move numbering starts from 1. */
 
-		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. */
+		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. Does not include departure square nor arrival square. */
 };
 
 /* -------------------------------------------------------------------------- */
