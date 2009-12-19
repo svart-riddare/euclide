@@ -12,15 +12,15 @@ void abort(error_t error)
 
 /* -------------------------------------------------------------------------- */
 
+#ifndef NDEBUG
+
 void assert(bool expression)
 {
-#ifndef NDEBUG
 	if (!expression)
 		abort(InternalLogicError);
-#else
-	expression;
-#endif
 }
+
+#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -33,7 +33,9 @@ namespace boost
 
 void assertion_failed(char const *, char const *, char const *, long)
 {
+#ifndef NDEBUG
 	euclide::assert(false);
+#endif
 }
 
 }
