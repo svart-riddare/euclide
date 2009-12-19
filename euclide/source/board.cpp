@@ -76,7 +76,8 @@ int Board::moves(Man man, Superman superman, Color color) const
 	assert(man.isValid());
 	assert(color.isValid());
 	assert(superman.isValid());
-	assert(pieces[color][superman] != NULL);
+
+	assert(_pieces[color][superman] != NULL);
 
 	int moves = _pieces[color][man]->moves();
 
@@ -398,7 +399,7 @@ void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, c
 		{
 			if (supermen[superman])
 			{
-				assert(pieces[color][superman] != NULL);
+				assert(_pieces[color][superman] != NULL);
 
 				promotions[superman.square(color)] = true;
 				minimize(promotionMoves, _pieces[color][superman]->distance(squares));

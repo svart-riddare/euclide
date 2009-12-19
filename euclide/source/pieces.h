@@ -63,8 +63,8 @@ class Piece
 		void updateInitialDistances();
 		void updateInitialCaptures();
 
-		void updateInitialDistances(const int distances[NumSquares]);
-		void updateInitialCaptures(const int captures[NumSquares]);
+		void updateInitialDistances(const int distances[NumSquares], bool reverse = false);
+		void updateInitialCaptures(const int captures[NumSquares], bool reverse = false);
 
 		void computeForwardDistances(Square square, int distances[NumSquares]) const;
 		void computeForwardCaptures(Square square, int captures[NumSquares]) const;
@@ -73,6 +73,9 @@ class Piece
 
 		void computeReverseDistances(Square square, int distances[NumSquares]) const;
 		void computeReverseCaptures(Square square, int captures[NumSquares]) const;
+
+		void computeReverseDistances(const Squares& squares, int distances[NumSquares]) const;
+		void computeReverseCaptures(const Squares& squares, int captures[NumSquares]) const;
 
 		bool mayLeave(Square square) const;
 		bool mayReach(Square square) const;
@@ -104,12 +107,18 @@ class Piece
 		int _distances[NumSquares];                            /**< Precomputed number of moves required to reach each square from the initial square (castling taken into account). */
 		int _captures[NumSquares];                             /**< Precomputed number of captures required to reach each square from the initial square. */
 
+		int _rdistances[NumSquares];                           /**< Precomputed number of moves required to reach any possible final destination square from given square (castling taken into account). */
+		int _rcaptures[NumSquares];                            /**< Precomputed number of captures required to reach any possible final destination square from given square (castling taken into account). */
+
 		Squares _squares;                                      /**< List of squares that can be reached by the moving piece. */
 
 		Squares _possibleSquares;                              /**< List of possible final squares for this piece. */
 		Squares _possibleCaptures;                             /**< List of possible squares for captures made by this piece. */
 		int _availableMoves;                                   /**< Number of available moves for this piece. */
 		int _availableCaptures;                                /**< Number of available captures for this piece. */
+
+		int _earliest;                                         /**< Earliest move for this piece, counting from 1. May be undefined if piece has not moved. */
+		int _latest;                                           /**< Latest move for this piece, counting from 1. May be undefined if piece has not moved. */
 
 		bool _optimized;                                       /**< True if all movements, distances and other state variables are up to date. */
 
