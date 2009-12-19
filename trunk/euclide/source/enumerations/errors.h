@@ -2,7 +2,9 @@
 #define __EUCLIDE_ERRORS_H
 
 #include <cassert>
-#undef assert
+#ifndef NDEBUG
+	#undef assert
+#endif
 
 #include "euclide.h"
 
@@ -27,7 +29,10 @@ typedef enum
 /* -------------------------------------------------------------------------- */
 
 void abort(error_t error);
-void assert(bool expression);
+
+#ifndef NDEBUG
+	void assert(bool expression);
+#endif
 
 /* -------------------------------------------------------------------------- */
 
