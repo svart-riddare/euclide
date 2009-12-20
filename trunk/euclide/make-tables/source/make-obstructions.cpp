@@ -23,7 +23,7 @@ void makeObstructions(void)
 	{
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 		{
-			numObstructions[glyph][square] = NULL;
+			numObstructions[glyph][square] = 0;
 
 			if (glyph != NoGlyph)
 				fprintf(file, "\t/* %s, %s */\n", strings::glyphs[glyph], strings::squares[square]);

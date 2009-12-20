@@ -26,7 +26,7 @@ extern const bool captures[NumGlyphs][NumSquares][NumSquares];
 	  by a king of the opposite color of the given glyph.
 	  Check obstructions are valid only if the occupied square is occupied 
 	  by an opponent that would give check to the king if placed on the 
-	  source square.These obstructions apply only to kings.
+	  source square. These obstructions apply only to kings.
 /* -------------------------------------------------------------------------- */
 
 typedef struct
@@ -46,6 +46,22 @@ typedef struct
 } Obstructions;
 
 extern const Obstructions obstructions[NumGlyphs][NumSquares];
+
+/* -------------------------------------------------------------------------- */
+/* -- A constraint list is the list of squares that must be free for a 
+      given move (piece type, source square, destination square) to be 
+      possible. The source and destination squares are not included in the 
+	  list of constraints.
+/* -------------------------------------------------------------------------- */
+
+typedef struct
+{
+	const Square *constraints;
+	int numConstraints;
+
+} Constraints;
+
+extern const Constraints constraints[NumGlyphs][NumSquares][NumSquares];
 
 /* -------------------------------------------------------------------------- */
 /* -- A king on a given square is in check from a given glyph on a given

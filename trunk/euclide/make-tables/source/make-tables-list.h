@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------------
 
 void makeObstructions(void);
+void makeConstraints(void);
 void makeMovements(void);
 void makeChecks(void);
 
@@ -16,6 +17,7 @@ typedef void (*makefunction)(void);
 const makefunction MakeFunctions[] =
 {
 	makeObstructions,
+	makeConstraints,
 	makeMovements,
 	makeChecks,
 	NULL
