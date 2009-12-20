@@ -436,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\tables\constraint-tables.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\tables\movement-tables.cpp"
 				>
 			</File>

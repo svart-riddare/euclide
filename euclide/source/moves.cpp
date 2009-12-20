@@ -62,9 +62,11 @@ void Move::initialize(Square from, Square to, Superman superman, Color color, in
 	if (!tables::captures[_glyph][from][to] && tables::movements[_glyph][from][to])
 		_capture = false;
 
-	/* -- ... -- */
+	/* -- Store squares that should be free -- */
 
-	// Squares = ???
+	const tables::Constraints *constraints = &tables::constraints[_glyph][from][to];
+	for (int k = 0; k < constraints->numConstraints; k++)
+		_squares[constraints->constraints[k]] = true;
 }
 
 /* -------------------------------------------------------------------------- */
