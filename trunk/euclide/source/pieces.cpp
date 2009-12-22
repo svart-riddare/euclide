@@ -1022,17 +1022,10 @@ void Piece::optimize()
 
 	/* -- Recompute initial distances and captures -- */
 
+	int moves = this->moves();
+
 	updateInitialDistances();
 	updateInitialCaptures();
-
-	/* -- Tabulate list of possible destination squares -- */
-
-	_squares.reset();
-	_squares[_initial] = true;
-
-	for (Square square = FirstSquare; square <= LastSquare; square++)
-		if (_distances[square] < infinity)
-			_squares[square] = true;
 
 	/* -- Eliminate unused movements given number of available moves and captures -- */
 
@@ -1075,6 +1068,23 @@ void Piece::optimize()
 		if (_validObstructions[glyph])
 			for (Square square = FirstSquare; square <= LastSquare; square++)
 				_obstructions[square][glyph]->optimize();
+
+	/* -- Recompute initial distances and captures if necessary -- */
+
+	if (this->moves() < moves)
+	{
+		updateInitialDistances();
+		updateInitialCaptures();
+	}
+
+	/* -- Tabulate list of possible destination squares -- */
+
+	_squares.reset();
+	_squares[_initial] = true;
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		if (_distances[square] < infinity)
+			_squares[square] = true;
 
 	/* -- All done -- */
 
