@@ -46,6 +46,7 @@ class Piece
 		void setPossibleCaptures(const Squares& captures);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);
+		void optimizeCastling();
 
 		void optimize();
 		void optimize(const vector<tuple<Man, Color, vector<Square> > >& paths);
@@ -66,8 +67,8 @@ class Piece
 		void updateInitialDistances(const int distances[NumSquares], bool reverse = false);
 		void updateInitialCaptures(const int captures[NumSquares], bool reverse = false);
 
-		void computeForwardDistances(Square square, int distances[NumSquares]) const;
-		void computeForwardCaptures(Square square, int captures[NumSquares]) const;
+		void computeForwardDistances(Square square, int distances[NumSquares], bool castling = true) const;
+		void computeForwardCaptures(Square square, int captures[NumSquares], bool castling = true) const;
 
 		void computeForwardDistances(Square square, const vector<Square>& obstructions, Glyph glyph, int distances[NumSquares]);
 
