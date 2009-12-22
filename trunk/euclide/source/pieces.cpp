@@ -439,14 +439,14 @@ void Piece::computeForwardDistances(Square square, const vector<Square>& obstruc
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::computeForwardDistances(Square square, int distances[NumSquares]) const
+void Piece::computeForwardDistances(Square square, int distances[NumSquares], bool castling) const
 {
 	/* -- Initialize distances -- */
 
 	std::fill(distances, distances + NumSquares, infinity);
 	distances[square] = 0;
 
-	if (square == _initial)
+	if ((square == _initial) && castling)
 	{
 		if (_kcastling || _qcastling)
 			distances[_initial] = infinity;
@@ -462,7 +462,7 @@ void Piece::computeForwardDistances(Square square, int distances[NumSquares]) co
 	if (!distances[square])
 		squares.push(square);
 	
-	if (square == _initial)
+	if ((square == _initial) && castling)
 	{
 		if (_kcastling || indeterminate(_kcastling))
 			squares.push(_ksquare);
@@ -501,7 +501,7 @@ void Piece::computeForwardDistances(Square square, int distances[NumSquares]) co
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::computeForwardCaptures(Square square, int captures[NumSquares]) const
+void Piece::computeForwardCaptures(Square square, int captures[NumSquares], bool /*castling*/) const
 {
 	/* -- Initialize captures -- */
 
@@ -1016,15 +1016,9 @@ void Piece::optimize()
 
 	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
 
-	/* -- Obvious castling deductions -- */
+	/* -- Castling deductions -- */
 
-	if (!moves() && indeterminate(_kcastling))
-		if ((!_possibleSquares[_initial] && !_possibleSquares[_qsquare]) || !_possibleSquares[_ksquare])
-			_kcastling = _possibleSquares[_ksquare] ? true : false;
-
-	if (!moves() && indeterminate(_qcastling))
-		if ((!_possibleSquares[_initial] && !_possibleSquares[_ksquare]) || !_possibleSquares[_qsquare])
-			_qcastling = _possibleSquares[_qsquare] ? true : false;
+	optimizeCastling();
 
 	/* -- Recompute initial distances and captures -- */
 
@@ -1074,20 +1068,6 @@ void Piece::optimize()
 	/* -- Keep only possible moves -- */
 
 	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
-
-	/* -- Further castling deductions -- */
-
-	if (indeterminate(_kcastling) || indeterminate(_qcastling))
-	{
-		if (!_possibleSquares[_initial] && !mayLeave(_initial))
-		{
-			if (!_possibleSquares[_qsquare] && !mayLeave(_qsquare))
-				_kcastling = true;
-
-			if (!_possibleSquares[_ksquare] && !mayLeave(_ksquare))
-				_qcastling = true;
-		}
-	}
 
 	/* -- Remove all useless obstructions -- */
 
@@ -1181,28 +1161,119 @@ void Piece::setPossibleCaptures(const Squares& captures)
 
 /* -------------------------------------------------------------------------- */
 
+void Piece::optimizeCastling()
+{
+	/* -- Try possible castlings -- */
+
+	if (indeterminate(_kcastling) || indeterminate(_qcastling))
+	{
+		/* -- Compute distances assuming castling state -- */
+
+		int distances[NumSquares];
+		int kdistances[NumSquares];
+		int qdistances[NumSquares];
+
+		int distance = infinity;
+		int kdistance = infinity;
+		int qdistance = infinity;
+
+		computeForwardDistances(_initial, distances, false);
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			if (_possibleSquares[square])
+				minimize(distance, distances[square]);
+
+		if (indeterminate(_kcastling))
+		{
+			computeForwardDistances(_ksquare, kdistances, false);
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+				if (_possibleSquares[square])
+					minimize(kdistance, kdistances[square]);
+
+			kdistance += _castling;
+		}
+
+		if (indeterminate(_qcastling))
+		{
+			computeForwardDistances(_qsquare, qdistances, false);
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+				if (_possibleSquares[square])
+					minimize(qdistance, qdistances[square]);
+
+			qdistance += _castling;
+		}
+
+		/* -- Eliminate impossible castlings -- */
+
+		if (indeterminate(_kcastling) && (kdistance > _availableMoves))
+			_kcastling = false;
+
+		if (indeterminate(_qcastling) && (qdistance > _availableMoves))
+			_qcastling = false;
+
+		if (indeterminate(_kcastling) && !_qcastling && (distance > _availableMoves))
+			_kcastling = true;
+
+		if (indeterminate(_qcastling) && !_kcastling && (distance > _availableMoves))
+			_qcastling = true;
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Piece::synchronizeCastling(Piece& krook, Piece& qrook)
 {
 	assert(_superman.isKing());
 
 	/* -- Synchronize castling deductions between king and rooks -- */
 
-	if (!indeterminate(_kcastling))
+	if (!indeterminate(_kcastling) && indeterminate(krook._kcastling))
+	{
 		krook._kcastling = _kcastling;
-	if (!indeterminate(_qcastling))
+		krook._optimized = false;
+	}
+
+	if (!indeterminate(_qcastling) && indeterminate(qrook._qcastling))
+	{
 		qrook._qcastling = _qcastling;
+		qrook._optimized = false;
+	}
 	
-	if (!indeterminate(krook._kcastling))
+	if (!indeterminate(krook._kcastling) && indeterminate(_kcastling))
+	{
 		_kcastling = krook._kcastling;
-	if (!indeterminate(qrook._qcastling))
+		_optimized = false;
+	}
+
+	if (!indeterminate(qrook._qcastling) && indeterminate(_qcastling))
+	{
 		_qcastling = qrook._qcastling;
+		_optimized = false;
+	}
+
+	/* -- Basic coherency checks -- */
+
+	if (!indeterminate(_kcastling))
+		if (_kcastling != krook._kcastling)
+			abort(NoSolution);
+
+	if (!indeterminate(_qcastling))
+		if (_qcastling != qrook._qcastling)
+			abort(NoSolution);
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Piece::moves() const
 {
-	return (int)_moves.size();
+	int moves = (int)_moves.size();
+
+	if (_superman.isKing())
+	{
+		moves += (indeterminate(_kcastling) ? _castling : 0);
+		moves += (indeterminate(_qcastling) ? _castling : 0);
+	}	
+
+	return moves;
 }
 
 /* -------------------------------------------------------------------------- */
