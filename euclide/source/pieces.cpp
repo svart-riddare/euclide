@@ -749,6 +749,97 @@ bool Piece::mayReach(Square square) const
 
 /* -------------------------------------------------------------------------- */
 
+void Piece::findMandatoryMoves()
+{
+	bool backward = true;
+
+	/* -- Follow path from initial square until there is more than one possibility -- */
+
+	if (!indeterminate(_kcastling) && !indeterminate(_qcastling))
+	{
+		/* -- Take castling into account -- */
+
+		Square current = _initial;
+		if (_kcastling)
+			current = _ksquare;
+		if (_qcastling)
+			current = _qsquare;
+
+		/* -- Loop until we have reached a possible destination square -- */
+
+		while (_rdistances[current] > 0)
+		{
+			Square destination = current;
+			int possibilities  = 0;
+
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+			{
+				if (_movements[current][square].possible())
+				{
+					destination = square;
+					possibilities++;
+				}
+			}
+
+			/* -- If there is more than one possibility, stop -- */
+
+			if (possibilities != 1)
+				break;
+
+			/* -- Label current movement as mandatory and move on -- */
+	
+			_movements[current][destination].validate();
+			current = destination;
+		}
+
+		/* -- If we have reached a possible destination square, no need to perform backward analysis -- */
+
+		if (_possibleSquares[current])
+			backward = false;
+	}
+
+	/* -- Follow path backward from destination square if it is unique -- */
+
+	if (backward && (_possibleSquares.count() == 1))
+	{
+		/* -- Find unique destination square -- */
+
+		Square current;
+		for (current = FirstSquare; current <= LastSquare; current++)
+			if (_possibleSquares[current])
+				break;
+
+		/* -- Loop until we have almost reached a departure square -- */
+
+		while (_distances[current] > 1)
+		{
+			Square source = current;
+			int possibilities = 0;
+
+			for (Square square = FirstSquare; square <= LastSquare; square++)
+			{
+				if (_movements[square][current].possible())
+				{
+					source = square;
+					possibilities++;
+				}
+			}
+
+			/* -- If there is more than one possibility, stop -- */
+
+			if (possibilities != 1)
+				break;
+
+			/* -- Label current movement as mandatory and move backward -- */
+
+			_movements[source][current].validate();
+			current = source;
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
 int Piece::getCaptures(Square from, Square to, vector<Squares>& captures) const
 {
 	assert(from.isValid());
@@ -1061,6 +1152,10 @@ void Piece::optimize()
 	/* -- Keep only possible moves -- */
 
 	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+
+	/* -- Find out mandatory moves -- */
+
+	findMandatoryMoves();
 
 	/* -- Remove all useless obstructions -- */
 

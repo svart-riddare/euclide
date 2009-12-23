@@ -81,6 +81,8 @@ class Piece
 		bool mayLeave(Square square) const;
 		bool mayReach(Square square) const;
 
+		void findMandatoryMoves();
+
 	private :
 		static inline bool isMovePossible(const Move *move)
 			{ return move->possible(); }
