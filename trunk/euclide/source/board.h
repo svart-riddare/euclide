@@ -39,8 +39,10 @@ class Board
 		int getCaptures(Glyph glyph, Square from, Square to, vector<Squares>& captures) const;
 		int getCaptures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const;
 
-		bool getUniquePath(Man man, Superman superman, Color color, Square to, vector<Square>& squares) const;
+	public :
+		bool optimize(int level = 1, bool recursive = true);
 
+	protected :
 		void block(Superman superman, Color color, Square square, bool captured = false);
 		void unblock(Superman superman, Color color, Square square, bool captured = false);
 		void transblock(Superman superman, Color color, Square from, Square to, bool captured = false);
@@ -50,13 +52,12 @@ class Board
 		void block(Man man, Superman superman, Color color, const Squares& squares);
 		void block(Man man, const Supermen& supermen, Color color, const Squares& squares);
 
-		void setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures);
+		void setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(Man man, Superman superman, Color color, const Squares& squares);
 
 		void optimizeLevelOne();
 		void optimizeLevelTwo();
-		void optimize();
-
+		
 	private :
 		Piece *_pieces[NumColors][NumSupermen];   /**< Movement descriptors for each piece type. */
 		

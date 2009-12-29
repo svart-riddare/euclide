@@ -198,35 +198,6 @@ int Board::getCaptures(Man man, Superman superman, Color color, Square from, Squ
 
 /* -------------------------------------------------------------------------- */
 
-bool Board::getUniquePath(Man man, Superman superman, Color color, Square to, vector<Square>& squares) const
-{
-	assert(man.isValid());
-	assert(superman.isValid());
-	assert(color.isValid());
-
-	assert(_pieces[color][superman] != NULL);
-
-	/* -- No promotion case -- */
-
-	if (man == superman)
-		return _pieces[color][man]->getUniquePath(man.square(color), to, squares);
-
-	/* -- Handle promotion -- */
-
-	Square square = superman.square(color);
-	vector<Square> _squares;
-
-	if (!_pieces[color][man]->getUniquePath(man.square(color), square, squares))
-		return false;
-	if (!_pieces[color][superman]->getUniquePath(square, to, _squares))
-		return false;
-
-	squares.insert(squares.end(), _squares.begin(), _squares.end());
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
 void Board::block(Superman man, Color color, Square square, bool captured)
 {
 	assert(man.isValid());
@@ -371,7 +342,7 @@ void Board::block(Man man, const Supermen& supermen, Color color, const Squares&
 
 /* -------------------------------------------------------------------------- */
 
-void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, int availableMoves, int availableCaptures)
+void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, tribool captured, int availableMoves, int availableCaptures)
 {
 	assert(man.isValid());
 	assert(color.isValid());
@@ -380,7 +351,7 @@ void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, c
 	/* -- No promotion case -- */
 
 	if ((supermen.count() == 1) && supermen[man])
-		_pieces[color][man]->setPossibleSquares(squares, availableMoves, availableCaptures);
+		_pieces[color][man]->setPossibleSquares(squares, captured, availableMoves, availableCaptures);
 
 	/* -- Promotion case -- */
 
@@ -407,7 +378,7 @@ void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, c
 			}
 		}
 
-		_pieces[color][man]->setPossibleSquares(promotions, availableMoves - promotionMoves, availableCaptures - promotionCaptures); 
+		_pieces[color][man]->setPossibleSquares(promotions, captured, availableMoves - promotionMoves, availableCaptures - promotionCaptures); 
 
 		/* -- Handle each possible promotion -- */
 
@@ -421,7 +392,7 @@ void Board::setPossibleSquares(Man man, const Supermen& supermen, Color color, c
 				int requiredCaptures = _pieces[color][man]->captures(promotion);
 
 				assert(_pieces[color][superman] != NULL);
-				_pieces[color][superman]->setPossibleSquares(squares, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
+				_pieces[color][superman]->setPossibleSquares(squares, captured, availableMoves - requiredMoves, availableCaptures - requiredCaptures);
 			}
 		}
 	}
@@ -462,6 +433,7 @@ void Board::optimizeLevelOne()
 		Superman superman;
 
 		bool captured;
+		bool alive;
 			
 	} men[NumMen];
 
@@ -485,6 +457,7 @@ void Board::optimizeLevelOne()
 			men[man].availableCaptures = 0;
 
 			men[man].captured = false;
+			men[man].alive = false;
 		}
 
 		/* -- Loop through partitions, targets and destinations to collect the information -- */
@@ -510,6 +483,8 @@ void Board::optimizeLevelOne()
 
 					if (destination->captured())
 						men[man].captured = true;
+					else
+						men[man].alive = true;
 				}
 			}
 		}
@@ -528,7 +503,7 @@ void Board::optimizeLevelOne()
 		/* -- Apply move restrictions -- */
 
 		for (Man man = FirstMan; man <= LastMan; man++)
-			setPossibleSquares(man, men[man].supermen, color, men[man].squares, men[man].availableMoves, men[man].availableCaptures);
+			setPossibleSquares(man, men[man].supermen, color, men[man].squares, men[man].captured ? (men[man].alive ? tribool(indeterminate) : true) : false, men[man].availableMoves, men[man].availableCaptures);
 
 		/* -- Apply capture restrictions -- */
 
@@ -555,66 +530,55 @@ void Board::optimizeLevelOne()
 
 	/* -- Complete optimization -- */
 		
-	optimize();
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+			if (_pieces[color][superman])
+				_pieces[color][superman]->optimize();
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Board::optimizeLevelTwo()
 {
-	vector<tuple<Man, Color, vector<Square> > > paths;
-
-	/* -- List men that were not captured and have a definite target -- */
-
-	for (Color color = FirstColor; color <= LastColor; color++)
-	{
-		const Position *position = _positions[color];
-
-		for (Partitions::const_iterator partition = position->begin(); partition != position->end(); partition++)
-		{
-			Targets::const_iterator target = partition->begin();
-
-			if (partition->size() > 1)
-				continue;
-
-			if (!target->alive())
-				continue;
-
-			if (target->man() == UndefinedMan)
-				continue;
-
-			if (target->superman() == UndefinedSuperman)
-				continue;
-			
-			if (target->square() == UndefinedSquare)
-				continue;
-
-			/* -- Is there a definite path to reach this target ? -- */
-
-			vector<Square> path;
-			if (getUniquePath(target->man(), target->superman(), color, target->square(), path))
-				if (path.size() > 1)
-					paths.push_back(make_tuple(target->man(), color, path));
-		}
-	}
-
-	/* -- Use the list of well determined paths to find eventual obstructions -- */
-
-	if (!paths.empty())
-		for (Color color = FirstColor; color <= LastColor; color++)
-			for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-				if (_pieces[color][superman])
-					_pieces[color][superman]->optimize(paths);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimize()
+bool Board::optimize(int level, bool recursive)
 {
-	for (Color color = FirstColor; color <= LastColor; color++)
-		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-			if (_pieces[color][superman])
-				_pieces[color][superman]->optimize();
+	/* -- If level is out of bound, just exit -- */
+
+	if ((level <= 0) || (level > 2))
+		return false;
+
+	/* -- Save number of possibles moves -- */
+
+	int moves = this->moves();
+
+	/* -- Perform optimization -- */
+
+	if (level == 1)
+		optimizeLevelOne();
+	if (level == 2)
+		optimizeLevelTwo();
+
+	/* -- Have we optimized something ? -- */
+
+	bool optimized = (this->moves() < moves) ? true : false;
+
+	/* -- Let's perform more computations if we have not optimized anything -- */
+
+	if (!optimized && recursive)
+		return optimize(level + 1, recursive);
+
+	/* -- Let's drop back to level one if instead we have found something -- */
+
+	if (optimized && recursive && (level > 1))
+		optimize(1, false);
+
+	/* -- Return result -- */
+
+	return optimized;
 }
 
 /* -------------------------------------------------------------------------- */

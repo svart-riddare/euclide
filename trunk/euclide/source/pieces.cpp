@@ -71,6 +71,11 @@ Piece::Piece(Superman superman, Color color, int moves)
 	_availableMoves = infinity;
 	_availableCaptures = infinity;
 
+	/* -- Captured and promoted state -- */
+
+	_captured = superman.isKing() ? false : indeterminate;
+	_promoted = superman.isPawn() ? indeterminate : false;
+
 	/* -- Fill in initial distances and required captures -- */
 
 	computeInitialDistances();
@@ -348,93 +353,6 @@ void Piece::updateInitialDistances(const int distances[NumSquares], bool reverse
 void Piece::updateInitialCaptures(const int captures[NumSquares], bool reverse)
 {
 	maximize(reverse ? _rcaptures : _captures, captures, NumSquares);
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Piece::obstrusive(const vector<Square>& squares, Glyph glyph) const
-{
-	bool obstrusive = false;
-
-	for (vector<Square>::const_iterator square = squares.begin(); square != squares.end(); square++)
-		if (_obstructions[*square][glyph]->obstructions())
-			obstrusive = true;
-
-	return obstrusive;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Piece::computeForwardDistances(Square square, const vector<Square>& obstructions, Glyph glyph, int distances[NumSquares])
-{
-	/* -- Start by blocking first square -- */
-
-	if (obstructions.size() > 0)
-		block(obstructions[0], glyph, false);
-
-	/* -- Compute initial distances -- */
-
-	computeForwardDistances(square, distances);
-
-	/* -- Unblock first square -- */
-
-	if (obstructions.size() > 0)
-		unblock(obstructions[0], glyph, false);
-
-	/* -- Perhaps we are done ? -- */
-
-	if ((obstructions.size() < 2) || !obstrusive(obstructions, glyph))
-		return;
-
-	/* -- List of squares, ordered by distance -- */
-
-	array<Square, NumSquares> squares;
-	for (Square square = FirstSquare; square < NumSquares; square++)
-		squares[square] = square;
-
-	std::sort(squares.begin(), squares.end(), _smaller<int, NumSquares>(distances));
-
-	/* -- Block each square of the obstructing path and refine distances -- */
-
-	for (int obstruction = 1; obstruction < (int)obstructions.size(); obstruction++)
-	{
-		block(obstructions[obstruction], glyph, false);
-
-		/* -- Handle each square, by increasing distance -- */
-
-		for (int s = 0; s < NumSquares; s++)
-		{
-			Square from = squares[s];
-			bool modified = false;
-
-			/* -- Handle every possible immediate destination -- */
-
-			for (Square to = FirstSquare; to <= LastSquare; to++)
-			{
-				if (!_movements[from][to].possible())
-					continue;
-
-				int distance = distances[from] + 1;
-			
-				/* -- Is it a quicker path ? -- */
-
-				if (distance > distances[to])
-					continue;
-
-				distances[to] = distance;
-				modified = true;
-			}
-
-			/* -- Sort array of squares given new distances -- */
-
-			if (modified)
-				std::sort(squares.begin() + s, squares.end(), _smaller<int, NumSquares>(distances));
-		}
-
-		/* -- Prepare for next iteration -- */
-
-		unblock(obstructions[obstruction], glyph, false);
-	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -954,70 +872,21 @@ int Piece::getCaptures(Square from, Square to, vector<Squares>& captures) const
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::getUniquePath(Square from, Square to, vector<Square>& squares) const
+int Piece::getMandatoryMoves(vector<Move *>& moves) const
 {
-	assert(from.isValid());
-	assert(to.isValid());
+	/* -- Initialize output -- */
 
-	/* -- Check castling -- */
+	moves.clear();
 
-	if (from == _initial)
-		if (indeterminate(_kcastling) || indeterminate(_qcastling))
-			return false;
-		
-	/* -- Initialize list of squares -- */
+	/* -- Scan list of moves to find mandatory ones -- */
 
-	squares.clear();
+	for (Moves::const_iterator move = _moves.begin(); move != _moves.end(); move++)
+		if (move->mandatory())
+			moves.push_back(*move);
 
-	if (from == _initial) 
-	{
-		if (_kcastling)
-			squares.push_back(_ksquare);
-		else
-		if (_qcastling)
-			squares.push_back(_qsquare);
-	}
+	/* -- Return number of moves found -- */
 
-	if (squares.empty())
-		squares.push_back(from);
-
-	/* -- Follow path(s) and build square lite -- */
-
-	while (squares.size() <= NumSquares)
-	{
-		Square current = squares.back();
-		Square next = UndefinedSquare;
-
-		/* -- Find immediate destinations from current square -- */
-
-		for (Square square = FirstSquare; square <= LastSquare; square++)
-		{
-			if (!_movements[current][square].possible())
-				continue;
-
-			/* -- Return if path is not unique -- */
-
-			if (next != UndefinedSquare)
-				return false;
-
-			next = square;
-		}
-
-		/* -- Return if we can go elsewere than our target -- */
-
-		if (current == to)
-			return (next == UndefinedSquare) ? true : false;
-
-		/* -- Add square to path -- */
-
-		assert(next != UndefinedSquare);
-		squares.push_back(next);		
-	}
-
-	/* -- We should not be here -- */
-
-	assert(squares.back() == to);
-	return false;
+	return moves.size();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1111,47 +980,53 @@ void Piece::optimize()
 
 	optimizeCastling();
 
-	/* -- Recompute initial distances and captures -- */
+	/* -- Distance computations and moves optimizations are performed recursively -- */
 
-	int moves = this->moves();
+	int moves = infinity;
+	while (moves > this->moves())
+	{
+		moves = this->moves();
 
-	updateInitialDistances();
-	updateInitialCaptures();
+		/* -- Recompute initial distances and captures -- */
 
-	/* -- Eliminate unused movements given number of available moves and captures -- */
+		updateInitialDistances();
+		updateInitialCaptures();
 
-	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-		if ((_distances[move->from()] + 1 + _rdistances[move->to()]) > _availableMoves)
-			move->invalidate();
+		/* -- Eliminate unused movements given number of available moves and captures -- */
 
-	if (_hybrid)
 		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-			if ((_captures[move->from()] + (move->capture() ? 1 : 0) + _rcaptures[move->to()]) > _availableCaptures)
+			if ((_distances[move->from()] + 1 + _rdistances[move->to()]) > _availableMoves)
 				move->invalidate();
 
-	/* -- Keep only possible moves -- */
+		if (_hybrid)
+			for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+				if ((_captures[move->from()] + (move->capture() ? 1 : 0) + _rcaptures[move->to()]) > _availableCaptures)
+					move->invalidate();
 
-	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+		/* -- Keep only possible moves -- */
 
-	/* -- Get earliest and latest moves -- */
+		_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
 
-	int earliest = infinity;
-	int latest = 0;
+		/* -- Get earliest and latest moves -- */
 
-	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-		minimize(earliest, move->earliest()), maximize(latest, move->latest());
+		int earliest = infinity;
+		int latest = 0;
 
-	maximize(_earliest, earliest);
-	minimize(_latest, latest);
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			minimize(earliest, move->earliest()), maximize(latest, move->latest());
 
-	/* -- Set obvious lower and upper bounds for move order -- */
+		maximize(_earliest, earliest);
+		minimize(_latest, latest);
 
-	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-		move->bound(_earliest + _distances[move->from()], _latest - _rdistances[move->to()]);
+		/* -- Set obvious lower and upper bounds for move order -- */
 
-	/* -- Keep only possible moves -- */
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			move->bound(_earliest + _distances[move->from()], _latest - _rdistances[move->to()]);
 
-	_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+		/* -- Keep only possible moves -- */
+
+		_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+	}
 
 	/* -- Find out mandatory moves -- */
 
@@ -1164,14 +1039,6 @@ void Piece::optimize()
 			for (Square square = FirstSquare; square <= LastSquare; square++)
 				_obstructions[square][glyph]->optimize();
 
-	/* -- Recompute initial distances and captures if necessary -- */
-
-	if (this->moves() < moves)
-	{
-		updateInitialDistances();
-		updateInitialCaptures();
-	}
-
 	/* -- Tabulate list of possible destination squares -- */
 
 	_squares.reset();
@@ -1181,6 +1048,10 @@ void Piece::optimize()
 		if (_distances[square] < infinity)
 			_squares[square] = true;
 
+	/* -- Sort moves -- */
+
+	std::sort(_moves.begin(), _moves.end(), boost::bind(isMoveEarlier, _1, _2, cref(*this)));
+
 	/* -- All done -- */
 
 	_optimized = true;
@@ -1188,57 +1059,57 @@ void Piece::optimize()
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::optimize(const vector<tuple<Man, Color, vector<Square> > >& paths)
-{
-	if (!moves())
-		return;
-
-	/* -- For each given path -- */
-
-	for (vector<tuple<Man, Color, vector<Square> > >::const_iterator path = paths.begin(); path != paths.end(); path++)
-	{
-		Man man = get<0>(*path);
-		Color color = get<1>(*path);
-		const vector<Square>& squares = get<2>(*path);
-
-		/* -- Let's not block ourself -- */
-
-		if ((man == _superman) && (color == _color))
-			continue;
-
-		/* -- Compute distances taking into account the path of another piece -- */
-
-		int distances[NumSquares];
-		computeForwardDistances(_initial, squares, man.glyph(color), distances);
-		updateInitialDistances(distances);
-	}
-
-	/* -- Finish optimization -- */
-
-	optimize();
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Piece::setPossibleSquares(const Squares& squares, int availableMoves, int availableCaptures)
+void Piece::setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures)
 {
 	assert(!squares.none());
 	assert(availableMoves >= 0);
 	assert(availableCaptures >= 0);
 
+	/* -- Normalize 'captured' tribool parameter -- */
+
+	if (indeterminate(captured) && !indeterminate(_captured))
+		captured = _captured;
+
 	/* -- Return if we already have this knowledge -- */
 
 	if (squares.count() >= _possibleSquares.count())
-		if (availableMoves >= _availableMoves)
-			if (availableCaptures >= _availableCaptures)
-				return;
+		if (captured == _captured)
+			if (availableMoves >= _availableMoves)
+				if (availableCaptures >= _availableCaptures)
+					return;
 
 	/* -- Update state -- */
 
 	_possibleSquares = squares;
+	_captured = captured;
 
 	_availableMoves = availableMoves;
 	_availableCaptures = availableCaptures;
+
+	/* -- Handle promotion -- */
+
+	if (indeterminate(_promoted))
+	{
+		bool promoted = false;
+		bool unpromoted = false;
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			if (_possibleSquares[square])
+			{
+				if (square.isPromotion(_color))
+					promoted = true;
+				else
+					unpromoted = true;
+			}
+		}
+
+		if (promoted && !unpromoted)
+			_promoted = true;
+		else
+		if (!promoted)
+			_promoted = false;
+	}
 
 	/* -- Schedule for optimization -- */
 
@@ -1386,6 +1257,22 @@ int Piece::moves() const
 const Squares& Piece::squares() const
 {
 	return _squares;
+}
+
+/* -------------------------------------------------------------------------- */
+
+tribool Piece::alive(bool final) const
+{
+	if (!final)
+		return !_superman.isPromoted();
+
+	if (!_captured && !_promoted)
+		return true;
+
+	if (_captured || _promoted)
+		return false;
+
+	return indeterminate;
 }
 
 /* -------------------------------------------------------------------------- */

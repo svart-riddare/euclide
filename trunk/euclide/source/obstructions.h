@@ -35,7 +35,10 @@ class Obstructions
 		void optimize();
 
 	public :
-		int obstructions(bool captured = false) const;
+		inline int obstructions(bool captured = false) const
+			{ return captured ? _numSoftObstructions : _numHardObstructions; }
+		inline Move *operator[](int obstruction) const 
+			{ return _obstructions[obstruction]; }
 
 	private :
 		int _numHardObstructions;    /**< Number of obstructions, except moves by a piece of opposite color that ends on the obstruction square (thus allowing capture of the blocking figure). */

@@ -118,7 +118,6 @@ void Euclide::analyseBasicConstraints()
 	bool modified = true;
 	while (modified)
 	{
-		int moves = board->moves();
 		modified = false;
 
 		/* -- Compute number of required moves and captures -- */
@@ -147,8 +146,8 @@ void Euclide::analyseBasicConstraints()
 
 		/* -- Optimize board movements -- */
 
-		board->optimizeLevelOne();
-		board->optimizeLevelTwo();
+		if (board->optimize())
+			modified = true;
 
 		/* -- Output current deductions -- */
 	
@@ -159,11 +158,6 @@ void Euclide::analyseBasicConstraints()
 
 		if (callbacks.displayDeductions)
 			(*callbacks.displayDeductions)(callbacks.handle, &deductions);
-
-		/* -- Check for modifications -- */
-
-		if (moves != board->moves())
-			modified = true;
 	}
 }
 

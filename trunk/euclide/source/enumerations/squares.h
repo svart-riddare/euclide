@@ -2,6 +2,7 @@
 #define __EUCLIDE_SQUARES_H
 
 #include "errors.h"
+#include "colors.h"
 
 namespace euclide
 {
@@ -177,6 +178,16 @@ class Square
 		{
 			assert(isValid());
 			return (row_t)(square % 8);
+		}
+
+		/* ---------------------------------- */
+
+		inline bool isPromotion(Color color)
+		{
+			assert(isValid());
+			assert(color.isValid());
+			
+			return (row() == ((color == White) ? Eight : One));
 		}
 
 		/* ---------------------------------- */

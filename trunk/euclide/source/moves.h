@@ -38,6 +38,8 @@ class Move
 	public :
 		inline bool possible() const
 			{ return (_obstructions == 0) ? true : false; }
+		inline bool unique() const
+			{ return (_earliest == _latest) ? true : false; }
 		inline tribool capture() const
 			{ return _capture; }
 		inline tribool mandatory() const
@@ -48,6 +50,11 @@ class Move
 			{ return _earliest; }
 		inline int latest() const
 			{ return _latest; }
+
+		inline int offset(const Move& move) const
+			{ return _color.offset(move.color()); }
+		inline int roffset(const Move& move) const
+			{ return move.color().offset(_color); }
 	
 	public :
 		inline bool isFromSquare(Square square) const
