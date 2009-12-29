@@ -145,11 +145,4 @@ void Obstructions::optimize()
 
 /* -------------------------------------------------------------------------- */
 
-int Obstructions::obstructions(bool captured) const
-{
-	return captured ? _numSoftObstructions : _numHardObstructions;
-}
-
-/* -------------------------------------------------------------------------- */
-
 }

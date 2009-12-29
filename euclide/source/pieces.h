@@ -36,26 +36,33 @@ class Piece
 		int captures(Square from, Square to) const;
 
 		int getCaptures(Square from, Square to, vector<Squares>& captures) const;
-		bool getUniquePath(Square from, Square to, vector<Square>& squares) const;
+		int getMandatoryMoves(vector<Move *>& moves) const;
 
 		void block(Squares squares, Glyph glyph, bool definitive = true);
 		void block(Square square, Glyph glyph, bool captured, bool definitive = false);
 		void unblock(Square square, Glyph glyph, bool captured);
 
-		void setPossibleSquares(const Squares& squares, int availableMoves, int availableCaptures);
+		void setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(const Squares& captures);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);
 		void optimizeCastling();
 
 		void optimize();
-		void optimize(const vector<tuple<Man, Color, vector<Square> > >& paths);
 
-		bool obstrusive(const vector<Square>& squares, Glyph glyph) const;
+	public :
+		inline Superman superman() const
+			{ return _superman; }
+		inline Glyph glyph() const
+			{ return _glyph; }
+		inline Color color() const
+			{ return _color; }
 
 	public :
 		int moves() const;
 		const Squares& squares() const;
+
+		tribool alive(bool final = true) const;
 
 	protected :
 		void computeInitialDistances();
@@ -69,8 +76,6 @@ class Piece
 
 		void computeForwardDistances(Square square, int distances[NumSquares], bool castling = true) const;
 		void computeForwardCaptures(Square square, int captures[NumSquares], bool castling = true) const;
-
-		void computeForwardDistances(Square square, const vector<Square>& obstructions, Glyph glyph, int distances[NumSquares]);
 
 		void computeReverseDistances(Square square, int distances[NumSquares]) const;
 		void computeReverseCaptures(Square square, int captures[NumSquares]) const;
@@ -88,6 +93,8 @@ class Piece
 			{ return move->possible(); }
 		static inline bool isMoveImpossible(const Move *move)
 			{ return !move->possible(); }
+		static inline bool isMoveEarlier(const Move *moveA, const Move *moveB, const Piece& piece)
+			{ return piece.distance(moveA->from()) < piece.distance(moveB->from()); }
 
 	private :
 		Move _movements[NumSquares][NumSquares];               /**< All piece movements, one for each departure and arrival square. */
@@ -104,6 +111,9 @@ class Piece
 
 		tribool _kcastling;                                    /**< Has piece performed king side castling ? */
 		tribool _qcastling;                                    /**< Has piece performed queen side castling ? */
+
+		tribool _captured;                                     /**< Has piece been captured ? */
+		tribool _promoted;                                     /**< Has piece been promoted ? */
 
 		bool _hybrid;                                          /**< Hybrid pieces are pieces that captures differently than they move, like pawns. */
 

@@ -67,6 +67,16 @@ class Color
 
 		/* ---------------------------------- */
 
+		int offset(const Color& color) const
+		{
+			if ((this->color != White) || (color.color != Black))
+				return 1;
+
+			return 0;
+		}
+
+		/* ---------------------------------- */
+
 	private :
 		color_t color;
 };
