@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <locale.h>
 #include <stdio.h>
 #include <string.h>
 #include "Erreur.h"
@@ -7,6 +8,8 @@
 #include "Timer.h"
 #include "Version.h"
 
+#include <iconv.h>
+#include <langinfo.h>
 #include <ncurses.h>
 
 /*************************************************************/
@@ -33,12 +36,19 @@ static char ESCAPE = 27;
 
 /*************************************************************/
 
+static iconv_t ICONV = (iconv_t)(-1);
+
+/*************************************************************/
+
 void OutputStrategieId(unsigned int ID);
 
 /*************************************************************/
 
 void OutputCreate()
 {
+	setlocale(LC_ALL, "");
+	ICONV = iconv_open(nl_langinfo(CODESET), "ISO_8859-1");
+
 	initscr();
 	start_color();
 
@@ -100,6 +110,29 @@ void OutputClear()
 void OutputDestroy()
 {
 	endwin();
+
+	iconv_close(ICONV);
+}
+
+/*************************************************************/
+
+const char *TranslateString(const char *String)
+{
+	static char Translation[512];
+
+	char *Input = (char *)String;
+	char *Output = Translation;
+
+	size_t InputSize = strlen(String) + 1;
+	size_t OutputSize = sizeof(Translation);
+
+	if (iconv(ICONV, &Input, &InputSize, &Output, &OutputSize) == (size_t)(-1))
+		return String;
+
+	if (InputSize > 0)
+		return String;
+
+	return Translation;
 }
 
 /*************************************************************/
@@ -120,7 +153,7 @@ void OutputMessage(const char *Message)
 	memcpy(Tampon, Message, L);
 
 	attrset(COULEUR_BLANC);
-	mvprintw(1, 9, Tampon);
+	mvprintw(1, 9, TranslateString(Tampon));
 	refresh();
 }
 
@@ -142,7 +175,7 @@ void OutputMessageErreur(const char *Message)
 	memcpy(Tampon, Message, L);
 
 	attrset(COULEUR_ROUGE);
-	mvprintw(4, 9, Tampon);
+	mvprintw(4, 9, TranslateString(Tampon));
 	refresh();
 }
 
@@ -159,13 +192,13 @@ bool WaitForInput()
 	}
 	
 	attrset(COULEUR_GRIS);
-	mvprintw(HEIGHT - 1, 0, Texte);
+	mvprintw(HEIGHT - 1, 0, TranslateString(Texte));
 	refresh();
 
 	char Input = (char)getch();
 
 	attrset(COULEUR_GRIS);
-	mvprintw(HEIGHT - 1, 0, Texte);
+	mvprintw(HEIGHT - 1, 0, Vide);
 	refresh();
 
 	return (Input == ESCAPE) || (Input == 'x') || (Input == 'X');
@@ -204,7 +237,7 @@ void OutputDiagramme(const diagramme *Diagramme)
 	strcat(Tampon, GetTexte(MESSAGE_COUPS, 32, true));
 
 	attrset(COULEUR_BLANC);
-	mvprintw(7, 9, Tampon);
+	mvprintw(7, 9, TranslateString(Tampon));
 	refresh();
 }
 
@@ -278,7 +311,7 @@ void OutputResultat(const char *Resultat)
 	Tampon[32] = '\0';
 
 	attrset(COULEUR_JAUNE);
-	mvprintw(5, WIDTH - 33, Tampon);
+	mvprintw(5, WIDTH - 33, TranslateString(Tampon));
 	refresh();
 }
 
