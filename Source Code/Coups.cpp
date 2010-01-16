@@ -1123,7 +1123,8 @@ void CalculDesLiensDePriorite(pseudopartie *Partie)
 							}
 							else {
 								if (Bloqueur->Dernier) {
-									Coup->DoitPreceder[Coup->NombreDoitPreceder++] = Bloqueur;
+									if ((CoupsLibresBloqueur < 2) || (!Bloqueur->Promotion && (Bloqueur->Type == PION)))
+										Coup->DoitPreceder[Coup->NombreDoitPreceder++] = Bloqueur;
 								}
 								else {
 									Coup->PeutPreceder[Coup->NombrePeutPreceder++] = Bloqueur;
