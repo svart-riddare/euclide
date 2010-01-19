@@ -11,16 +11,6 @@ Euclide web page example :
 -- Messigny 2002 Solving Championship --
 ----------------------------------------
 
-	Sixth Problem :
-		Gianni Donati
-		6nb/p1pn1p2/k2p4/rp2ppp1/7q/5PPb/PPPP1P1P/RNBQK1N1
-		41			
-
-	Fourth Problem :
-		Satoshi Hashimoto
-		r1b1nnk1/1pp1pp1p/1p2p2b/1q5p/8/1N3r2/PPP1PPPP/3QKBNR
-		31
-
 	First Problem :
 		Joost de Heer
 		rnb1kbn1/1p1pppp1/6p1/2p5/8/N7/1PPPPPPP/R1BQKBNR
@@ -36,13 +26,24 @@ Euclide web page example :
 		r3kbn1/pp2p1pn/1p1p1pr1/7p/7P/8/PPbPPPPq/RNBQKBN1
 		26
 
+	Fourth Problem :
+		Satoshi Hashimoto
+		r1b1nnk1/1pp1pp1p/1p2p2b/1q5p/8/1N3r2/PPP1PPPP/3QKBNR
+		31
+
 	Fifth Problem :
 		Rustam Ubaidullaev
 		rn4n1/p7/bpppKpp1/k1r1p1qp/7b/5P1P/PPPPP1P1/RNBQ1BNR					
 		36
 
 
-Timing required to solve above problems :
+	Sixth Problem :
+		Gianni Donati
+		6nb/p1pn1p2/k2p4/rp2ppp1/7q/5PPb/PPPP1P1P/RNBQK1N1
+		41			
+
+
+Time required to solve above problems :
 -----------------------------------------
 
 
