@@ -31,55 +31,6 @@ Verdict :
 #############################################
 
 Problème analysé :
-	6nb/p1pn1p2/k2p4/rp2ppp1/7q/5PPb/PPPP1P1P/RNBQK1N1
-	41
-
-
-Solution #1 :
----------------------------------------------------------------------
- 1. Pg2-g3   Pd7-d6     2. Ff1-g2   Fc8-h3     3. Fg2-e4   Cb8-d7    
- 4. Fe4-g6   Ph7xg6     5. Cg1-f3   Th8-h5     6. Cf3-h4   Th5-a5    
- 7. Ch4-g2   Pe7-e5     8. 0-0      Dd8-h4     9. Rg1-h1   0-0-0     
-10. Tf1-g1   Td8-e8    11. Tg1-e1   Te8-e6    12. Rh1-g1   Te6-f6    
-13. Rg1-f1   Tf6-f3    14. Pe2xf3   Pb7-b5    15. Te1-e4   Rc8-b7    
-16. Te4-f4   Rb7-a6    17. Tf4-f5   Pg6xf5    18. Rf1-e1   Pg7-g5    
-19. Cg2-f4   Ff8-g7    20. Cf4-e2   Fg7-h8    21. Ce2-g1   
-
-
-Verdict :
-	Solution unique
-	0.70 secondes
-
-
-#############################################
-## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
-#############################################
-
-Problème analysé :
-	r1b1nnk1/1pp1pp1p/1p2p2b/1q5p/8/1N3r2/PPP1PPPP/3QKBNR
-	31
-
-
-Solution #1 :
----------------------------------------------------------------------
- 1. Pd2-d4   Cg8-f6     2. Fc1-h6   Pg7xh6     3. Pd4-d5   Ph6-h5    
- 4. Pd5-d6   Ff8-h6     5. Dd1-d5   0-0        6. Dd5-e6   Pd7xe6    
- 7. Pd6-d7   Dd8-e8     8. Pd7-d8=D De8-b5     9. Dd8-d1   Tf8-d8    
-10. Cb1-d2   Td8-d3    11. Cd2-b3   Td3-f3    12. Dd1-d8   Cf6-e8    
-13. Ta1-d1   Cb8-d7    14. Td1-d6   Cd7-f8    15. Td6-b6   Pa7xb6    
-16. Dd8-d1   
-
-
-Verdict :
-	Solution unique
-	0.63 secondes
-
-
-#############################################
-## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
-#############################################
-
-Problème analysé :
 	rnb1kbn1/1p1pppp1/6p1/2p5/8/N7/1PPPPPPP/R1BQKBNR
 	18
 
@@ -146,6 +97,30 @@ Verdict :
 #############################################
 
 Problème analysé :
+	r1b1nnk1/1pp1pp1p/1p2p2b/1q5p/8/1N3r2/PPP1PPPP/3QKBNR
+	31
+
+
+Solution #1 :
+---------------------------------------------------------------------
+ 1. Pd2-d4   Cg8-f6     2. Fc1-h6   Pg7xh6     3. Pd4-d5   Ph6-h5    
+ 4. Pd5-d6   Ff8-h6     5. Dd1-d5   0-0        6. Dd5-e6   Pd7xe6    
+ 7. Pd6-d7   Dd8-e8     8. Pd7-d8=D De8-b5     9. Dd8-d1   Tf8-d8    
+10. Cb1-d2   Td8-d3    11. Cd2-b3   Td3-f3    12. Dd1-d8   Cf6-e8    
+13. Ta1-d1   Cb8-d7    14. Td1-d6   Cd7-f8    15. Td6-b6   Pa7xb6    
+16. Dd8-d1   
+
+
+Verdict :
+	Solution unique
+	0.63 secondes
+
+
+#############################################
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
+#############################################
+
+Problème analysé :
 	rn4n1/p7/bpppKpp1/k1r1p1qp/7b/5P1P/PPPPP1P1/RNBQ1BNR
 	36
 
@@ -163,4 +138,29 @@ Solution #1 :
 Verdict :
 	Solution unique
 	4:59:46.56 secondes
+
+
+#############################################
+## Euclide 0.95, ©2000-2009 Étienne Dupuis ##
+#############################################
+
+Problème analysé :
+	6nb/p1pn1p2/k2p4/rp2ppp1/7q/5PPb/PPPP1P1P/RNBQK1N1
+	41
+
+
+Solution #1 :
+---------------------------------------------------------------------
+ 1. Pg2-g3   Pd7-d6     2. Ff1-g2   Fc8-h3     3. Fg2-e4   Cb8-d7    
+ 4. Fe4-g6   Ph7xg6     5. Cg1-f3   Th8-h5     6. Cf3-h4   Th5-a5    
+ 7. Ch4-g2   Pe7-e5     8. 0-0      Dd8-h4     9. Rg1-h1   0-0-0     
+10. Tf1-g1   Td8-e8    11. Tg1-e1   Te8-e6    12. Rh1-g1   Te6-f6    
+13. Rg1-f1   Tf6-f3    14. Pe2xf3   Pb7-b5    15. Te1-e4   Rc8-b7    
+16. Te4-f4   Rb7-a6    17. Tf4-f5   Pg6xf5    18. Rf1-e1   Pg7-g5    
+19. Cg2-f4   Ff8-g7    20. Cf4-e2   Fg7-h8    21. Ce2-g1   
+
+
+Verdict :
+	Solution unique
+	0.70 secondes
 
