@@ -540,6 +540,45 @@ void Board::optimizeLevelOne()
 
 void Board::optimizeLevelTwo()
 {
+#if 0
+	Moves moves;
+
+	/* -- List mandatory moves for each piece -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		for (Man man = FirstMan; man <= LastMan; man++)
+		{
+			if (_pieces[color][man])
+			{
+				_pieces[color][man]->getMandatoryMoves(moves);
+
+				/* -- If there are mandatory moves, add constraints -- */
+
+				if (moves.size() > 0)
+					for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
+						for (Man xman = FirstMan; xman <= LastMan; xman++)
+							if (_pieces[xcolor][xman])
+								_pieces[xcolor][xman]->setMandatoryMoves(*_pieces[color][man], moves);
+			}
+		}
+	}
+
+	/* -- Apply these constraints -- */
+
+	bool constrain = true;
+
+	while (constrain)
+	{
+		constrain = false;
+	
+		for (Color color = FirstColor; color <= LastColor; color++)
+			for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+				if (_pieces[color][superman])
+					if (_pieces[color][superman]->constrain())
+						constrain = true;
+	}
+#endif
 }
 
 /* -------------------------------------------------------------------------- */
