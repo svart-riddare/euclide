@@ -1059,6 +1059,30 @@ void Piece::optimize()
 
 /* -------------------------------------------------------------------------- */
 
+bool Piece::constrain()
+{
+	bool modified = false;
+
+	/* -- Apply constraints to every move -- */
+
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+		if (move->constrain())
+			modified = true;
+
+	/* -- Optimize if necessary -- */
+
+	if (modified)
+		_optimized = false;
+
+	optimize();
+
+	/* -- Done -- */
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Piece::setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures)
 {
 	assert(!squares.none());
@@ -1114,6 +1138,88 @@ void Piece::setPossibleSquares(const Squares& squares, tribool captured, int ava
 	/* -- Schedule for optimization -- */
 
 	_optimized = false;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
+{
+	/* -- Don't mess with ourself -- */
+
+	if (&piece == this)
+		return;
+
+	/* -- Don't bother if there is no mandatory moves -- */
+
+	if (moves.empty())
+		return;
+
+	/* -- Let's put aside castling for now and start from initial square -- */
+
+	if (!piece._kcastling && !piece._qcastling && piece.alive(false))
+	{
+		Square square = piece._initial;
+		Obstructions obstructions(*_obstructions[square][piece.glyph()]);
+		
+		for (Moves::const_iterator constraint = moves.begin(); constraint != moves.end(); constraint++)
+		{
+			/* -- Check for end of sequence of continuous mandatory moves -- */
+
+			if (constraint->from() != square)
+				break;
+
+			/* -- Get common obstructions for all moves up to current one -- */
+
+			if (constraint != moves.begin())
+				obstructions &= *_obstructions[constraint->from()][piece.glyph()];
+
+			/* -- If there is no more obstructions, there is nothing mode to do -- */
+
+			if (!obstructions.obstructions())
+				break;
+
+			/* -- These obstructions are the moves that are constrained -- */
+
+			for (int move = 0; move < obstructions.obstructions(); move++)
+				*obstructions[move] += new FollowsMandatoryMoveConstraint(*constraint);
+
+			/* -- Update current square -- */
+
+			square = constraint->to();
+		}
+	}
+
+	/* -- Let's do the same starting from the end -- */
+
+	if (piece.alive())
+	{
+		/* -- Let's find ending square -- */
+
+		Square square = FirstSquare;
+		while (!piece._possibleSquares[square])
+			square++;
+
+		Obstructions obstructions(*_obstructions[square][piece.glyph()]);
+
+		/* -- Do the same as above, but backward -- */
+
+		for (Moves::const_reverse_iterator constraint = moves.rbegin(); constraint != moves.rend(); constraint++)
+		{
+			if ((*constraint)->to() != square)
+				break;
+
+			if (constraint != moves.rbegin())
+				obstructions &= *_obstructions[(*constraint)->to()][piece.glyph()];
+
+			if (!obstructions.obstructions())
+				break;
+
+			for (int move = 0; move < obstructions.obstructions(); move++)
+				*obstructions[move] += new PreceedesMandatoryMoveConstraint(*constraint);
+
+			square = (*constraint)->from();
+		}
+	}
 }
 
 /* -------------------------------------------------------------------------- */

@@ -257,6 +257,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\constraints.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\destinations.cpp"
 				>
 			</File>
@@ -337,6 +341,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\captures.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\constraints.h"
 				>
 			</File>
 			<File

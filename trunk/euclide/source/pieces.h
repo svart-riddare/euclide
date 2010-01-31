@@ -44,11 +44,13 @@ class Piece
 
 		void setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(const Squares& captures);
+		void setMandatoryMoves(const Piece& piece, const Moves& moves);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);
 		void optimizeCastling();
 
 		void optimize();
+		bool constrain();
 
 	public :
 		inline Superman superman() const

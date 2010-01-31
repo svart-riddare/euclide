@@ -2,6 +2,7 @@
 #define __EUCLIDE_MOVES_H
 
 #include "includes.h"
+#include "constraints.h"
 
 namespace euclide
 {
@@ -12,6 +13,8 @@ class Move
 {
 	public :
 		Move();
+		~Move();
+
 		Move(Square from, Square to, Superman superman, Color color, int moves = infinity);
 		void initialize(Square from, Square to, Superman superman, Color color, int moves = infinity);
 		
@@ -22,6 +25,9 @@ class Move
 		void unblock();
 
 		void bound(int earliest, int latest);
+		bool constrain();
+
+		Move& operator+=(Constraint *constraint);
 
 	public :
 		inline Square from() const
@@ -84,6 +90,8 @@ class Move
 		int _latest;                     /**< Latest time at which this move can be played in proof game. Move numbering starts from 1. */
 
 		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. Does not include departure square nor arrival square. */
+
+		Constraints _constraints;        /**< Constraints, if any, associated with this move. */
 };
 
 /* -------------------------------------------------------------------------- */

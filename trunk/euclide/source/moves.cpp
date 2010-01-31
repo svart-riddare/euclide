@@ -31,6 +31,16 @@ Move::Move(Square from, Square to, Superman superman, Color color, int moves)
 
 /* -------------------------------------------------------------------------- */
 
+Move::~Move()
+{
+	for (Constraints::iterator constraint = _constraints.begin(); constraint != _constraints.end(); constraint++)
+		delete *constraint;
+
+	_constraints.clear();
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Move::initialize(Square from, Square to, Superman superman, Color color, int moves)
 {
 	assert(from.isValid());
@@ -110,6 +120,27 @@ void Move::bound(int earliest, int latest)
 
 	if (_earliest > _latest)
 		invalidate();
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Move::constrain()
+{
+	bool modified = false;
+
+	for (Constraints::iterator constraint = _constraints.begin(); constraint != _constraints.end(); constraint++)
+		if (constraint->apply(*this))
+			modified = true;
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Move& Move::operator+=(Constraint *constraint)
+{
+	_constraints.push_back(constraint);
+	return *this;
 }
 
 /* -------------------------------------------------------------------------- */
