@@ -7,6 +7,8 @@
 namespace euclide
 {
 
+class Piece;
+
 /* -------------------------------------------------------------------------- */
 
 class Move
@@ -15,8 +17,8 @@ class Move
 		Move();
 		~Move();
 
-		Move(Square from, Square to, Superman superman, Color color, int moves = infinity);
-		void initialize(Square from, Square to, Superman superman, Color color, int moves = infinity);
+		Move(Square from, Square to, Piece *piece, int moves = infinity);
+		void initialize(Square from, Square to, Piece *piece, int moves = infinity);
 		
 		void validate();
 		void invalidate();
@@ -25,11 +27,17 @@ class Move
 		void unblock();
 
 		void bound(int earliest, int latest);
+		
+		Constraints *constraints();
 		bool constrain();
 
-		Move& operator+=(Constraint *constraint);
+	public :
+		int distance() const;
+		int rdistance() const;
 
 	public :
+		inline Piece *piece() const
+			{ return _piece; }
 		inline Square from() const
 			{ return _from; }		
 		inline Square to() const
@@ -75,6 +83,8 @@ class Move
 			{ return _superman == superman; }
 
 	private :
+		Piece *_piece;                   /**< Moving piece. */
+
 		Square _from;                    /**< Departure square. */
 		Square _to;                      /**< Arrival square. */
 		Color _color;                    /**< Moving piece color. */
@@ -91,7 +101,8 @@ class Move
 
 		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. Does not include departure square nor arrival square. */
 
-		Constraints _constraints;        /**< Constraints, if any, associated with this move. */
+		Constraints *_constraints;       /**< Constraints, if any, associated with this move. */
+
 };
 
 /* -------------------------------------------------------------------------- */

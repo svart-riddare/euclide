@@ -540,7 +540,6 @@ void Board::optimizeLevelOne()
 
 void Board::optimizeLevelTwo()
 {
-#if 0
 	Moves moves;
 
 	/* -- List mandatory moves for each piece -- */
@@ -578,7 +577,6 @@ void Board::optimizeLevelTwo()
 					if (_pieces[color][superman]->constrain())
 						constrain = true;
 	}
-#endif
 }
 
 /* -------------------------------------------------------------------------- */

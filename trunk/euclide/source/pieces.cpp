@@ -42,7 +42,7 @@ Piece::Piece(Superman superman, Color color, int moves)
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
-			_movements[from][to].initialize(from, to, superman, color, moves);
+			_movements[from][to].initialize(from, to, this, moves);
 
 	/* -- List valid movements -- */
 
@@ -145,6 +145,15 @@ int Piece::captures(Square square) const
 	assert(square.isValid());
 
 	return _captures[square];
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::rdistance(Square square) const
+{
+	assert(square.isValid());
+
+	return _rdistances[square];
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1181,7 +1190,7 @@ void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
 			/* -- These obstructions are the moves that are constrained -- */
 
 			for (int move = 0; move < obstructions.obstructions(); move++)
-				*obstructions[move] += new FollowsMandatoryMoveConstraint(*constraint);
+				obstructions[move]->constraints()->mustFollow(constraint->piece(), *constraint);
 
 			/* -- Update current square -- */
 
@@ -1215,7 +1224,7 @@ void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
 				break;
 
 			for (int move = 0; move < obstructions.obstructions(); move++)
-				*obstructions[move] += new PreceedesMandatoryMoveConstraint(*constraint);
+				obstructions[move]->constraints()->mustPreceed((*constraint)->piece(), *constraint);
 
 			square = (*constraint)->from();
 		}
