@@ -1,3 +1,4 @@
+#include "pieces.h"
 #include "moves.h"
 
 namespace euclide
@@ -7,6 +8,8 @@ namespace euclide
 
 Move::Move()
 {
+	_piece = NULL;
+
 	_from = UndefinedSquare;
 	_to = UndefinedSquare;
 	_superman = UndefinedSuperman;
@@ -20,39 +23,38 @@ Move::Move()
 	_latest = 0;
 
 	_obstructions = infinity;
+
+	_constraints = NULL;
 }
 
 /* -------------------------------------------------------------------------- */
 
-Move::Move(Square from, Square to, Superman superman, Color color, int moves)
+Move::Move(Square from, Square to, Piece *piece, int moves)
 {
-	initialize(from, to, superman, color, moves);
+	initialize(from, to, piece, moves);
 }
 
 /* -------------------------------------------------------------------------- */
 
 Move::~Move()
 {
-	for (Constraints::iterator constraint = _constraints.begin(); constraint != _constraints.end(); constraint++)
-		delete *constraint;
-
-	_constraints.clear();
+	delete _constraints;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Move::initialize(Square from, Square to, Superman superman, Color color, int moves)
+void Move::initialize(Square from, Square to, Piece *piece, int moves)
 {
 	assert(from.isValid());
 	assert(to.isValid());
-	assert(superman.isValid());
-	assert(color.isValid());
+
+	_piece = piece;
 
 	_from = from;
 	_to = to;
-	_superman = superman;
-	_glyph = superman.glyph(color);
-	_color = color;
+	_superman = piece->superman();
+	_glyph = piece->glyph();
+	_color = piece->color();
 	
 	_mandatory = indeterminate;
 	_capture = indeterminate;
@@ -124,23 +126,36 @@ void Move::bound(int earliest, int latest)
 
 /* -------------------------------------------------------------------------- */
 
-bool Move::constrain()
+Constraints *Move::constraints()
 {
-	bool modified = false;
+	if (!_constraints)
+		_constraints = new Constraints(this);
 
-	for (Constraints::iterator constraint = _constraints.begin(); constraint != _constraints.end(); constraint++)
-		if (constraint->apply(*this))
-			modified = true;
-
-	return modified;
+	return _constraints;
 }
 
 /* -------------------------------------------------------------------------- */
 
-Move& Move::operator+=(Constraint *constraint)
+bool Move::constrain()
 {
-	_constraints.push_back(constraint);
-	return *this;
+	if (!_constraints)
+		return false;
+
+	return _constraints->apply();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Move::distance() const
+{
+	return _piece->distance(_to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Move::rdistance() const
+{
+	return _piece->rdistance(_from);
 }
 
 /* -------------------------------------------------------------------------- */

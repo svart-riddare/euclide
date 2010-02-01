@@ -28,6 +28,7 @@ class Piece
 
 		int distance(Square square) const;
 		int captures(Square square) const;
+		int rdistance(Square square) const;
 
 		int distance(const Squares& squares) const;
 		int captures(const Squares& squares) const;
@@ -53,12 +54,20 @@ class Piece
 		bool constrain();
 
 	public :
+		inline Man man() const
+			{ return _superman.man(); }
 		inline Superman superman() const
 			{ return _superman; }
 		inline Glyph glyph() const
 			{ return _glyph; }
 		inline Color color() const
 			{ return _color; }
+
+	public :
+		inline int earliest() const
+			{ return _earliest; }
+		inline int latest() const
+			{ return _latest; }
 
 	public :
 		int moves() const;
