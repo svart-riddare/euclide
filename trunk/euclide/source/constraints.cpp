@@ -7,106 +7,79 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-Constraint::Constraint(Piece *piece)
+Constraint::Constraint(const Piece *piece)
 	: _piece(piece)
 {
 	_follows = NULL;
 	_preceedes = NULL;
-
-	_moves = 0;
-	_rmoves = 0;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Constraint::mustFollow(Move *move)
+bool Constraint::mustFollow(const Move *move)
 {
 	assert(move->mandatory());
 
 	/* -- Check if we already know that -- */
 
 	if (_follows)
-		if (move->distance() <= _follows->distance())
+	{
+		if (move->distance() < _follows->distance())
 			return false;
+
+		if (move->distance() == _follows->distance())
+			if (move->incomplete() || !_follows->incomplete())
+				return false;
+	}
 
 	/* -- If not, let's not forget it -- */
 
 	_follows = move;
 
-	/* -- Update also the move rank -- */
+	/* -- Done -- */
 
-	mustFollow(move->distance());
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Constraint::mustPreceed(Move *move)
+bool Constraint::mustPreceed(const Move *move)
 {
 	assert(move->mandatory());
 
 	/* -- Check if we already know that -- */
 
 	if (_preceedes)
-		if (move->rdistance() <= _preceedes->rdistance())
+	{
+		if (move->rdistance() < _preceedes->rdistance())
 			return false;
+
+		if (move->rdistance() == _preceedes->rdistance())
+			if (move->incomplete() || !_preceedes->incomplete())
+				return false;
+	}
 
 	/* -- If not, let's not forget it -- */
 
 	_preceedes = move;
 
-	/* -- Update also the move rank -- */
+	/* -- Done -- */
 
-	mustPreceed(move->rdistance());
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Constraint::mustFollow(int moves)
-{
-	assert(moves > 0);
-
-	/* -- Check if we already know that -- */
-
-	if (moves <= _moves)
-		return false;
-
-	/* -- Update state -- */
-
-	_moves = moves;
-	return true;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Constraint::mustPreceed(int moves)
-{
-	assert(moves > 0);
-
-	/* -- Check if we already know that -- */
-
-	if (moves <= _rmoves)
-		return false;
-
-	/* -- Update state -- */
-
-	_rmoves = moves;
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Constraint::earliest(int offset) const
-{ 
-	return _moves ? _piece->earliest() + _moves - 1 + offset : 1;
+{
+	return _follows ? _piece->earliest() + _follows->distance() - 1 + offset : 1;
 }
 
 /* -------------------------------------------------------------------------- */
 
 int Constraint::latest(int offset) const
 { 
-	return _rmoves ? _piece->latest() - _rmoves + 1 - offset : infinity;
+	return _preceedes ? _piece->latest() - _preceedes->rdistance() + 1 - offset : infinity;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -144,8 +117,8 @@ bool Constraints::apply(void)
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
-		int offset = color.offset(_move->color());  // Peut-être le contraire !
-		int roffset = _move->color().offset(color);  // Là aussi c'est peut-être le contraire !
+		int offset = color.offset(_move->color());
+		int roffset = _move->color().offset(color);
 
 		for (Man man = FirstMan; man <= LastMan; man++)
 		{
@@ -168,37 +141,42 @@ bool Constraints::apply(void)
 
 /* -------------------------------------------------------------------------- */
 
-bool Constraints::mustFollow(Piece *piece, Move *move)
+bool Constraints::mustFollow(const Piece *piece, const Move *move, bool recursive)
 {
 	assert(piece == move->piece());
-	return constraint(piece)->mustFollow(move);
+	
+	/* -- Set constraint -- */
+
+	bool modified = constraint(piece)->mustFollow(move);
+	
+	/* -- Set symetrical constraint -- */
+
+	if (recursive && _move->mandatory())
+		if (const_cast<Move *>(move)->constraints()->mustPreceed(_move->piece(), _move, false))
+			modified = true;
+
+	/* -- Done -- */
+
+	return modified;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Constraints::mustPreceed(Piece *piece, Move *move)
+bool Constraints::mustPreceed(const Piece *piece, const Move *move, bool recursive)
 {
 	assert(piece == move->piece());
-	return constraint(piece)->mustPreceed(move);
+	
+	bool modified = constraint(piece)->mustPreceed(move);
+	if (recursive && _move->mandatory())
+		if (const_cast<Move *>(move)->constraints()->mustFollow(_move->piece(), _move, false))
+			modified = true;
+
+	return modified;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Constraints::mustFollow(Piece *piece, int moves)
-{
-	return constraint(piece)->mustFollow(moves);
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Constraints::mustPreceed(Piece *piece, int moves)
-{
-	return constraint(piece)->mustPreceed(moves);
-}
-
-/* -------------------------------------------------------------------------- */
-
-Constraint *Constraints::constraint(Piece *piece)
+Constraint *Constraints::constraint(const Piece *piece)
 {
 	if (!_constraints[piece->color()][piece->man()])
 		_constraints[piece->color()][piece->man()] = new Constraint(piece);

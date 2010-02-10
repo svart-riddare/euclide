@@ -37,7 +37,9 @@ class Piece
 		int captures(Square from, Square to) const;
 
 		int getCaptures(Square from, Square to, vector<Squares>& captures) const;
-		int getMandatoryMoves(vector<Move *>& moves) const;
+		int getMandatoryMoves(Moves& moves, bool incomplete) /*const*/;
+		int getMovesFrom(Square square, Moves& moves) const;
+		int getMovesTo(Square square, Moves& moves) const;
 
 		void block(Squares squares, Glyph glyph, bool definitive = true);
 		void block(Square square, Glyph glyph, bool captured, bool definitive = false);
@@ -45,7 +47,7 @@ class Piece
 
 		void setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(const Squares& captures);
-		void setMandatoryMoves(const Piece& piece, const Moves& moves);
+		void setMandatoryMoveConstraints(const Piece& piece, const Moves& moves);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);
 		void optimizeCastling();
@@ -68,6 +70,8 @@ class Piece
 			{ return _earliest; }
 		inline int latest() const
 			{ return _latest; }
+
+	public :
 
 	public :
 		int moves() const;
@@ -109,6 +113,7 @@ class Piece
 
 	private :
 		Move _movements[NumSquares][NumSquares];               /**< All piece movements, one for each departure and arrival square. */
+		Move _imovements[NumSquares][2];                       /**< Incomplete movemvents, one for each departure and arrival square. */
 		Moves _moves;                                          /**< Possible piece movements. */
 
 		Superman _superman;                                    /**< Piece type. */
