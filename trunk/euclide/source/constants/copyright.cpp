@@ -7,7 +7,7 @@ namespace constants
 
 /* -------------------------------------------------------------------------- */
 
-const wchar_t copyright[] = L"Euclide, \xA9" L"2000-2009, \xC9" L"tienne Dupuis";
+const wchar_t copyright[] = L"Euclide, \xA9" L"2000-2010, \xC9" L"tienne Dupuis";
 
 /* -------------------------------------------------------------------------- */
 
