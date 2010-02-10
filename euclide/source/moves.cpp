@@ -45,8 +45,7 @@ Move::~Move()
 
 void Move::initialize(Square from, Square to, Piece *piece, int moves)
 {
-	assert(from.isValid());
-	assert(to.isValid());
+	assert(from.isValid() || to.isValid());
 
 	_piece = piece;
 
@@ -62,23 +61,47 @@ void Move::initialize(Square from, Square to, Piece *piece, int moves)
 	_earliest = 1;
 	_latest = moves;
 
-	/* -- Is this a valid move or not ? -- */
+	/* -- Finish initialization for true movements -- */
 
-	_obstructions = (tables::movements[_glyph][from][to] || tables::captures[_glyph][from][to]) ? 0 : infinity;
+	if (from.isValid() && to.isValid())
+	{
+		/* -- Is this a valid move or not ? -- */
 
-	/* -- If so, is capture possible or mandatory ? -- */
+		_obstructions = (tables::movements[_glyph][from][to] || tables::captures[_glyph][from][to]) ? 0 : infinity;
 
-	if (tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to])
-		_capture = true;
+		/* -- If so, is capture possible or mandatory ? -- */
+
+		if (tables::captures[_glyph][from][to] && !tables::movements[_glyph][from][to])
+			_capture = true;
+		else
+		if (!tables::captures[_glyph][from][to] && tables::movements[_glyph][from][to])
+			_capture = false;
+
+		/* -- Store squares that should be free -- */
+
+		const tables::Constraints *constraints = &tables::constraints[_glyph][from][to];
+		for	(int k = 0; k < constraints->numConstraints; k++)
+			_squares[constraints->constraints[k]] = true;
+	}
 	else
-	if (!tables::captures[_glyph][from][to] && tables::movements[_glyph][from][to])
-		_capture = false;
+	if (from.isValid())
+	{
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			if (tables::movements[_glyph][from][square] || tables::captures[_glyph][from][square])
+				_obstructions = 0;
+	}
+	else
+	if (to.isValid())
+	{
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			if (tables::movements[_glyph][square][to] || tables::captures[_glyph][square][to])
+				_obstructions = 0;
+	}
 
-	/* -- Store squares that should be free -- */
+	/* -- Departure square should always be free -- */
 
-	const tables::Constraints *constraints = &tables::constraints[_glyph][from][to];
-	for (int k = 0; k < constraints->numConstraints; k++)
-		_squares[constraints->constraints[k]] = true;
+	if (from.isValid())
+		_squares[from] = true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -148,6 +171,9 @@ bool Move::constrain()
 
 int Move::distance() const
 {
+	if (_to == UndefinedSquare)
+		return _piece->distance(_from) + 1;
+
 	return _piece->distance(_to);
 }
 
@@ -155,6 +181,9 @@ int Move::distance() const
 
 int Move::rdistance() const
 {
+	if (_from == UndefinedSquare)
+		return _piece->rdistance(_to) + 1;
+
 	return _piece->rdistance(_from);
 }
 

@@ -24,25 +24,20 @@ class Piece;
 class Constraint
 {
 	public :
-		Constraint(Piece *piece);
+		Constraint(const Piece *piece);
 
-		bool mustFollow(Move *move);
-		bool mustPreceed(Move *move);
-		bool mustFollow(int moves);
-		bool mustPreceed(int moves);
+		bool mustFollow(const Move *move);
+		bool mustPreceed(const Move *move);
 
 	public :
 		int earliest(int offset) const;
 		int latest(int offset) const;
 
 	private :
-		Piece *_piece;       /**< Constraining piece. */
+		const Piece *_piece;       /**< Constraining piece. */
 
-		Move *_follows;      /**< Constrained move must be played after this move. NULL if none. */
-		Move *_preceedes;    /**< Constrained move must be played before this move. NULL if none. */
-
-		int _moves;          /**< Number of moves the constrained piece must have played, 0 if none. */
-		int _rmoves;         /**< Number of moves the constrained piece must still have to play, 0 if none. */
+		const Move *_follows;      /**< Constrained move must be played after this move. NULL if none. */
+		const Move *_preceedes;    /**< Constrained move must be played before this move. NULL if none. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -55,13 +50,11 @@ class Constraints
 		
 		bool apply(void);
 
-		bool mustFollow(Piece *piece, Move *move);
-		bool mustPreceed(Piece *piece, Move *move);
-		bool mustFollow(Piece *piece, int moves);
-		bool mustPreceed(Piece *piece, int moves);
+		bool mustFollow(const Piece *piece, const Move *move, bool recursive = true);
+		bool mustPreceed(const Piece *piece, const Move *move, bool recursive = true);
 
 	private :
-		Constraint *constraint(Piece *piece);
+		Constraint *constraint(const Piece *piece);
 
 	private :
 		Constraint *_constraints[NumColors][NumMen];    /**< Constraints. */

@@ -550,7 +550,7 @@ void Board::optimizeLevelTwo()
 		{
 			if (_pieces[color][man])
 			{
-				_pieces[color][man]->getMandatoryMoves(moves);
+				_pieces[color][man]->getMandatoryMoves(moves, true);
 
 				/* -- If there are mandatory moves, add constraints -- */
 
@@ -558,7 +558,7 @@ void Board::optimizeLevelTwo()
 					for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
 						for (Man xman = FirstMan; xman <= LastMan; xman++)
 							if (_pieces[xcolor][xman])
-								_pieces[xcolor][xman]->setMandatoryMoves(*_pieces[color][man], moves);
+								_pieces[xcolor][xman]->setMandatoryMoveConstraints(*_pieces[color][man], moves);
 			}
 		}
 	}

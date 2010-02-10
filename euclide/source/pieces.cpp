@@ -44,6 +44,12 @@ Piece::Piece(Superman superman, Color color, int moves)
 		for (Square to = FirstSquare; to <= LastSquare; to++)
 			_movements[from][to].initialize(from, to, this, moves);
 
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		_imovements[from][0].initialize(from, UndefinedSquare, this, moves);
+
+	for (Square to = FirstSquare; to <= LastSquare; to++)
+		_imovements[to][1].initialize(UndefinedSquare, to, this, moves);
+
 	/* -- List valid movements -- */
 
 	for (Square from = FirstSquare; from <= LastSquare; from++)
@@ -708,6 +714,11 @@ void Piece::findMandatoryMoves()
 				}
 			}
 
+			/* -- Label incomplete move as mandatory -- */
+
+			if (possibilities > 1)
+				_imovements[current][0].validate();
+
 			/* -- If there is more than one possibility, stop -- */
 
 			if (possibilities != 1)
@@ -716,6 +727,8 @@ void Piece::findMandatoryMoves()
 			/* -- Label current movement as mandatory and move on -- */
 	
 			_movements[current][destination].validate();
+			_imovements[destination][1].validate();
+
 			current = destination;
 		}
 
@@ -738,7 +751,7 @@ void Piece::findMandatoryMoves()
 
 		/* -- Loop until we have almost reached a departure square -- */
 
-		while (_distances[current] > 1)
+		while (_distances[current] > 0)
 		{
 			Square source = current;
 			int possibilities = 0;
@@ -752,6 +765,11 @@ void Piece::findMandatoryMoves()
 				}
 			}
 
+			/* -- Label incomplete move as mandatory -- */
+
+			if (possibilities > 1)
+				_imovements[current][1].validate();
+
 			/* -- If there is more than one possibility, stop -- */
 
 			if (possibilities != 1)
@@ -760,6 +778,8 @@ void Piece::findMandatoryMoves()
 			/* -- Label current movement as mandatory and move backward -- */
 
 			_movements[source][current].validate();
+			_movements[source][0].validate();
+
 			current = source;
 		}
 	}
@@ -881,8 +901,12 @@ int Piece::getCaptures(Square from, Square to, vector<Squares>& captures) const
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::getMandatoryMoves(vector<Move *>& moves) const
+int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 {
+	/* -- Find initial square if known -- */
+
+	Square square = (_kcastling || _qcastling) ? UndefinedSquare : _initial;
+
 	/* -- Initialize output -- */
 
 	moves.clear();
@@ -890,8 +914,86 @@ int Piece::getMandatoryMoves(vector<Move *>& moves) const
 	/* -- Scan list of moves to find mandatory ones -- */
 
 	for (Moves::const_iterator move = _moves.begin(); move != _moves.end(); move++)
+	{
 		if (move->mandatory())
-			moves.push_back(*move);
+		{
+			/* -- Add incomplete moves if required -- */
+
+			if (incomplete && (move->from() != square))
+			{
+				if (square != UndefinedSquare)
+					if (_imovements[square][0].mandatory())
+						moves.push_back(&_imovements[square][0]);
+	
+				if (_imovements[move->from()][1].mandatory())
+					moves.push_back(&_imovements[move->from()][1]);
+			}
+			
+			/* -- Add mandatory move -- */
+
+			moves.push_back(*move);			
+			square = move->to();
+		}
+	}
+
+	/* -- Add final incomplete moves if required -- */
+
+	if (incomplete && (square != UndefinedSquare))
+	{	
+		if (!_possibleSquares[square])
+		{
+			if (_imovements[square][0].mandatory())
+				moves.push_back(&_imovements[square][0]);
+
+			if (_possibleSquares.count() == 1)
+			{
+				Square square = FirstSquare;
+				while (!_possibleSquares[square])
+					square++;
+
+				if (_imovements[square][1].mandatory())
+					moves.push_back(&_imovements[square][1]);
+			}
+		}
+	}
+
+	/* -- Return number of moves found -- */
+
+	return moves.size();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::getMovesFrom(Square square, Moves& moves) const
+{
+	/* -- Initialize output -- */
+
+	moves.clear();
+
+	/* -- Scan moves to find moves leaving the given square -- */
+
+	for (Square to = FirstSquare; to <= LastSquare; to++)
+		if (_movements[square][to].possible())
+			moves.push_back(const_cast<Move *>(&_movements[square][to]));
+
+	/* -- Return number of moves found -- */
+
+	return moves.size();
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::getMovesTo(Square square, Moves& moves) const
+{
+	/* -- Initialize output -- */
+
+	moves.clear();
+
+	/* -- Scan moves to find moves reaching the given square -- */
+
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+		if (_movements[from][square].possible())
+			moves.push_back(const_cast<Move *>(&_movements[from][square]));
 
 	/* -- Return number of moves found -- */
 
@@ -1032,9 +1134,65 @@ void Piece::optimize()
 		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
 			move->bound(_earliest + _distances[move->from()], _latest - _rdistances[move->to()]);
 
+		/* -- Remove impossible optional moves -- */
+
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			if (!_imovements[move->from()][0].possible() || !_imovements[move->to()][1].possible())
+				move->invalidate();
+
+		/* -- Remove optional moves that are out of bounds -- */
+
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			move->bound(_imovements[move->from()][0].earliest(), _imovements[move->from()][0].latest());
+
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			move->bound(_imovements[move->to()][1].earliest(), _imovements[move->to()][1].latest());
+
 		/* -- Keep only possible moves -- */
 
 		_moves.erase(std::remove_if(_moves.begin(), _moves.end(), isMoveImpossible), _moves.end());
+	}
+
+	/* -- Update incomplete moves -- */
+
+	for (Square from = FirstSquare; from <= LastSquare; from++)
+	{
+		if (_imovements[from][0].possible())
+		{
+			int earliest = infinity;
+			int latest = 0;
+
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+			{
+				if (_movements[from][to].possible())
+				{
+					minimize(earliest, _movements[from][to].earliest());
+					maximize(latest, _movements[from][to].latest());
+				}
+			}
+
+			_imovements[from][0].bound(earliest, latest);
+		}
+	}
+
+	for (Square to = FirstSquare; to <= LastSquare; to++)
+	{
+		if (_imovements[to][1].possible())
+		{
+			int earliest = infinity;
+			int latest = 0;
+
+			for (Square from = FirstSquare; from <= LastSquare; from++)
+			{
+				if (_movements[from][to].possible())
+				{
+					minimize(earliest, _movements[from][to].earliest());
+					maximize(latest, _movements[from][to].latest());
+				}
+			}
+
+			_imovements[to][1].bound(earliest, latest);
+		}
 	}
 
 	/* -- Find out mandatory moves -- */
@@ -1077,6 +1235,19 @@ bool Piece::constrain()
 	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
 		if (move->constrain())
 			modified = true;
+
+	/* -- Apply contraints to partial moves also -- */
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+	{
+		if (_imovements[square][0].possible())
+			if (_imovements[square][0].constrain())
+				modified = true;
+
+		if (_imovements[square][1].possible())
+			if (_imovements[square][1].constrain())
+				modified = true;
+	}
 
 	/* -- Optimize if necessary -- */
 
@@ -1151,16 +1322,16 @@ void Piece::setPossibleSquares(const Squares& squares, tribool captured, int ava
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
+void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 {
 	/* -- Don't mess with ourself -- */
 
 	if (&piece == this)
 		return;
 
-	/* -- Don't bother if there is no mandatory moves -- */
+	/* -- Don't bother if there is no mandatory moves or the piece has not moved -- */
 
-	if (moves.empty())
+	if (moves.empty() || _moves.empty())
 		return;
 
 	/* -- Let's put aside castling for now and start from initial square -- */
@@ -1182,7 +1353,7 @@ void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
 			if (constraint != moves.begin())
 				obstructions &= *_obstructions[constraint->from()][piece.glyph()];
 
-			/* -- If there is no more obstructions, there is nothing mode to do -- */
+			/* -- If there is no more obstructions, there is nothing more to do -- */
 
 			if (!obstructions.obstructions())
 				break;
@@ -1192,9 +1363,48 @@ void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
 			for (int move = 0; move < obstructions.obstructions(); move++)
 				obstructions[move]->constraints()->mustFollow(constraint->piece(), *constraint);
 
+			/* -- Constrain also generic moves -- */
+
+			int movesFrom[NumSquares];
+			int movesTo[NumSquares];
+
+			std::fill(movesFrom, movesFrom + NumSquares, 0);
+			std::fill(movesTo, movesTo + NumSquares, 0);
+
+			for (Moves::const_iterator move = _moves.begin(); move != _moves.end(); move++)
+			{
+				if (move->possible())
+				{
+					movesFrom[move->from()] += 1;
+					movesTo[move->to()] += 1;
+				}
+			}
+
+			for (int move = 0; move < obstructions.obstructions(); move++)
+			{
+				if (obstructions[move]->possible())
+				{
+					movesFrom[obstructions[move]->from()] -= 1;
+					movesTo[obstructions[move]->to()] -= 1;
+				}
+			}
+
+			for (Square from = FirstSquare; from <= LastSquare; from++)
+				if (_imovements[from][0].possible() && !movesFrom[from])
+					_imovements[from][0].constraints()->mustFollow(constraint->piece(), *constraint);
+
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+				if (_imovements[to][1].possible() && !movesTo[to])
+					_imovements[to][1].constraints()->mustFollow(constraint->piece(), *constraint);
+
 			/* -- Update current square -- */
 
 			square = constraint->to();
+
+			/* -- Break on incomplete move -- */
+
+			if (square == UndefinedSquare)
+				break;
 		}
 	}
 
@@ -1226,7 +1436,42 @@ void Piece::setMandatoryMoves(const Piece& piece, const Moves& moves)
 			for (int move = 0; move < obstructions.obstructions(); move++)
 				obstructions[move]->constraints()->mustPreceed((*constraint)->piece(), *constraint);
 
+			int movesFrom[NumSquares];
+			int movesTo[NumSquares];
+
+			std::fill(movesFrom, movesFrom + NumSquares, 0);
+			std::fill(movesTo, movesTo + NumSquares, 0);
+
+			for (Moves::const_iterator move = _moves.begin(); move != _moves.end(); move++)
+			{
+				if (move->possible())
+				{
+					movesFrom[move->from()] += 1;
+					movesTo[move->to()] += 1;
+				}
+			}
+
+			for (int move = 0; move < obstructions.obstructions(); move++)
+			{
+				if (obstructions[move]->possible())
+				{
+					movesFrom[obstructions[move]->from()] -= 1;
+					movesTo[obstructions[move]->to()] -= 1;
+				}
+			}
+
+			for (Square from = FirstSquare; from <= LastSquare; from++)
+				if (_imovements[from][0].possible() && !movesFrom[from])
+					_imovements[from][0].constraints()->mustPreceed((*constraint)->piece(), *constraint);
+
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+				if (_imovements[to][1].possible() && !movesTo[to])
+					_imovements[to][1].constraints()->mustPreceed((*constraint)->piece(), *constraint);
+
 			square = (*constraint)->from();
+
+			if (square == UndefinedSquare)
+				break;
 		}
 	}
 }

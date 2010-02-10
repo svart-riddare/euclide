@@ -54,6 +54,8 @@ class Move
 			{ return (_obstructions == 0) ? true : false; }
 		inline bool unique() const
 			{ return (_earliest == _latest) ? true : false; }
+		inline bool incomplete() const
+			{ return ((_from == UndefinedSquare) || (_to == UndefinedSquare)) ? true : false; }
 		inline tribool capture() const
 			{ return _capture; }
 		inline tribool mandatory() const
@@ -82,6 +84,10 @@ class Move
 		inline bool isSuperman(Superman superman) const
 			{ return _superman == superman; }
 
+	public :
+		inline bool isObstruction(Square square) const
+			{ return _squares[square]; }
+
 	private :
 		Piece *_piece;                   /**< Moving piece. */
 
@@ -99,7 +105,7 @@ class Move
 		int _earliest;                   /**< Earliest time at which this move can be played in proof game. Move numbering starts from 1. */
 		int _latest;                     /**< Latest time at which this move can be played in proof game. Move numbering starts from 1. */
 
-		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. Does not include departure square nor arrival square. */
+		Squares _squares;                /**< Intermediate squares which should be free for this move to be played. Includes the departure square but not the arrival square. */
 
 		Constraints *_constraints;       /**< Constraints, if any, associated with this move. */
 
