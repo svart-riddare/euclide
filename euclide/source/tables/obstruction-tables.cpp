@@ -12,7 +12,7 @@ namespace tables
 {
 
 /* --------------------------------------------------------------------------
-   -- Computer generated with make-tables on Sun Nov 26 16:38:44 2006
+   -- Computer generated with make-tables on Sat Feb 13 17:25:01 2010
    -------------------------------------------------------------------------- */
 
 const Obstruction _obstructions[] =
@@ -122,6 +122,7 @@ const Obstruction _obstructions[] =
 	{ D2, C3, false,  true },
 	{ D3, C3, false,  true },
 	{ D4, C3, false,  true },
+	{ E1, C1,  true, false },
 	/* WhiteKing, A3 */
 	{ A1, A2, false,  true },
 	{ A1, B1, false,  true },
@@ -604,6 +605,7 @@ const Obstruction _obstructions[] =
 	{ D3, C3, false,  true },
 	{ D3, D2, false,  true },
 	{ D4, C3, false,  true },
+	{ E1, C1, false, false },
 	{ E1, D2, false,  true },
 	{ E2, D2, false,  true },
 	{ E3, D2, false,  true },
@@ -691,6 +693,7 @@ const Obstruction _obstructions[] =
 	{ D4, C4, false,  true },
 	{ D4, D3, false,  true },
 	{ D5, C4, false,  true },
+	{ E1, C1, false,  true },
 	{ E1, D1, false,  true },
 	{ E2, D1, false,  true },
 	{ E2, D3, false,  true },
@@ -802,6 +805,7 @@ const Obstruction _obstructions[] =
 	{ D5, C5, false,  true },
 	{ D5, D4, false,  true },
 	{ D6, C5, false,  true },
+	{ E1, C1, false,  true },
 	{ E1, D2, false,  true },
 	{ E2, D2, false,  true },
 	{ E3, D2, false,  true },
@@ -1370,6 +1374,7 @@ const Obstruction _obstructions[] =
 	{ D3, D2, false,  true },
 	{ D3, E2, false,  true },
 	{ D4, D3, false,  true },
+	{ E1, C1, false, false },
 	{ E1, D1, false,  true },
 	{ E1, D2, false,  true },
 	{ E1, E2, false,  true },
@@ -1476,6 +1481,7 @@ const Obstruction _obstructions[] =
 	{ D4, D3, false,  true },
 	{ D4, E3, false,  true },
 	{ D5, D4, false,  true },
+	{ E1, C1, false,  true },
 	{ E1, D1, false,  true },
 	{ E1, D2, false,  true },
 	{ E2, D1, false,  true },
@@ -2312,11 +2318,13 @@ const Obstruction _obstructions[] =
 	{ D3, E3, false,  true },
 	{ D4, C3, false,  true },
 	{ D4, E3, false,  true },
+	{ E1, C1, false, false },
 	{ E1, D1, false, false },
 	{ E1, D2,  true, false },
 	{ E1, E2,  true, false },
 	{ E1, F1,  true, false },
 	{ E1, F2,  true, false },
+	{ E1, G1,  true, false },
 	{ E2, D1, false, false },
 	{ E2, D2,  true, false },
 	{ E2, D3,  true, false },
@@ -2415,11 +2423,13 @@ const Obstruction _obstructions[] =
 	{ D4, E4, false,  true },
 	{ D5, C4, false,  true },
 	{ D5, E4, false,  true },
+	{ E1, C1,  true, false },
 	{ E1, D1,  true, false },
 	{ E1, D2, false, false },
 	{ E1, E2,  true, false },
 	{ E1, F1,  true, false },
 	{ E1, F2,  true, false },
+	{ E1, G1,  true, false },
 	{ E2, D1,  true, false },
 	{ E2, D2, false, false },
 	{ E2, D3,  true, false },
@@ -2551,6 +2561,7 @@ const Obstruction _obstructions[] =
 	{ D5, E5, false,  true },
 	{ D6, C5, false,  true },
 	{ D6, E5, false,  true },
+	{ E1, C1, false,  true },
 	{ E1, D2, false,  true },
 	{ E1, E2, false,  true },
 	{ E1, F2, false,  true },
@@ -3288,11 +3299,13 @@ const Obstruction _obstructions[] =
 	{ D3, D2, false,  true },
 	{ D3, E2, false,  true },
 	{ D4, D3, false,  true },
+	{ E1, C1, false, false },
 	{ E1, D1, false, false },
 	{ E1, D2, false, false },
 	{ E1, E2, false, false },
 	{ E1, F1, false, false },
 	{ E1, F2, false, false },
+	{ E1, G1, false, false },
 	{ E2, D1,  true, false },
 	{ E2, D2,  true, false },
 	{ E2, D3,  true, false },
@@ -3383,11 +3396,13 @@ const Obstruction _obstructions[] =
 	{ D4, D3, false,  true },
 	{ D4, E3, false,  true },
 	{ D5, D4, false,  true },
+	{ E1, C1,  true, false },
 	{ E1, D1,  true, false },
 	{ E1, D2,  true, false },
 	{ E1, E2, false, false },
 	{ E1, F1,  true, false },
 	{ E1, F2,  true, false },
+	{ E1, G1,  true, false },
 	{ E2, D1, false, false },
 	{ E2, D2, false, false },
 	{ E2, D3, false, false },
@@ -4267,11 +4282,13 @@ const Obstruction _obstructions[] =
 	{ D3, E2, false,  true },
 	{ D3, E3, false,  true },
 	{ D4, E3, false,  true },
+	{ E1, C1,  true, false },
 	{ E1, D1,  true, false },
 	{ E1, D2,  true, false },
 	{ E1, E2,  true, false },
 	{ E1, F1, false, false },
 	{ E1, F2,  true, false },
+	{ E1, G1, false, false },
 	{ E2, D1,  true, false },
 	{ E2, D2,  true, false },
 	{ E2, D3,  true, false },
@@ -4351,11 +4368,13 @@ const Obstruction _obstructions[] =
 	{ D4, E3, false,  true },
 	{ D4, E4, false,  true },
 	{ D5, E4, false,  true },
+	{ E1, C1,  true, false },
 	{ E1, D1,  true, false },
 	{ E1, D2,  true, false },
 	{ E1, E2,  true, false },
 	{ E1, F1,  true, false },
 	{ E1, F2, false, false },
+	{ E1, G1,  true, false },
 	{ E2, D1,  true, false },
 	{ E2, D2,  true, false },
 	{ E2, D3,  true, false },
@@ -4471,6 +4490,7 @@ const Obstruction _obstructions[] =
 	{ E1, D2, false,  true },
 	{ E1, E2, false,  true },
 	{ E1, F2, false,  true },
+	{ E1, G1, false,  true },
 	{ E2, D1,  true, false },
 	{ E2, D2,  true, false },
 	{ E2, D3,  true, false },
@@ -5216,6 +5236,7 @@ const Obstruction _obstructions[] =
 	{ E1, E2, false,  true },
 	{ E1, F1, false,  true },
 	{ E1, F2, false,  true },
+	{ E1, G1, false, false },
 	{ E2, F1, false,  true },
 	{ E2, F2, false,  true },
 	{ E2, F3, false,  true },
@@ -5279,6 +5300,7 @@ const Obstruction _obstructions[] =
 	{ D4, E3, false,  true },
 	{ E1, F1, false,  true },
 	{ E1, F2, false,  true },
+	{ E1, G1, false,  true },
 	{ E2, E1, false,  true },
 	{ E2, E3, false,  true },
 	{ E2, F1, false,  true },
@@ -5971,6 +5993,7 @@ const Obstruction _obstructions[] =
 	{ H8, H7,  true, false },
 	/* WhiteKing, H1 */
 	{ E1, F2, false,  true },
+	{ E1, G1, false,  true },
 	{ E2, F2, false,  true },
 	{ E3, F2, false,  true },
 	{ F1, F2, false,  true },
@@ -6014,6 +6037,7 @@ const Obstruction _obstructions[] =
 	{ H4, G3, false,  true },
 	/* WhiteKing, H2 */
 	{ E1, F1, false,  true },
+	{ E1, G1,  true, false },
 	{ E2, F1, false,  true },
 	{ E2, F3, false,  true },
 	{ E3, F3, false,  true },
@@ -6076,6 +6100,7 @@ const Obstruction _obstructions[] =
 	{ H5, G4, false,  true },
 	/* WhiteKing, H3 */
 	{ E1, F2, false,  true },
+	{ E1, G1, false,  true },
 	{ E2, F2, false,  true },
 	{ E3, F2, false,  true },
 	{ E3, F4, false,  true },
@@ -32840,6 +32865,7 @@ const Obstruction _obstructions[] =
 	{ D7, C6, false,  true },
 	{ D7, C8, false,  true },
 	{ D8, C8, false,  true },
+	{ E8, C8,  true, false },
 	/* BlackKing, A8 */
 	{ A5, B6, false,  true },
 	{ A6, A7, false,  true },
@@ -33491,6 +33517,7 @@ const Obstruction _obstructions[] =
 	{ E6, D5, false,  true },
 	{ E6, D7, false,  true },
 	{ E7, D7, false,  true },
+	{ E8, C8, false,  true },
 	{ E8, D7, false,  true },
 	/* BlackKing, B7 */
 	{ A4, A5, false,  true },
@@ -33580,6 +33607,7 @@ const Obstruction _obstructions[] =
 	{ E6, D6, false,  true },
 	{ E7, D6, false,  true },
 	{ E7, D8, false,  true },
+	{ E8, C8, false,  true },
 	{ E8, D8, false,  true },
 	/* BlackKing, B8 */
 	{ A5, A6, false,  true },
@@ -33642,6 +33670,7 @@ const Obstruction _obstructions[] =
 	{ D8, D7, false,  true },
 	{ E6, D7, false,  true },
 	{ E7, D7, false,  true },
+	{ E8, C8, false, false },
 	{ E8, D7, false,  true },
 	/* BlackKing, C1 */
 	{ A1, A2, false,  true },
@@ -34514,6 +34543,7 @@ const Obstruction _obstructions[] =
 	{ E7, D8, false,  true },
 	{ E7, E6, false,  true },
 	{ E7, E8, false,  true },
+	{ E8, C8, false,  true },
 	{ E8, D7, false,  true },
 	{ E8, D8, false,  true },
 	{ F5, E6, false,  true },
@@ -34593,6 +34623,7 @@ const Obstruction _obstructions[] =
 	{ E7, D6, false,  true },
 	{ E7, D7, false,  true },
 	{ E7, D8, false,  true },
+	{ E8, C8, false, false },
 	{ E8, D7, false,  true },
 	{ E8, D8, false,  true },
 	{ E8, E7, false,  true },
@@ -35370,6 +35401,7 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7,  true, false },
 	{ E7, F8,  true, false },
+	{ E8, C8, false,  true },
 	{ E8, D7, false,  true },
 	{ E8, E7, false,  true },
 	{ E8, F7, false,  true },
@@ -35490,11 +35522,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7,  true, false },
 	{ E7, F8,  true, false },
+	{ E8, C8,  true, false },
 	{ E8, D7, false, false },
 	{ E8, D8,  true, false },
 	{ E8, E7,  true, false },
 	{ E8, F7,  true, false },
 	{ E8, F8,  true, false },
+	{ E8, G8,  true, false },
 	{ F4, E5, false,  true },
 	{ F5, E5, false,  true },
 	{ F5, E6, false,  true },
@@ -35577,11 +35611,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7,  true, false },
 	{ E7, F8,  true, false },
+	{ E8, C8, false, false },
 	{ E8, D7,  true, false },
 	{ E8, D8, false, false },
 	{ E8, E7,  true, false },
 	{ E8, F7,  true, false },
 	{ E8, F8,  true, false },
+	{ E8, G8,  true, false },
 	{ F5, E6, false,  true },
 	{ F6, E6, false,  true },
 	{ F6, E7, false,  true },
@@ -36461,11 +36497,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6, false, false },
 	{ E7, F7, false, false },
 	{ E7, F8, false, false },
+	{ E8, C8,  true, false },
 	{ E8, D7,  true, false },
 	{ E8, D8,  true, false },
 	{ E8, E7, false, false },
 	{ E8, F7,  true, false },
 	{ E8, F8,  true, false },
+	{ E8, G8,  true, false },
 	{ F4, F5, false,  true },
 	{ F5, E6, false,  true },
 	{ F5, F6, false,  true },
@@ -36556,11 +36594,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7,  true, false },
 	{ E7, F8,  true, false },
+	{ E8, C8, false, false },
 	{ E8, D7, false, false },
 	{ E8, D8, false, false },
 	{ E8, E7, false, false },
 	{ E8, F7, false, false },
 	{ E8, F8, false, false },
+	{ E8, G8, false, false },
 	{ F5, F6, false,  true },
 	{ F6, E7, false,  true },
 	{ F6, F7, false,  true },
@@ -37272,6 +37312,7 @@ const Obstruction _obstructions[] =
 	{ E8, D7, false,  true },
 	{ E8, E7, false,  true },
 	{ E8, F7, false,  true },
+	{ E8, G8, false,  true },
 	{ F3, E4, false,  true },
 	{ F3, G4, false,  true },
 	{ F4, E4, false,  true },
@@ -37397,11 +37438,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7, false, false },
 	{ E7, F8,  true, false },
+	{ E8, C8,  true, false },
 	{ E8, D7,  true, false },
 	{ E8, D8,  true, false },
 	{ E8, E7,  true, false },
 	{ E8, F7, false, false },
 	{ E8, F8,  true, false },
+	{ E8, G8,  true, false },
 	{ F4, E5, false,  true },
 	{ F4, G5, false,  true },
 	{ F5, E5, false,  true },
@@ -37495,11 +37538,13 @@ const Obstruction _obstructions[] =
 	{ E7, F6,  true, false },
 	{ E7, F7,  true, false },
 	{ E7, F8, false, false },
+	{ E8, C8,  true, false },
 	{ E8, D7,  true, false },
 	{ E8, D8,  true, false },
 	{ E8, E7,  true, false },
 	{ E8, F7,  true, false },
 	{ E8, F8, false, false },
+	{ E8, G8, false, false },
 	{ F5, E6, false,  true },
 	{ F5, G6, false,  true },
 	{ F6, E6, false,  true },
@@ -38176,6 +38221,7 @@ const Obstruction _obstructions[] =
 	{ E7, F8, false,  true },
 	{ E8, F7, false,  true },
 	{ E8, F8, false,  true },
+	{ E8, G8, false,  true },
 	{ F4, F5, false,  true },
 	{ F5, E6, false,  true },
 	{ F5, F6, false,  true },
@@ -38259,6 +38305,7 @@ const Obstruction _obstructions[] =
 	{ E8, E7, false,  true },
 	{ E8, F7, false,  true },
 	{ E8, F8, false,  true },
+	{ E8, G8, false, false },
 	{ F5, F6, false,  true },
 	{ F6, E7, false,  true },
 	{ F6, F7, false,  true },
@@ -38659,6 +38706,7 @@ const Obstruction _obstructions[] =
 	{ E6, F7, false,  true },
 	{ E7, F7, false,  true },
 	{ E8, F7, false,  true },
+	{ E8, G8, false,  true },
 	{ F3, G4, false,  true },
 	{ F4, F5, false,  true },
 	{ F4, G4, false,  true },
@@ -38736,6 +38784,7 @@ const Obstruction _obstructions[] =
 	{ E7, F6, false,  true },
 	{ E7, F8, false,  true },
 	{ E8, F8, false,  true },
+	{ E8, G8,  true, false },
 	{ F4, G5, false,  true },
 	{ F5, F6, false,  true },
 	{ F5, G5, false,  true },
@@ -38796,6 +38845,7 @@ const Obstruction _obstructions[] =
 	{ E6, F7, false,  true },
 	{ E7, F7, false,  true },
 	{ E8, F7, false,  true },
+	{ E8, G8, false,  true },
 	{ F5, G6, false,  true },
 	{ F6, F7, false,  true },
 	{ F6, G6, false,  true },
@@ -64767,795 +64817,795 @@ const Obstructions obstructions[NumGlyphs][NumSquares] =
 	},
 	{  /* WhiteKing */
 		{ &_obstructions[    0],  42 },  /* A1 */
-		{ &_obstructions[   42],  61 },  /* A2 */
-		{ &_obstructions[  103],  77 },  /* A3 */
-		{ &_obstructions[  180],  80 },  /* A4 */
-		{ &_obstructions[  260],  80 },  /* A5 */
-		{ &_obstructions[  340],  77 },  /* A6 */
-		{ &_obstructions[  417],  61 },  /* A7 */
-		{ &_obstructions[  478],  42 },  /* A8 */
-		{ &_obstructions[  520],  61 },  /* B1 */
-		{ &_obstructions[  581],  88 },  /* B2 */
-		{ &_obstructions[  669], 111 },  /* B3 */
-		{ &_obstructions[  780], 116 },  /* B4 */
-		{ &_obstructions[  896], 116 },  /* B5 */
-		{ &_obstructions[ 1012], 111 },  /* B6 */
-		{ &_obstructions[ 1123],  88 },  /* B7 */
-		{ &_obstructions[ 1211],  61 },  /* B8 */
-		{ &_obstructions[ 1272],  77 },  /* C1 */
-		{ &_obstructions[ 1349], 111 },  /* C2 */
-		{ &_obstructions[ 1460], 140 },  /* C3 */
-		{ &_obstructions[ 1600], 146 },  /* C4 */
-		{ &_obstructions[ 1746], 146 },  /* C5 */
-		{ &_obstructions[ 1892], 140 },  /* C6 */
-		{ &_obstructions[ 2032], 111 },  /* C7 */
-		{ &_obstructions[ 2143],  77 },  /* C8 */
-		{ &_obstructions[ 2220],  80 },  /* D1 */
-		{ &_obstructions[ 2300], 116 },  /* D2 */
-		{ &_obstructions[ 2416], 146 },  /* D3 */
-		{ &_obstructions[ 2562], 152 },  /* D4 */
-		{ &_obstructions[ 2714], 152 },  /* D5 */
-		{ &_obstructions[ 2866], 146 },  /* D6 */
-		{ &_obstructions[ 3012], 116 },  /* D7 */
-		{ &_obstructions[ 3128],  80 },  /* D8 */
-		{ &_obstructions[ 3208],  80 },  /* E1 */
-		{ &_obstructions[ 3288], 116 },  /* E2 */
-		{ &_obstructions[ 3404], 146 },  /* E3 */
-		{ &_obstructions[ 3550], 152 },  /* E4 */
-		{ &_obstructions[ 3702], 152 },  /* E5 */
-		{ &_obstructions[ 3854], 146 },  /* E6 */
-		{ &_obstructions[ 4000], 116 },  /* E7 */
-		{ &_obstructions[ 4116],  80 },  /* E8 */
-		{ &_obstructions[ 4196],  77 },  /* F1 */
-		{ &_obstructions[ 4273], 111 },  /* F2 */
-		{ &_obstructions[ 4384], 140 },  /* F3 */
-		{ &_obstructions[ 4524], 146 },  /* F4 */
-		{ &_obstructions[ 4670], 146 },  /* F5 */
-		{ &_obstructions[ 4816], 140 },  /* F6 */
-		{ &_obstructions[ 4956], 111 },  /* F7 */
-		{ &_obstructions[ 5067],  77 },  /* F8 */
-		{ &_obstructions[ 5144],  61 },  /* G1 */
-		{ &_obstructions[ 5205],  88 },  /* G2 */
-		{ &_obstructions[ 5293], 111 },  /* G3 */
-		{ &_obstructions[ 5404], 116 },  /* G4 */
-		{ &_obstructions[ 5520], 116 },  /* G5 */
-		{ &_obstructions[ 5636], 111 },  /* G6 */
-		{ &_obstructions[ 5747],  88 },  /* G7 */
-		{ &_obstructions[ 5835],  61 },  /* G8 */
-		{ &_obstructions[ 5896],  42 },  /* H1 */
-		{ &_obstructions[ 5938],  61 },  /* H2 */
-		{ &_obstructions[ 5999],  77 },  /* H3 */
-		{ &_obstructions[ 6076],  80 },  /* H4 */
-		{ &_obstructions[ 6156],  80 },  /* H5 */
-		{ &_obstructions[ 6236],  77 },  /* H6 */
-		{ &_obstructions[ 6313],  61 },  /* H7 */
-		{ &_obstructions[ 6374],  42 },  /* H8 */
+		{ &_obstructions[   42],  62 },  /* A2 */
+		{ &_obstructions[  104],  77 },  /* A3 */
+		{ &_obstructions[  181],  80 },  /* A4 */
+		{ &_obstructions[  261],  80 },  /* A5 */
+		{ &_obstructions[  341],  77 },  /* A6 */
+		{ &_obstructions[  418],  61 },  /* A7 */
+		{ &_obstructions[  479],  42 },  /* A8 */
+		{ &_obstructions[  521],  62 },  /* B1 */
+		{ &_obstructions[  583],  89 },  /* B2 */
+		{ &_obstructions[  672], 112 },  /* B3 */
+		{ &_obstructions[  784], 116 },  /* B4 */
+		{ &_obstructions[  900], 116 },  /* B5 */
+		{ &_obstructions[ 1016], 111 },  /* B6 */
+		{ &_obstructions[ 1127],  88 },  /* B7 */
+		{ &_obstructions[ 1215],  61 },  /* B8 */
+		{ &_obstructions[ 1276],  78 },  /* C1 */
+		{ &_obstructions[ 1354], 112 },  /* C2 */
+		{ &_obstructions[ 1466], 140 },  /* C3 */
+		{ &_obstructions[ 1606], 146 },  /* C4 */
+		{ &_obstructions[ 1752], 146 },  /* C5 */
+		{ &_obstructions[ 1898], 140 },  /* C6 */
+		{ &_obstructions[ 2038], 111 },  /* C7 */
+		{ &_obstructions[ 2149],  77 },  /* C8 */
+		{ &_obstructions[ 2226],  82 },  /* D1 */
+		{ &_obstructions[ 2308], 118 },  /* D2 */
+		{ &_obstructions[ 2426], 147 },  /* D3 */
+		{ &_obstructions[ 2573], 152 },  /* D4 */
+		{ &_obstructions[ 2725], 152 },  /* D5 */
+		{ &_obstructions[ 2877], 146 },  /* D6 */
+		{ &_obstructions[ 3023], 116 },  /* D7 */
+		{ &_obstructions[ 3139],  80 },  /* D8 */
+		{ &_obstructions[ 3219],  82 },  /* E1 */
+		{ &_obstructions[ 3301], 118 },  /* E2 */
+		{ &_obstructions[ 3419], 146 },  /* E3 */
+		{ &_obstructions[ 3565], 152 },  /* E4 */
+		{ &_obstructions[ 3717], 152 },  /* E5 */
+		{ &_obstructions[ 3869], 146 },  /* E6 */
+		{ &_obstructions[ 4015], 116 },  /* E7 */
+		{ &_obstructions[ 4131],  80 },  /* E8 */
+		{ &_obstructions[ 4211],  79 },  /* F1 */
+		{ &_obstructions[ 4290], 113 },  /* F2 */
+		{ &_obstructions[ 4403], 141 },  /* F3 */
+		{ &_obstructions[ 4544], 146 },  /* F4 */
+		{ &_obstructions[ 4690], 146 },  /* F5 */
+		{ &_obstructions[ 4836], 140 },  /* F6 */
+		{ &_obstructions[ 4976], 111 },  /* F7 */
+		{ &_obstructions[ 5087],  77 },  /* F8 */
+		{ &_obstructions[ 5164],  62 },  /* G1 */
+		{ &_obstructions[ 5226],  89 },  /* G2 */
+		{ &_obstructions[ 5315], 111 },  /* G3 */
+		{ &_obstructions[ 5426], 116 },  /* G4 */
+		{ &_obstructions[ 5542], 116 },  /* G5 */
+		{ &_obstructions[ 5658], 111 },  /* G6 */
+		{ &_obstructions[ 5769],  88 },  /* G7 */
+		{ &_obstructions[ 5857],  61 },  /* G8 */
+		{ &_obstructions[ 5918],  43 },  /* H1 */
+		{ &_obstructions[ 5961],  62 },  /* H2 */
+		{ &_obstructions[ 6023],  78 },  /* H3 */
+		{ &_obstructions[ 6101],  80 },  /* H4 */
+		{ &_obstructions[ 6181],  80 },  /* H5 */
+		{ &_obstructions[ 6261],  77 },  /* H6 */
+		{ &_obstructions[ 6338],  61 },  /* H7 */
+		{ &_obstructions[ 6399],  42 },  /* H8 */
 	},
 	{  /* WhiteQueen */
-		{ &_obstructions[ 6416], 104 },  /* A1 */
-		{ &_obstructions[ 6520], 151 },  /* A2 */
-		{ &_obstructions[ 6671], 161 },  /* A3 */
-		{ &_obstructions[ 6832], 165 },  /* A4 */
-		{ &_obstructions[ 6997], 165 },  /* A5 */
-		{ &_obstructions[ 7162], 161 },  /* A6 */
-		{ &_obstructions[ 7323], 151 },  /* A7 */
-		{ &_obstructions[ 7474], 104 },  /* A8 */
-		{ &_obstructions[ 7578], 151 },  /* B1 */
-		{ &_obstructions[ 7729], 229 },  /* B2 */
-		{ &_obstructions[ 7958], 243 },  /* B3 */
-		{ &_obstructions[ 8201], 249 },  /* B4 */
-		{ &_obstructions[ 8450], 249 },  /* B5 */
-		{ &_obstructions[ 8699], 243 },  /* B6 */
-		{ &_obstructions[ 8942], 229 },  /* B7 */
-		{ &_obstructions[ 9171], 151 },  /* B8 */
-		{ &_obstructions[ 9322], 161 },  /* C1 */
-		{ &_obstructions[ 9483], 243 },  /* C2 */
-		{ &_obstructions[ 9726], 277 },  /* C3 */
-		{ &_obstructions[10003], 287 },  /* C4 */
-		{ &_obstructions[10290], 287 },  /* C5 */
-		{ &_obstructions[10577], 277 },  /* C6 */
-		{ &_obstructions[10854], 243 },  /* C7 */
-		{ &_obstructions[11097], 161 },  /* C8 */
-		{ &_obstructions[11258], 165 },  /* D1 */
-		{ &_obstructions[11423], 249 },  /* D2 */
-		{ &_obstructions[11672], 287 },  /* D3 */
-		{ &_obstructions[11959], 315 },  /* D4 */
-		{ &_obstructions[12274], 315 },  /* D5 */
-		{ &_obstructions[12589], 287 },  /* D6 */
-		{ &_obstructions[12876], 249 },  /* D7 */
-		{ &_obstructions[13125], 165 },  /* D8 */
-		{ &_obstructions[13290], 165 },  /* E1 */
-		{ &_obstructions[13455], 249 },  /* E2 */
-		{ &_obstructions[13704], 287 },  /* E3 */
-		{ &_obstructions[13991], 315 },  /* E4 */
-		{ &_obstructions[14306], 315 },  /* E5 */
-		{ &_obstructions[14621], 287 },  /* E6 */
-		{ &_obstructions[14908], 249 },  /* E7 */
-		{ &_obstructions[15157], 165 },  /* E8 */
-		{ &_obstructions[15322], 161 },  /* F1 */
-		{ &_obstructions[15483], 243 },  /* F2 */
-		{ &_obstructions[15726], 277 },  /* F3 */
-		{ &_obstructions[16003], 287 },  /* F4 */
-		{ &_obstructions[16290], 287 },  /* F5 */
-		{ &_obstructions[16577], 277 },  /* F6 */
-		{ &_obstructions[16854], 243 },  /* F7 */
-		{ &_obstructions[17097], 161 },  /* F8 */
-		{ &_obstructions[17258], 151 },  /* G1 */
-		{ &_obstructions[17409], 229 },  /* G2 */
-		{ &_obstructions[17638], 243 },  /* G3 */
-		{ &_obstructions[17881], 249 },  /* G4 */
-		{ &_obstructions[18130], 249 },  /* G5 */
-		{ &_obstructions[18379], 243 },  /* G6 */
-		{ &_obstructions[18622], 229 },  /* G7 */
-		{ &_obstructions[18851], 151 },  /* G8 */
-		{ &_obstructions[19002], 104 },  /* H1 */
-		{ &_obstructions[19106], 151 },  /* H2 */
-		{ &_obstructions[19257], 161 },  /* H3 */
-		{ &_obstructions[19418], 165 },  /* H4 */
-		{ &_obstructions[19583], 165 },  /* H5 */
-		{ &_obstructions[19748], 161 },  /* H6 */
-		{ &_obstructions[19909], 151 },  /* H7 */
-		{ &_obstructions[20060], 104 },  /* H8 */
+		{ &_obstructions[ 6441], 104 },  /* A1 */
+		{ &_obstructions[ 6545], 151 },  /* A2 */
+		{ &_obstructions[ 6696], 161 },  /* A3 */
+		{ &_obstructions[ 6857], 165 },  /* A4 */
+		{ &_obstructions[ 7022], 165 },  /* A5 */
+		{ &_obstructions[ 7187], 161 },  /* A6 */
+		{ &_obstructions[ 7348], 151 },  /* A7 */
+		{ &_obstructions[ 7499], 104 },  /* A8 */
+		{ &_obstructions[ 7603], 151 },  /* B1 */
+		{ &_obstructions[ 7754], 229 },  /* B2 */
+		{ &_obstructions[ 7983], 243 },  /* B3 */
+		{ &_obstructions[ 8226], 249 },  /* B4 */
+		{ &_obstructions[ 8475], 249 },  /* B5 */
+		{ &_obstructions[ 8724], 243 },  /* B6 */
+		{ &_obstructions[ 8967], 229 },  /* B7 */
+		{ &_obstructions[ 9196], 151 },  /* B8 */
+		{ &_obstructions[ 9347], 161 },  /* C1 */
+		{ &_obstructions[ 9508], 243 },  /* C2 */
+		{ &_obstructions[ 9751], 277 },  /* C3 */
+		{ &_obstructions[10028], 287 },  /* C4 */
+		{ &_obstructions[10315], 287 },  /* C5 */
+		{ &_obstructions[10602], 277 },  /* C6 */
+		{ &_obstructions[10879], 243 },  /* C7 */
+		{ &_obstructions[11122], 161 },  /* C8 */
+		{ &_obstructions[11283], 165 },  /* D1 */
+		{ &_obstructions[11448], 249 },  /* D2 */
+		{ &_obstructions[11697], 287 },  /* D3 */
+		{ &_obstructions[11984], 315 },  /* D4 */
+		{ &_obstructions[12299], 315 },  /* D5 */
+		{ &_obstructions[12614], 287 },  /* D6 */
+		{ &_obstructions[12901], 249 },  /* D7 */
+		{ &_obstructions[13150], 165 },  /* D8 */
+		{ &_obstructions[13315], 165 },  /* E1 */
+		{ &_obstructions[13480], 249 },  /* E2 */
+		{ &_obstructions[13729], 287 },  /* E3 */
+		{ &_obstructions[14016], 315 },  /* E4 */
+		{ &_obstructions[14331], 315 },  /* E5 */
+		{ &_obstructions[14646], 287 },  /* E6 */
+		{ &_obstructions[14933], 249 },  /* E7 */
+		{ &_obstructions[15182], 165 },  /* E8 */
+		{ &_obstructions[15347], 161 },  /* F1 */
+		{ &_obstructions[15508], 243 },  /* F2 */
+		{ &_obstructions[15751], 277 },  /* F3 */
+		{ &_obstructions[16028], 287 },  /* F4 */
+		{ &_obstructions[16315], 287 },  /* F5 */
+		{ &_obstructions[16602], 277 },  /* F6 */
+		{ &_obstructions[16879], 243 },  /* F7 */
+		{ &_obstructions[17122], 161 },  /* F8 */
+		{ &_obstructions[17283], 151 },  /* G1 */
+		{ &_obstructions[17434], 229 },  /* G2 */
+		{ &_obstructions[17663], 243 },  /* G3 */
+		{ &_obstructions[17906], 249 },  /* G4 */
+		{ &_obstructions[18155], 249 },  /* G5 */
+		{ &_obstructions[18404], 243 },  /* G6 */
+		{ &_obstructions[18647], 229 },  /* G7 */
+		{ &_obstructions[18876], 151 },  /* G8 */
+		{ &_obstructions[19027], 104 },  /* H1 */
+		{ &_obstructions[19131], 151 },  /* H2 */
+		{ &_obstructions[19282], 161 },  /* H3 */
+		{ &_obstructions[19443], 165 },  /* H4 */
+		{ &_obstructions[19608], 165 },  /* H5 */
+		{ &_obstructions[19773], 161 },  /* H6 */
+		{ &_obstructions[19934], 151 },  /* H7 */
+		{ &_obstructions[20085], 104 },  /* H8 */
 	},
 	{  /* WhiteRook */
-		{ &_obstructions[20164],  54 },  /* A1 */
-		{ &_obstructions[20218],  72 },  /* A2 */
-		{ &_obstructions[20290],  80 },  /* A3 */
-		{ &_obstructions[20370],  84 },  /* A4 */
-		{ &_obstructions[20454],  84 },  /* A5 */
-		{ &_obstructions[20538],  80 },  /* A6 */
-		{ &_obstructions[20618],  72 },  /* A7 */
-		{ &_obstructions[20690],  54 },  /* A8 */
-		{ &_obstructions[20744],  72 },  /* B1 */
-		{ &_obstructions[20816],  90 },  /* B2 */
-		{ &_obstructions[20906],  98 },  /* B3 */
-		{ &_obstructions[21004], 102 },  /* B4 */
-		{ &_obstructions[21106], 102 },  /* B5 */
-		{ &_obstructions[21208],  98 },  /* B6 */
-		{ &_obstructions[21306],  90 },  /* B7 */
-		{ &_obstructions[21396],  72 },  /* B8 */
-		{ &_obstructions[21468],  80 },  /* C1 */
-		{ &_obstructions[21548],  98 },  /* C2 */
-		{ &_obstructions[21646], 106 },  /* C3 */
-		{ &_obstructions[21752], 110 },  /* C4 */
-		{ &_obstructions[21862], 110 },  /* C5 */
-		{ &_obstructions[21972], 106 },  /* C6 */
-		{ &_obstructions[22078],  98 },  /* C7 */
-		{ &_obstructions[22176],  80 },  /* C8 */
-		{ &_obstructions[22256],  84 },  /* D1 */
-		{ &_obstructions[22340], 102 },  /* D2 */
-		{ &_obstructions[22442], 110 },  /* D3 */
-		{ &_obstructions[22552], 114 },  /* D4 */
-		{ &_obstructions[22666], 114 },  /* D5 */
-		{ &_obstructions[22780], 110 },  /* D6 */
-		{ &_obstructions[22890], 102 },  /* D7 */
-		{ &_obstructions[22992],  84 },  /* D8 */
-		{ &_obstructions[23076],  84 },  /* E1 */
-		{ &_obstructions[23160], 102 },  /* E2 */
-		{ &_obstructions[23262], 110 },  /* E3 */
-		{ &_obstructions[23372], 114 },  /* E4 */
-		{ &_obstructions[23486], 114 },  /* E5 */
-		{ &_obstructions[23600], 110 },  /* E6 */
-		{ &_obstructions[23710], 102 },  /* E7 */
-		{ &_obstructions[23812],  84 },  /* E8 */
-		{ &_obstructions[23896],  80 },  /* F1 */
-		{ &_obstructions[23976],  98 },  /* F2 */
-		{ &_obstructions[24074], 106 },  /* F3 */
-		{ &_obstructions[24180], 110 },  /* F4 */
-		{ &_obstructions[24290], 110 },  /* F5 */
-		{ &_obstructions[24400], 106 },  /* F6 */
-		{ &_obstructions[24506],  98 },  /* F7 */
-		{ &_obstructions[24604],  80 },  /* F8 */
-		{ &_obstructions[24684],  72 },  /* G1 */
-		{ &_obstructions[24756],  90 },  /* G2 */
-		{ &_obstructions[24846],  98 },  /* G3 */
-		{ &_obstructions[24944], 102 },  /* G4 */
-		{ &_obstructions[25046], 102 },  /* G5 */
-		{ &_obstructions[25148],  98 },  /* G6 */
-		{ &_obstructions[25246],  90 },  /* G7 */
-		{ &_obstructions[25336],  72 },  /* G8 */
-		{ &_obstructions[25408],  54 },  /* H1 */
-		{ &_obstructions[25462],  72 },  /* H2 */
-		{ &_obstructions[25534],  80 },  /* H3 */
-		{ &_obstructions[25614],  84 },  /* H4 */
-		{ &_obstructions[25698],  84 },  /* H5 */
-		{ &_obstructions[25782],  80 },  /* H6 */
-		{ &_obstructions[25862],  72 },  /* H7 */
-		{ &_obstructions[25934],  54 },  /* H8 */
+		{ &_obstructions[20189],  54 },  /* A1 */
+		{ &_obstructions[20243],  72 },  /* A2 */
+		{ &_obstructions[20315],  80 },  /* A3 */
+		{ &_obstructions[20395],  84 },  /* A4 */
+		{ &_obstructions[20479],  84 },  /* A5 */
+		{ &_obstructions[20563],  80 },  /* A6 */
+		{ &_obstructions[20643],  72 },  /* A7 */
+		{ &_obstructions[20715],  54 },  /* A8 */
+		{ &_obstructions[20769],  72 },  /* B1 */
+		{ &_obstructions[20841],  90 },  /* B2 */
+		{ &_obstructions[20931],  98 },  /* B3 */
+		{ &_obstructions[21029], 102 },  /* B4 */
+		{ &_obstructions[21131], 102 },  /* B5 */
+		{ &_obstructions[21233],  98 },  /* B6 */
+		{ &_obstructions[21331],  90 },  /* B7 */
+		{ &_obstructions[21421],  72 },  /* B8 */
+		{ &_obstructions[21493],  80 },  /* C1 */
+		{ &_obstructions[21573],  98 },  /* C2 */
+		{ &_obstructions[21671], 106 },  /* C3 */
+		{ &_obstructions[21777], 110 },  /* C4 */
+		{ &_obstructions[21887], 110 },  /* C5 */
+		{ &_obstructions[21997], 106 },  /* C6 */
+		{ &_obstructions[22103],  98 },  /* C7 */
+		{ &_obstructions[22201],  80 },  /* C8 */
+		{ &_obstructions[22281],  84 },  /* D1 */
+		{ &_obstructions[22365], 102 },  /* D2 */
+		{ &_obstructions[22467], 110 },  /* D3 */
+		{ &_obstructions[22577], 114 },  /* D4 */
+		{ &_obstructions[22691], 114 },  /* D5 */
+		{ &_obstructions[22805], 110 },  /* D6 */
+		{ &_obstructions[22915], 102 },  /* D7 */
+		{ &_obstructions[23017],  84 },  /* D8 */
+		{ &_obstructions[23101],  84 },  /* E1 */
+		{ &_obstructions[23185], 102 },  /* E2 */
+		{ &_obstructions[23287], 110 },  /* E3 */
+		{ &_obstructions[23397], 114 },  /* E4 */
+		{ &_obstructions[23511], 114 },  /* E5 */
+		{ &_obstructions[23625], 110 },  /* E6 */
+		{ &_obstructions[23735], 102 },  /* E7 */
+		{ &_obstructions[23837],  84 },  /* E8 */
+		{ &_obstructions[23921],  80 },  /* F1 */
+		{ &_obstructions[24001],  98 },  /* F2 */
+		{ &_obstructions[24099], 106 },  /* F3 */
+		{ &_obstructions[24205], 110 },  /* F4 */
+		{ &_obstructions[24315], 110 },  /* F5 */
+		{ &_obstructions[24425], 106 },  /* F6 */
+		{ &_obstructions[24531],  98 },  /* F7 */
+		{ &_obstructions[24629],  80 },  /* F8 */
+		{ &_obstructions[24709],  72 },  /* G1 */
+		{ &_obstructions[24781],  90 },  /* G2 */
+		{ &_obstructions[24871],  98 },  /* G3 */
+		{ &_obstructions[24969], 102 },  /* G4 */
+		{ &_obstructions[25071], 102 },  /* G5 */
+		{ &_obstructions[25173],  98 },  /* G6 */
+		{ &_obstructions[25271],  90 },  /* G7 */
+		{ &_obstructions[25361],  72 },  /* G8 */
+		{ &_obstructions[25433],  54 },  /* H1 */
+		{ &_obstructions[25487],  72 },  /* H2 */
+		{ &_obstructions[25559],  80 },  /* H3 */
+		{ &_obstructions[25639],  84 },  /* H4 */
+		{ &_obstructions[25723],  84 },  /* H5 */
+		{ &_obstructions[25807],  80 },  /* H6 */
+		{ &_obstructions[25887],  72 },  /* H7 */
+		{ &_obstructions[25959],  54 },  /* H8 */
 	},
 	{  /* WhiteBishop */
-		{ &_obstructions[25988],  22 },  /* A1 */
-		{ &_obstructions[26010],  28 },  /* A2 */
-		{ &_obstructions[26038],  30 },  /* A3 */
-		{ &_obstructions[26068],  30 },  /* A4 */
-		{ &_obstructions[26098],  30 },  /* A5 */
-		{ &_obstructions[26128],  30 },  /* A6 */
-		{ &_obstructions[26158],  28 },  /* A7 */
-		{ &_obstructions[26186],  22 },  /* A8 */
-		{ &_obstructions[26208],  28 },  /* B1 */
-		{ &_obstructions[26236],  51 },  /* B2 */
-		{ &_obstructions[26287],  53 },  /* B3 */
-		{ &_obstructions[26340],  55 },  /* B4 */
-		{ &_obstructions[26395],  55 },  /* B5 */
-		{ &_obstructions[26450],  53 },  /* B6 */
-		{ &_obstructions[26503],  51 },  /* B7 */
-		{ &_obstructions[26554],  28 },  /* B8 */
-		{ &_obstructions[26582],  30 },  /* C1 */
-		{ &_obstructions[26612],  53 },  /* C2 */
-		{ &_obstructions[26665],  75 },  /* C3 */
-		{ &_obstructions[26740],  77 },  /* C4 */
-		{ &_obstructions[26817],  77 },  /* C5 */
-		{ &_obstructions[26894],  75 },  /* C6 */
-		{ &_obstructions[26969],  53 },  /* C7 */
-		{ &_obstructions[27022],  30 },  /* C8 */
-		{ &_obstructions[27052],  30 },  /* D1 */
-		{ &_obstructions[27082],  55 },  /* D2 */
-		{ &_obstructions[27137],  77 },  /* D3 */
-		{ &_obstructions[27214],  97 },  /* D4 */
-		{ &_obstructions[27311],  97 },  /* D5 */
-		{ &_obstructions[27408],  77 },  /* D6 */
-		{ &_obstructions[27485],  55 },  /* D7 */
-		{ &_obstructions[27540],  30 },  /* D8 */
-		{ &_obstructions[27570],  30 },  /* E1 */
-		{ &_obstructions[27600],  55 },  /* E2 */
-		{ &_obstructions[27655],  77 },  /* E3 */
-		{ &_obstructions[27732],  97 },  /* E4 */
-		{ &_obstructions[27829],  97 },  /* E5 */
-		{ &_obstructions[27926],  77 },  /* E6 */
-		{ &_obstructions[28003],  55 },  /* E7 */
-		{ &_obstructions[28058],  30 },  /* E8 */
-		{ &_obstructions[28088],  30 },  /* F1 */
-		{ &_obstructions[28118],  53 },  /* F2 */
-		{ &_obstructions[28171],  75 },  /* F3 */
-		{ &_obstructions[28246],  77 },  /* F4 */
-		{ &_obstructions[28323],  77 },  /* F5 */
-		{ &_obstructions[28400],  75 },  /* F6 */
-		{ &_obstructions[28475],  53 },  /* F7 */
-		{ &_obstructions[28528],  30 },  /* F8 */
-		{ &_obstructions[28558],  28 },  /* G1 */
-		{ &_obstructions[28586],  51 },  /* G2 */
-		{ &_obstructions[28637],  53 },  /* G3 */
-		{ &_obstructions[28690],  55 },  /* G4 */
-		{ &_obstructions[28745],  55 },  /* G5 */
-		{ &_obstructions[28800],  53 },  /* G6 */
-		{ &_obstructions[28853],  51 },  /* G7 */
-		{ &_obstructions[28904],  28 },  /* G8 */
-		{ &_obstructions[28932],  22 },  /* H1 */
-		{ &_obstructions[28954],  28 },  /* H2 */
-		{ &_obstructions[28982],  30 },  /* H3 */
-		{ &_obstructions[29012],  30 },  /* H4 */
-		{ &_obstructions[29042],  30 },  /* H5 */
-		{ &_obstructions[29072],  30 },  /* H6 */
-		{ &_obstructions[29102],  28 },  /* H7 */
-		{ &_obstructions[29130],  22 },  /* H8 */
+		{ &_obstructions[26013],  22 },  /* A1 */
+		{ &_obstructions[26035],  28 },  /* A2 */
+		{ &_obstructions[26063],  30 },  /* A3 */
+		{ &_obstructions[26093],  30 },  /* A4 */
+		{ &_obstructions[26123],  30 },  /* A5 */
+		{ &_obstructions[26153],  30 },  /* A6 */
+		{ &_obstructions[26183],  28 },  /* A7 */
+		{ &_obstructions[26211],  22 },  /* A8 */
+		{ &_obstructions[26233],  28 },  /* B1 */
+		{ &_obstructions[26261],  51 },  /* B2 */
+		{ &_obstructions[26312],  53 },  /* B3 */
+		{ &_obstructions[26365],  55 },  /* B4 */
+		{ &_obstructions[26420],  55 },  /* B5 */
+		{ &_obstructions[26475],  53 },  /* B6 */
+		{ &_obstructions[26528],  51 },  /* B7 */
+		{ &_obstructions[26579],  28 },  /* B8 */
+		{ &_obstructions[26607],  30 },  /* C1 */
+		{ &_obstructions[26637],  53 },  /* C2 */
+		{ &_obstructions[26690],  75 },  /* C3 */
+		{ &_obstructions[26765],  77 },  /* C4 */
+		{ &_obstructions[26842],  77 },  /* C5 */
+		{ &_obstructions[26919],  75 },  /* C6 */
+		{ &_obstructions[26994],  53 },  /* C7 */
+		{ &_obstructions[27047],  30 },  /* C8 */
+		{ &_obstructions[27077],  30 },  /* D1 */
+		{ &_obstructions[27107],  55 },  /* D2 */
+		{ &_obstructions[27162],  77 },  /* D3 */
+		{ &_obstructions[27239],  97 },  /* D4 */
+		{ &_obstructions[27336],  97 },  /* D5 */
+		{ &_obstructions[27433],  77 },  /* D6 */
+		{ &_obstructions[27510],  55 },  /* D7 */
+		{ &_obstructions[27565],  30 },  /* D8 */
+		{ &_obstructions[27595],  30 },  /* E1 */
+		{ &_obstructions[27625],  55 },  /* E2 */
+		{ &_obstructions[27680],  77 },  /* E3 */
+		{ &_obstructions[27757],  97 },  /* E4 */
+		{ &_obstructions[27854],  97 },  /* E5 */
+		{ &_obstructions[27951],  77 },  /* E6 */
+		{ &_obstructions[28028],  55 },  /* E7 */
+		{ &_obstructions[28083],  30 },  /* E8 */
+		{ &_obstructions[28113],  30 },  /* F1 */
+		{ &_obstructions[28143],  53 },  /* F2 */
+		{ &_obstructions[28196],  75 },  /* F3 */
+		{ &_obstructions[28271],  77 },  /* F4 */
+		{ &_obstructions[28348],  77 },  /* F5 */
+		{ &_obstructions[28425],  75 },  /* F6 */
+		{ &_obstructions[28500],  53 },  /* F7 */
+		{ &_obstructions[28553],  30 },  /* F8 */
+		{ &_obstructions[28583],  28 },  /* G1 */
+		{ &_obstructions[28611],  51 },  /* G2 */
+		{ &_obstructions[28662],  53 },  /* G3 */
+		{ &_obstructions[28715],  55 },  /* G4 */
+		{ &_obstructions[28770],  55 },  /* G5 */
+		{ &_obstructions[28825],  53 },  /* G6 */
+		{ &_obstructions[28878],  51 },  /* G7 */
+		{ &_obstructions[28929],  28 },  /* G8 */
+		{ &_obstructions[28957],  22 },  /* H1 */
+		{ &_obstructions[28979],  28 },  /* H2 */
+		{ &_obstructions[29007],  30 },  /* H3 */
+		{ &_obstructions[29037],  30 },  /* H4 */
+		{ &_obstructions[29067],  30 },  /* H5 */
+		{ &_obstructions[29097],  30 },  /* H6 */
+		{ &_obstructions[29127],  28 },  /* H7 */
+		{ &_obstructions[29155],  22 },  /* H8 */
 	},
 	{  /* WhiteKnight */
-		{ &_obstructions[29152],  14 },  /* A1 */
-		{ &_obstructions[29166],  21 },  /* A2 */
-		{ &_obstructions[29187],  27 },  /* A3 */
-		{ &_obstructions[29214],  30 },  /* A4 */
-		{ &_obstructions[29244],  30 },  /* A5 */
-		{ &_obstructions[29274],  27 },  /* A6 */
-		{ &_obstructions[29301],  21 },  /* A7 */
-		{ &_obstructions[29322],  14 },  /* A8 */
-		{ &_obstructions[29336],  21 },  /* B1 */
-		{ &_obstructions[29357],  28 },  /* B2 */
-		{ &_obstructions[29385],  38 },  /* B3 */
-		{ &_obstructions[29423],  43 },  /* B4 */
-		{ &_obstructions[29466],  43 },  /* B5 */
-		{ &_obstructions[29509],  38 },  /* B6 */
-		{ &_obstructions[29547],  28 },  /* B7 */
-		{ &_obstructions[29575],  21 },  /* B8 */
-		{ &_obstructions[29596],  27 },  /* C1 */
-		{ &_obstructions[29623],  38 },  /* C2 */
-		{ &_obstructions[29661],  50 },  /* C3 */
-		{ &_obstructions[29711],  56 },  /* C4 */
-		{ &_obstructions[29767],  56 },  /* C5 */
-		{ &_obstructions[29823],  50 },  /* C6 */
-		{ &_obstructions[29873],  38 },  /* C7 */
-		{ &_obstructions[29911],  27 },  /* C8 */
-		{ &_obstructions[29938],  30 },  /* D1 */
-		{ &_obstructions[29968],  43 },  /* D2 */
-		{ &_obstructions[30011],  56 },  /* D3 */
-		{ &_obstructions[30067],  64 },  /* D4 */
-		{ &_obstructions[30131],  64 },  /* D5 */
-		{ &_obstructions[30195],  56 },  /* D6 */
-		{ &_obstructions[30251],  43 },  /* D7 */
-		{ &_obstructions[30294],  30 },  /* D8 */
-		{ &_obstructions[30324],  30 },  /* E1 */
-		{ &_obstructions[30354],  43 },  /* E2 */
-		{ &_obstructions[30397],  56 },  /* E3 */
-		{ &_obstructions[30453],  64 },  /* E4 */
-		{ &_obstructions[30517],  64 },  /* E5 */
-		{ &_obstructions[30581],  56 },  /* E6 */
-		{ &_obstructions[30637],  43 },  /* E7 */
-		{ &_obstructions[30680],  30 },  /* E8 */
-		{ &_obstructions[30710],  27 },  /* F1 */
-		{ &_obstructions[30737],  38 },  /* F2 */
-		{ &_obstructions[30775],  50 },  /* F3 */
-		{ &_obstructions[30825],  56 },  /* F4 */
-		{ &_obstructions[30881],  56 },  /* F5 */
-		{ &_obstructions[30937],  50 },  /* F6 */
-		{ &_obstructions[30987],  38 },  /* F7 */
-		{ &_obstructions[31025],  27 },  /* F8 */
-		{ &_obstructions[31052],  21 },  /* G1 */
-		{ &_obstructions[31073],  28 },  /* G2 */
-		{ &_obstructions[31101],  38 },  /* G3 */
-		{ &_obstructions[31139],  43 },  /* G4 */
-		{ &_obstructions[31182],  43 },  /* G5 */
-		{ &_obstructions[31225],  38 },  /* G6 */
-		{ &_obstructions[31263],  28 },  /* G7 */
-		{ &_obstructions[31291],  21 },  /* G8 */
-		{ &_obstructions[31312],  14 },  /* H1 */
-		{ &_obstructions[31326],  21 },  /* H2 */
-		{ &_obstructions[31347],  27 },  /* H3 */
-		{ &_obstructions[31374],  30 },  /* H4 */
-		{ &_obstructions[31404],  30 },  /* H5 */
-		{ &_obstructions[31434],  27 },  /* H6 */
-		{ &_obstructions[31461],  21 },  /* H7 */
-		{ &_obstructions[31482],  14 },  /* H8 */
+		{ &_obstructions[29177],  14 },  /* A1 */
+		{ &_obstructions[29191],  21 },  /* A2 */
+		{ &_obstructions[29212],  27 },  /* A3 */
+		{ &_obstructions[29239],  30 },  /* A4 */
+		{ &_obstructions[29269],  30 },  /* A5 */
+		{ &_obstructions[29299],  27 },  /* A6 */
+		{ &_obstructions[29326],  21 },  /* A7 */
+		{ &_obstructions[29347],  14 },  /* A8 */
+		{ &_obstructions[29361],  21 },  /* B1 */
+		{ &_obstructions[29382],  28 },  /* B2 */
+		{ &_obstructions[29410],  38 },  /* B3 */
+		{ &_obstructions[29448],  43 },  /* B4 */
+		{ &_obstructions[29491],  43 },  /* B5 */
+		{ &_obstructions[29534],  38 },  /* B6 */
+		{ &_obstructions[29572],  28 },  /* B7 */
+		{ &_obstructions[29600],  21 },  /* B8 */
+		{ &_obstructions[29621],  27 },  /* C1 */
+		{ &_obstructions[29648],  38 },  /* C2 */
+		{ &_obstructions[29686],  50 },  /* C3 */
+		{ &_obstructions[29736],  56 },  /* C4 */
+		{ &_obstructions[29792],  56 },  /* C5 */
+		{ &_obstructions[29848],  50 },  /* C6 */
+		{ &_obstructions[29898],  38 },  /* C7 */
+		{ &_obstructions[29936],  27 },  /* C8 */
+		{ &_obstructions[29963],  30 },  /* D1 */
+		{ &_obstructions[29993],  43 },  /* D2 */
+		{ &_obstructions[30036],  56 },  /* D3 */
+		{ &_obstructions[30092],  64 },  /* D4 */
+		{ &_obstructions[30156],  64 },  /* D5 */
+		{ &_obstructions[30220],  56 },  /* D6 */
+		{ &_obstructions[30276],  43 },  /* D7 */
+		{ &_obstructions[30319],  30 },  /* D8 */
+		{ &_obstructions[30349],  30 },  /* E1 */
+		{ &_obstructions[30379],  43 },  /* E2 */
+		{ &_obstructions[30422],  56 },  /* E3 */
+		{ &_obstructions[30478],  64 },  /* E4 */
+		{ &_obstructions[30542],  64 },  /* E5 */
+		{ &_obstructions[30606],  56 },  /* E6 */
+		{ &_obstructions[30662],  43 },  /* E7 */
+		{ &_obstructions[30705],  30 },  /* E8 */
+		{ &_obstructions[30735],  27 },  /* F1 */
+		{ &_obstructions[30762],  38 },  /* F2 */
+		{ &_obstructions[30800],  50 },  /* F3 */
+		{ &_obstructions[30850],  56 },  /* F4 */
+		{ &_obstructions[30906],  56 },  /* F5 */
+		{ &_obstructions[30962],  50 },  /* F6 */
+		{ &_obstructions[31012],  38 },  /* F7 */
+		{ &_obstructions[31050],  27 },  /* F8 */
+		{ &_obstructions[31077],  21 },  /* G1 */
+		{ &_obstructions[31098],  28 },  /* G2 */
+		{ &_obstructions[31126],  38 },  /* G3 */
+		{ &_obstructions[31164],  43 },  /* G4 */
+		{ &_obstructions[31207],  43 },  /* G5 */
+		{ &_obstructions[31250],  38 },  /* G6 */
+		{ &_obstructions[31288],  28 },  /* G7 */
+		{ &_obstructions[31316],  21 },  /* G8 */
+		{ &_obstructions[31337],  14 },  /* H1 */
+		{ &_obstructions[31351],  21 },  /* H2 */
+		{ &_obstructions[31372],  27 },  /* H3 */
+		{ &_obstructions[31399],  30 },  /* H4 */
+		{ &_obstructions[31429],  30 },  /* H5 */
+		{ &_obstructions[31459],  27 },  /* H6 */
+		{ &_obstructions[31486],  21 },  /* H7 */
+		{ &_obstructions[31507],  14 },  /* H8 */
 	},
 	{  /* WhitePawn */
-		{ &_obstructions[31496],   0 },  /* A1 */
-		{ &_obstructions[31496],   3 },  /* A2 */
-		{ &_obstructions[31499],   8 },  /* A3 */
-		{ &_obstructions[31507],   7 },  /* A4 */
-		{ &_obstructions[31514],   6 },  /* A5 */
-		{ &_obstructions[31520],   6 },  /* A6 */
-		{ &_obstructions[31526],   6 },  /* A7 */
-		{ &_obstructions[31532],   4 },  /* A8 */
-		{ &_obstructions[31536],   0 },  /* B1 */
-		{ &_obstructions[31536],   4 },  /* B2 */
-		{ &_obstructions[31540],  12 },  /* B3 */
-		{ &_obstructions[31552],  10 },  /* B4 */
-		{ &_obstructions[31562],   9 },  /* B5 */
-		{ &_obstructions[31571],   9 },  /* B6 */
-		{ &_obstructions[31580],   9 },  /* B7 */
-		{ &_obstructions[31589],   6 },  /* B8 */
-		{ &_obstructions[31595],   0 },  /* C1 */
-		{ &_obstructions[31595],   4 },  /* C2 */
-		{ &_obstructions[31599],  13 },  /* C3 */
-		{ &_obstructions[31612],  11 },  /* C4 */
-		{ &_obstructions[31623],  10 },  /* C5 */
-		{ &_obstructions[31633],  10 },  /* C6 */
-		{ &_obstructions[31643],  10 },  /* C7 */
-		{ &_obstructions[31653],   7 },  /* C8 */
-		{ &_obstructions[31660],   0 },  /* D1 */
-		{ &_obstructions[31660],   4 },  /* D2 */
-		{ &_obstructions[31664],  13 },  /* D3 */
-		{ &_obstructions[31677],  11 },  /* D4 */
-		{ &_obstructions[31688],  10 },  /* D5 */
-		{ &_obstructions[31698],  10 },  /* D6 */
-		{ &_obstructions[31708],  10 },  /* D7 */
-		{ &_obstructions[31718],   7 },  /* D8 */
-		{ &_obstructions[31725],   0 },  /* E1 */
-		{ &_obstructions[31725],   4 },  /* E2 */
-		{ &_obstructions[31729],  13 },  /* E3 */
-		{ &_obstructions[31742],  11 },  /* E4 */
-		{ &_obstructions[31753],  10 },  /* E5 */
-		{ &_obstructions[31763],  10 },  /* E6 */
-		{ &_obstructions[31773],  10 },  /* E7 */
-		{ &_obstructions[31783],   7 },  /* E8 */
-		{ &_obstructions[31790],   0 },  /* F1 */
-		{ &_obstructions[31790],   4 },  /* F2 */
-		{ &_obstructions[31794],  13 },  /* F3 */
-		{ &_obstructions[31807],  11 },  /* F4 */
-		{ &_obstructions[31818],  10 },  /* F5 */
-		{ &_obstructions[31828],  10 },  /* F6 */
-		{ &_obstructions[31838],  10 },  /* F7 */
-		{ &_obstructions[31848],   7 },  /* F8 */
-		{ &_obstructions[31855],   0 },  /* G1 */
-		{ &_obstructions[31855],   4 },  /* G2 */
-		{ &_obstructions[31859],  12 },  /* G3 */
-		{ &_obstructions[31871],  10 },  /* G4 */
-		{ &_obstructions[31881],   9 },  /* G5 */
-		{ &_obstructions[31890],   9 },  /* G6 */
-		{ &_obstructions[31899],   9 },  /* G7 */
-		{ &_obstructions[31908],   6 },  /* G8 */
-		{ &_obstructions[31914],   0 },  /* H1 */
-		{ &_obstructions[31914],   3 },  /* H2 */
-		{ &_obstructions[31917],   8 },  /* H3 */
-		{ &_obstructions[31925],   7 },  /* H4 */
-		{ &_obstructions[31932],   6 },  /* H5 */
-		{ &_obstructions[31938],   6 },  /* H6 */
-		{ &_obstructions[31944],   6 },  /* H7 */
-		{ &_obstructions[31950],   4 },  /* H8 */
+		{ &_obstructions[31521],   0 },  /* A1 */
+		{ &_obstructions[31521],   3 },  /* A2 */
+		{ &_obstructions[31524],   8 },  /* A3 */
+		{ &_obstructions[31532],   7 },  /* A4 */
+		{ &_obstructions[31539],   6 },  /* A5 */
+		{ &_obstructions[31545],   6 },  /* A6 */
+		{ &_obstructions[31551],   6 },  /* A7 */
+		{ &_obstructions[31557],   4 },  /* A8 */
+		{ &_obstructions[31561],   0 },  /* B1 */
+		{ &_obstructions[31561],   4 },  /* B2 */
+		{ &_obstructions[31565],  12 },  /* B3 */
+		{ &_obstructions[31577],  10 },  /* B4 */
+		{ &_obstructions[31587],   9 },  /* B5 */
+		{ &_obstructions[31596],   9 },  /* B6 */
+		{ &_obstructions[31605],   9 },  /* B7 */
+		{ &_obstructions[31614],   6 },  /* B8 */
+		{ &_obstructions[31620],   0 },  /* C1 */
+		{ &_obstructions[31620],   4 },  /* C2 */
+		{ &_obstructions[31624],  13 },  /* C3 */
+		{ &_obstructions[31637],  11 },  /* C4 */
+		{ &_obstructions[31648],  10 },  /* C5 */
+		{ &_obstructions[31658],  10 },  /* C6 */
+		{ &_obstructions[31668],  10 },  /* C7 */
+		{ &_obstructions[31678],   7 },  /* C8 */
+		{ &_obstructions[31685],   0 },  /* D1 */
+		{ &_obstructions[31685],   4 },  /* D2 */
+		{ &_obstructions[31689],  13 },  /* D3 */
+		{ &_obstructions[31702],  11 },  /* D4 */
+		{ &_obstructions[31713],  10 },  /* D5 */
+		{ &_obstructions[31723],  10 },  /* D6 */
+		{ &_obstructions[31733],  10 },  /* D7 */
+		{ &_obstructions[31743],   7 },  /* D8 */
+		{ &_obstructions[31750],   0 },  /* E1 */
+		{ &_obstructions[31750],   4 },  /* E2 */
+		{ &_obstructions[31754],  13 },  /* E3 */
+		{ &_obstructions[31767],  11 },  /* E4 */
+		{ &_obstructions[31778],  10 },  /* E5 */
+		{ &_obstructions[31788],  10 },  /* E6 */
+		{ &_obstructions[31798],  10 },  /* E7 */
+		{ &_obstructions[31808],   7 },  /* E8 */
+		{ &_obstructions[31815],   0 },  /* F1 */
+		{ &_obstructions[31815],   4 },  /* F2 */
+		{ &_obstructions[31819],  13 },  /* F3 */
+		{ &_obstructions[31832],  11 },  /* F4 */
+		{ &_obstructions[31843],  10 },  /* F5 */
+		{ &_obstructions[31853],  10 },  /* F6 */
+		{ &_obstructions[31863],  10 },  /* F7 */
+		{ &_obstructions[31873],   7 },  /* F8 */
+		{ &_obstructions[31880],   0 },  /* G1 */
+		{ &_obstructions[31880],   4 },  /* G2 */
+		{ &_obstructions[31884],  12 },  /* G3 */
+		{ &_obstructions[31896],  10 },  /* G4 */
+		{ &_obstructions[31906],   9 },  /* G5 */
+		{ &_obstructions[31915],   9 },  /* G6 */
+		{ &_obstructions[31924],   9 },  /* G7 */
+		{ &_obstructions[31933],   6 },  /* G8 */
+		{ &_obstructions[31939],   0 },  /* H1 */
+		{ &_obstructions[31939],   3 },  /* H2 */
+		{ &_obstructions[31942],   8 },  /* H3 */
+		{ &_obstructions[31950],   7 },  /* H4 */
+		{ &_obstructions[31957],   6 },  /* H5 */
+		{ &_obstructions[31963],   6 },  /* H6 */
+		{ &_obstructions[31969],   6 },  /* H7 */
+		{ &_obstructions[31975],   4 },  /* H8 */
 	},
 	{  /* BlackKing */
-		{ &_obstructions[31954],  42 },  /* A1 */
-		{ &_obstructions[31996],  61 },  /* A2 */
-		{ &_obstructions[32057],  77 },  /* A3 */
-		{ &_obstructions[32134],  80 },  /* A4 */
-		{ &_obstructions[32214],  80 },  /* A5 */
-		{ &_obstructions[32294],  77 },  /* A6 */
-		{ &_obstructions[32371],  61 },  /* A7 */
-		{ &_obstructions[32432],  42 },  /* A8 */
-		{ &_obstructions[32474],  61 },  /* B1 */
-		{ &_obstructions[32535],  88 },  /* B2 */
-		{ &_obstructions[32623], 111 },  /* B3 */
-		{ &_obstructions[32734], 116 },  /* B4 */
-		{ &_obstructions[32850], 116 },  /* B5 */
-		{ &_obstructions[32966], 111 },  /* B6 */
-		{ &_obstructions[33077],  88 },  /* B7 */
-		{ &_obstructions[33165],  61 },  /* B8 */
-		{ &_obstructions[33226],  77 },  /* C1 */
-		{ &_obstructions[33303], 111 },  /* C2 */
-		{ &_obstructions[33414], 140 },  /* C3 */
-		{ &_obstructions[33554], 146 },  /* C4 */
-		{ &_obstructions[33700], 146 },  /* C5 */
-		{ &_obstructions[33846], 140 },  /* C6 */
-		{ &_obstructions[33986], 111 },  /* C7 */
-		{ &_obstructions[34097],  77 },  /* C8 */
-		{ &_obstructions[34174],  80 },  /* D1 */
-		{ &_obstructions[34254], 116 },  /* D2 */
-		{ &_obstructions[34370], 146 },  /* D3 */
-		{ &_obstructions[34516], 152 },  /* D4 */
-		{ &_obstructions[34668], 152 },  /* D5 */
-		{ &_obstructions[34820], 146 },  /* D6 */
-		{ &_obstructions[34966], 116 },  /* D7 */
-		{ &_obstructions[35082],  80 },  /* D8 */
-		{ &_obstructions[35162],  80 },  /* E1 */
-		{ &_obstructions[35242], 116 },  /* E2 */
-		{ &_obstructions[35358], 146 },  /* E3 */
-		{ &_obstructions[35504], 152 },  /* E4 */
-		{ &_obstructions[35656], 152 },  /* E5 */
-		{ &_obstructions[35808], 146 },  /* E6 */
-		{ &_obstructions[35954], 116 },  /* E7 */
-		{ &_obstructions[36070],  80 },  /* E8 */
-		{ &_obstructions[36150],  77 },  /* F1 */
-		{ &_obstructions[36227], 111 },  /* F2 */
-		{ &_obstructions[36338], 140 },  /* F3 */
-		{ &_obstructions[36478], 146 },  /* F4 */
-		{ &_obstructions[36624], 146 },  /* F5 */
-		{ &_obstructions[36770], 140 },  /* F6 */
-		{ &_obstructions[36910], 111 },  /* F7 */
-		{ &_obstructions[37021],  77 },  /* F8 */
-		{ &_obstructions[37098],  61 },  /* G1 */
-		{ &_obstructions[37159],  88 },  /* G2 */
-		{ &_obstructions[37247], 111 },  /* G3 */
-		{ &_obstructions[37358], 116 },  /* G4 */
-		{ &_obstructions[37474], 116 },  /* G5 */
-		{ &_obstructions[37590], 111 },  /* G6 */
-		{ &_obstructions[37701],  88 },  /* G7 */
-		{ &_obstructions[37789],  61 },  /* G8 */
-		{ &_obstructions[37850],  42 },  /* H1 */
-		{ &_obstructions[37892],  61 },  /* H2 */
-		{ &_obstructions[37953],  77 },  /* H3 */
-		{ &_obstructions[38030],  80 },  /* H4 */
-		{ &_obstructions[38110],  80 },  /* H5 */
-		{ &_obstructions[38190],  77 },  /* H6 */
-		{ &_obstructions[38267],  61 },  /* H7 */
-		{ &_obstructions[38328],  42 },  /* H8 */
+		{ &_obstructions[31979],  42 },  /* A1 */
+		{ &_obstructions[32021],  61 },  /* A2 */
+		{ &_obstructions[32082],  77 },  /* A3 */
+		{ &_obstructions[32159],  80 },  /* A4 */
+		{ &_obstructions[32239],  80 },  /* A5 */
+		{ &_obstructions[32319],  77 },  /* A6 */
+		{ &_obstructions[32396],  62 },  /* A7 */
+		{ &_obstructions[32458],  42 },  /* A8 */
+		{ &_obstructions[32500],  61 },  /* B1 */
+		{ &_obstructions[32561],  88 },  /* B2 */
+		{ &_obstructions[32649], 111 },  /* B3 */
+		{ &_obstructions[32760], 116 },  /* B4 */
+		{ &_obstructions[32876], 116 },  /* B5 */
+		{ &_obstructions[32992], 112 },  /* B6 */
+		{ &_obstructions[33104],  89 },  /* B7 */
+		{ &_obstructions[33193],  62 },  /* B8 */
+		{ &_obstructions[33255],  77 },  /* C1 */
+		{ &_obstructions[33332], 111 },  /* C2 */
+		{ &_obstructions[33443], 140 },  /* C3 */
+		{ &_obstructions[33583], 146 },  /* C4 */
+		{ &_obstructions[33729], 146 },  /* C5 */
+		{ &_obstructions[33875], 140 },  /* C6 */
+		{ &_obstructions[34015], 112 },  /* C7 */
+		{ &_obstructions[34127],  78 },  /* C8 */
+		{ &_obstructions[34205],  80 },  /* D1 */
+		{ &_obstructions[34285], 116 },  /* D2 */
+		{ &_obstructions[34401], 146 },  /* D3 */
+		{ &_obstructions[34547], 152 },  /* D4 */
+		{ &_obstructions[34699], 152 },  /* D5 */
+		{ &_obstructions[34851], 147 },  /* D6 */
+		{ &_obstructions[34998], 118 },  /* D7 */
+		{ &_obstructions[35116],  82 },  /* D8 */
+		{ &_obstructions[35198],  80 },  /* E1 */
+		{ &_obstructions[35278], 116 },  /* E2 */
+		{ &_obstructions[35394], 146 },  /* E3 */
+		{ &_obstructions[35540], 152 },  /* E4 */
+		{ &_obstructions[35692], 152 },  /* E5 */
+		{ &_obstructions[35844], 146 },  /* E6 */
+		{ &_obstructions[35990], 118 },  /* E7 */
+		{ &_obstructions[36108],  82 },  /* E8 */
+		{ &_obstructions[36190],  77 },  /* F1 */
+		{ &_obstructions[36267], 111 },  /* F2 */
+		{ &_obstructions[36378], 140 },  /* F3 */
+		{ &_obstructions[36518], 146 },  /* F4 */
+		{ &_obstructions[36664], 146 },  /* F5 */
+		{ &_obstructions[36810], 141 },  /* F6 */
+		{ &_obstructions[36951], 113 },  /* F7 */
+		{ &_obstructions[37064],  79 },  /* F8 */
+		{ &_obstructions[37143],  61 },  /* G1 */
+		{ &_obstructions[37204],  88 },  /* G2 */
+		{ &_obstructions[37292], 111 },  /* G3 */
+		{ &_obstructions[37403], 116 },  /* G4 */
+		{ &_obstructions[37519], 116 },  /* G5 */
+		{ &_obstructions[37635], 111 },  /* G6 */
+		{ &_obstructions[37746],  89 },  /* G7 */
+		{ &_obstructions[37835],  62 },  /* G8 */
+		{ &_obstructions[37897],  42 },  /* H1 */
+		{ &_obstructions[37939],  61 },  /* H2 */
+		{ &_obstructions[38000],  77 },  /* H3 */
+		{ &_obstructions[38077],  80 },  /* H4 */
+		{ &_obstructions[38157],  80 },  /* H5 */
+		{ &_obstructions[38237],  78 },  /* H6 */
+		{ &_obstructions[38315],  62 },  /* H7 */
+		{ &_obstructions[38377],  43 },  /* H8 */
 	},
 	{  /* BlackQueen */
-		{ &_obstructions[38370], 104 },  /* A1 */
-		{ &_obstructions[38474], 151 },  /* A2 */
-		{ &_obstructions[38625], 161 },  /* A3 */
-		{ &_obstructions[38786], 165 },  /* A4 */
-		{ &_obstructions[38951], 165 },  /* A5 */
-		{ &_obstructions[39116], 161 },  /* A6 */
-		{ &_obstructions[39277], 151 },  /* A7 */
-		{ &_obstructions[39428], 104 },  /* A8 */
-		{ &_obstructions[39532], 151 },  /* B1 */
-		{ &_obstructions[39683], 229 },  /* B2 */
-		{ &_obstructions[39912], 243 },  /* B3 */
-		{ &_obstructions[40155], 249 },  /* B4 */
-		{ &_obstructions[40404], 249 },  /* B5 */
-		{ &_obstructions[40653], 243 },  /* B6 */
-		{ &_obstructions[40896], 229 },  /* B7 */
-		{ &_obstructions[41125], 151 },  /* B8 */
-		{ &_obstructions[41276], 161 },  /* C1 */
-		{ &_obstructions[41437], 243 },  /* C2 */
-		{ &_obstructions[41680], 277 },  /* C3 */
-		{ &_obstructions[41957], 287 },  /* C4 */
-		{ &_obstructions[42244], 287 },  /* C5 */
-		{ &_obstructions[42531], 277 },  /* C6 */
-		{ &_obstructions[42808], 243 },  /* C7 */
-		{ &_obstructions[43051], 161 },  /* C8 */
-		{ &_obstructions[43212], 165 },  /* D1 */
-		{ &_obstructions[43377], 249 },  /* D2 */
-		{ &_obstructions[43626], 287 },  /* D3 */
-		{ &_obstructions[43913], 315 },  /* D4 */
-		{ &_obstructions[44228], 315 },  /* D5 */
-		{ &_obstructions[44543], 287 },  /* D6 */
-		{ &_obstructions[44830], 249 },  /* D7 */
-		{ &_obstructions[45079], 165 },  /* D8 */
-		{ &_obstructions[45244], 165 },  /* E1 */
-		{ &_obstructions[45409], 249 },  /* E2 */
-		{ &_obstructions[45658], 287 },  /* E3 */
-		{ &_obstructions[45945], 315 },  /* E4 */
-		{ &_obstructions[46260], 315 },  /* E5 */
-		{ &_obstructions[46575], 287 },  /* E6 */
-		{ &_obstructions[46862], 249 },  /* E7 */
-		{ &_obstructions[47111], 165 },  /* E8 */
-		{ &_obstructions[47276], 161 },  /* F1 */
-		{ &_obstructions[47437], 243 },  /* F2 */
-		{ &_obstructions[47680], 277 },  /* F3 */
-		{ &_obstructions[47957], 287 },  /* F4 */
-		{ &_obstructions[48244], 287 },  /* F5 */
-		{ &_obstructions[48531], 277 },  /* F6 */
-		{ &_obstructions[48808], 243 },  /* F7 */
-		{ &_obstructions[49051], 161 },  /* F8 */
-		{ &_obstructions[49212], 151 },  /* G1 */
-		{ &_obstructions[49363], 229 },  /* G2 */
-		{ &_obstructions[49592], 243 },  /* G3 */
-		{ &_obstructions[49835], 249 },  /* G4 */
-		{ &_obstructions[50084], 249 },  /* G5 */
-		{ &_obstructions[50333], 243 },  /* G6 */
-		{ &_obstructions[50576], 229 },  /* G7 */
-		{ &_obstructions[50805], 151 },  /* G8 */
-		{ &_obstructions[50956], 104 },  /* H1 */
-		{ &_obstructions[51060], 151 },  /* H2 */
-		{ &_obstructions[51211], 161 },  /* H3 */
-		{ &_obstructions[51372], 165 },  /* H4 */
-		{ &_obstructions[51537], 165 },  /* H5 */
-		{ &_obstructions[51702], 161 },  /* H6 */
-		{ &_obstructions[51863], 151 },  /* H7 */
-		{ &_obstructions[52014], 104 },  /* H8 */
+		{ &_obstructions[38420], 104 },  /* A1 */
+		{ &_obstructions[38524], 151 },  /* A2 */
+		{ &_obstructions[38675], 161 },  /* A3 */
+		{ &_obstructions[38836], 165 },  /* A4 */
+		{ &_obstructions[39001], 165 },  /* A5 */
+		{ &_obstructions[39166], 161 },  /* A6 */
+		{ &_obstructions[39327], 151 },  /* A7 */
+		{ &_obstructions[39478], 104 },  /* A8 */
+		{ &_obstructions[39582], 151 },  /* B1 */
+		{ &_obstructions[39733], 229 },  /* B2 */
+		{ &_obstructions[39962], 243 },  /* B3 */
+		{ &_obstructions[40205], 249 },  /* B4 */
+		{ &_obstructions[40454], 249 },  /* B5 */
+		{ &_obstructions[40703], 243 },  /* B6 */
+		{ &_obstructions[40946], 229 },  /* B7 */
+		{ &_obstructions[41175], 151 },  /* B8 */
+		{ &_obstructions[41326], 161 },  /* C1 */
+		{ &_obstructions[41487], 243 },  /* C2 */
+		{ &_obstructions[41730], 277 },  /* C3 */
+		{ &_obstructions[42007], 287 },  /* C4 */
+		{ &_obstructions[42294], 287 },  /* C5 */
+		{ &_obstructions[42581], 277 },  /* C6 */
+		{ &_obstructions[42858], 243 },  /* C7 */
+		{ &_obstructions[43101], 161 },  /* C8 */
+		{ &_obstructions[43262], 165 },  /* D1 */
+		{ &_obstructions[43427], 249 },  /* D2 */
+		{ &_obstructions[43676], 287 },  /* D3 */
+		{ &_obstructions[43963], 315 },  /* D4 */
+		{ &_obstructions[44278], 315 },  /* D5 */
+		{ &_obstructions[44593], 287 },  /* D6 */
+		{ &_obstructions[44880], 249 },  /* D7 */
+		{ &_obstructions[45129], 165 },  /* D8 */
+		{ &_obstructions[45294], 165 },  /* E1 */
+		{ &_obstructions[45459], 249 },  /* E2 */
+		{ &_obstructions[45708], 287 },  /* E3 */
+		{ &_obstructions[45995], 315 },  /* E4 */
+		{ &_obstructions[46310], 315 },  /* E5 */
+		{ &_obstructions[46625], 287 },  /* E6 */
+		{ &_obstructions[46912], 249 },  /* E7 */
+		{ &_obstructions[47161], 165 },  /* E8 */
+		{ &_obstructions[47326], 161 },  /* F1 */
+		{ &_obstructions[47487], 243 },  /* F2 */
+		{ &_obstructions[47730], 277 },  /* F3 */
+		{ &_obstructions[48007], 287 },  /* F4 */
+		{ &_obstructions[48294], 287 },  /* F5 */
+		{ &_obstructions[48581], 277 },  /* F6 */
+		{ &_obstructions[48858], 243 },  /* F7 */
+		{ &_obstructions[49101], 161 },  /* F8 */
+		{ &_obstructions[49262], 151 },  /* G1 */
+		{ &_obstructions[49413], 229 },  /* G2 */
+		{ &_obstructions[49642], 243 },  /* G3 */
+		{ &_obstructions[49885], 249 },  /* G4 */
+		{ &_obstructions[50134], 249 },  /* G5 */
+		{ &_obstructions[50383], 243 },  /* G6 */
+		{ &_obstructions[50626], 229 },  /* G7 */
+		{ &_obstructions[50855], 151 },  /* G8 */
+		{ &_obstructions[51006], 104 },  /* H1 */
+		{ &_obstructions[51110], 151 },  /* H2 */
+		{ &_obstructions[51261], 161 },  /* H3 */
+		{ &_obstructions[51422], 165 },  /* H4 */
+		{ &_obstructions[51587], 165 },  /* H5 */
+		{ &_obstructions[51752], 161 },  /* H6 */
+		{ &_obstructions[51913], 151 },  /* H7 */
+		{ &_obstructions[52064], 104 },  /* H8 */
 	},
 	{  /* BlackRook */
-		{ &_obstructions[52118],  54 },  /* A1 */
-		{ &_obstructions[52172],  72 },  /* A2 */
-		{ &_obstructions[52244],  80 },  /* A3 */
-		{ &_obstructions[52324],  84 },  /* A4 */
-		{ &_obstructions[52408],  84 },  /* A5 */
-		{ &_obstructions[52492],  80 },  /* A6 */
-		{ &_obstructions[52572],  72 },  /* A7 */
-		{ &_obstructions[52644],  54 },  /* A8 */
-		{ &_obstructions[52698],  72 },  /* B1 */
-		{ &_obstructions[52770],  90 },  /* B2 */
-		{ &_obstructions[52860],  98 },  /* B3 */
-		{ &_obstructions[52958], 102 },  /* B4 */
-		{ &_obstructions[53060], 102 },  /* B5 */
-		{ &_obstructions[53162],  98 },  /* B6 */
-		{ &_obstructions[53260],  90 },  /* B7 */
-		{ &_obstructions[53350],  72 },  /* B8 */
-		{ &_obstructions[53422],  80 },  /* C1 */
-		{ &_obstructions[53502],  98 },  /* C2 */
-		{ &_obstructions[53600], 106 },  /* C3 */
-		{ &_obstructions[53706], 110 },  /* C4 */
-		{ &_obstructions[53816], 110 },  /* C5 */
-		{ &_obstructions[53926], 106 },  /* C6 */
-		{ &_obstructions[54032],  98 },  /* C7 */
-		{ &_obstructions[54130],  80 },  /* C8 */
-		{ &_obstructions[54210],  84 },  /* D1 */
-		{ &_obstructions[54294], 102 },  /* D2 */
-		{ &_obstructions[54396], 110 },  /* D3 */
-		{ &_obstructions[54506], 114 },  /* D4 */
-		{ &_obstructions[54620], 114 },  /* D5 */
-		{ &_obstructions[54734], 110 },  /* D6 */
-		{ &_obstructions[54844], 102 },  /* D7 */
-		{ &_obstructions[54946],  84 },  /* D8 */
-		{ &_obstructions[55030],  84 },  /* E1 */
-		{ &_obstructions[55114], 102 },  /* E2 */
-		{ &_obstructions[55216], 110 },  /* E3 */
-		{ &_obstructions[55326], 114 },  /* E4 */
-		{ &_obstructions[55440], 114 },  /* E5 */
-		{ &_obstructions[55554], 110 },  /* E6 */
-		{ &_obstructions[55664], 102 },  /* E7 */
-		{ &_obstructions[55766],  84 },  /* E8 */
-		{ &_obstructions[55850],  80 },  /* F1 */
-		{ &_obstructions[55930],  98 },  /* F2 */
-		{ &_obstructions[56028], 106 },  /* F3 */
-		{ &_obstructions[56134], 110 },  /* F4 */
-		{ &_obstructions[56244], 110 },  /* F5 */
-		{ &_obstructions[56354], 106 },  /* F6 */
-		{ &_obstructions[56460],  98 },  /* F7 */
-		{ &_obstructions[56558],  80 },  /* F8 */
-		{ &_obstructions[56638],  72 },  /* G1 */
-		{ &_obstructions[56710],  90 },  /* G2 */
-		{ &_obstructions[56800],  98 },  /* G3 */
-		{ &_obstructions[56898], 102 },  /* G4 */
-		{ &_obstructions[57000], 102 },  /* G5 */
-		{ &_obstructions[57102],  98 },  /* G6 */
-		{ &_obstructions[57200],  90 },  /* G7 */
-		{ &_obstructions[57290],  72 },  /* G8 */
-		{ &_obstructions[57362],  54 },  /* H1 */
-		{ &_obstructions[57416],  72 },  /* H2 */
-		{ &_obstructions[57488],  80 },  /* H3 */
-		{ &_obstructions[57568],  84 },  /* H4 */
-		{ &_obstructions[57652],  84 },  /* H5 */
-		{ &_obstructions[57736],  80 },  /* H6 */
-		{ &_obstructions[57816],  72 },  /* H7 */
-		{ &_obstructions[57888],  54 },  /* H8 */
+		{ &_obstructions[52168],  54 },  /* A1 */
+		{ &_obstructions[52222],  72 },  /* A2 */
+		{ &_obstructions[52294],  80 },  /* A3 */
+		{ &_obstructions[52374],  84 },  /* A4 */
+		{ &_obstructions[52458],  84 },  /* A5 */
+		{ &_obstructions[52542],  80 },  /* A6 */
+		{ &_obstructions[52622],  72 },  /* A7 */
+		{ &_obstructions[52694],  54 },  /* A8 */
+		{ &_obstructions[52748],  72 },  /* B1 */
+		{ &_obstructions[52820],  90 },  /* B2 */
+		{ &_obstructions[52910],  98 },  /* B3 */
+		{ &_obstructions[53008], 102 },  /* B4 */
+		{ &_obstructions[53110], 102 },  /* B5 */
+		{ &_obstructions[53212],  98 },  /* B6 */
+		{ &_obstructions[53310],  90 },  /* B7 */
+		{ &_obstructions[53400],  72 },  /* B8 */
+		{ &_obstructions[53472],  80 },  /* C1 */
+		{ &_obstructions[53552],  98 },  /* C2 */
+		{ &_obstructions[53650], 106 },  /* C3 */
+		{ &_obstructions[53756], 110 },  /* C4 */
+		{ &_obstructions[53866], 110 },  /* C5 */
+		{ &_obstructions[53976], 106 },  /* C6 */
+		{ &_obstructions[54082],  98 },  /* C7 */
+		{ &_obstructions[54180],  80 },  /* C8 */
+		{ &_obstructions[54260],  84 },  /* D1 */
+		{ &_obstructions[54344], 102 },  /* D2 */
+		{ &_obstructions[54446], 110 },  /* D3 */
+		{ &_obstructions[54556], 114 },  /* D4 */
+		{ &_obstructions[54670], 114 },  /* D5 */
+		{ &_obstructions[54784], 110 },  /* D6 */
+		{ &_obstructions[54894], 102 },  /* D7 */
+		{ &_obstructions[54996],  84 },  /* D8 */
+		{ &_obstructions[55080],  84 },  /* E1 */
+		{ &_obstructions[55164], 102 },  /* E2 */
+		{ &_obstructions[55266], 110 },  /* E3 */
+		{ &_obstructions[55376], 114 },  /* E4 */
+		{ &_obstructions[55490], 114 },  /* E5 */
+		{ &_obstructions[55604], 110 },  /* E6 */
+		{ &_obstructions[55714], 102 },  /* E7 */
+		{ &_obstructions[55816],  84 },  /* E8 */
+		{ &_obstructions[55900],  80 },  /* F1 */
+		{ &_obstructions[55980],  98 },  /* F2 */
+		{ &_obstructions[56078], 106 },  /* F3 */
+		{ &_obstructions[56184], 110 },  /* F4 */
+		{ &_obstructions[56294], 110 },  /* F5 */
+		{ &_obstructions[56404], 106 },  /* F6 */
+		{ &_obstructions[56510],  98 },  /* F7 */
+		{ &_obstructions[56608],  80 },  /* F8 */
+		{ &_obstructions[56688],  72 },  /* G1 */
+		{ &_obstructions[56760],  90 },  /* G2 */
+		{ &_obstructions[56850],  98 },  /* G3 */
+		{ &_obstructions[56948], 102 },  /* G4 */
+		{ &_obstructions[57050], 102 },  /* G5 */
+		{ &_obstructions[57152],  98 },  /* G6 */
+		{ &_obstructions[57250],  90 },  /* G7 */
+		{ &_obstructions[57340],  72 },  /* G8 */
+		{ &_obstructions[57412],  54 },  /* H1 */
+		{ &_obstructions[57466],  72 },  /* H2 */
+		{ &_obstructions[57538],  80 },  /* H3 */
+		{ &_obstructions[57618],  84 },  /* H4 */
+		{ &_obstructions[57702],  84 },  /* H5 */
+		{ &_obstructions[57786],  80 },  /* H6 */
+		{ &_obstructions[57866],  72 },  /* H7 */
+		{ &_obstructions[57938],  54 },  /* H8 */
 	},
 	{  /* BlackBishop */
-		{ &_obstructions[57942],  22 },  /* A1 */
-		{ &_obstructions[57964],  28 },  /* A2 */
-		{ &_obstructions[57992],  30 },  /* A3 */
-		{ &_obstructions[58022],  30 },  /* A4 */
-		{ &_obstructions[58052],  30 },  /* A5 */
-		{ &_obstructions[58082],  30 },  /* A6 */
-		{ &_obstructions[58112],  28 },  /* A7 */
-		{ &_obstructions[58140],  22 },  /* A8 */
-		{ &_obstructions[58162],  28 },  /* B1 */
-		{ &_obstructions[58190],  51 },  /* B2 */
-		{ &_obstructions[58241],  53 },  /* B3 */
-		{ &_obstructions[58294],  55 },  /* B4 */
-		{ &_obstructions[58349],  55 },  /* B5 */
-		{ &_obstructions[58404],  53 },  /* B6 */
-		{ &_obstructions[58457],  51 },  /* B7 */
-		{ &_obstructions[58508],  28 },  /* B8 */
-		{ &_obstructions[58536],  30 },  /* C1 */
-		{ &_obstructions[58566],  53 },  /* C2 */
-		{ &_obstructions[58619],  75 },  /* C3 */
-		{ &_obstructions[58694],  77 },  /* C4 */
-		{ &_obstructions[58771],  77 },  /* C5 */
-		{ &_obstructions[58848],  75 },  /* C6 */
-		{ &_obstructions[58923],  53 },  /* C7 */
-		{ &_obstructions[58976],  30 },  /* C8 */
-		{ &_obstructions[59006],  30 },  /* D1 */
-		{ &_obstructions[59036],  55 },  /* D2 */
-		{ &_obstructions[59091],  77 },  /* D3 */
-		{ &_obstructions[59168],  97 },  /* D4 */
-		{ &_obstructions[59265],  97 },  /* D5 */
-		{ &_obstructions[59362],  77 },  /* D6 */
-		{ &_obstructions[59439],  55 },  /* D7 */
-		{ &_obstructions[59494],  30 },  /* D8 */
-		{ &_obstructions[59524],  30 },  /* E1 */
-		{ &_obstructions[59554],  55 },  /* E2 */
-		{ &_obstructions[59609],  77 },  /* E3 */
-		{ &_obstructions[59686],  97 },  /* E4 */
-		{ &_obstructions[59783],  97 },  /* E5 */
-		{ &_obstructions[59880],  77 },  /* E6 */
-		{ &_obstructions[59957],  55 },  /* E7 */
-		{ &_obstructions[60012],  30 },  /* E8 */
-		{ &_obstructions[60042],  30 },  /* F1 */
-		{ &_obstructions[60072],  53 },  /* F2 */
-		{ &_obstructions[60125],  75 },  /* F3 */
-		{ &_obstructions[60200],  77 },  /* F4 */
-		{ &_obstructions[60277],  77 },  /* F5 */
-		{ &_obstructions[60354],  75 },  /* F6 */
-		{ &_obstructions[60429],  53 },  /* F7 */
-		{ &_obstructions[60482],  30 },  /* F8 */
-		{ &_obstructions[60512],  28 },  /* G1 */
-		{ &_obstructions[60540],  51 },  /* G2 */
-		{ &_obstructions[60591],  53 },  /* G3 */
-		{ &_obstructions[60644],  55 },  /* G4 */
-		{ &_obstructions[60699],  55 },  /* G5 */
-		{ &_obstructions[60754],  53 },  /* G6 */
-		{ &_obstructions[60807],  51 },  /* G7 */
-		{ &_obstructions[60858],  28 },  /* G8 */
-		{ &_obstructions[60886],  22 },  /* H1 */
-		{ &_obstructions[60908],  28 },  /* H2 */
-		{ &_obstructions[60936],  30 },  /* H3 */
-		{ &_obstructions[60966],  30 },  /* H4 */
-		{ &_obstructions[60996],  30 },  /* H5 */
-		{ &_obstructions[61026],  30 },  /* H6 */
-		{ &_obstructions[61056],  28 },  /* H7 */
-		{ &_obstructions[61084],  22 },  /* H8 */
+		{ &_obstructions[57992],  22 },  /* A1 */
+		{ &_obstructions[58014],  28 },  /* A2 */
+		{ &_obstructions[58042],  30 },  /* A3 */
+		{ &_obstructions[58072],  30 },  /* A4 */
+		{ &_obstructions[58102],  30 },  /* A5 */
+		{ &_obstructions[58132],  30 },  /* A6 */
+		{ &_obstructions[58162],  28 },  /* A7 */
+		{ &_obstructions[58190],  22 },  /* A8 */
+		{ &_obstructions[58212],  28 },  /* B1 */
+		{ &_obstructions[58240],  51 },  /* B2 */
+		{ &_obstructions[58291],  53 },  /* B3 */
+		{ &_obstructions[58344],  55 },  /* B4 */
+		{ &_obstructions[58399],  55 },  /* B5 */
+		{ &_obstructions[58454],  53 },  /* B6 */
+		{ &_obstructions[58507],  51 },  /* B7 */
+		{ &_obstructions[58558],  28 },  /* B8 */
+		{ &_obstructions[58586],  30 },  /* C1 */
+		{ &_obstructions[58616],  53 },  /* C2 */
+		{ &_obstructions[58669],  75 },  /* C3 */
+		{ &_obstructions[58744],  77 },  /* C4 */
+		{ &_obstructions[58821],  77 },  /* C5 */
+		{ &_obstructions[58898],  75 },  /* C6 */
+		{ &_obstructions[58973],  53 },  /* C7 */
+		{ &_obstructions[59026],  30 },  /* C8 */
+		{ &_obstructions[59056],  30 },  /* D1 */
+		{ &_obstructions[59086],  55 },  /* D2 */
+		{ &_obstructions[59141],  77 },  /* D3 */
+		{ &_obstructions[59218],  97 },  /* D4 */
+		{ &_obstructions[59315],  97 },  /* D5 */
+		{ &_obstructions[59412],  77 },  /* D6 */
+		{ &_obstructions[59489],  55 },  /* D7 */
+		{ &_obstructions[59544],  30 },  /* D8 */
+		{ &_obstructions[59574],  30 },  /* E1 */
+		{ &_obstructions[59604],  55 },  /* E2 */
+		{ &_obstructions[59659],  77 },  /* E3 */
+		{ &_obstructions[59736],  97 },  /* E4 */
+		{ &_obstructions[59833],  97 },  /* E5 */
+		{ &_obstructions[59930],  77 },  /* E6 */
+		{ &_obstructions[60007],  55 },  /* E7 */
+		{ &_obstructions[60062],  30 },  /* E8 */
+		{ &_obstructions[60092],  30 },  /* F1 */
+		{ &_obstructions[60122],  53 },  /* F2 */
+		{ &_obstructions[60175],  75 },  /* F3 */
+		{ &_obstructions[60250],  77 },  /* F4 */
+		{ &_obstructions[60327],  77 },  /* F5 */
+		{ &_obstructions[60404],  75 },  /* F6 */
+		{ &_obstructions[60479],  53 },  /* F7 */
+		{ &_obstructions[60532],  30 },  /* F8 */
+		{ &_obstructions[60562],  28 },  /* G1 */
+		{ &_obstructions[60590],  51 },  /* G2 */
+		{ &_obstructions[60641],  53 },  /* G3 */
+		{ &_obstructions[60694],  55 },  /* G4 */
+		{ &_obstructions[60749],  55 },  /* G5 */
+		{ &_obstructions[60804],  53 },  /* G6 */
+		{ &_obstructions[60857],  51 },  /* G7 */
+		{ &_obstructions[60908],  28 },  /* G8 */
+		{ &_obstructions[60936],  22 },  /* H1 */
+		{ &_obstructions[60958],  28 },  /* H2 */
+		{ &_obstructions[60986],  30 },  /* H3 */
+		{ &_obstructions[61016],  30 },  /* H4 */
+		{ &_obstructions[61046],  30 },  /* H5 */
+		{ &_obstructions[61076],  30 },  /* H6 */
+		{ &_obstructions[61106],  28 },  /* H7 */
+		{ &_obstructions[61134],  22 },  /* H8 */
 	},
 	{  /* BlackKnight */
-		{ &_obstructions[61106],  14 },  /* A1 */
-		{ &_obstructions[61120],  21 },  /* A2 */
-		{ &_obstructions[61141],  27 },  /* A3 */
-		{ &_obstructions[61168],  30 },  /* A4 */
-		{ &_obstructions[61198],  30 },  /* A5 */
-		{ &_obstructions[61228],  27 },  /* A6 */
-		{ &_obstructions[61255],  21 },  /* A7 */
-		{ &_obstructions[61276],  14 },  /* A8 */
-		{ &_obstructions[61290],  21 },  /* B1 */
-		{ &_obstructions[61311],  28 },  /* B2 */
-		{ &_obstructions[61339],  38 },  /* B3 */
-		{ &_obstructions[61377],  43 },  /* B4 */
-		{ &_obstructions[61420],  43 },  /* B5 */
-		{ &_obstructions[61463],  38 },  /* B6 */
-		{ &_obstructions[61501],  28 },  /* B7 */
-		{ &_obstructions[61529],  21 },  /* B8 */
-		{ &_obstructions[61550],  27 },  /* C1 */
-		{ &_obstructions[61577],  38 },  /* C2 */
-		{ &_obstructions[61615],  50 },  /* C3 */
-		{ &_obstructions[61665],  56 },  /* C4 */
-		{ &_obstructions[61721],  56 },  /* C5 */
-		{ &_obstructions[61777],  50 },  /* C6 */
-		{ &_obstructions[61827],  38 },  /* C7 */
-		{ &_obstructions[61865],  27 },  /* C8 */
-		{ &_obstructions[61892],  30 },  /* D1 */
-		{ &_obstructions[61922],  43 },  /* D2 */
-		{ &_obstructions[61965],  56 },  /* D3 */
-		{ &_obstructions[62021],  64 },  /* D4 */
-		{ &_obstructions[62085],  64 },  /* D5 */
-		{ &_obstructions[62149],  56 },  /* D6 */
-		{ &_obstructions[62205],  43 },  /* D7 */
-		{ &_obstructions[62248],  30 },  /* D8 */
-		{ &_obstructions[62278],  30 },  /* E1 */
-		{ &_obstructions[62308],  43 },  /* E2 */
-		{ &_obstructions[62351],  56 },  /* E3 */
-		{ &_obstructions[62407],  64 },  /* E4 */
-		{ &_obstructions[62471],  64 },  /* E5 */
-		{ &_obstructions[62535],  56 },  /* E6 */
-		{ &_obstructions[62591],  43 },  /* E7 */
-		{ &_obstructions[62634],  30 },  /* E8 */
-		{ &_obstructions[62664],  27 },  /* F1 */
-		{ &_obstructions[62691],  38 },  /* F2 */
-		{ &_obstructions[62729],  50 },  /* F3 */
-		{ &_obstructions[62779],  56 },  /* F4 */
-		{ &_obstructions[62835],  56 },  /* F5 */
-		{ &_obstructions[62891],  50 },  /* F6 */
-		{ &_obstructions[62941],  38 },  /* F7 */
-		{ &_obstructions[62979],  27 },  /* F8 */
-		{ &_obstructions[63006],  21 },  /* G1 */
-		{ &_obstructions[63027],  28 },  /* G2 */
-		{ &_obstructions[63055],  38 },  /* G3 */
-		{ &_obstructions[63093],  43 },  /* G4 */
-		{ &_obstructions[63136],  43 },  /* G5 */
-		{ &_obstructions[63179],  38 },  /* G6 */
-		{ &_obstructions[63217],  28 },  /* G7 */
-		{ &_obstructions[63245],  21 },  /* G8 */
-		{ &_obstructions[63266],  14 },  /* H1 */
-		{ &_obstructions[63280],  21 },  /* H2 */
-		{ &_obstructions[63301],  27 },  /* H3 */
-		{ &_obstructions[63328],  30 },  /* H4 */
-		{ &_obstructions[63358],  30 },  /* H5 */
-		{ &_obstructions[63388],  27 },  /* H6 */
-		{ &_obstructions[63415],  21 },  /* H7 */
-		{ &_obstructions[63436],  14 },  /* H8 */
+		{ &_obstructions[61156],  14 },  /* A1 */
+		{ &_obstructions[61170],  21 },  /* A2 */
+		{ &_obstructions[61191],  27 },  /* A3 */
+		{ &_obstructions[61218],  30 },  /* A4 */
+		{ &_obstructions[61248],  30 },  /* A5 */
+		{ &_obstructions[61278],  27 },  /* A6 */
+		{ &_obstructions[61305],  21 },  /* A7 */
+		{ &_obstructions[61326],  14 },  /* A8 */
+		{ &_obstructions[61340],  21 },  /* B1 */
+		{ &_obstructions[61361],  28 },  /* B2 */
+		{ &_obstructions[61389],  38 },  /* B3 */
+		{ &_obstructions[61427],  43 },  /* B4 */
+		{ &_obstructions[61470],  43 },  /* B5 */
+		{ &_obstructions[61513],  38 },  /* B6 */
+		{ &_obstructions[61551],  28 },  /* B7 */
+		{ &_obstructions[61579],  21 },  /* B8 */
+		{ &_obstructions[61600],  27 },  /* C1 */
+		{ &_obstructions[61627],  38 },  /* C2 */
+		{ &_obstructions[61665],  50 },  /* C3 */
+		{ &_obstructions[61715],  56 },  /* C4 */
+		{ &_obstructions[61771],  56 },  /* C5 */
+		{ &_obstructions[61827],  50 },  /* C6 */
+		{ &_obstructions[61877],  38 },  /* C7 */
+		{ &_obstructions[61915],  27 },  /* C8 */
+		{ &_obstructions[61942],  30 },  /* D1 */
+		{ &_obstructions[61972],  43 },  /* D2 */
+		{ &_obstructions[62015],  56 },  /* D3 */
+		{ &_obstructions[62071],  64 },  /* D4 */
+		{ &_obstructions[62135],  64 },  /* D5 */
+		{ &_obstructions[62199],  56 },  /* D6 */
+		{ &_obstructions[62255],  43 },  /* D7 */
+		{ &_obstructions[62298],  30 },  /* D8 */
+		{ &_obstructions[62328],  30 },  /* E1 */
+		{ &_obstructions[62358],  43 },  /* E2 */
+		{ &_obstructions[62401],  56 },  /* E3 */
+		{ &_obstructions[62457],  64 },  /* E4 */
+		{ &_obstructions[62521],  64 },  /* E5 */
+		{ &_obstructions[62585],  56 },  /* E6 */
+		{ &_obstructions[62641],  43 },  /* E7 */
+		{ &_obstructions[62684],  30 },  /* E8 */
+		{ &_obstructions[62714],  27 },  /* F1 */
+		{ &_obstructions[62741],  38 },  /* F2 */
+		{ &_obstructions[62779],  50 },  /* F3 */
+		{ &_obstructions[62829],  56 },  /* F4 */
+		{ &_obstructions[62885],  56 },  /* F5 */
+		{ &_obstructions[62941],  50 },  /* F6 */
+		{ &_obstructions[62991],  38 },  /* F7 */
+		{ &_obstructions[63029],  27 },  /* F8 */
+		{ &_obstructions[63056],  21 },  /* G1 */
+		{ &_obstructions[63077],  28 },  /* G2 */
+		{ &_obstructions[63105],  38 },  /* G3 */
+		{ &_obstructions[63143],  43 },  /* G4 */
+		{ &_obstructions[63186],  43 },  /* G5 */
+		{ &_obstructions[63229],  38 },  /* G6 */
+		{ &_obstructions[63267],  28 },  /* G7 */
+		{ &_obstructions[63295],  21 },  /* G8 */
+		{ &_obstructions[63316],  14 },  /* H1 */
+		{ &_obstructions[63330],  21 },  /* H2 */
+		{ &_obstructions[63351],  27 },  /* H3 */
+		{ &_obstructions[63378],  30 },  /* H4 */
+		{ &_obstructions[63408],  30 },  /* H5 */
+		{ &_obstructions[63438],  27 },  /* H6 */
+		{ &_obstructions[63465],  21 },  /* H7 */
+		{ &_obstructions[63486],  14 },  /* H8 */
 	},
 	{  /* BlackPawn */
-		{ &_obstructions[63450],   4 },  /* A1 */
-		{ &_obstructions[63454],   6 },  /* A2 */
-		{ &_obstructions[63460],   6 },  /* A3 */
-		{ &_obstructions[63466],   6 },  /* A4 */
-		{ &_obstructions[63472],   7 },  /* A5 */
-		{ &_obstructions[63479],   8 },  /* A6 */
-		{ &_obstructions[63487],   3 },  /* A7 */
-		{ &_obstructions[63490],   0 },  /* A8 */
-		{ &_obstructions[63490],   6 },  /* B1 */
-		{ &_obstructions[63496],   9 },  /* B2 */
-		{ &_obstructions[63505],   9 },  /* B3 */
-		{ &_obstructions[63514],   9 },  /* B4 */
-		{ &_obstructions[63523],  10 },  /* B5 */
-		{ &_obstructions[63533],  12 },  /* B6 */
-		{ &_obstructions[63545],   4 },  /* B7 */
-		{ &_obstructions[63549],   0 },  /* B8 */
-		{ &_obstructions[63549],   7 },  /* C1 */
-		{ &_obstructions[63556],  10 },  /* C2 */
-		{ &_obstructions[63566],  10 },  /* C3 */
-		{ &_obstructions[63576],  10 },  /* C4 */
-		{ &_obstructions[63586],  11 },  /* C5 */
-		{ &_obstructions[63597],  13 },  /* C6 */
-		{ &_obstructions[63610],   4 },  /* C7 */
-		{ &_obstructions[63614],   0 },  /* C8 */
-		{ &_obstructions[63614],   7 },  /* D1 */
-		{ &_obstructions[63621],  10 },  /* D2 */
-		{ &_obstructions[63631],  10 },  /* D3 */
-		{ &_obstructions[63641],  10 },  /* D4 */
-		{ &_obstructions[63651],  11 },  /* D5 */
-		{ &_obstructions[63662],  13 },  /* D6 */
-		{ &_obstructions[63675],   4 },  /* D7 */
-		{ &_obstructions[63679],   0 },  /* D8 */
-		{ &_obstructions[63679],   7 },  /* E1 */
-		{ &_obstructions[63686],  10 },  /* E2 */
-		{ &_obstructions[63696],  10 },  /* E3 */
-		{ &_obstructions[63706],  10 },  /* E4 */
-		{ &_obstructions[63716],  11 },  /* E5 */
-		{ &_obstructions[63727],  13 },  /* E6 */
-		{ &_obstructions[63740],   4 },  /* E7 */
-		{ &_obstructions[63744],   0 },  /* E8 */
-		{ &_obstructions[63744],   7 },  /* F1 */
-		{ &_obstructions[63751],  10 },  /* F2 */
-		{ &_obstructions[63761],  10 },  /* F3 */
-		{ &_obstructions[63771],  10 },  /* F4 */
-		{ &_obstructions[63781],  11 },  /* F5 */
-		{ &_obstructions[63792],  13 },  /* F6 */
-		{ &_obstructions[63805],   4 },  /* F7 */
-		{ &_obstructions[63809],   0 },  /* F8 */
-		{ &_obstructions[63809],   6 },  /* G1 */
-		{ &_obstructions[63815],   9 },  /* G2 */
-		{ &_obstructions[63824],   9 },  /* G3 */
-		{ &_obstructions[63833],   9 },  /* G4 */
-		{ &_obstructions[63842],  10 },  /* G5 */
-		{ &_obstructions[63852],  12 },  /* G6 */
-		{ &_obstructions[63864],   4 },  /* G7 */
-		{ &_obstructions[63868],   0 },  /* G8 */
-		{ &_obstructions[63868],   4 },  /* H1 */
-		{ &_obstructions[63872],   6 },  /* H2 */
-		{ &_obstructions[63878],   6 },  /* H3 */
-		{ &_obstructions[63884],   6 },  /* H4 */
-		{ &_obstructions[63890],   7 },  /* H5 */
-		{ &_obstructions[63897],   8 },  /* H6 */
-		{ &_obstructions[63905],   3 },  /* H7 */
-		{ &_obstructions[63908],   0 },  /* H8 */
+		{ &_obstructions[63500],   4 },  /* A1 */
+		{ &_obstructions[63504],   6 },  /* A2 */
+		{ &_obstructions[63510],   6 },  /* A3 */
+		{ &_obstructions[63516],   6 },  /* A4 */
+		{ &_obstructions[63522],   7 },  /* A5 */
+		{ &_obstructions[63529],   8 },  /* A6 */
+		{ &_obstructions[63537],   3 },  /* A7 */
+		{ &_obstructions[63540],   0 },  /* A8 */
+		{ &_obstructions[63540],   6 },  /* B1 */
+		{ &_obstructions[63546],   9 },  /* B2 */
+		{ &_obstructions[63555],   9 },  /* B3 */
+		{ &_obstructions[63564],   9 },  /* B4 */
+		{ &_obstructions[63573],  10 },  /* B5 */
+		{ &_obstructions[63583],  12 },  /* B6 */
+		{ &_obstructions[63595],   4 },  /* B7 */
+		{ &_obstructions[63599],   0 },  /* B8 */
+		{ &_obstructions[63599],   7 },  /* C1 */
+		{ &_obstructions[63606],  10 },  /* C2 */
+		{ &_obstructions[63616],  10 },  /* C3 */
+		{ &_obstructions[63626],  10 },  /* C4 */
+		{ &_obstructions[63636],  11 },  /* C5 */
+		{ &_obstructions[63647],  13 },  /* C6 */
+		{ &_obstructions[63660],   4 },  /* C7 */
+		{ &_obstructions[63664],   0 },  /* C8 */
+		{ &_obstructions[63664],   7 },  /* D1 */
+		{ &_obstructions[63671],  10 },  /* D2 */
+		{ &_obstructions[63681],  10 },  /* D3 */
+		{ &_obstructions[63691],  10 },  /* D4 */
+		{ &_obstructions[63701],  11 },  /* D5 */
+		{ &_obstructions[63712],  13 },  /* D6 */
+		{ &_obstructions[63725],   4 },  /* D7 */
+		{ &_obstructions[63729],   0 },  /* D8 */
+		{ &_obstructions[63729],   7 },  /* E1 */
+		{ &_obstructions[63736],  10 },  /* E2 */
+		{ &_obstructions[63746],  10 },  /* E3 */
+		{ &_obstructions[63756],  10 },  /* E4 */
+		{ &_obstructions[63766],  11 },  /* E5 */
+		{ &_obstructions[63777],  13 },  /* E6 */
+		{ &_obstructions[63790],   4 },  /* E7 */
+		{ &_obstructions[63794],   0 },  /* E8 */
+		{ &_obstructions[63794],   7 },  /* F1 */
+		{ &_obstructions[63801],  10 },  /* F2 */
+		{ &_obstructions[63811],  10 },  /* F3 */
+		{ &_obstructions[63821],  10 },  /* F4 */
+		{ &_obstructions[63831],  11 },  /* F5 */
+		{ &_obstructions[63842],  13 },  /* F6 */
+		{ &_obstructions[63855],   4 },  /* F7 */
+		{ &_obstructions[63859],   0 },  /* F8 */
+		{ &_obstructions[63859],   6 },  /* G1 */
+		{ &_obstructions[63865],   9 },  /* G2 */
+		{ &_obstructions[63874],   9 },  /* G3 */
+		{ &_obstructions[63883],   9 },  /* G4 */
+		{ &_obstructions[63892],  10 },  /* G5 */
+		{ &_obstructions[63902],  12 },  /* G6 */
+		{ &_obstructions[63914],   4 },  /* G7 */
+		{ &_obstructions[63918],   0 },  /* G8 */
+		{ &_obstructions[63918],   4 },  /* H1 */
+		{ &_obstructions[63922],   6 },  /* H2 */
+		{ &_obstructions[63928],   6 },  /* H3 */
+		{ &_obstructions[63934],   6 },  /* H4 */
+		{ &_obstructions[63940],   7 },  /* H5 */
+		{ &_obstructions[63947],   8 },  /* H6 */
+		{ &_obstructions[63955],   3 },  /* H7 */
+		{ &_obstructions[63958],   0 },  /* H8 */
 	},
 };
 

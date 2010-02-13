@@ -5,14 +5,14 @@
 
 // ----------------------------------------------------------------------------
 
-void makeObstructions(void);
-void makeConstraints(void);
-void makeMovements(void);
-void makeChecks(void);
+void makeObstructions(bool castling);
+void makeConstraints(bool castling);
+void makeMovements(bool castling);
+void makeChecks(bool castling);
 
 // ----------------------------------------------------------------------------
 
-typedef void (*makefunction)(void);
+typedef void (*makefunction)(bool castling);
 
 const makefunction MakeFunctions[] =
 {

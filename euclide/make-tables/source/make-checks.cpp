@@ -8,7 +8,7 @@ using namespace euclide;
 
 /* -------------------------------------------------------------------------- */
 
-void makeChecks(void)
+void makeChecks(bool castling)
 {	
 	CodeFile file("check-tables.cpp");
 
