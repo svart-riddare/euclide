@@ -16,27 +16,18 @@ Piece::Piece(Superman superman, Color color, int moves)
 	/* -- Initialize initial squares -- */
 
 	_initial = superman.square(color);
-	_ksquare = _initial;
-	_qsquare = _initial;
+	_xinitial = _initial;
 
 	/* -- Handle castling -- */
 
-	_castling = (superman == King) ? 1 : 0;
-
-	if (superman == King)
-		_ksquare = Square((column_t)(_initial.column() + 2), _initial.row());
-
-	if (superman == King)
-		_qsquare = Square((column_t)(_initial.column() - 2), _initial.row());
-
 	if (superman == KingRook)
-		_ksquare = Square((column_t)(_initial.column() - 2), _initial.row());
+		_xinitial = _initial.make(-2, 0);
 
 	if (superman == QueenRook)
-		_qsquare = Square((column_t)(_initial.column() + 3), _initial.row());
+		_xinitial = _initial.make(3, 0);
 
-	_kcastling = (_ksquare != _initial) ? indeterminate : tribool(false);
-	_qcastling = (_qsquare != _initial) ? indeterminate : tribool(false);
+	_kcastling = superman.isKing() ? &_movements[_initial][_initial.make(2, 0)] : NULL;
+	_qcastling = superman.isKing() ? &_movements[_initial][_initial.make(-2, 0)] : NULL;
 
 	/* -- Initialize movement tables -- */
 
@@ -79,8 +70,9 @@ Piece::Piece(Superman superman, Color color, int moves)
 
 	/* -- Captured and promoted state -- */
 
-	_captured = superman.isKing() ? false : indeterminate;
-	_promoted = superman.isPawn() ? indeterminate : false;
+	_teleported = (_initial != _xinitial) ? indeterminate : (tribool)false;
+	_captured = superman.isKing() ? (tribool)false : indeterminate;
+	_promoted = superman.isPawn() ? indeterminate : (tribool)false;
 
 	/* -- Fill in initial distances and required captures -- */
 
@@ -378,31 +370,50 @@ void Piece::computeForwardDistances(Square square, int distances[NumSquares], bo
 
 	std::fill(distances, distances + NumSquares, infinity);
 	distances[square] = 0;
-
-	if ((square == _initial) && castling)
-	{
-		if (_kcastling || _qcastling)
-			distances[_initial] = infinity;
-		if (_kcastling || indeterminate(_kcastling))
-			distances[_ksquare] = _castling;
-		if (_qcastling || indeterminate(_qcastling))
-			distances[_qsquare] = _castling;
-	}		
 	
 	/* -- Initialize square queue -- */
 
 	queue<Square> squares;
-	if (!distances[square])
-		squares.push(square);
-	
-	if ((square == _initial) && castling)
-	{
-		if (_kcastling || indeterminate(_kcastling))
-			squares.push(_ksquare);
-		if (_qcastling || indeterminate(_qcastling))
-			squares.push(_qsquare);
-	}
+	squares.push(square);
 
+	/* -- Handle castling -- */
+
+	if (castling && (square == _initial))
+	{
+		/* -- Castling must be the king's first move -- */
+
+		if (_superman.isKing() && (bool)_kcastling->mandatory())
+		{
+			squares.pop();
+
+			distances[_kcastling->to()] = 1;
+			squares.push(_kcastling->to());
+		}
+
+		if (_superman.isKing() && (bool)_qcastling->mandatory())
+		{
+			squares.pop();
+
+			distances[_qcastling->to()] = 1;
+			squares.push(_qcastling->to());
+		}
+
+		/* -- Castling must be the rook's first move -- */
+
+		if (_teleported)
+			squares.pop();
+
+		/* -- Castling allows the rook to reach it's teleportation square freely -- */
+
+		if (_teleported || indeterminate(_teleported))
+		{
+			assert(_xinitial != _initial);
+
+			distances[_xinitial] = 0;
+			squares.push(_xinitial);
+		}
+	}
+	
 	/* -- Loop until every reachable square has been handled -- */
 
 	while (!squares.empty())
@@ -688,15 +699,11 @@ void Piece::findMandatoryMoves()
 
 	/* -- Follow path from initial square until there is more than one possibility -- */
 
-	if (!indeterminate(_kcastling) && !indeterminate(_qcastling))
+	if (!indeterminate(_teleported))
 	{
 		/* -- Take castling into account -- */
 
-		Square current = _initial;
-		if (_kcastling)
-			current = _ksquare;
-		if (_qcastling)
-			current = _qsquare;
+		Square current = _xinitial;
 
 		/* -- Loop until we have reached a possible destination square -- */
 
@@ -905,7 +912,7 @@ int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 {
 	/* -- Find initial square if known -- */
 
-	Square square = (_kcastling || _qcastling) ? UndefinedSquare : _initial;
+	Square square = indeterminate(_teleported) ? UndefinedSquare : _xinitial;
 
 	/* -- Initialize output -- */
 
@@ -1336,7 +1343,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 	/* -- Let's put aside castling for now and start from initial square -- */
 
-	if (!piece._kcastling && !piece._qcastling && piece.alive(false))
+	if ((_initial != _xinitial) && piece.alive(false))
 	{
 		Square square = piece._initial;
 		Obstructions obstructions(*_obstructions[square][piece.glyph()]);
@@ -1499,58 +1506,38 @@ void Piece::setPossibleCaptures(const Squares& captures)
 
 void Piece::optimizeCastling()
 {
-	/* -- Try possible castlings -- */
+	/* -- Try if castling is required or impossible -- */
 
-	if (indeterminate(_kcastling) || indeterminate(_qcastling))
+	if (indeterminate(_teleported))
 	{
 		/* -- Compute distances assuming castling state -- */
 
 		int distances[NumSquares];
-		int kdistances[NumSquares];
-		int qdistances[NumSquares];
+		int xdistances[NumSquares];
 
 		int distance = infinity;
-		int kdistance = infinity;
-		int qdistance = infinity;
+		int xdistance = infinity;
 
 		computeForwardDistances(_initial, distances, false);
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 			if (_possibleSquares[square])
 				minimize(distance, distances[square]);
 
-		if (indeterminate(_kcastling))
-		{
-			computeForwardDistances(_ksquare, kdistances, false);
-			for (Square square = FirstSquare; square <= LastSquare; square++)
-				if (_possibleSquares[square])
-					minimize(kdistance, kdistances[square]);
-
-			kdistance += _castling;
-		}
-
-		if (indeterminate(_qcastling))
-		{
-			computeForwardDistances(_qsquare, qdistances, false);
-			for (Square square = FirstSquare; square <= LastSquare; square++)
-				if (_possibleSquares[square])
-					minimize(qdistance, qdistances[square]);
-
-			qdistance += _castling;
-		}
+		computeForwardDistances(_xinitial, xdistances, false);
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+			if (_possibleSquares[square])
+				minimize(xdistance, xdistances[square]);
 
 		/* -- Eliminate impossible castlings -- */
 
-		if (indeterminate(_kcastling) && (kdistance > _availableMoves))
-			_kcastling = false;
+		if (distance > _availableMoves)
+			_teleported = true;
 
-		if (indeterminate(_qcastling) && (qdistance > _availableMoves))
-			_qcastling = false;
+		if (xdistance > _availableMoves)
+			_teleported = false;
 
-		if (indeterminate(_kcastling) && !_qcastling && (distance > _availableMoves))
-			_kcastling = true;
-
-		if (indeterminate(_qcastling) && !_kcastling && (distance > _availableMoves))
-			_qcastling = true;
+		if (!_teleported)
+			_xinitial = _initial;
 	}
 }
 
@@ -1562,61 +1549,69 @@ void Piece::synchronizeCastling(Piece& krook, Piece& qrook)
 
 	/* -- Synchronize castling deductions between king and rooks -- */
 
-	if (!indeterminate(_kcastling) && indeterminate(krook._kcastling))
+	if (_kcastling->mandatory() && indeterminate(krook._teleported))
 	{
-		krook._kcastling = _kcastling;
+		krook._teleported = true;
 		krook._optimized = false;
 	}
 
-	if (!indeterminate(_qcastling) && indeterminate(qrook._qcastling))
+	if (!_kcastling->possible() && indeterminate(krook._teleported))
 	{
-		qrook._qcastling = _qcastling;
+		krook._xinitial = krook._initial;
+		krook._teleported = false;
+		krook._optimized = false;
+	}
+
+	if (_qcastling->mandatory() && indeterminate(qrook._teleported))
+	{
+		qrook._teleported = true;
+		qrook._optimized = false;
+	}
+
+	if (!_qcastling->possible() && indeterminate(qrook._teleported))
+	{
+		qrook._xinitial = qrook._initial;
+		qrook._teleported = false;
 		qrook._optimized = false;
 	}
 	
-	if (!indeterminate(krook._kcastling) && indeterminate(_kcastling))
+	if (krook._teleported && !_kcastling->mandatory())
 	{
-		_kcastling = krook._kcastling;
+		_kcastling->validate();
 		_optimized = false;
 	}
 
-	if (!indeterminate(qrook._qcastling) && indeterminate(_qcastling))
+	if (!krook._teleported && _kcastling->possible())
 	{
-		_qcastling = qrook._qcastling;
+		_kcastling->invalidate();
+		_optimized = false;
+	}
+
+	if (qrook._teleported && !_qcastling->mandatory())
+	{
+		_qcastling->validate();
+		_optimized = false;
+	}
+
+	if (!qrook._teleported && _qcastling->possible())
+	{
+		_qcastling->invalidate();
 		_optimized = false;
 	}
 
 	/* -- Basic coherency checks -- */
 
-	if (!indeterminate(_kcastling))
-		if (_kcastling != krook._kcastling)
-			abort(NoSolution);
+	if (_kcastling->mandatory() && !krook._teleported)
+		abort(NoSolution);
 
-	if (!indeterminate(_qcastling))
-		if (_qcastling != qrook._qcastling)
-			abort(NoSolution);
-}
+	if (_qcastling->mandatory() && !qrook._teleported)
+		abort(NoSolution);
 
-/* -------------------------------------------------------------------------- */
+	if (krook._teleported && !_kcastling->possible())
+		abort(NoSolution);
 
-int Piece::moves() const
-{
-	int moves = (int)_moves.size();
-
-	if (_superman.isKing())
-	{
-		moves += (indeterminate(_kcastling) ? _castling : 0);
-		moves += (indeterminate(_qcastling) ? _castling : 0);
-	}	
-
-	return moves;
-}
-
-/* -------------------------------------------------------------------------- */
-
-const Squares& Piece::squares() const
-{
-	return _squares;
+	if (qrook._teleported && !_qcastling->possible())
+		abort(NoSolution);
 }
 
 /* -------------------------------------------------------------------------- */

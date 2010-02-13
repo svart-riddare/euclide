@@ -192,6 +192,13 @@ class Square
 
 		/* ---------------------------------- */
 
+		inline Square make(int column, int row) const
+		{
+			return Square((column_t)(this->column() + column), (row_t)(this->row() + row));
+		}
+
+		/* ---------------------------------- */
+
 	private :
 		square_t square;
 };

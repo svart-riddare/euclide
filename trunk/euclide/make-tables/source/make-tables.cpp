@@ -10,7 +10,7 @@ int main(void)
 	const makefunction *MakeFunction = MakeFunctions;
 
 	while (*MakeFunction)
-		(*MakeFunction++)();
+		(*MakeFunction++)(true);
 
 	return 0;
 }

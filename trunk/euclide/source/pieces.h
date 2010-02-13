@@ -72,10 +72,10 @@ class Piece
 			{ return _latest; }
 
 	public :
-
-	public :
-		int moves() const;
-		const Squares& squares() const;
+		inline int moves() const
+			{ return (int)_moves.size(); }
+		inline const Squares& squares() const
+			{ return _squares; }
 
 		tribool alive(bool final = true) const;
 
@@ -121,13 +121,12 @@ class Piece
 		Color _color;                                          /**< Piece's color. */
 
 		Square _initial;                                       /**< Piece's initial square (promotion square for promoted pieces). */
-		Square _ksquare;                                       /**< Piece's initial square after performing king side castling. */
-		Square _qsquare;                                       /**< Piece's initial square after performing queen side castling. */
-		int _castling;                                         /**< Number of moves required for castling (1 for king, 0 for rooks). */
+		Square _xinitial;                                      /**< Piece's alternative initial square (for rooks which have performed castling). */
 
-		tribool _kcastling;                                    /**< Has piece performed king side castling ? */
-		tribool _qcastling;                                    /**< Has piece performed queen side castling ? */
+		Move *_kcastling;                                      /**< King side castling move (kings only). */
+		Move *_qcastling;                                      /**< Queen side castling move (kings only). */
 
+		tribool _teleported;                                   /**< Has piece been teleported (for rooks which have performed castling). */
 		tribool _captured;                                     /**< Has piece been captured ? */
 		tribool _promoted;                                     /**< Has piece been promoted ? */
 

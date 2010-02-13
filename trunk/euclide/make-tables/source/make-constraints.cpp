@@ -11,7 +11,7 @@ using namespace constants;
 
 /* -------------------------------------------------------------------------- */
 
-void makeConstraints(void)
+void makeConstraints(bool castling)
 {	
 	CodeFile file("constraint-tables.cpp");
 
@@ -36,6 +36,14 @@ void makeConstraints(void)
 				int verticalDelta = to.row() - from.row();
 				int verticalDistance = abs(verticalDelta);
 				int verticalIncrement = verticalDistance ? verticalDelta / verticalDistance : 0;
+
+				if (glyph.isKing() && castling)
+					if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
+						interference = true;
+
+				if (glyph.isKing() && castling)
+					if ((glyph == BlackKing) && (from == E8) && ((to == C8) ||(to == G8)))
+						interference = true;
 
 				if (glyph.isRook() || glyph.isQueen())
 					if (!horizontalDistance && (verticalDistance > 1))

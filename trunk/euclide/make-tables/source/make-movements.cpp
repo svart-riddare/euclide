@@ -8,7 +8,7 @@ using namespace euclide;
 
 /* -------------------------------------------------------------------------- */
 
-void makeMovements(void)
+void makeMovements(bool castling)
 {	
 	CodeFile file("movement-tables.cpp");
 
@@ -35,6 +35,16 @@ void makeMovements(void)
 				if ((glyph == WhiteKing) || (glyph == BlackKing))
 					if (horizontalDistance <= 1)
 						if (verticalDistance <= 1)
+							isValid = true;
+
+				if (castling)
+					if ((glyph == WhiteKing) && (from == E1))
+						if ((to == C1) || (to == G1))
+							isValid = true;
+
+				if (castling)
+					if ((glyph == BlackKing) && (from == E8))
+						if ((to == C8) || (to == G8))
 							isValid = true;
 
 				if ((glyph == WhiteQueen) || (glyph == BlackQueen))
@@ -107,7 +117,6 @@ void makeMovements(void)
 				
 				int verticalDelta = to.row() - from.row();
 				int verticalDistance = abs(verticalDelta);
-
 
 				if (glyph.isKing())
 					if (horizontalDistance <= 1)

@@ -11,7 +11,7 @@ using namespace constants;
 
 /* -------------------------------------------------------------------------- */
 
-void makeObstructions(void)
+void makeObstructions(bool castling)
 {	
 	CodeFile file("obstruction-tables.cpp");
 
@@ -55,6 +55,26 @@ void makeObstructions(void)
 							if (verticalDistance <= 1)
 								if ((square == to) || (square == from))
 									blocked = true;
+
+					if (castling)
+						if ((glyph == WhiteKing) && (from == E1) && (to == C1))
+							if ((square == B1) || (square == C1) || (square == D1) || (square == E1))
+								blocked = true;
+
+					if (castling)
+						if ((glyph == WhiteKing) && (from == E1) && (to == G1))
+							if ((square == E1) || (square == F1) || (square == G1))
+								blocked = true;
+
+					if (castling)
+						if ((glyph == BlackKing) && (from == E8) && (to == C8))
+							if ((square == B8) || (square == C8) || (square == D8) || (square == E8))
+								blocked = true;
+
+					if (castling)
+						if ((glyph == BlackKing) && (from == E8) && (to == G8))
+							if ((square == E8) || (square == F8) || (square == G8))
+								blocked = true;
 				
 					if (glyph.isRook() || glyph.isQueen())
 						if (!horizontalDistance)
@@ -100,6 +120,26 @@ void makeObstructions(void)
 								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
 									blocked = true;
 
+						if (castling)
+							if ((glyph == WhiteKing) && (from == E1) && (to == C1))
+								if ((square == A2) || ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1)))
+									blocked = true;
+
+						if (castling)
+							if ((glyph == WhiteKing) && (from == E1) && (to == G1))
+								if ((square == H2) || ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1)))
+									blocked = true;
+
+						if (castling)
+							if ((glyph == BlackKing) && (from == E8) && (to == C8))
+								if ((square == A7) || ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1)))
+									blocked = true;
+
+						if (castling)
+							if ((glyph == BlackKing) && (from == E8) && (to == G8))
+								if ((square == H7) || ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1)))
+									blocked = true;
+
 						if (glyph.isQueen())
 							if ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1))
 								if ((horizontalDistance == verticalDistance) || !horizontalDistance || !verticalDistance)
@@ -143,9 +183,29 @@ void makeObstructions(void)
 								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
 									blocked = true;
 
+						if (castling)
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
+									blocked = true;
+							
 						if (glyph.isKing())
 							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
 								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
 									blocked = true;
 
 						if (blocked)
