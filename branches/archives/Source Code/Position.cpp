@@ -11,6 +11,7 @@
 /*************************************************************/
 
 void DecompteDesPieces(position* Position);
+void VerificationDesEchecs(const position *Position);
 void ProvenanceDesPions(bonhomme Pieces[MaxHommes], couleurs Couleur);
 void ProvenanceDesPionsII(bonhomme Pieces[MaxHommes], unsigned int CapturesDisponibles, unsigned int *CapturesLibres);
 void RestrictionDesMouvementsParLesPions(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int CapturesLibres);
@@ -301,6 +302,88 @@ void DecompteDesPieces(position* Position)
 
 	if ((Blancs->NombreMinimumDePromotions > Blancs->NombreMaximumDePromotions) || (Noirs->NombreMinimumDePromotions > Noirs->NombreMaximumDePromotions))
 		ErreurEnonce(MESSAGE_TROPDEPIECESDEPROMOTION);
+
+	VerificationDesEchecs(Position);
+}
+
+/*************************************************************/
+
+void VerificationDesEchecs(const position *Position)
+{
+	const diagramme *Diagramme = &Position->Diagramme;
+
+	bool Echecs[MaxCouleurs];
+
+	for (couleurs Couleur = BLANCS; Couleur <= NOIRS; Couleur++) {
+		Echecs[Couleur] = false;
+
+		cases CaseRoi = (Couleur == BLANCS) ? Position->PiecesBlanches[0].CaseActuelle : Position->PiecesNoires[0].CaseActuelle;
+
+		colonnes ColonneRoi = QuelleColonne(CaseRoi);
+		rangees RangeeRoi = QuelleRangee(CaseRoi);
+
+		for (int DeltaX = -2; DeltaX <= 2; DeltaX++) {
+			for (int DeltaY = -2; DeltaY <= 2; DeltaY++) {
+				if ((ColonneRoi + DeltaX < A) || (ColonneRoi + DeltaX > H))
+					continue;
+
+				if ((RangeeRoi + DeltaY < UN) || (RangeeRoi + DeltaY > HUIT))
+					continue;
+
+				cases Case = QuelleCase(ColonneRoi + DeltaX, RangeeRoi + DeltaY);
+				if (Diagramme->Couleurs[Case] == Couleur)
+					continue;
+
+				if (abs(DeltaX * DeltaY) == 2)
+					if (Diagramme->Pieces[Case] == CAVALIER)
+						Echecs[Couleur] = true;
+
+				if (abs(DeltaX * DeltaY) <= 1)
+					if (Diagramme->Pieces[Case] == ROI)
+						Echecs[Couleur] = true;
+
+				if ((abs(DeltaX) == 1) && (DeltaY == ((Couleur == BLANCS) ? 1 : -1)))
+					if (Diagramme->Pieces[Case] == PION)
+						Echecs[Couleur] = true;
+			}
+		}
+
+		for (int DeltaX = -1; DeltaX <= 1; DeltaX++) {
+			for (int DeltaY = -1; DeltaY <= 1; DeltaY++) {
+				if (!DeltaX && !DeltaY)
+					continue;
+
+				pieces Piece = (DeltaX && DeltaY) ? QuelFou(CaseRoi) : TOUR;
+
+				for (int Distance = 1; Distance <= 7; Distance++) {
+					if ((ColonneRoi + DeltaX * Distance < A) || (ColonneRoi + DeltaX * Distance > H))
+						break;
+
+					if ((RangeeRoi + DeltaY * Distance < UN) || (RangeeRoi + DeltaY * Distance > HUIT))
+						break;
+
+					cases Case = QuelleCase(ColonneRoi + DeltaX * Distance, RangeeRoi + DeltaY * Distance);
+					if (Diagramme->Couleurs[Case] == Couleur)
+						break;
+
+					if ((Diagramme->Pieces[Case] == Piece) || (Diagramme->Pieces[Case] == DAME))
+						Echecs[Couleur] = true;
+
+					if (Diagramme->Couleurs[Case] != VIDE)
+						break;
+				}
+			}
+		}
+	}
+
+	if (Echecs[BLANCS] && Echecs[NOIRS])
+		ErreurEnonce(MESSAGE_AUCUNESOLUTION);
+
+	if (Echecs[BLANCS] && ((Diagramme->DemiCoups % 2) == 1))
+		ErreurEnonce(MESSAGE_AUCUNESOLUTION);
+
+	if (Echecs[NOIRS] && ((Diagramme->DemiCoups % 2) == 0))
+		ErreurEnonce(MESSAGE_AUCUNESOLUTION);
 }
 
 /*************************************************************/
