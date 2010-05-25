@@ -121,6 +121,8 @@ void ConstructionDesScenarios(destin Destins[MaxHommes], const vie Pieces[MaxHom
 			}
 		}
 		
+		Verifier(k < sizeof(Destin->Scenarios) / sizeof(scenario));
+
 		qsort(Destin->Scenarios, k, sizeof(scenario), TriDesScenarios);
 		Destin->Scenarios[k].Coups = UINT_MAX;
 		Destin->NombreDeScenarios = k;
@@ -185,6 +187,8 @@ void ConstructionDesScenariosSuicides(permutations *Permutations, const vie Piec
 			}
 		}
 
+		Verifier(Destin->NombreDeScenariosMorts < sizeof(Destin->ScenariosMorts) / sizeof(scenario));
+
 		Destin->ScenariosMorts[Destin->NombreDeScenariosMorts].Coups = UINT_MAX;
 		qsort(Destin->ScenariosMorts, Destin->NombreDeScenariosMorts, sizeof(scenario), TriDesScenarios);
 
@@ -194,6 +198,8 @@ void ConstructionDesScenariosSuicides(permutations *Permutations, const vie Piec
 	}
 
 	for (k = 0; k < MaxCases; k++) {
+		Verifier(NombreDeScenarios[k] < sizeof(Permutations->ScenariosSuicides[k]) / sizeof(scenario));
+
 		Permutations->ScenariosSuicides[k][NombreDeScenarios[k]].Coups = UINT_MAX;
 		qsort(Permutations->ScenariosSuicides[k], NombreDeScenarios[k], sizeof(scenario), TriDesScenarios);
 	}

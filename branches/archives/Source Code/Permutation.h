@@ -30,8 +30,8 @@ typedef struct _destin {
 	bool PromuSurCetteCase[MaxHommes];
 	promotions PieceSurCetteCase[MaxHommes];
 
-	scenario Scenarios[MaxHommes * MaxColonnes];
-	scenario ScenariosMorts[MaxCases * MaxColonnes * MaxPromotions + MaxCases];
+	scenario Scenarios[MaxHommes * MaxColonnes + 1];
+	scenario ScenariosMorts[MaxCases * MaxColonnes * MaxPromotions + MaxCases + 1];
 
 	unsigned int NombreDeScenarios;
 	unsigned int NombreDeScenariosMorts;
@@ -43,7 +43,7 @@ typedef struct _destin {
 typedef struct _permutations {
 	destin Destins[MaxHommes];
 
-	scenario ScenariosSuicides[MaxCases][MaxHommes + MaxColonnes * MaxColonnes * MaxPromotions];
+	scenario ScenariosSuicides[MaxCases][MaxHommes + MaxColonnes * MaxColonnes * MaxPromotions + 1];
 
 	bool GrandRoquePossible;
 	bool PetitRoquePossible;
