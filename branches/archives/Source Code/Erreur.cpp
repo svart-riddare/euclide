@@ -21,6 +21,8 @@ void ErreurFichierLangue(const char *Fichier)
 
 	OutputMessageErreur(Tampon);
 	OutputDestroy();
+	
+	fprintf(stderr, "%s\n", Tampon);
 
 	delete[] Tampon;
 	exit(-1);
