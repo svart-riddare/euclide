@@ -6,7 +6,7 @@
 <META HTTP-EQUIV = "Content-Type" CONTENT = "text/html; charset=iso-8859-1">
 <META NAME = author CONTENT = "&Eacute;tienne Dupuis">
 <META NAME = copyright CONTENT = "Copyright 2000-2009, &Eacute;tienne Dupuis">
-<TITLE>Euclide 0.96 - Help File</TITLE>
+<TITLE>Euclide 0.97 - Help File</TITLE>
 </HEAD>
 
 <BODY>
@@ -53,7 +53,7 @@ Version 0.92 had the following improvements :
 </P>
 
 <P>
-The initial released version was labelled 0.90. Versions 0.91, 0.93, 0.94 and 0.96 are bug fix releases.
+The initial released version was labelled 0.90. Versions 0.91, 0.93, 0.94, 0.96 and 0.97 are bug fix releases.
 </P>
 
 <!-- *********************************************************************** -->
@@ -231,7 +231,38 @@ There are almost no differences with the Windows implementation.
 
 <!-- *********************************************************************** -->
 
-<H2>8. Random notes</H2>
+<H2>8. Mac OS X</H2>
+
+<P>
+Official Mac OS X support for <EM>Euclide </EM> has been introduced with version 0.97.
+However, as the author does not master this environment, there is no installation packages.
+Using <EM>Euclide</EM> requires to use the terminal window as opposed to Apple's user friendly applications.
+Mac OS X users are invited to follow these steps to get <EM>Euclide</EM> working on Mac OS X :
+<OL>
+	<LI>Install <EM>Xcode</EM>, an integrated development environment for Apple's operating systems.
+	    <EM>Xcode</EM> can be found <A HREF="http://developer.apple.com/technologies/xcode.html">here</A>.</LI>
+	<LI>Using the <EM>Finder</EM>, create a folder where <EM>Euclide</EM> will be installed.</LI>
+	<LI>Open a terminal and execute the following command in the folder just created above :
+	     <CODE>svn checkout http://euclide.googlecode.com/svn/branches/archives .</CODE>
+		 Note the final dot which is part of the command.
+		 This will download <EM>Euclide</EM>'s source code.</LI>
+	<LI>Going back to the finder, locate, in <EM>Euclide</EM>'s folder, <EM>Project Files</EM>.
+	    In this folder, launch <CODE>Euclide.xcodeproj</CODE>. This will launch <EM>Xcode</EM>.</LI>
+	<LI>In the top left corner of the <EM>Xcode</EM> project window that appears, there is a small drow down menu to select compiler configuration.
+	    Choose <EM>Release</EM> configuration.</LI>
+	<LI>Build the program, using <CODE>Build</CODE> menu.
+	    The build process takes less than 10 seconds; you should see a <EM>Build succeeded</EM> message in the status bar when the process in complete.
+		You may then exit <EM>Xcode</EM>.</LI>
+	<LI>An executable called <CODE>Euclide</CODE> should then be available at the top level folder.
+	    Run <EM>Euclide</EM> to test that all is working correctly : <CODE>./Euclide Input.txt</CODE>.</LI>
+</OL>
+Note that the above steps have been tested on Mac OS X 10.6, known as <EM>Snow Leopard</EM>.
+The above steps are probably difficult for a casual Mac user but they nevertheless allow <EM>Euclide</EM> to be run for those that can follow them.
+</P>	 
+
+<!-- *********************************************************************** -->
+
+<H2>9. Random notes</H2>
 
 <P>
 <EM>Euclide</EM> is divided in four major parts.
@@ -267,7 +298,7 @@ Note also that the code has <B>not</B> been speed optimized at all, and that thi
 
 <!-- *********************************************************************** -->
 
-<H2>9. Acknowledgments</H2>
+<H2>10. Acknowledgments</H2>
 
 <P>
 Pascal Wassong deserves the first place, as <EM>Euclide</EM> has been inspired by carefully watching <EM>Natch</EM> working.
