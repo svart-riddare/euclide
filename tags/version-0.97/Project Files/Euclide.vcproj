@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9,00"
+	Name="Euclide"
+	ProjectGUID="{8EC08189-FE8F-4A48-83D4-622D2BC9EE36}"
+	RootNamespace="Euclide"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="196613"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				UseUnicodeResponseFiles="true"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				BasicRuntimeChecks="3"
+				SmallerTypeCheck="true"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="1"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				GenerateManifest="false"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				EmbedManifest="false"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)\.."
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="3"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="true"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateManifest="false"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				EmbedManifest="false"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Fichiers sources"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath="..\Source Code\Constantes.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Coups.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\DOSOutput.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\DOSSave.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\DOSSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Epd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Erreur.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Euclide.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\HashTables.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Mouvements.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Output.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Partie.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Permutation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Position.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Timer.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Fichiers d&apos;en-tête"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath="..\Source Code\Constantes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Coups.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Entiers.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Epd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Erreur.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\HashTables.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Main.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Mouvements.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Output.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Partie.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Permutation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Position.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Save.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\System.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Timer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source Code\Version.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Fichiers de ressources"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
