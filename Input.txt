@@ -1,0 +1,65 @@
+
+Euclide web page example :
+
+	Unto Heinonen
+	Probleemblad, March 2001
+	4n1n1/1ppbr1p1/4kpp1/2rp4/P6P/b4q2/1PPPPPP1/3nKBN1
+	52
+
+
+----------------------------------------
+-- Messigny 2002 Solving Championship --
+----------------------------------------
+
+	First Problem :
+		Joost de Heer
+		rnb1kbn1/1p1pppp1/6p1/2p5/8/N7/1PPPPPPP/R1BQKBNR
+		18
+
+	Second Problem :
+		Christoph Frieberg
+		rnb3k1/pppppp2/7p/6p1/8/2QPP3/PPP2PPP/RNB1KBNR
+		19
+
+	Third Problem :
+		Pascal Wassong
+		r3kbn1/pp2p1pn/1p1p1pr1/7p/7P/8/PPbPPPPq/RNBQKBN1
+		26
+
+	Fourth Problem :
+		Satoshi Hashimoto
+		r1b1nnk1/1pp1pp1p/1p2p2b/1q5p/8/1N3r2/PPP1PPPP/3QKBNR
+		31
+
+	Fifth Problem :
+		Rustam Ubaidullaev
+		rn4n1/p7/bpppKpp1/k1r1p1qp/7b/5P1P/PPPPP1P1/RNBQ1BNR					
+		36
+
+
+	Sixth Problem :
+		Gianni Donati
+		6nb/p1pn1p2/k2p4/rp2ppp1/7q/5PPb/PPPP1P1P/RNBQK1N1
+		41			
+
+
+Time required to solve above problems :
+-----------------------------------------
+
+
+                  | Euclide 0.90 (2000)       | Euclide 0.95 (2009)      |
+                  | 1GHz Pentium-IV           | 2.4 GHz P8600 Core 2 Duo |
+                  | 128 Mbytes of RAM         | 4 Gbytes of RAM          |
+                  | Windows 98                | Windows 7 64 bits        |
+                  |---------------------------|--------------------------|
+Web page example  | 9 minutes 34 seconds      | 1 minute 43 seconds      |
+                  |                           |                          |
+Messigny :        |                           |                          |
+1°    9.0 moves   | 17.58 seconds             | 2.22 seconds             |
+2°    9.5 moves   | 73 minutes                | 6 minutes 50 seconds     |
+3°   13.0 moves   | 13 hours                  | 3.37 seconds (!)         |
+4°   15.5 moves   | 5.71 seconds              | 0.63 seconds             |
+5°   18.0 moves   | Interrupted after 7 hours | 5 hours                  |
+6°   20.5 moves   | 2.35 seconds              | 0.70 seconds             |
+
+

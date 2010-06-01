@@ -1,0 +1,314 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8DD76F6A0486A84900D96B5E /* Euclide.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* Euclide.1 */; };
+		CEA9126D11B1568C00B93666 /* Constantes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9124A11B1568C00B93666 /* Constantes.cpp */; };
+		CEA9126E11B1568C00B93666 /* Coups.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9124C11B1568C00B93666 /* Coups.cpp */; };
+		CEA9127211B1568C00B93666 /* Epd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125211B1568C00B93666 /* Epd.cpp */; };
+		CEA9127311B1568C00B93666 /* Erreur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125411B1568C00B93666 /* Erreur.cpp */; };
+		CEA9127411B1568C00B93666 /* Euclide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125611B1568C00B93666 /* Euclide.cpp */; };
+		CEA9127511B1568C00B93666 /* HashTables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125711B1568C00B93666 /* HashTables.cpp */; };
+		CEA9127611B1568C00B93666 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125911B1568C00B93666 /* Main.cpp */; };
+		CEA9127711B1568C00B93666 /* Mouvements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125B11B1568C00B93666 /* Mouvements.cpp */; };
+		CEA9127811B1568C00B93666 /* Output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125D11B1568C00B93666 /* Output.cpp */; };
+		CEA9127911B1568C00B93666 /* Partie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9125F11B1568C00B93666 /* Partie.cpp */; };
+		CEA9127A11B1568C00B93666 /* Permutation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126111B1568C00B93666 /* Permutation.cpp */; };
+		CEA9127B11B1568C00B93666 /* Position.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126311B1568C00B93666 /* Position.cpp */; };
+		CEA9127C11B1568C00B93666 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126711B1568C00B93666 /* Timer.cpp */; };
+		CEA9127D11B1568C00B93666 /* UnixOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126911B1568C00B93666 /* UnixOutput.cpp */; };
+		CEA9127E11B1568C00B93666 /* UnixSave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126A11B1568C00B93666 /* UnixSave.cpp */; };
+		CEA9127F11B1568C00B93666 /* MacSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA9126B11B1568C00B93666 /* MacSystem.cpp */; };
+		CEA9130F11B1626800B93666 /* libncurses.5.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA9130E11B1626800B93666 /* libncurses.5.4.dylib */; };
+		CEA9131E11B162A300B93666 /* libiconv.2.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA9131D11B162A300B93666 /* libiconv.2.4.0.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76F690486A84900D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				8DD76F6A0486A84900D96B5E /* Euclide.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		8DD76F6C0486A84900D96B5E /* Euclide */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Euclide; sourceTree = BUILT_PRODUCTS_DIR; };
+		C6859E8B029090EE04C91782 /* Euclide.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Euclide.1; sourceTree = "<group>"; };
+		CEA9124A11B1568C00B93666 /* Constantes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constantes.cpp; sourceTree = "<group>"; };
+		CEA9124B11B1568C00B93666 /* Constantes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constantes.h; sourceTree = "<group>"; };
+		CEA9124C11B1568C00B93666 /* Coups.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coups.cpp; sourceTree = "<group>"; };
+		CEA9124D11B1568C00B93666 /* Coups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coups.h; sourceTree = "<group>"; };
+		CEA9125111B1568C00B93666 /* Entiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entiers.h; sourceTree = "<group>"; };
+		CEA9125211B1568C00B93666 /* Epd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Epd.cpp; sourceTree = "<group>"; };
+		CEA9125311B1568C00B93666 /* Epd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Epd.h; sourceTree = "<group>"; };
+		CEA9125411B1568C00B93666 /* Erreur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Erreur.cpp; sourceTree = "<group>"; };
+		CEA9125511B1568C00B93666 /* Erreur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Erreur.h; sourceTree = "<group>"; };
+		CEA9125611B1568C00B93666 /* Euclide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Euclide.cpp; sourceTree = "<group>"; };
+		CEA9125711B1568C00B93666 /* HashTables.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HashTables.cpp; sourceTree = "<group>"; };
+		CEA9125811B1568C00B93666 /* HashTables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HashTables.h; sourceTree = "<group>"; };
+		CEA9125911B1568C00B93666 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		CEA9125A11B1568C00B93666 /* Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Main.h; sourceTree = "<group>"; };
+		CEA9125B11B1568C00B93666 /* Mouvements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mouvements.cpp; sourceTree = "<group>"; };
+		CEA9125C11B1568C00B93666 /* Mouvements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mouvements.h; sourceTree = "<group>"; };
+		CEA9125D11B1568C00B93666 /* Output.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Output.cpp; sourceTree = "<group>"; };
+		CEA9125E11B1568C00B93666 /* Output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Output.h; sourceTree = "<group>"; };
+		CEA9125F11B1568C00B93666 /* Partie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Partie.cpp; sourceTree = "<group>"; };
+		CEA9126011B1568C00B93666 /* Partie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Partie.h; sourceTree = "<group>"; };
+		CEA9126111B1568C00B93666 /* Permutation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Permutation.cpp; sourceTree = "<group>"; };
+		CEA9126211B1568C00B93666 /* Permutation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Permutation.h; sourceTree = "<group>"; };
+		CEA9126311B1568C00B93666 /* Position.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Position.cpp; sourceTree = "<group>"; };
+		CEA9126411B1568C00B93666 /* Position.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Position.h; sourceTree = "<group>"; };
+		CEA9126511B1568C00B93666 /* Save.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Save.h; sourceTree = "<group>"; };
+		CEA9126611B1568C00B93666 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
+		CEA9126711B1568C00B93666 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		CEA9126811B1568C00B93666 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		CEA9126911B1568C00B93666 /* UnixOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnixOutput.cpp; sourceTree = "<group>"; };
+		CEA9126A11B1568C00B93666 /* UnixSave.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnixSave.cpp; sourceTree = "<group>"; };
+		CEA9126B11B1568C00B93666 /* MacSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MacSystem.cpp; sourceTree = "<group>"; };
+		CEA9126C11B1568C00B93666 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
+		CEA9130E11B1626800B93666 /* libncurses.5.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.5.4.dylib; path = /usr/lib/libncurses.5.4.dylib; sourceTree = "<absolute>"; };
+		CEA9131D11B162A300B93666 /* libiconv.2.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.4.0.dylib; path = /usr/lib/libiconv.2.4.0.dylib; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76F660486A84900D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEA9130F11B1626800B93666 /* libncurses.5.4.dylib in Frameworks */,
+				CEA9131E11B162A300B93666 /* libiconv.2.4.0.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* Euclide */ = {
+			isa = PBXGroup;
+			children = (
+				CEA9131D11B162A300B93666 /* libiconv.2.4.0.dylib */,
+				CEA9130E11B1626800B93666 /* libncurses.5.4.dylib */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6859E8C029090F304C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = Euclide;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				CEA9124911B1568C00B93666 /* Source Code */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76F6C0486A84900D96B5E /* Euclide */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6859E8C029090F304C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				C6859E8B029090EE04C91782 /* Euclide.1 */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		CEA9124911B1568C00B93666 /* Source Code */ = {
+			isa = PBXGroup;
+			children = (
+				CEA9124A11B1568C00B93666 /* Constantes.cpp */,
+				CEA9124B11B1568C00B93666 /* Constantes.h */,
+				CEA9124C11B1568C00B93666 /* Coups.cpp */,
+				CEA9124D11B1568C00B93666 /* Coups.h */,
+				CEA9125111B1568C00B93666 /* Entiers.h */,
+				CEA9125211B1568C00B93666 /* Epd.cpp */,
+				CEA9125311B1568C00B93666 /* Epd.h */,
+				CEA9125411B1568C00B93666 /* Erreur.cpp */,
+				CEA9125511B1568C00B93666 /* Erreur.h */,
+				CEA9125611B1568C00B93666 /* Euclide.cpp */,
+				CEA9125711B1568C00B93666 /* HashTables.cpp */,
+				CEA9125811B1568C00B93666 /* HashTables.h */,
+				CEA9125911B1568C00B93666 /* Main.cpp */,
+				CEA9125A11B1568C00B93666 /* Main.h */,
+				CEA9125B11B1568C00B93666 /* Mouvements.cpp */,
+				CEA9125C11B1568C00B93666 /* Mouvements.h */,
+				CEA9125D11B1568C00B93666 /* Output.cpp */,
+				CEA9125E11B1568C00B93666 /* Output.h */,
+				CEA9125F11B1568C00B93666 /* Partie.cpp */,
+				CEA9126011B1568C00B93666 /* Partie.h */,
+				CEA9126111B1568C00B93666 /* Permutation.cpp */,
+				CEA9126211B1568C00B93666 /* Permutation.h */,
+				CEA9126311B1568C00B93666 /* Position.cpp */,
+				CEA9126411B1568C00B93666 /* Position.h */,
+				CEA9126511B1568C00B93666 /* Save.h */,
+				CEA9126611B1568C00B93666 /* System.h */,
+				CEA9126711B1568C00B93666 /* Timer.cpp */,
+				CEA9126811B1568C00B93666 /* Timer.h */,
+				CEA9126911B1568C00B93666 /* UnixOutput.cpp */,
+				CEA9126A11B1568C00B93666 /* UnixSave.cpp */,
+				CEA9126B11B1568C00B93666 /* MacSystem.cpp */,
+				CEA9126C11B1568C00B93666 /* Version.h */,
+			);
+			name = "Source Code";
+			path = "../Source Code";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76F620486A84900D96B5E /* Euclide */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "Euclide" */;
+			buildPhases = (
+				8DD76F640486A84900D96B5E /* Sources */,
+				8DD76F660486A84900D96B5E /* Frameworks */,
+				8DD76F690486A84900D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Euclide;
+			productInstallPath = "$(HOME)/bin";
+			productName = Euclide;
+			productReference = 8DD76F6C0486A84900D96B5E /* Euclide */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "Euclide" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* Euclide */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76F620486A84900D96B5E /* Euclide */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76F640486A84900D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEA9126D11B1568C00B93666 /* Constantes.cpp in Sources */,
+				CEA9126E11B1568C00B93666 /* Coups.cpp in Sources */,
+				CEA9127211B1568C00B93666 /* Epd.cpp in Sources */,
+				CEA9127311B1568C00B93666 /* Erreur.cpp in Sources */,
+				CEA9127411B1568C00B93666 /* Euclide.cpp in Sources */,
+				CEA9127511B1568C00B93666 /* HashTables.cpp in Sources */,
+				CEA9127611B1568C00B93666 /* Main.cpp in Sources */,
+				CEA9127711B1568C00B93666 /* Mouvements.cpp in Sources */,
+				CEA9127811B1568C00B93666 /* Output.cpp in Sources */,
+				CEA9127911B1568C00B93666 /* Partie.cpp in Sources */,
+				CEA9127A11B1568C00B93666 /* Permutation.cpp in Sources */,
+				CEA9127B11B1568C00B93666 /* Position.cpp in Sources */,
+				CEA9127C11B1568C00B93666 /* Timer.cpp in Sources */,
+				CEA9127D11B1568C00B93666 /* UnixOutput.cpp in Sources */,
+				CEA9127E11B1568C00B93666 /* UnixSave.cpp in Sources */,
+				CEA9127F11B1568C00B93666 /* MacSystem.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB923208733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = Euclide;
+			};
+			name = Debug;
+		};
+		1DEB923308733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = Euclide;
+			};
+			name = Release;
+		};
+		1DEB923608733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		1DEB923708733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CONFIGURATION_BUILD_DIR = ..;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "Euclide" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923208733DC60010E9CD /* Debug */,
+				1DEB923308733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "Euclide" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923608733DC60010E9CD /* Debug */,
+				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
