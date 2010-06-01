@@ -338,7 +338,7 @@ void VerificationDesEchecs(const position *Position)
 					if (Diagramme->Pieces[Case] == CAVALIER)
 						Echecs[Couleur] = true;
 
-				if (abs(DeltaX * DeltaY) <= 1)
+				if ((abs(DeltaX) <= 1) && (abs(DeltaY) <= 1))
 					if (Diagramme->Pieces[Case] == ROI)
 						Echecs[Couleur] = true;
 
