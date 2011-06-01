@@ -249,7 +249,9 @@ void OutputEntete(const char *PositionEPD, unsigned int DemiCoups)
 	Tampon[NombreDieses] = '\0';
 
 	fprintf(Output, "\n%s\n## %s ##\n%s\n\n", Tampon, EUCLIDE_VERSION, Tampon);
-	
+
+	unsigned int Blancs = 0;
+	unsigned int Noirs = 0;
 	unsigned int i = 0;
 	unsigned int k = 0;
 	do {
@@ -259,10 +261,42 @@ void OutputEntete(const char *PositionEPD, unsigned int DemiCoups)
 		if (!isspace(PositionEPD[k]))
 			Tampon[i++] = PositionEPD[k];
 	
+		Blancs += ((PositionEPD[k] >= 'A') && (PositionEPD[k] <= 'Z')) ? 1 : 0;
+		Noirs += ((PositionEPD[k] >= 'a') && (PositionEPD[k] <= 'z')) ? 1 : 0;
+
 	} while (PositionEPD[++k]);
 
 	Tampon[i] = '\0';		
 	fprintf(Output, "%s\n\t%s\n\t%u\n\n", GetTexte(MESSAGE_PROBLEMEANALYSE, 256, false), Tampon, DemiCoups);
+
+	fprintf(Output, "\t+---+---+---+---+---+---+---+---+\n\t");
+	for (k = 0; PositionEPD[k]; k++) {
+		if (isspace(PositionEPD[k]))
+			continue;
+
+		if (isdigit(PositionEPD[k]))
+			for (i = 0; i < (unsigned int)(PositionEPD[k] - '0'); i++)
+				fprintf(Output, "|   ");
+
+		if (isalpha(PositionEPD[k]))
+			fprintf(Output, "| %c ", PositionEPD[k]);
+			
+		if (PositionEPD[k] == '/')
+			fprintf(Output, "|\n\t+---+---+---+---+---+---+---+---+\n\t");
+	}
+
+	while (isspace(PositionEPD[--k]) && (k > 0))
+		;
+
+	if (PositionEPD[k] != '/')
+		fprintf(Output, "|\n\t+---+---+---+---+---+---+---+---+\n\t");
+
+	sprintf(Tampon, "%u%s%c ", DemiCoups / 2, GetTexte(MESSAGE_VIRGULE, 1, true), (DemiCoups % 2) ? '5' : '0');
+	strcat(Tampon, GetTexte(MESSAGE_COUPS, 32, false));
+	strcat(Tampon, "                                 ");
+	sprintf(&Tampon[33 - (5 + ((Blancs >= 10) ? 1 : 0) + ((Noirs >= 10) ? 1 : 0))], "(%d+%d)", Blancs, Noirs);
+	fprintf(Output, "%s\n\n", Tampon);
+
 	fflush(Output);
 }
 
