@@ -1,4 +1,6 @@
 #include <windows.h>
+#include <shlwapi.h>
+#include <strsafe.h>
 #include <math.h>
 #include "System.h"
 
@@ -21,6 +23,22 @@ unsigned int MemoireDisponible()
 	unsigned int MemoireVirtuelle = (unsigned int)(MemoireVirtuelleDisponible - 0.5);
 
 	return min(MemoirePhysique, MemoireVirtuelle);
+}
+
+/*************************************************************/
+
+const char *CheminAlternatif(const char *Fichier)
+{
+	static char Chemin[MAX_PATH];
+	ZeroMemory(Chemin, sizeof(Chemin));
+	GetModuleFileName(NULL, Chemin, sizeof(Chemin) / sizeof(Chemin[0]) - 1);
+
+	char *Executable = PathFindFileName(Chemin);
+	if (!Executable)
+		return Fichier;
+
+	StringCchCopy(Executable, sizeof(Chemin) / sizeof(Chemin[0]) - (Executable - Chemin), Fichier);
+	return Chemin;
 }
 
 /*************************************************************/

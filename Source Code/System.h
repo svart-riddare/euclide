@@ -5,6 +5,8 @@
 
 unsigned int MemoireDisponible();
 
+const char *CheminAlternatif(const char *Fichier);
+
 /*************************************************************/
 
 #endif
