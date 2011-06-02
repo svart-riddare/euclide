@@ -43,7 +43,7 @@ int main(int NombreArguments, char *Arguments[])
 					Continuer = false;
 			}
 		}
-		else if (strcmp(Arguments[1], "-batch") == 0) {
+		else if ((strcmp(Arguments[1], "-b") == 0) || (strcmp(Arguments[1], "-batch") == 0) || (strcmp(Arguments[1], "--batch") == 0)) {
 			ModeExpress = true;
 		}
 		else if (memcmp(Arguments[1], "-m", strlen("-m")) == 0) {
