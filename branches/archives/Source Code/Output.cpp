@@ -5,6 +5,7 @@
 #include "Erreur.h"
 #include "Output.h"
 #include "Partie.h"
+#include "System.h"
 #include "Timer.h"
 #include "Version.h"
 
@@ -42,6 +43,8 @@ void ChoixDeLangue(langue Langue)
 		Textes[i] = NULL;
 
 	FILE *Source = fopen(FichiersTexte[Langue], "r");
+	if (!Source)
+		Source = fopen(CheminAlternatif(FichiersTexte[Langue]), "r");
 	if (!Source)
 		ErreurFichierLangue(FichiersTexte[Langue]);
 
