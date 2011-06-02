@@ -986,6 +986,7 @@ void CalculDesLiensDePriorite(pseudopartie *Partie)
 				vie *Pieces = (CouleurMorts == BLANCS) ? Partie->Strategie->PiecesBlanches : Partie->Strategie->PiecesNoires;
 				unsigned int *IndexAssassins = (CouleurMorts == BLANCS) ? Partie->IndexPremiersCoupsNoirs : Partie->IndexPremiersCoupsBlancs;
 				coup *CoupsAssassins = (CouleurMorts == BLANCS) ? Partie->CoupsNoirs : Partie->CoupsBlancs;
+				unsigned int CoupsLibresAssassin = (CouleurMorts == BLANCS) ? Partie->Strategie->CoupsLibresNoirs : Partie->Strategie->CoupsLibresBlancs;
 				bool VraimentMort = (CouleurMorts == BLANCS) ? (Partie->Strategie->CoupsLibresBlancs < 2) : (Partie->Strategie->CoupsLibresNoirs < 2);
 
 				for (unsigned int h = 0; h < MaxHommes; h++) {
@@ -1024,7 +1025,8 @@ void CalculDesLiensDePriorite(pseudopartie *Partie)
 						Assassinat++;
 
 					if (Assassinat->Dernier || (Coup == (Assassinat + 1))) {
-						Coup->DoitSuivre[Coup->NombreDoitSuivre++] = Assassinat;
+						if (!Assassinat->Dernier || (CoupsLibresAssassin < 2) || (Assassinat->Type == PION))
+							Coup->DoitSuivre[Coup->NombreDoitSuivre++] = Assassinat;
 					}
 					else {
 						Coup->DoitSuivre[Coup->NombreDoitSuivre++] = Assassinat + 1;
