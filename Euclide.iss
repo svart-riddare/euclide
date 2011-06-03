@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Euclide
-AppVerName=Euclide 0.98
+AppVerName=Euclide 0.99
 AppPublisher=Étienne Dupuis
 AppPublisherURL=http://lestourtereaux.free.fr/euclide/
 AppSupportURL=http://lestourtereaux.free.fr/euclide/
@@ -11,7 +11,7 @@ AppUpdatesURL=http://lestourtereaux.free.fr/euclide/
 DefaultDirName={pf}\Euclide
 DefaultGroupName=Euclide
 
-AppVersion=0.98
+AppVersion=0.99
 ; uncomment the following line if you want your installation to run on NT 3.51 too.
 ; MinVersion=4,3.51
 
@@ -36,7 +36,7 @@ Source: Euclide.txt; DestDir: {app}; Flags: ignoreversion; Permissions: users-mo
 
 [Icons]
 Name: {group}\Euclide; Filename: {app}\Euclide.exe; Parameters: Input.txt Output.txt; WorkingDir: {app}; IconIndex: 0
-Name: {group}\Euclide (Batch Mode); Filename: {app}\Euclide.exe; Parameters: Input.txt Output.txt -batch; WorkingDir: {app}; IconIndex: 0
+Name: {group}\Euclide (Batch Mode); Filename: {app}\Euclide.exe; Parameters: Input.txt Output.txt --batch; WorkingDir: {app}; IconIndex: 0
 Name: {group}\Input File; Filename: {app}\Input.txt; IconIndex: 0
 Name: {group}\Output File; Filename: {app}\Output.txt; IconIndex: 0
 Name: {group}\Help Files\Help; Filename: {app}\Euclide.html; IconIndex: 0
