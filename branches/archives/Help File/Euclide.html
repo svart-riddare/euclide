@@ -5,8 +5,8 @@
 <HEAD>
 <META HTTP-EQUIV = "Content-Type" CONTENT = "text/html; charset=iso-8859-1">
 <META NAME = author CONTENT = "&Eacute;tienne Dupuis">
-<META NAME = copyright CONTENT = "Copyright 2000-2009, &Eacute;tienne Dupuis">
-<TITLE>Euclide 0.98 - Help File</TITLE>
+<META NAME = copyright CONTENT = "Copyright 2000-2011, &Eacute;tienne Dupuis">
+<TITLE>Euclide 0.99 - Help File</TITLE>
 </HEAD>
 
 <BODY>
@@ -33,6 +33,14 @@ It is distributed as freeware in the hope that it will help proofgame composers 
 <!-- *********************************************************************** -->
 
 <H2>2. What's New</H2>
+
+<P>
+Version 0.99 has two minor improvements :
+<UL>
+	<LI>The output file now contains a diagram.
+	<LI>The working directory no longer needs to be the install directory.
+</UL>
+</P>
 
 <P>
 Version 0.95 showcases the following major improvements :
@@ -142,7 +150,7 @@ If no output file is given, file <CODE><NOBR>Output.txt</NOBR></CODE> will be us
 <P>
 Available options are:
 <UL>
-	<LI><CODE>-batch</CODE> will instruct Euclide not to wait for user input between problems.</LI>
+	<LI><CODE>-b</CODE> or <CODE>--batch</CODE> will instruct Euclide not to wait for user input between problems.</LI>
 	<LI><CODE>-s<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to start solving from the <I>nth</I> strategy.
 	Note that reaching this strategy may take a substantial amount of time.</LI>
 	<LI><CODE>-m<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to allocate 2<SUP>n</SUP> bytes of memory for hashtables.
@@ -216,11 +224,11 @@ In all cases, the author would be grateful if you could<OL>
 
 <P>
 Official Linux supports for <EM>Euclide</EM> has been introduced with version 0.95.
-However, as the author does not master this environment, there is no installation packages.
+However, as the author does not master this environment, there is no installation package.
 Linux users are invited to follow these steps to get <EM>Euclide</EM> working on Linux :
 <OL>
 	<LI>Install the following packages : <CODE>svn</CODE>, <CODE>g++</CODE> and <CODE>libncursesw5-dev</CODE>.
-		The first is required to checkout the source code, the second is a C++ compiler while the third is a library required for compilation.</LI>
+		The first is required to retrieve the source code, the second is a C++ compiler while the third is a library required for compilation.</LI>
 	<LI>Get the source code : <CODE>svn checkout http://euclide.googlecode.com/svn/branches/archives euclide</CODE>.</LI>
 	<LI>Compile the source code : <CODE>make</CODE> in folder <CODE>euclide/Project Files</CODE>.
 	    This will create a file named <CODE>euclide</CODE> in the parent folder.</LI>
@@ -235,7 +243,7 @@ There are almost no differences with the Windows implementation.
 
 <P>
 Official Mac OS X support for <EM>Euclide </EM> has been introduced with version 0.97.
-However, as the author does not master this environment, there is no installation packages.
+However, as the author does not master this environment, there is no installation package.
 Using <EM>Euclide</EM> requires to use the terminal window as opposed to Apple's user friendly applications.
 Mac OS X users are invited to follow these steps to get <EM>Euclide</EM> working on Mac OS X :
 <OL>
