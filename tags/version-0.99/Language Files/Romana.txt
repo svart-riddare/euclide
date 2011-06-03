@@ -1,0 +1,57 @@
+ pCNNTDR
+,
+mutari
+Apasati o tasta pentru continuare...
+Eroare interna! Va rugam contactati autorul.
+Analiza completa.
+Fara solutie
+O solutie
+Solutie unica
+solutii
+solutii distincte
+Dubla
+
+Analiza structurii de pioni
+Numararea pieselor
+Marcarea casutelor moarte
+Analiza mutarilor
+Gasirea traiectoriilor posibile
+Analiza pozitiei nebunilor
+Respingerea traiectoriilor prea lungi
+Analiza sumara a capturilor
+Determinarea traiectoriilor pieselor capturate
+Analiza rocadelor
+Examenul pieselor din promotie
+Studiul permutarilor pentru fiecare tip de figura
+Pregatirea scanarii tuturor strategiilor posibile
+Cautarea unei strategii
+Analiza strategiei
+Relansarea analizei
+
+Prea multi pioni!
+Prea multe piese!
+Prea multe piese din promotie!
+Fiecare culoare trebuie sa aiba un rege si numai unul!
+Structura de pioni este ilegala.
+Confuzie de limba in timpul decodarii sirului EPD.
+Eroare de decodare a sirului EPD.
+Numar insuficient de mutari pentru atingerea pozitiei.
+Prezenta inexplicabila a unor anumite piese.
+Nu se pot explica anumite capturi.
+Prezenta inexplicabila a anumitor piese din promotie.
+Problema nu are solutie! Verificati enuntul cu atentie.
+Analiza intrerupta de utilizator.
+Eroare de citire!
+[Euclide.exe] Argumentele incorecte ale liniei de comanda.
+Nu s-a putut identifica enuntul.
+Euclide nu poate analiza o partida atit de lunga.
+
+Problema analizata:
+Solutie
+Rezultat:
+secunde
+Analiza intrerupta
+<Omisa> Strategie
+Reluarea analizei cu pornire de la strategia
+
+Vlaicu Crisan
