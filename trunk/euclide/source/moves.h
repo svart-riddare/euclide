@@ -11,7 +11,7 @@ class Piece;
 
 /* -------------------------------------------------------------------------- */
 
-class Move
+class Move : public taggable<bool>
 {
 	public :
 		Move();

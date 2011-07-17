@@ -1485,6 +1485,144 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves moves[2], int recursion)
+{
+	int requiredMoves = infinity;
+
+	/* -- Try all moves for both pieces -- */
+
+	for (int k = 0; k < 2; k++)
+	{
+		/* -- Check that we can still play -- */
+
+		if ((int)moves[k].size() >= pieces[k]->_availableMoves)
+			continue;
+
+		for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+		{
+			/* -- Check if we can play this move -- */
+
+			if (move->from() != squares[k])
+				continue;
+
+			if (move->isObstruction(squares[k ^ 1]))
+				continue;
+
+			if (move->to() == squares[k ^ 1])
+				continue;
+
+			/* -- Check that playing this move makes sense -- */
+
+			if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - (int)moves[k].size() - 1)
+				continue;
+
+			/* -- Play the move -- */
+
+			moves[k].push_back(*move);
+			squares[k] = move->to();
+
+			if (pieces[0]->_possibleSquares[squares[0]] && pieces[1]->_possibleSquares[squares[1]])
+			{
+				/* -- Goal has been reached, keep number of moves -- */
+
+				minimize(requiredMoves, (int)(moves[0].size() + moves[1].size()));
+
+				/* -- Label all moves -- */
+
+				for (int k = 0; k < 2; k++)
+					std::for_each(moves[k].begin(), moves[k].end(), boost::bind(&Move::tag, _1, cref(true)));
+			}
+			else
+			{
+				/* -- Recursive call -- */
+
+				minimize(requiredMoves, findMutualObstructions(pieces, squares, moves, recursion + 1));
+			}
+
+			/* -- Unplay the move -- */
+
+			moves[k].pop_back();
+			squares[k] = move->from();
+		}
+	}
+
+	/* -- Return required moves -- */
+
+	return requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Piece::setMutualObstructions(Piece& piece, int *requiredMoves)
+{
+	if (requiredMoves)
+		*requiredMoves = 0;
+
+	if (&piece == this)
+		return false;
+
+	/* -- Skip useless computations -- */
+
+	if ((_availableMoves >= moves()) && (piece._availableMoves >= piece.moves()))
+		return false;
+
+	/* -- Skip if there is too many possibilities -- */
+
+	if ((moves() + piece.moves()) >= 100)
+		return false;
+
+	/* -- This function does not implement captures yet -- */
+
+	if (!!_captured || !!piece._captured)
+		return false;
+
+	/* -- This function does not handle castling yet -- */
+
+	if ((_initial != _xinitial) || (piece._initial != piece._xinitial))
+		return false;
+
+	/* -- Initialization -- */
+
+	Piece *pieces[2] = { this, &piece };
+
+	Square squares[2] = { pieces[0]->_initial, pieces[1]->_initial };
+	Moves moves[2];
+
+	/* -- Tag all moves as unused -- */
+
+	for (int k = 0; k < 2; k++)
+		std::for_each(pieces[k]->_moves.begin(), pieces[k]->_moves.end(), boost::bind(&Move::tag, _1, cref(false)));
+
+	/* -- Recursively try all possible move order for these two pieces -- */
+
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, moves, 0);
+
+	/* -- Mark as impossible all moves that have not been played -- */
+
+	bool modified = false;
+	for (int k = 0; k < 2; k++)
+	{
+		for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+		{
+			if (!move->tag())
+			{
+				pieces[k]->_optimized = false;
+				move->invalidate();
+				modified = true;
+			}
+		}
+	}
+	
+	/* -- Return number of required moves -- */
+
+	if (requiredMoves)
+		*requiredMoves = requiredMovesForBothPieces;
+
+	return modified;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Piece::setPossibleCaptures(const Squares& captures)
 {
 	/* -- Return if we already have this knowledge -- */

@@ -488,6 +488,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\utilities\tag.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\utilities\vector.h"
 				>
 			</File>
