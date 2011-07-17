@@ -57,6 +57,7 @@ class Board
 
 		void optimizeLevelOne();
 		void optimizeLevelTwo();
+		void optimizeLevelThree();
 		
 	private :
 		Piece *_pieces[NumColors][NumSupermen];   /**< Movement descriptors for each piece type. */

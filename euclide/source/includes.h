@@ -58,6 +58,7 @@ using boost::tuples::make_tuple;
 #include "utilities/pointer.h"
 #include "utilities/predicates.h"
 #include "utilities/vector.h"
+#include "utilities/tag.h"
 
 /* -------------------------------------------------------------------------- */
 

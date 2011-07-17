@@ -581,11 +581,33 @@ void Board::optimizeLevelTwo()
 
 /* -------------------------------------------------------------------------- */
 
+void Board::optimizeLevelThree()
+{
+	/* -- Take mutual obstructions into account -- */
+
+	bool modified = false;
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (_pieces[color][man] && _pieces[color][man]->moves())
+				for (Man xman = FirstMan; xman <= LastMan; xman++)
+					if (_pieces[color][xman] && _pieces[color][xman]->moves() && (man < xman))
+						if (_pieces[color][man]->setMutualObstructions(*_pieces[color][xman]))
+							modified = true;
+
+	if (modified)
+		for (Color color = FirstColor; color <= LastColor; color++)
+			for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
+				if (_pieces[color][superman])
+					_pieces[color][superman]->optimize();
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Board::optimize(int level, bool recursive)
 {
 	/* -- If level is out of bound, just exit -- */
 
-	if ((level <= 0) || (level > 2))
+	if ((level <= 0) || (level > 3))
 		return false;
 
 	/* -- Save number of possibles moves -- */
@@ -598,6 +620,8 @@ bool Board::optimize(int level, bool recursive)
 		optimizeLevelOne();
 	if (level == 2)
 		optimizeLevelTwo();
+	if (level == 3)
+		optimizeLevelThree();
 
 	/* -- Have we optimized something ? -- */
 
