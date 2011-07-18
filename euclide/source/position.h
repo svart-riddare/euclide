@@ -13,7 +13,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 /**
- * \class Pieces
+ * \class Position
  * Static information (Partitions, Targets) associated with all pieces of a
  * given color.
  */
@@ -45,6 +45,11 @@ class Position : public Partitions
 			{ return _requiredMoves; }
 		inline int requiredCaptures() const
 			{ return _requiredCaptures; }
+		
+		inline int availableMoves() const
+			{ return _availableMoves; }
+		inline int availableCaptures() const
+			{ return _availableCaptures; }
 
 	public :
 		inline Color color() const
@@ -59,6 +64,9 @@ class Position : public Partitions
 	private :
 		int _requiredMoves;       /**< Total number of moves required to meet all targets for this player. */
 		int _requiredCaptures;    /**< Total number of captures required to meet all targets for this player. */
+
+		int _availableMoves;      /**< Total number of moves available to solve this problem. */
+		int _availableCaptures;   /**< Total number of captures available to solve this problem. */
 };
 
 /* -------------------------------------------------------------------------- */

@@ -1,4 +1,5 @@
 #include "board.h"
+#include "implications.h"
 #include "position.h"
 #include "pieces.h"
 
@@ -420,81 +421,20 @@ void Board::setPossibleCaptures(Man man, Superman superman, Color color, const S
 
 void Board::optimizeLevelOne()
 {
-	/* -- Temporary structure describing constraints for each man -- */
-
-	struct 
-	{
-		int availableMoves;
-		int availableCaptures;
-
-		Squares squares;
-
-		Supermen supermen;
-		Superman superman;
-
-		bool captured;
-		bool alive;
-			
-	} men[NumMen];
-
 	/* -- Loop over both colors -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
-		const Position *position = _positions[color];
+		/* -- Retrieve position implications -- */
 
-		int availableMoves = _problem->moves(color);
-		int availableCaptures = _problem->captures(color);
-
-		/* -- Initialize local information -- */
-
-		for (Man man = FirstMan; man <= LastMan; man++)
-		{
-			men[man].squares.reset();
-			men[man].supermen.reset();
-
-			men[man].availableMoves = 0;
-			men[man].availableCaptures = 0;
-
-			men[man].captured = false;
-			men[man].alive = false;
-		}
-
-		/* -- Loop through partitions, targets and destinations to collect the information -- */
-
-		for	(Partitions::const_iterator partition = position->begin(); partition != position->end(); partition++)
-		{
-			int unassignedMoves = availableMoves - position->requiredMoves() + partition->requiredMoves() - partition->assignedMoves();
-			int unassignedCaptures = availableCaptures - position->requiredCaptures() + partition->requiredCaptures() - partition->assignedCaptures();
-
-			for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
-			{
-				for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
-				{
-					Man man = destination->man();
-					Superman superman = destination->superman();
-					Square square = destination->square();
-
-					maximize(men[man].availableMoves, target->requiredMoves() + unassignedMoves);
-					maximize(men[man].availableCaptures, target->requiredCaptures() + unassignedCaptures);
-
-					men[man].squares[square] = true;
-					men[man].supermen[superman] = true;
-
-					if (destination->captured())
-						men[man].captured = true;
-					else
-						men[man].alive = true;
-				}
-			}
-		}
+		Implications implications(*_positions[color]);
 
 		/* -- Find possible capture squares -- */
 
 		Squares captures;
 		for (Man man = FirstMan; man <= LastMan; man++)
-			if (men[man].captured)
-				captures |= men[man].squares;
+			if (implications.captured(man))
+				captures |= implications.squares(man);
 
 		/* -- Synchronize castling -- */
 
@@ -503,7 +443,7 @@ void Board::optimizeLevelOne()
 		/* -- Apply move restrictions -- */
 
 		for (Man man = FirstMan; man <= LastMan; man++)
-			setPossibleSquares(man, men[man].supermen, color, men[man].squares, men[man].captured ? (men[man].alive ? tribool(indeterminate) : true) : false, men[man].availableMoves, men[man].availableCaptures);
+			setPossibleSquares(man, implications.supermen(man), color, implications.squares(man), implications.captured(man) ? (implications.alive(man) ? tribool(indeterminate) : true) : false, implications.availableMoves(man), implications.availableCaptures(man));
 
 		/* -- Apply capture restrictions -- */
 
@@ -513,14 +453,14 @@ void Board::optimizeLevelOne()
 		/* -- Block squares -- */
 
 		for (Man man = FirstMan; man <= LastMan; man++)
-			if (!men[man].captured)
-				block(man, men[man].supermen, color);
+			if (!implications.captured(man))
+				block(man, implications.supermen(man), color);
 
 		/* -- Delete useless supermen -- */
 
 		for (Superman superman = FirstPromotedMan; superman <= LastPromotedMan; superman++)
 		{
-			if (!men[superman.man()].supermen[superman])
+			if (!implications.supermen(superman.man())[superman])
 			{
 				delete _pieces[color][superman];
 				_pieces[color][superman] = NULL;
@@ -587,12 +527,26 @@ void Board::optimizeLevelThree()
 
 	bool modified = false;
 	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		Implications implications(*_positions[color]);
+
 		for (Man man = FirstMan; man <= LastMan; man++)
+		{
 			if (_pieces[color][man] && _pieces[color][man]->moves())
+			{
 				for (Man xman = FirstMan; xman <= LastMan; xman++)
+				{
 					if (_pieces[color][xman] && _pieces[color][xman]->moves() && (man < xman))
-						if (_pieces[color][man]->setMutualObstructions(*_pieces[color][xman]))
+					{
+						int availableMoves = implications.availableMoves(man) + implications.availableMoves(xman) - std::min(implications.unassignedMoves(man), implications.unassignedMoves(xman));
+
+						if (_pieces[color][man]->setMutualObstructions(*_pieces[color][xman], availableMoves))
 							modified = true;
+					}
+				}
+			}
+		}
+	}
 
 	if (modified)
 		for (Color color = FirstColor; color <= LastColor; color++)

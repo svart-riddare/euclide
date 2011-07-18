@@ -13,6 +13,9 @@ Position::Position(const Problem& problem, Color color)
 	_requiredMoves = 0;
 	_requiredCaptures = 0;
 
+	_availableMoves = problem.moves(color);
+	_availableCaptures = problem.captures(color);
+
 	/* -- Create single partition -- */
 
 	reserve(NumMen);
