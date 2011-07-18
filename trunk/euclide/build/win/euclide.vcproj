@@ -303,6 +303,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\source\implications.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\moves.cpp"
 				>
 			</File>
@@ -349,6 +353,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\destinations.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\implications.h"
 				>
 			</File>
 			<File

@@ -1485,7 +1485,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves moves[2], int recursion)
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves moves[2], int availableMoves, int recursion)
 {
 	int requiredMoves = infinity;
 
@@ -1536,7 +1536,8 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves mov
 			{
 				/* -- Recursive call -- */
 
-				minimize(requiredMoves, findMutualObstructions(pieces, squares, moves, recursion + 1));
+				if (availableMoves > 0)
+					minimize(requiredMoves, findMutualObstructions(pieces, squares, moves, availableMoves - 1, recursion + 1));
 			}
 
 			/* -- Unplay the move -- */
@@ -1553,7 +1554,7 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves mov
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int *requiredMoves)
+bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *requiredMoves)
 {
 	if (requiredMoves)
 		*requiredMoves = 0;
@@ -1595,7 +1596,7 @@ bool Piece::setMutualObstructions(Piece& piece, int *requiredMoves)
 
 	/* -- Recursively try all possible move order for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, moves, 0);
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, moves, availableMoves, 0);
 
 	/* -- Mark as impossible all moves that have not been played -- */
 
