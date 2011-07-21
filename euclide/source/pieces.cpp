@@ -1554,6 +1554,13 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves mov
 
 /* -------------------------------------------------------------------------- */
 
+bool Piece::setMutualObstructions(Piece& piece, int *requiredMoves)
+{
+	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, requiredMoves);
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *requiredMoves)
 {
 	if (requiredMoves)
@@ -1569,7 +1576,10 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *require
 
 	/* -- Skip if there is too many possibilities -- */
 
-	if ((moves() + piece.moves()) >= 100)
+	if ((moves() + piece.moves()) >= 75)
+		return false;
+
+	if (availableMoves > 12)
 		return false;
 
 	/* -- This function does not implement captures yet -- */
