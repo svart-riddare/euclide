@@ -48,6 +48,7 @@ class Piece
 		void setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(const Squares& captures);
 		void setMandatoryMoveConstraints(const Piece& piece, const Moves& moves);
+		bool setMutualObstructions(Piece& piece, int *requiredMoves = NULL);
 		bool setMutualObstructions(Piece& piece, int availableMoves, int *requiredMoves = NULL);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);

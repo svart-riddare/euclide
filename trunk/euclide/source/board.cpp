@@ -523,7 +523,7 @@ void Board::optimizeLevelTwo()
 
 void Board::optimizeLevelThree()
 {
-	/* -- Take mutual obstructions into account -- */
+	/* -- Take mutual obstructions between two pieces of the same color into account -- */
 
 	bool modified = false;
 	for (Color color = FirstColor; color <= LastColor; color++)
@@ -547,6 +547,25 @@ void Board::optimizeLevelThree()
 			}
 		}
 	}
+
+	/* -- Take mutual obstructions between two pieces of opposite colors into account -- */
+
+	for (Man man = FirstMan; man <= LastMan; man++)
+	{
+		if (_pieces[White][man] && _pieces[White][man]->moves())
+		{
+			for (Man xman = FirstMan; xman <= LastMan; xman++)
+			{
+				if (_pieces[Black][xman] && _pieces[Black][xman]->moves())
+				{
+					if (_pieces[White][man]->setMutualObstructions(*_pieces[Black][xman]))
+						modified = true;
+				}
+			}
+		}
+	}
+
+	/* -- Complete optimization -- */
 
 	if (modified)
 		for (Color color = FirstColor; color <= LastColor; color++)
