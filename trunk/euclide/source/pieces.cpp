@@ -412,6 +412,11 @@ void Piece::computeForwardDistances(Square square, int distances[NumSquares], bo
 			distances[_xinitial] = 0;
 			squares.push(_xinitial);
 		}
+
+		/* -- If castling is mandatory, the initial rook square distance is non zero -- */
+
+		if (_teleported)
+			distances[_initial] = infinity;
 	}
 	
 	/* -- Loop until every reachable square has been handled -- */
