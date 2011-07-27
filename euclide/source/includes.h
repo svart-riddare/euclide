@@ -24,6 +24,7 @@ using std::queue;
 using std::priority_queue;
 using std::vector;
 using std::pair;
+using std::make_pair;
 
 /* -------------------------------------------------------------------------- */
 
@@ -31,11 +32,16 @@ using std::pair;
 
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
 
 using boost::ref;
 using boost::cref;
+
+using boost::int8_t;
+using boost::int16_t;
+using boost::int32_t;
 
 using boost::logic::tribool;
 using boost::logic::indeterminate;

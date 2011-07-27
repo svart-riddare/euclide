@@ -18,6 +18,11 @@ class matrix : public array<array<T, N>, M>
 			{ for (int n = 0; n < N; n++)  (*this)[n].assign(value); }
 
 	public :
+		typedef T value_type;
+		typedef T& reference;
+		typedef const T& const_reference;
+
+	public :
 		const array<T, N>& operator[](int index) const
 			{ return this->at(index); }
 

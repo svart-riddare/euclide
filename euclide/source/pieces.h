@@ -3,6 +3,7 @@
 
 #include "includes.h"
 #include "moves.h"
+#include "hashtables.h"
 
 namespace euclide
 {
@@ -104,7 +105,7 @@ class Piece
 		bool mayReach(Square square) const;
 
 		void findMandatoryMoves();
-		int findMutualObstructions(Piece *pieces[2], Square squares[2], Moves moves[2], int availableMoves, int recursion);
+		int findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int recursion);
 
 	private :
 		static inline bool isMovePossible(const Move *move)
