@@ -1,5 +1,6 @@
 #include "pieces.h"
 #include "moves.h"
+#include "hashtables.h"
 #include "obstructions.h"
 
 namespace euclide
@@ -1490,65 +1491,77 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], Moves moves[2], int availableMoves, int recursion)
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int recursion)
 {
 	int requiredMoves = infinity;
 
-	/* -- Try all moves for both pieces -- */
+	/* -- Check if we have achieved our goal -- */
 
-	for (int k = 0; k < 2; k++)
+	if (pieces[0]->_possibleSquares[squares[0]] && pieces[1]->_possibleSquares[squares[1]])
+		requiredMoves = moves.size();
+
+	/* -- Return if there is no more available moves -- */
+
+	if (availableMoves <= 0)
+		return requiredMoves;
+
+	/* -- If we do not know the result, we must perform calculations -- */
+
+	if (!processed[squares[0]][squares[1]].visited(nmoves, &requiredMoves))
 	{
-		/* -- Check that we can still play -- */
+		/* -- Try all moves for both pieces -- */
 
-		if ((int)moves[k].size() >= pieces[k]->_availableMoves)
-			continue;
-
-		for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+		for (int k = 0; k < 2; k++)
 		{
-			/* -- Check if we can play this move -- */
+			/* -- Check that we can still play -- */
 
-			if (move->from() != squares[k])
+			if (nmoves[k] >= pieces[k]->_availableMoves)
 				continue;
 
-			if (move->isObstruction(squares[k ^ 1]))
-				continue;
-
-			if (move->to() == squares[k ^ 1])
-				continue;
-
-			/* -- Check that playing this move makes sense -- */
-
-			if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - (int)moves[k].size() - 1)
-				continue;
-
-			/* -- Play the move -- */
-
-			moves[k].push_back(*move);
-			squares[k] = move->to();
-
-			if (pieces[0]->_possibleSquares[squares[0]] && pieces[1]->_possibleSquares[squares[1]])
+			for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
 			{
-				/* -- Goal has been reached, keep number of moves -- */
+				/* -- Check if we can play this move -- */
 
-				minimize(requiredMoves, (int)(moves[0].size() + moves[1].size()));
+				if (move->from() != squares[k])
+					continue;
 
-				/* -- Label all moves -- */
+				if (move->isObstruction(squares[k ^ 1]))
+					continue;
 
-				for (int k = 0; k < 2; k++)
-					std::for_each(moves[k].begin(), moves[k].end(), boost::bind(&Move::tag, _1, cref(true)));
-			}
-			else
-			{
+				if (move->to() == squares[k ^ 1])
+					continue;
+
+				/* -- Check that playing this move makes sense -- */
+
+				if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - nmoves[k] - 1)
+					continue;
+
+				/* -- Play the move -- */
+
+				squares[k] = move->to();
+				moves.push_back(*move);
+				nmoves[k] += 1;
+
 				/* -- Recursive call -- */
 
-				if (availableMoves > 0)
-					minimize(requiredMoves, findMutualObstructions(pieces, squares, moves, availableMoves - 1, recursion + 1));
+				int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, recursion + 1);
+				
+				/* -- Update hash table and tag successful moves -- */
+
+				processed[squares[0]][squares[1]].visited(nmoves, result);
+				if (result < infinity)
+					move->tag(true);
+
+				/* -- Update number of required moves -- */
+
+				minimize(requiredMoves, result);
+
+				/* -- Unplay the move -- */
+
+				nmoves[k] -= 1;
+				moves.pop_back();
+				squares[k] = move->from();
 			}
-
-			/* -- Unplay the move -- */
-
-			moves[k].pop_back();
-			squares[k] = move->from();
 		}
 	}
 
@@ -1602,16 +1615,21 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *require
 	Piece *pieces[2] = { this, &piece };
 
 	Square squares[2] = { pieces[0]->_initial, pieces[1]->_initial };
-	Moves moves[2];
+	int nmoves[2] = { 0, 0 };
+	Moves moves;
+
+	/* -- Initialize hash table of positions already processed -- */
+
+	MiniHash processed;
 
 	/* -- Tag all moves as unused -- */
 
 	for (int k = 0; k < 2; k++)
-		std::for_each(pieces[k]->_moves.begin(), pieces[k]->_moves.end(), boost::bind(&Move::tag, _1, cref(false)));
+		std::for_each(pieces[k]->_moves.begin(), pieces[k]->_moves.end(), boost::bind(&Move::tag, _1, false));
 
 	/* -- Recursively try all possible move order for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, moves, availableMoves, 0);
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, 0);
 
 	/* -- Mark as impossible all moves that have not been played -- */
 

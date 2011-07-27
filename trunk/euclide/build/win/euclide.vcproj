@@ -303,6 +303,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\source\hashtables.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\implications.cpp"
 				>
 			</File>
@@ -353,6 +357,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\destinations.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\hashtables.h"
 				>
 			</File>
 			<File
