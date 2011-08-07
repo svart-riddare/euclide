@@ -1,4 +1,5 @@
 #include "board.h"
+#include "assignations.h"
 #include "implications.h"
 #include "position.h"
 #include "pieces.h"
@@ -17,6 +18,12 @@ Board::Board(const Position& whitePosition, const Position& blackPosition, const
 
 	_problem = &problem;
 
+	_assignedMoves[White] = new Assignations();
+	_assignedMoves[Black] = new Assignations();
+
+	_assignedCaptures[White] = new Assignations();
+	_assignedCaptures[Black] = new Assignations();
+
 	/* -- Initialize movement tables -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
@@ -28,6 +35,14 @@ Board::Board(const Position& whitePosition, const Position& blackPosition, const
 
 Board::~Board()
 {
+	/* -- Destroy member variables -- */
+
+	delete _assignedMoves[White];
+	delete _assignedMoves[Black];
+
+	delete _assignedCaptures[White];
+	delete _assignedCaptures[Black];
+
 	/* -- Release movement tables -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
@@ -427,7 +442,12 @@ void Board::optimizeLevelOne()
 	{
 		/* -- Retrieve position implications -- */
 
-		Implications implications(*_positions[color]);
+		Implications implications(*_positions[color], *_assignedMoves[color], *_assignedCaptures[color]);
+
+		/* -- Remove useless assignations -- */
+
+		_assignedMoves[color]->cleanup(implications, &Implications::assignedMoves);
+		_assignedCaptures[color]->cleanup(implications, &Implications::assignedCaptures);
 
 		/* -- Find possible capture squares -- */
 
@@ -523,55 +543,81 @@ void Board::optimizeLevelTwo()
 
 void Board::optimizeLevelThree()
 {
-	/* -- Take mutual obstructions between two pieces of the same color into account -- */
+	/* -- Get implications of the current position -- */
 
+	Implications implications[NumColors] = { Implications(*_positions[White], *_assignedMoves[White], *_assignedCaptures[White]), Implications(*_positions[Black], *_assignedMoves[Black], *_assignedCaptures[Black]) };
+
+	/* -- List all mutual obstructions -- */
+
+	std::vector<OptimizeLevelThreeItem> pairs;
+	pairs.reserve(NumColors * NumColors * NumMen * NumMen / 2);
+
+	for (Color colorA = FirstColor; colorA <= LastColor; colorA++)
+	{
+		for (Color colorB = colorA; colorB <= LastColor; colorB++)
+		{
+			for (Man manA = FirstMan; manA <= LastMan; manA++)
+			{
+				if (!_pieces[colorA][manA] || !_pieces[colorA][manA]->moves())
+					continue;
+
+				for (Man manB = (colorA == colorB) ? (man_t)(manA + 1) : FirstMan; manB <= LastMan; manB++)
+				{
+					if (!_pieces[colorB][manB] || !_pieces[colorB][manB]->moves())
+						continue;
+
+					OptimizeLevelThreeItem pair(manA, manB, colorA, colorB, 
+						_pieces[colorA][manA]->moves(), _pieces[colorB][manB]->moves(),
+						(colorA == colorB) ? implications[colorA].assignedMoves(manA, manB) : (implications[colorA].assignedMoves(manA) + implications[colorB].assignedMoves(manB)),
+						(colorA == colorB) ? implications[colorA].availableMoves(manA, manB) : (implications[colorA].availableMoves(manA) + implications[colorB].availableMoves(manB)));
+
+					pairs.push_back(pair);
+				}
+			}
+		}
+	}
+
+	/* -- Sort pairs -- */
+
+	std::sort(pairs.begin(), pairs.end());
+
+	/* -- For each pair, take mutual obstructions between the two pieces into account -- */
+
+	bool assigned = false;
 	bool modified = false;
-	for (Color color = FirstColor; color <= LastColor; color++)
+	for (std::vector<OptimizeLevelThreeItem>::const_iterator pair = pairs.begin(); pair != pairs.end(); pair++)
 	{
-		Implications implications(*_positions[color]);
+		/* -- Let's not loose ourselves in infinite computations -- */
 
-		for (Man man = FirstMan; man <= LastMan; man++)
+		bool fast = pair->complexity >= 10000;
+		if (pair->complexity >= 25000)
+			break;
+
+		/* -- Mutual obstructions -- */
+
+		int requiredMoves = -1;
+		if (_pieces[pair->colorA][pair->manA]->setMutualObstructions(*_pieces[pair->colorB][pair->manB], pair->availableMoves, pair->assignedMoves, &requiredMoves, fast))
+			modified = true;
+
+		if ((requiredMoves > pair->assignedMoves) && (pair->colorA == pair->colorB))
+			assigned = true;
+
+		/* -- If we have modified something, complete optimization now -- */
+
+		if (modified)
 		{
-			if (_pieces[color][man] && _pieces[color][man]->moves())
-			{
-				for (Man xman = FirstMan; xman <= LastMan; xman++)
-				{
-					if (_pieces[color][xman] && _pieces[color][xman]->moves() && (man < xman))
-					{
-						int availableMoves = implications.availableMoves(man) + implications.availableMoves(xman) - std::min(implications.unassignedMoves(man), implications.unassignedMoves(xman));
-
-						if (_pieces[color][man]->setMutualObstructions(*_pieces[color][xman], availableMoves))
-							modified = true;
-					}
-				}
-			}
+			_pieces[pair->colorA][pair->manA]->optimize();
+			_pieces[pair->colorB][pair->manB]->optimize();
 		}
+
+		/* -- If we require more moves than expected, keep information and break -- */
+
+		if (assigned)
+			_assignedMoves[pair->colorA]->push_back(Assignation((1 << pair->manA) | (1 << pair->manB), pair->colorA, requiredMoves));
+			
+		if (assigned && modified)
+			break;
 	}
-
-	/* -- Take mutual obstructions between two pieces of opposite colors into account -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-	{
-		if (_pieces[White][man] && _pieces[White][man]->moves())
-		{
-			for (Man xman = FirstMan; xman <= LastMan; xman++)
-			{
-				if (_pieces[Black][xman] && _pieces[Black][xman]->moves())
-				{
-					if (_pieces[White][man]->setMutualObstructions(*_pieces[Black][xman]))
-						modified = true;
-				}
-			}
-		}
-	}
-
-	/* -- Complete optimization -- */
-
-	if (modified)
-		for (Color color = FirstColor; color <= LastColor; color++)
-			for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
-				if (_pieces[color][superman])
-					_pieces[color][superman]->optimize();
 }
 
 /* -------------------------------------------------------------------------- */

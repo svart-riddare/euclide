@@ -7,6 +7,13 @@ namespace euclide
 
 MiniHashEntry::MiniHashEntry()
 {
+	reset();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void MiniHashEntry::reset()
+{
 	_nvisits = 0;
 }
 
@@ -71,6 +78,15 @@ void MiniHashEntry::visited(const int moves[2], int requiredMoves)
 	_visits[m].first[0] = (int8_t)moves[0];
 	_visits[m].first[1] = (int8_t)moves[1];
 	_visits[m].second = (int16_t)requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void MiniHash::reset()
+{
+	for (int m = 0; m < NumSquares; m++)
+		for (int n = 0; n < NumSquares; n++)
+			(*this)[m][n].reset();
 }
 
 /* -------------------------------------------------------------------------- */

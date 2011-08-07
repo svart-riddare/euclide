@@ -7,11 +7,18 @@
 namespace euclide 
 {
 
+class Assignations;
+
 /* -------------------------------------------------------------------------- */
 
 /**
  * \class Implication
  * Various informations implied by the current position, for a given man and color.
+ */
+
+/**
+ * \class Implications
+ * Various informations implied by the current position, for a given color.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -22,9 +29,16 @@ class Implication
 		Implication();
 		~Implication();
 
+		void clear();
 		void add(int requiredMoves, int unassignedMoves, int requiredCaptures, int unassignedCaptures, Square square, Superman superman, bool captured);
+		void set(int requiredMoves, int availableMoves, int requiredCaptures, int availableCaptures);
+		void sub(int moves, int captures);
 
 	public :
+		inline int assignedMoves() const
+			{ return _assignedMoves; }
+		inline int assignedCaptures() const
+			{ return _assignedCaptures; }
 		inline int availableMoves() const
 			{ return _availableMoves; }
 		inline int availableCaptures() const
@@ -45,16 +59,18 @@ class Implication
 			{ return _alive; }
 
 	private :
-		int _availableMoves;
-		int _unassignedMoves;
-		int _availableCaptures;
-		int _unassignedCaptures;
+		int _assignedMoves;         /**< Number of moves assigned to this piece, i.e. that must have been played by this piece. */
+		int _availableMoves;        /**< Number of available moves for current piece. */
+		int _unassignedMoves;       /**< Number of unassigned moves available for current piece. */
+		int _assignedCaptures;      /**< Number of captures assigned to this piece, i.e. that lust have been performed by this piece. */
+		int _availableCaptures;     /**< Number of available captures for current piece. */
+		int _unassignedCaptures;    /**< Number of unassigned captures available for current piece. */
 
-		Squares _squares;
-		Supermen _supermen;
+		Squares _squares;           /**< Possible destination squares of current piece. */
+		Supermen _supermen;         /**< Possible supermen for current piece. */
 
-		bool _captured;
-		bool _alive;
+		bool _captured;             /**< True if piece may have been captured. */
+		bool _alive;                /**< True if piece may still be on the board. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -62,10 +78,20 @@ class Implication
 class Implications
 {
 	public :
+		Implications();
 		Implications(const Position& position);
+		Implications(const Position& position, const Assignations& assignedMoves, const Assignations& assignedCaptures);
 		~Implications();
 
+	protected :
+		void update(const Position& position, bool clear = true);
+		void update(const Assignations& assignedMoves, const Assignations& assignedCaptures);
+
 	public :
+		inline int assignedMoves(Man man) const
+			{ return _implications[man].assignedMoves(); }
+		inline int assignedCaptures(Man man) const
+			{ return _implications[man].assignedCaptures(); }
 		inline int availableMoves(Man man) const
 			{ return _implications[man].availableMoves(); }
 		inline int availableCaptures(Man man) const
@@ -85,8 +111,29 @@ class Implications
 		inline bool alive(Man man) const
 			{ return _implications[man].alive(); }
 
+	public :
+		int assignedMoves(Man man, Man xman) const;
+		int assignedCaptures(Man man, Man xman) const;
+		int availableMoves(Man man, Man xman) const;
+		int availableCaptures(Man man, Man xman) const;
+		int unassignedMoves(Man man, Man xman) const;
+		int unassignedCaptures(Man man, Man xman) const;
+
+	public :
+		int assignedMoves(Men men) const;
+		int assignedCaptures(Men men) const;
+		int availableMoves(Men men) const;
+		int availableCaptures(Men men) const;
+		int unassignedMoves(Men men) const;
+		int unassignedCaptures(Men men) const;
+
+		Squares squares(Men men) const;
+
 	private :
-		array<Implication, NumMen> _implications;
+		array<Implication, NumMen> _implications;    /**< Implications, for each piece. */
+
+		const Assignations *_assignedMoves;          /**< Assigned moves. */
+		const Assignations *_assignedCaptures;       /**< Assigned captures. */
 };
 
 /* -------------------------------------------------------------------------- */

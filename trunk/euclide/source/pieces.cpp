@@ -1491,7 +1491,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int recursion)
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int recursion)
 {
 	int requiredMoves = infinity;
 
@@ -1499,6 +1499,11 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 	if (pieces[0]->_possibleSquares[squares[0]] && pieces[1]->_possibleSquares[squares[1]])
 		requiredMoves = moves.size();
+
+	/* -- Return if performing more computations is useless -- */
+
+	if (requiredMoves <= assignedMoves)
+		return requiredMoves;
 
 	/* -- Return if there is no more available moves -- */
 
@@ -1544,7 +1549,7 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 				/* -- Recursive call -- */
 
-				int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, recursion + 1);
+				int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, recursion + 1);
 				
 				/* -- Update hash table and tag successful moves -- */
 
@@ -1561,6 +1566,11 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 				nmoves[k] -= 1;
 				moves.pop_back();
 				squares[k] = move->from();
+
+				/* -- Stop if performing more computations is useless -- */
+
+				if (requiredMoves <= assignedMoves)
+					return requiredMoves;
 			}
 		}
 	}
@@ -1572,14 +1582,14 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int *requiredMoves)
+bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, bool isFast)
 {
-	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, requiredMoves);
+	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, isFast);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *requiredMoves)
+bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, bool isFast)
 {
 	if (requiredMoves)
 		*requiredMoves = 0;
@@ -1592,17 +1602,9 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *require
 	if ((_availableMoves >= moves()) && (piece._availableMoves >= piece.moves()))
 		return false;
 
-	/* -- Skip if there is too many possibilities -- */
-
-	if ((moves() + piece.moves()) >= 75)
-		return false;
-
-	if (availableMoves > 12)
-		return false;
-
 	/* -- This function does not implement captures yet -- */
 
-	if (!!_captured || !!piece._captured)
+	if ((_captured != false) || (piece._captured != false))
 		return false;
 
 	/* -- This function does not handle castling yet -- */
@@ -1627,30 +1629,36 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int *require
 	for (int k = 0; k < 2; k++)
 		std::for_each(pieces[k]->_moves.begin(), pieces[k]->_moves.end(), boost::bind(&Move::tag, _1, false));
 
-	/* -- Recursively try all possible move order for these two pieces -- */
+	/* -- Recursively find the number of required moves for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, 0);
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, isFast ? assignedMoves : -1, 0);
+
+	/* -- Save result -- */
+
+	if (requiredMoves)
+		*requiredMoves = requiredMovesForBothPieces;
 
 	/* -- Mark as impossible all moves that have not been played -- */
 
 	bool modified = false;
-	for (int k = 0; k < 2; k++)
+
+	if (!isFast)
 	{
-		for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+		for (int k = 0; k < 2; k++)
 		{
-			if (!move->tag())
+			for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
 			{
-				pieces[k]->_optimized = false;
-				move->invalidate();
-				modified = true;
+				if (!move->tag())
+				{
+					pieces[k]->_optimized = false;
+					move->invalidate();
+					modified = true;
+				}
 			}
 		}
 	}
 	
-	/* -- Return number of required moves -- */
-
-	if (requiredMoves)
-		*requiredMoves = requiredMovesForBothPieces;
+	/* -- Return whether we have made some deductions or not -- */
 
 	return modified;
 }
