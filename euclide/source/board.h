@@ -6,6 +6,7 @@
 namespace euclide
 {
 
+class Assignations;
 class Position;
 class Piece;
 
@@ -58,12 +59,40 @@ class Board
 		void optimizeLevelOne();
 		void optimizeLevelTwo();
 		void optimizeLevelThree();
+
+	private :
+		class OptimizeLevelThreeItem
+		{
+			public :
+				OptimizeLevelThreeItem() {}
+				OptimizeLevelThreeItem(Man manA, Man manB, Color colorA, Color colorB, int movesA, int movesB, int assignedMoves, int availableMoves) : manA(manA), manB(manB), colorA(colorA), colorB(colorB), movesA(movesA), movesB(movesB), assignedMoves(assignedMoves), availableMoves(availableMoves)
+					{ complexity = std::min(movesA, movesB) * std::max(movesA, movesB) * (availableMoves - assignedMoves) * (availableMoves - assignedMoves); }
+				
+				bool operator<(const OptimizeLevelThreeItem& item) const
+					{ return complexity < item.complexity; }
+
+			public :
+				Man manA;
+				Man manB;
+				Color colorA;
+				Color colorB;
+				int movesA;
+				int movesB;
+	
+				int assignedMoves;
+				int availableMoves;
+
+				int complexity;
+		};
 		
 	private :
-		Piece *_pieces[NumColors][NumSupermen];   /**< Movement descriptors for each piece type. */
+		Piece *_pieces[NumColors][NumSupermen];        /**< Movement descriptors for each piece type. */
 		
-		const Position *_positions[NumColors];    /**< Positional deductions. */
-		const Problem *_problem;                  /**< Problem definition. */
+		const Position *_positions[NumColors];         /**< Positional deductions. */
+		const Problem *_problem;                       /**< Problem definition. */
+
+		Assignations *_assignedMoves[NumColors];       /**< Assigned moves. */
+		Assignations *_assignedCaptures[NumColors];    /**< Assigned captures. */
 };
 
 /* -------------------------------------------------------------------------- */

@@ -12,6 +12,7 @@ class MiniHashEntry
 {
 	public :
 		MiniHashEntry();
+		void reset();
 
 	public :
 		bool visited(const int moves[2], int *requiredMoves = NULL) const;
@@ -24,7 +25,11 @@ class MiniHashEntry
 
 /* -------------------------------------------------------------------------- */
 
-typedef matrix<MiniHashEntry, NumSquares, NumSquares> MiniHash;
+class MiniHash : public matrix<MiniHashEntry, NumSquares, NumSquares>
+{
+	public :
+		void reset();
+};
 
 /* -------------------------------------------------------------------------- */
 
