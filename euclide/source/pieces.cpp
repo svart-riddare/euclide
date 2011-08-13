@@ -1518,59 +1518,88 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 		for (int k = 0; k < 2; k++)
 		{
+			/* -- Try teleportation (castling) if we are a rook -- */
+
+			if (!nmoves[k] && (pieces[k]->_teleported || indeterminate(pieces[k]->_teleported)) && (squares[k] == pieces[k]->_initial))
+			{
+				bool possible = true;
+
+				/* -- Check if intermediate squares are free -- */
+
+				int delta = (pieces[k]->_initial < pieces[k]->_xinitial) ? 1 : -1;
+				for (Column column = (column_t)(pieces[k]->_initial.column() + delta); column != E; column += delta)
+					if ((pieces[k ^ 1]->man() != King) || (column != E - 2 * delta))
+						if (squares[k ^ 1] == Square(column, pieces[k]->_initial.row()))
+							possible = false;
+
+				/* -- Teleportation -- */
+
+				if (possible)
+				{
+					squares[k] = pieces[k]->_xinitial;
+					minimize(requiredMoves, findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, assignedMoves, recursion));
+					squares[k] = pieces[k]->_initial;
+				}
+			}
+
 			/* -- Check that we can still play -- */
 
 			if (nmoves[k] >= pieces[k]->_availableMoves)
 				continue;
 
-			for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+			/* -- Try all moves, unless castling is mandatory -- */
+
+			if ((nmoves[k] > 0) || !pieces[k]->_teleported || indeterminate(pieces[k]->_teleported) || (squares[k] != pieces[k]->_initial))
 			{
-				/* -- Check if we can play this move -- */
+				for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+				{
+					/* -- Check if we can play this move -- */
 
-				if (move->from() != squares[k])
-					continue;
+					if (move->from() != squares[k])
+						continue;
 
-				if (move->isObstruction(squares[k ^ 1]))
-					continue;
+					if (move->isObstruction(squares[k ^ 1]))
+						continue;
 
-				if (move->to() == squares[k ^ 1])
-					continue;
+					if (move->to() == squares[k ^ 1])
+						continue;
 
-				/* -- Check that playing this move makes sense -- */
+					/* -- Check that playing this move makes sense -- */
 
-				if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - nmoves[k] - 1)
-					continue;
+					if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - nmoves[k] - 1)
+						continue;
 
-				/* -- Play the move -- */
+					/* -- Play the move -- */
 
-				squares[k] = move->to();
-				moves.push_back(*move);
-				nmoves[k] += 1;
+					squares[k] = move->to();
+					moves.push_back(*move);
+					nmoves[k] += 1;
 
-				/* -- Recursive call -- */
+					/* -- Recursive call -- */
 
-				int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, recursion + 1);
-				
-				/* -- Update hash table and tag successful moves -- */
+					int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, recursion + 1);
+					
+					/* -- Update hash table and tag successful moves -- */
 
-				processed[squares[0]][squares[1]].visited(nmoves, result);
-				if (result < infinity)
-					move->tag(true);
+					processed[squares[0]][squares[1]].visited(nmoves, result);
+					if (result < infinity)
+						move->tag(true);
 
-				/* -- Update number of required moves -- */
+					/* -- Update number of required moves -- */
 
-				minimize(requiredMoves, result);
+					minimize(requiredMoves, result);
 
-				/* -- Unplay the move -- */
+					/* -- Unplay the move -- */
 
-				nmoves[k] -= 1;
-				moves.pop_back();
-				squares[k] = move->from();
+					nmoves[k] -= 1;
+					moves.pop_back();
+					squares[k] = move->from();
 
-				/* -- Stop if performing more computations is useless -- */
+					/* -- Stop if performing more computations is useless -- */
 
-				if (requiredMoves <= assignedMoves)
-					return requiredMoves;
+					if (requiredMoves <= assignedMoves)
+						return requiredMoves;
+				}
 			}
 		}
 	}
@@ -1605,11 +1634,6 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 	/* -- This function does not implement captures yet -- */
 
 	if ((_captured != false) || (piece._captured != false))
-		return false;
-
-	/* -- This function does not handle castling yet -- */
-
-	if ((_initial != _xinitial) || (piece._initial != piece._xinitial))
 		return false;
 
 	/* -- Initialization -- */

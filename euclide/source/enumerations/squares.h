@@ -70,7 +70,12 @@ class Column
 			{ ++(int&)column; return *this; }
 		inline Column& operator--()
 			{ --(int&)column; return *this; }
-		
+
+		inline Column operator+=(int n)
+			{ (int&)column += n; return *this; }
+		inline Column operator-=(int n)
+			{ (int&)column -= n; return *this; }
+
 		/* ---------------------------------- */
 
 		bool isValid() const
@@ -110,6 +115,11 @@ class Row
 		inline Row& operator--()
 			{ --(int&)row; return *this; }
 		
+		inline Row operator+=(int n)
+			{ (int&)row += n; return *this; }
+		inline Row operator-=(int n)
+			{ (int&)row -= n; return *this; }
+
 		/* ---------------------------------- */
 
 		bool isValid() const
