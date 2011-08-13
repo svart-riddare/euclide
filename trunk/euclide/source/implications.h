@@ -2,12 +2,12 @@
 #define __EUCLIDE_IMPLICATIONS_H
 
 #include "includes.h"
-#include "position.h"
+#include "assignations.h"
 
 namespace euclide 
 {
 
-class Assignations;
+class Position;
 
 /* -------------------------------------------------------------------------- */
 
@@ -27,26 +27,25 @@ class Implication
 {
 	public :
 		Implication();
-		~Implication();
 
-		void clear();
-		void add(int requiredMoves, int unassignedMoves, int requiredCaptures, int unassignedCaptures, Square square, Superman superman, bool captured);
-		void set(int requiredMoves, int availableMoves, int requiredCaptures, int availableCaptures);
-		void sub(int moves, int captures);
+	public :
+		void add(int requiredMoves, int requiredCaptures);
+		void add(int requiredMoves, int requiredCaptures, Square square, Superman superman, bool captured);
+		void set(int extraMoves, int extraCaptures);
 
 	public :
 		inline int assignedMoves() const
 			{ return _assignedMoves; }
 		inline int assignedCaptures() const
 			{ return _assignedCaptures; }
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
 		inline int availableMoves() const
 			{ return _availableMoves; }
 		inline int availableCaptures() const
 			{ return _availableCaptures; }
-		inline int unassignedMoves() const
-			{ return _unassignedMoves; }
-		inline int unassignedCaptures() const
-			{ return _unassignedCaptures; }
 
 		inline const Squares& squares() const
 			{ return _squares; }
@@ -59,12 +58,12 @@ class Implication
 			{ return _alive; }
 
 	private :
-		int _assignedMoves;         /**< Number of moves assigned to this piece, i.e. that must have been played by this piece. */
+		int _assignedMoves;         /**< Minimum number of moves assigned to current piece. */
+		int _requiredMoves;         /**< Minimum number of moves required for current piece. */
 		int _availableMoves;        /**< Number of available moves for current piece. */
-		int _unassignedMoves;       /**< Number of unassigned moves available for current piece. */
-		int _assignedCaptures;      /**< Number of captures assigned to this piece, i.e. that lust have been performed by this piece. */
+		int _assignedCaptures;      /**< Minimum number of captures assigned to current piece. */
+		int _requiredCaptures;      /**< Minimum numner of captures required for current piece. */
 		int _availableCaptures;     /**< Number of available captures for current piece. */
-		int _unassignedCaptures;    /**< Number of unassigned captures available for current piece. */
 
 		Squares _squares;           /**< Possible destination squares of current piece. */
 		Supermen _supermen;         /**< Possible supermen for current piece. */
@@ -78,28 +77,26 @@ class Implication
 class Implications
 {
 	public :
-		Implications();
 		Implications(const Position& position);
 		Implications(const Position& position, const Assignations& assignedMoves, const Assignations& assignedCaptures);
 		~Implications();
 
 	protected :
-		void update(const Position& position, bool clear = true);
-		void update(const Assignations& assignedMoves, const Assignations& assignedCaptures);
+		void constructor(const Position& position, const Assignations *assignedMoves = NULL, const Assignations *assignedCaptures = NULL);
 
 	public :
 		inline int assignedMoves(Man man) const
 			{ return _implications[man].assignedMoves(); }
 		inline int assignedCaptures(Man man) const
 			{ return _implications[man].assignedCaptures(); }
+		inline int requiredMoves(Man man) const
+			{ return _implications[man].requiredMoves(); }
+		inline int requiredCaptures(Man man) const
+			{ return _implications[man].requiredCaptures(); }
 		inline int availableMoves(Man man) const
 			{ return _implications[man].availableMoves(); }
 		inline int availableCaptures(Man man) const
 			{ return _implications[man].availableCaptures(); }
-		inline int unassignedMoves(Man man) const
-			{ return _implications[man].unassignedMoves(); }
-		inline int unassignedCaptures(Man man) const
-			{ return _implications[man].unassignedCaptures(); }
 
 		inline const Squares& squares(Man man) const
 			{ return _implications[man].squares(); }
@@ -112,28 +109,32 @@ class Implications
 			{ return _implications[man].alive(); }
 
 	public :
-		int assignedMoves(Man man, Man xman) const;
-		int assignedCaptures(Man man, Man xman) const;
-		int availableMoves(Man man, Man xman) const;
-		int availableCaptures(Man man, Man xman) const;
-		int unassignedMoves(Man man, Man xman) const;
-		int unassignedCaptures(Man man, Man xman) const;
+		int requiredMoves(Man manA, Man manB) const;
+		int requiredCaptures(Man manA, Man manB) const;
+		int availableMoves(Man manA, Man manB) const;
+		int availableCaptures(Man manA, Man manB) const;
 
 	public :
-		int assignedMoves(Men men) const;
-		int assignedCaptures(Men men) const;
-		int availableMoves(Men men) const;
-		int availableCaptures(Men men) const;
-		int unassignedMoves(Men men) const;
-		int unassignedCaptures(Men men) const;
+		int assignedMoves(const Men& men) const;
+		int assignedCaptures(const Men& men) const;
 
-		Squares squares(Men men) const;
+	public :
+		Squares squares(const Men& men) const;
 
 	private :
 		array<Implication, NumMen> _implications;    /**< Implications, for each piece. */
+		
+		vector<Assignation> _movePartitions;         /**< Men partitions, represented as move assignations. */
+		vector<Assignation> _capturePartitions;      /**< Men partitions, represented as capture assignations. */
 
-		const Assignations *_assignedMoves;          /**< Assigned moves. */
-		const Assignations *_assignedCaptures;       /**< Assigned captures. */
+		Assignations _assignedMoves;                 /**< Assigned moves. */
+		Assignations _assignedCaptures;              /**< Assigned captures. */
+
+		int _availableMoves;                         /**< Position total available moves. */
+		int _availableCaptures;                      /**< Position total available captures. */
+
+		int _requiredMoves;                          /**< Position minimum number or required moves. */
+		int _requiredCaptures;                       /**< Position minimum number of required captures. */
 };
 
 /* -------------------------------------------------------------------------- */

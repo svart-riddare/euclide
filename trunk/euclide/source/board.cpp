@@ -568,7 +568,7 @@ void Board::optimizeLevelThree()
 
 					OptimizeLevelThreeItem pair(manA, manB, colorA, colorB, 
 						_pieces[colorA][manA]->moves(), _pieces[colorB][manB]->moves(),
-						(colorA == colorB) ? implications[colorA].assignedMoves(manA, manB) : (implications[colorA].assignedMoves(manA) + implications[colorB].assignedMoves(manB)),
+						(colorA == colorB) ? implications[colorA].requiredMoves(manA, manB) : (implications[colorA].requiredMoves(manA) + implications[colorB].requiredMoves(manB)),
 						(colorA == colorB) ? implications[colorA].availableMoves(manA, manB) : (implications[colorA].availableMoves(manA) + implications[colorB].availableMoves(manB)));
 
 					pairs.push_back(pair);
