@@ -37,14 +37,14 @@ Assignation::Assignation(Men men, Color color, int assigned)
 
 void Assignation::merge(const Assignation& assignation)
 {
-	_men |= assignation.men();
+	assert(_color == assignation.color());
 
 	if (_men.to_ulong() & assignation.men().to_ulong())
 		maximize(_assigned, assignation.assigned());
 	else
 		_assigned += assignation.assigned();
 
-	assert(_color == assignation.color());
+	_men |= assignation.men();
 }
 
 /* -------------------------------------------------------------------------- */
