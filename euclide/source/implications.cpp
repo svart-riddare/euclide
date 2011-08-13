@@ -10,27 +10,14 @@ namespace euclide
 
 Implication::Implication()
 {
-	clear();
-}
+	_assignedMoves = infinity;
+	_assignedCaptures = infinity;
 
-/* -------------------------------------------------------------------------- */
+	_requiredMoves = infinity;
+	_requiredCaptures = infinity;
 
-Implication::~Implication()
-{
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Implication::clear()
-{
-	_assignedMoves = 0;
-	_assignedCaptures = 0;
-
-	_availableMoves = 0;
-	_availableCaptures = 0;
-
-	_unassignedMoves = infinity;
-	_unassignedCaptures = infinity;
+	_availableMoves = infinity;
+	_availableCaptures = infinity;
 
 	_squares.reset();
 	_supermen.reset();
@@ -41,86 +28,54 @@ void Implication::clear()
 
 /* -------------------------------------------------------------------------- */
 
-void Implication::add(int requiredMoves, int unassignedMoves, int requiredCaptures, int unassignedCaptures, Square square, Superman superman, bool captured)
+void Implication::add(int requiredMoves, int requiredCaptures)
 {
-	maximize(_availableMoves, requiredMoves + unassignedMoves);
-	maximize(_availableCaptures, requiredCaptures + unassignedCaptures);
+	minimize(_requiredMoves, requiredMoves);
+	minimize(_requiredCaptures, requiredCaptures);
+}
 
-	minimize(_unassignedMoves, unassignedMoves);
-	minimize(_unassignedCaptures, unassignedCaptures);
+/* -------------------------------------------------------------------------- */
 
-	_assignedMoves = _availableMoves - _unassignedMoves;
-	_assignedCaptures = _availableCaptures - _unassignedCaptures;
+void Implication::add(int assignedMoves, int assignedCaptures, Square square, Superman superman, bool captured)
+{
+	minimize(_assignedMoves, assignedMoves);
+	minimize(_assignedCaptures, assignedCaptures);
+
+	add(assignedMoves, assignedCaptures);
 
 	_squares[square] = true;
 	_supermen[superman] = true;
 
 	(captured ? _captured : _alive) = true;
-
-	assert(_assignedMoves + _unassignedMoves == _availableMoves);
-	assert(_assignedCaptures + _unassignedCaptures == _availableCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Implication::set(int requiredMoves, int availableMoves, int requiredCaptures, int availableCaptures)
+void Implication::set(int extraMoves, int extraCaptures)
 {
-	maximize(_assignedMoves, requiredMoves);
-	minimize(_availableMoves, availableMoves);
-
-	_unassignedMoves = _availableMoves - _assignedMoves;
-
-	maximize(_assignedCaptures, requiredCaptures);
-	minimize(_availableCaptures, availableCaptures);
-
-	_unassignedCaptures = _availableCaptures - _assignedCaptures;
+	minimize(_availableMoves, _requiredMoves + extraMoves);
+	minimize(_availableCaptures, _requiredCaptures + extraCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
-
-void Implication::sub(int moves, int captures)
-{
-	if (moves > 0)
-	{
-		_unassignedMoves = std::max(0, _unassignedMoves - moves);
-		_availableMoves = _assignedMoves + _unassignedMoves;
-	}
-
-	if (captures > 0)
-	{
-		_unassignedCaptures = std::max(0, _unassignedCaptures - captures);
-		_availableCaptures = _assignedCaptures + _unassignedCaptures;
-	}
-}
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-Implications::Implications()
-{
-	_assignedMoves = NULL;
-	_assignedCaptures = NULL;
-}
-
 /* -------------------------------------------------------------------------- */
 
 Implications::Implications(const Position& position)
 {
-	update(position, false);
+	_availableMoves = position.availableMoves();
+	_availableCaptures = position.availableCaptures();
 
-	_assignedMoves = NULL;
-	_assignedCaptures = NULL;
+	constructor(position);
 }
 
 /* -------------------------------------------------------------------------- */
 
 Implications::Implications(const Position& position, const Assignations& assignedMoves, const Assignations& assignedCaptures)
 {
-	update(position, false);
-	update(assignedMoves, assignedCaptures);
+	_availableMoves = position.availableMoves();
+	_availableCaptures = position.availableCaptures();
 
-	_assignedMoves = &assignedMoves;
-	_assignedCaptures = &assignedCaptures;
+	constructor(position, &assignedMoves, &assignedCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -131,254 +86,292 @@ Implications::~Implications()
 
 /* -------------------------------------------------------------------------- */
 
-void Implications::update(const Position& position, bool clear)
+void Implications::constructor(const Position& position, const Assignations *assignedMoves, const Assignations *assignedCaptures)
 {
-	/* -- Reset -- */
-
-	if (clear)
-		for (Man man = FirstMan; man <= LastMan; man++)
-			_implications[man].clear();
-
-	/* -- Loop through partitions, targets and destinations to collect the information -- */
+	/* -- Loop through partitions, targets and destinations to collect basic information -- */
 
 	for	(Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
-	{
-		int unassignedMoves = position.availableMoves() - position.requiredMoves() + partition->requiredMoves() - partition->assignedMoves();
-		int unassignedCaptures = position.availableCaptures() - position.requiredCaptures() + partition->requiredCaptures() - partition->assignedCaptures();
-
 		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
 			for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
-				_implications[destination->man()].add(target->requiredMoves(), unassignedMoves, target->requiredCaptures(), unassignedCaptures, destination->square(), destination->superman(), destination->captured());
-	}
-}
+				_implications[destination->man()].add(destination->requiredMoves(), destination->requiredCaptures(), destination->square(), destination->superman(), destination->captured());
 
-/* -------------------------------------------------------------------------- */
+	/* -- Consider partitions as assignations -- */
 
-void Implications::update(const Assignations& assignedMoves, const Assignations& assignedCaptures)
-{
-	/* -- Process assignations, for moves and then captures -- */
+	for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
+		_movePartitions.push_back(Assignation(partition->men(), position.color(), partition->requiredMoves()));
 
-	int minExtraMoves = 0;
-	int minExtraCaptures = 0;
-
-	array<int, NumMen> extraMoves(0);
-	array<int, NumMen> extraCaptures(0);
-
-	for (Assignations::const_iterator assigned = assignedMoves.begin(); assigned != assignedMoves.end(); assigned++)
-	{
-		int moves = assigned->assigned();
-		Men men = assigned->men();
-		
-		for (Man man = FirstMan; man <= LastMan; man++)
-			if (men[man])
-				moves -= this->assignedMoves(man);
-
-		if (moves <= 0)
-			continue;
-		
-		int minMoves = assigned->assigned();
-		for (Man man = FirstMan; man <= LastMan; man++)
-		{
-			if (men[man])
-			{
-				minimize(minMoves, moves - extraMoves[man]);
-				maximize(extraMoves[man], moves);
-			}
-		}
-
-		if (minMoves > 0)
-			minExtraMoves += minMoves;
-	}
-
-	for (Assignations::const_iterator assigned = assignedCaptures.begin(); assigned != assignedCaptures.end(); assigned++)
-	{
-		int captures = assigned->assigned();
-		Men men = assigned->men();
-		
-		for (Man man = FirstMan; man <= LastMan; man++)
-			if (men[man])
-				captures -= this->assignedCaptures(man);
-
-		if (captures <= 0)
-			continue;
-		
-		int minCaptures = assigned->assigned();
-		for (Man man = FirstMan; man <= LastMan; man++)
-		{
-			if (men[man])
-			{
-				minimize(minCaptures, captures - extraCaptures[man]);
-				maximize(extraCaptures[man], captures);
-			}
-		}
-
-		if (minCaptures > 0)
-			minExtraCaptures += minCaptures;
-	}
-
-	/* -- Update implications -- */
-
-	for (Man man = FirstMan; man <= LastMan; man++)
-		_implications[man].sub(minExtraMoves - extraMoves[man], minExtraCaptures - extraCaptures[man]);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::assignedMoves(Man man, Man xman) const
-{
-	if (_assignedMoves)
-	{
-		Men men = ((1 << man) | (1 << xman));
-
-		Assignations::const_iterator assignation = std::find_if(_assignedMoves->begin(), _assignedMoves->end(), boost::bind(&Assignation::isMen, _1, cref(men)));
-		if (assignation != _assignedMoves->end())
-			return assignation->assigned();
-	}
-
-	return assignedMoves(man) + assignedMoves(xman);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::assignedCaptures(Man man, Man xman) const
-{
-	if (_assignedCaptures)
-	{
-		Men men = ((1 << man) | (1 << xman));
-
-		Assignations::const_iterator assignation = std::find_if(_assignedCaptures->begin(), _assignedCaptures->end(), boost::bind(&Assignation::isMen, _1, cref(men)));
-		if (assignation != _assignedCaptures->end())
-			return assignation->assigned();
-	}		
-
-	return assignedCaptures(man) + assignedCaptures(xman);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::availableMoves(Man man, Man xman) const
-{
-	return availableMoves(man) + availableMoves(xman) - std::min(unassignedMoves(man), unassignedMoves(xman));
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::availableCaptures(Man man, Man xman) const
-{
-	return availableCaptures(man) + availableCaptures(xman) - std::min(unassignedCaptures(man), unassignedCaptures(xman));
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::unassignedMoves(Man man, Man xman) const
-{
-	return std::max(unassignedMoves(man), unassignedMoves(xman));
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::unassignedCaptures(Man man, Man xman) const
-{
-	return std::max(unassignedMoves(man), unassignedMoves(xman));
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::assignedMoves(Men men) const
-{
-	int assignedMoves = 0;
+	for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
+		_capturePartitions.push_back(Assignation(partition->men(), position.color(), partition->requiredCaptures()));
 	
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (men[man])
-			assignedMoves += _implications[man].assignedMoves();
+	/* -- Process single-piece assignations -- */
 
-	return assignedMoves;
-}
+	if (assignedMoves)		
+		for (Assignations::const_iterator assignation = assignedMoves->begin(); assignation != assignedMoves->begin(); assignation++)
+			if (assignation->men().count() == 1)
+				_implications[assignation->man()].add(assignation->assigned(), infinity);
 
-/* -------------------------------------------------------------------------- */
+	if (assignedCaptures)
+		for (Assignations::const_iterator assignation = assignedCaptures->begin(); assignation != assignedCaptures->begin(); assignation++)
+			if (assignation->men().count() == 1)
+				_implications[assignation->man()].add(infinity, assignation->assigned());
 
-int Implications::assignedCaptures(Men men) const
-{
-	int assignedCaptures = 0;
+	/* -- Process assignations -- */
 
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (men[man])
-			assignedCaptures += _implications[man].assignedCaptures();
-
-	return assignedCaptures;
-}
-
-/* -------------------------------------------------------------------------- */
-
-int Implications::availableMoves(Men men) const
-{
-	int availableMoves = 0;
-	int unassignedMoves = infinity;
-
-	for (Man man = FirstMan; man <= LastMan; man++)
+	if (assignedMoves)
 	{
-		if (men[man])
+		for (Assignations::const_iterator assignation = assignedMoves->begin(); assignation != assignedMoves->end(); assignation++)
 		{
-			availableMoves += _implications[man].availableMoves();
-			minimize(unassignedMoves, _implications[man].unassignedMoves());
+			Men men = assignation->men();
+
+			/* -- Merge partitions if necessary -- */
+
+			vector<Assignation>::iterator partition = _movePartitions.begin();
+			while ((partition->men().to_ulong() & men.to_ulong()) == 0)
+				partition++;
+
+			for (vector<Assignation>::size_type p = 0; p < _movePartitions.size(); p++)
+			{
+				if ((_movePartitions[p].men().to_ulong() & men.to_ulong()) != 0)
+				{
+					if (_movePartitions[p].men().to_ulong() != partition->men().to_ulong())
+					{
+						partition->merge(_movePartitions[p]);
+						_movePartitions[p--] = _movePartitions.back();
+						_movePartitions.pop_back();
+					}
+				}
+			}
+
+			/* -- Add additionnal information to partition -- */
+
+			partition->merge(*assignation);
+
+			/* -- Save assignation if it concerns exactly two men -- */
+
+			if (men.count() == 2)
+				_assignedMoves.push_back(*assignation);
 		}
 	}
 
-	assert(men.any());
-	return availableMoves - unassignedMoves;
-}
+	/* -- Same for captures -- */
 
-/* -------------------------------------------------------------------------- */
-
-int Implications::availableCaptures(Men men) const
-{
-	int availableCaptures = 0;
-	int unassignedCaptures = infinity;
-
-	for (Man man = FirstMan; man <= LastMan; man++)
+	if (assignedCaptures)
 	{
-		if (men[man])
+		for (Assignations::const_iterator assignation = assignedCaptures->begin(); assignation != assignedCaptures->end(); assignation++)
 		{
-			availableCaptures += _implications[man].availableCaptures();
-			minimize(unassignedCaptures, _implications[man].unassignedCaptures());
+			Men men = assignation->men();
+
+			/* -- Merge partitions if necessary -- */
+
+			vector<Assignation>::iterator partition = _movePartitions.begin();
+			while ((partition->men().to_ulong() & men.to_ulong()) == 0)
+				partition++;
+
+			for (vector<Assignation>::size_type p = 0; p < _movePartitions.size(); p++)
+			{
+				if ((_movePartitions[p].men().to_ulong() & men.to_ulong()) != 0)
+				{
+					if (_movePartitions[p].men().to_ulong() != partition->men().to_ulong())
+					{
+						partition->merge(_movePartitions[p]);
+						_movePartitions[p--] = _movePartitions.back();
+						_movePartitions.pop_back();
+					}
+				}
+			}
+
+			/* -- Add additionnal information to partition -- */
+
+			partition->merge(*assignation);
+
+			/* -- Save assignation if it concerns exactly two men -- */
+
+			if (men.count() == 2)
+				_assignedCaptures.push_back(*assignation);
 		}
 	}
 
-	assert(men.any());
-	return availableCaptures - unassignedCaptures;
-}
+	/* -- Compute minimum required moves and captures for partitions -- */
 
-/* -------------------------------------------------------------------------- */
+	_requiredMoves = 0;
+	for (vector<Assignation>::iterator partition = _movePartitions.begin(); partition != _movePartitions.end(); partition++)
+	{
+		Men men = partition->men();
 
-int Implications::unassignedMoves(Men men) const
-{
-	int unassignedMoves = 0;
+		int minimumMoves = 0;
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (men[man])
+				minimumMoves += this->requiredMoves(man);
+
+		partition->minimum(minimumMoves);
+
+		/* -- Save partition if is concern exactly two men -- */
+
+		if ((partition->minimum() < partition->assigned()) && (men.count() == 2))
+			_assignedMoves.push_back(*partition);
+
+		/* -- Sum up number of required moves -- */
+
+		_requiredMoves += partition->assigned();
+	}
+
+	_requiredCaptures = 0;
+	for (vector<Assignation>::iterator partition = _capturePartitions.begin(); partition != _capturePartitions.end(); partition++)
+	{
+		Men men = partition->men();
+
+		int minimumCaptures = 0;
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (men[man])
+				minimumCaptures += this->requiredCaptures(man);
+
+		partition->minimum(minimumCaptures);
+
+		/* -- Save partition if is concern exactly two men -- */
+
+		if ((partition->minimum() < partition->assigned()) && (men.count() == 2))
+			_assignedCaptures.push_back(*partition);
+
+		/* -- Sum up number of required moves -- */
+
+		_requiredCaptures += partition->assigned();
+	}
+
+	/* -- Coherency check -- */
+
+	if (_requiredMoves > _availableMoves)
+		abort(NoSolution);
+
+	if (_requiredCaptures > _availableCaptures)
+		abort(NoSolution);
+
+	/* -- Dispatch available moves and captures -- */
 
 	for (Man man = FirstMan; man <= LastMan; man++)
-		if (men[man])
-			maximize(unassignedMoves, _implications[man].unassignedMoves());
+	{
+		vector<Assignation>::const_iterator moves = _movePartitions.begin();
+		while (!moves->men()[man])
+			moves++;
 
-	assert(men.any());
-	return unassignedMoves;
+		vector<Assignation>::const_iterator captures = _capturePartitions.begin();
+		while (!captures->men()[man])
+			captures++;
+
+		_implications[man].set(moves->assigned() - moves->minimum() + _availableMoves - _requiredMoves, captures->assigned() - captures->minimum() + _availableCaptures - _requiredCaptures);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-int Implications::unassignedCaptures(Men men) const
+int Implications::requiredMoves(Man manA, Man manB) const
 {
-	int unassignedCaptures = 0;
+	int requiredMoves = this->requiredMoves(manA) + this->requiredMoves(manB);
 
-	for (Man man = FirstMan; man <= LastMan; man++)
-		if (men[man])
-			maximize(unassignedCaptures, _implications[man].unassignedCaptures());
+	Men men = (1 << manA) | (1 << manB);
+	Assignations::const_iterator assignation = _assignedMoves.begin();
+	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedMoves.end(), boost::bind(&Assignation::isMen, _1, cref(men)))) != _assignedMoves.end())
+	{
+		maximize(requiredMoves, assignation->assigned());
+		assignation++;
+	}
 
-	assert(men.any());
-	return unassignedCaptures;
+	return requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
 
-Squares Implications::squares(Men men) const
+int Implications::requiredCaptures(Man manA, Man manB) const
+{
+	int requiredCaptures = this->requiredCaptures(manA) + this->requiredCaptures(manB);
+
+	Men men = (1 << manA) | (1 << manB);
+	Assignations::const_iterator assignation = _assignedCaptures.begin();
+	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedCaptures.end(), boost::bind(&Assignation::isMen, _1, cref(men)))) != _assignedCaptures.end())
+	{
+		maximize(requiredCaptures, assignation->assigned());
+		assignation++;
+	}
+
+	return requiredCaptures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Implications::availableMoves(Man manA, Man manB) const
+{
+	int moves = _availableMoves - _requiredMoves;
+
+	vector<Assignation>::const_iterator movesA = _movePartitions.begin();
+	vector<Assignation>::const_iterator movesB = _movePartitions.begin();
+
+	while (!movesA->men()[manA])
+		movesA++;
+	while (!movesB->men()[manB])
+		movesB++;
+
+	if (movesA->men() == movesB->men())
+	{
+		/* -- Both are in the same partition -- */
+
+		moves += movesA->assigned();
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (movesA->men()[man] && (man != manA) && (man != manB))
+				moves -= this->requiredMoves(man);
+	}
+	else
+	{
+		/* -- Both are in two different partitions -- */
+
+		moves += movesA->assigned() - movesA->minimum() + this->requiredMoves(manA);
+		moves += movesB->assigned() - movesB->minimum() + this->requiredMoves(manB);
+	}
+	
+	/* -- Done -- */
+
+	return moves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Implications::availableCaptures(Man manA, Man manB) const
+{
+	int captures = _availableCaptures - _requiredCaptures;
+
+	vector<Assignation>::const_iterator capturesA = _movePartitions.begin();
+	vector<Assignation>::const_iterator capturesB = _movePartitions.begin();
+
+	while (!capturesA->men()[manA])
+		capturesA++;
+	while (!capturesB->men()[manB])
+		capturesB++;
+
+	if (capturesA->men() == capturesB->men())
+	{
+		/* -- Both are in the same partition -- */
+
+		captures += capturesA->assigned();
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (capturesA->men()[man] && (man != manA) && (man != manB))
+				captures -= this->requiredCaptures(man);
+	}
+	else
+	{
+		/* -- Both are in two different partitions -- */
+
+		captures += capturesA->assigned() - capturesA->minimum() + this->requiredCaptures(manA);
+		captures += capturesB->assigned() - capturesB->minimum() + this->requiredCaptures(manB);
+	}
+	
+	/* -- Done -- */
+
+	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Squares Implications::squares(const Men& men) const
 {
 	Squares squares;
 
