@@ -463,7 +463,7 @@ void Board::optimizeLevelOne()
 		/* -- Apply move restrictions -- */
 
 		for (Man man = FirstMan; man <= LastMan; man++)
-			setPossibleSquares(man, implications.supermen(man), color, implications.squares(man), implications.captured(man) ? (implications.alive(man) ? tribool(indeterminate) : true) : false, implications.availableMoves(man), implications.availableCaptures(man));
+			setPossibleSquares(man, implications.supermen(man), color, implications.squares(man), implications.captured(man) ? (implications.alive(man) ? tribool(indeterminate) : tribool(true)) : tribool(false), implications.availableMoves(man), implications.availableCaptures(man));
 
 		/* -- Apply capture restrictions -- */
 

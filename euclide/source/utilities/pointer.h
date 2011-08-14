@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_POINTER_H
 #define __EUCLIDE_POINTER_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {

@@ -1,8 +1,8 @@
 #include <cstddef>
 
-#include "enumerations.h"
-#include "constants.h"
-#include "tables.h"
+#include "../enumerations/enumerations.h"
+#include "../constants/constants.h"
+#include "../tables/tables.h"
 
 using euclide::constants::infinity;
 

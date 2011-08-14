@@ -55,9 +55,9 @@ CodeFile::operator FILE *()
 void CodeFile::header(const char *include)
 {
 	fprintf(file, "#include <cstddef>\n\n");
-	fprintf(file, "#include \"enumerations.h\"\n");
-	fprintf(file, "#include \"constants.h\"\n");
-	fprintf(file, "#include \"tables.h\"\n");
+	fprintf(file, "#include \"../enumerations/enumerations.h\"\n");
+	fprintf(file, "#include \"../constants/constants.h\"\n");
+	fprintf(file, "#include \"../tables/tables.h\"\n");
 	if (include)
 		fprintf(file, "\n#include \"%s\"\n", include);
 

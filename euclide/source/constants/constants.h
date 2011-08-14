@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_CONSTANTS_H
 #define __EUCLIDE_CONSTANTS_H
 
-#include "enumerations.h"
+#include "../enumerations/enumerations.h"
 
 namespace euclide
 {
