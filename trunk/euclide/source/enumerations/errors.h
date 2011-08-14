@@ -6,7 +6,7 @@
 	#undef assert
 #endif
 
-#include "euclide.h"
+#include "../../interface/euclide.h"
 
 namespace euclide 
 {

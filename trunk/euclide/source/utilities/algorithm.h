@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_ALGORITHM_H
 #define __EUCLIDE_ALGORITHM_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {

@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_ARRAY_H
 #define __EUCLIDE_ARRAY_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {

@@ -9,7 +9,7 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 Piece::Piece(Superman superman, Color color, int moves)
-	: _superman(superman), _color(color), _glyph(superman.glyph(color))
+	: _superman(superman), _glyph(superman.glyph(color)), _color(color)
 {
 	assert(superman.isValid());
 	assert(color.isValid());
@@ -918,7 +918,7 @@ int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 {
 	/* -- Find initial square if known -- */
 
-	Square square = indeterminate(_teleported) ? UndefinedSquare : _xinitial;
+	Square square = indeterminate(_teleported) ? Square(UndefinedSquare) : _xinitial;
 
 	/* -- Initialize output -- */
 

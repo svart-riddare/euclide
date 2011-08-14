@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_VECTOR_H
 #define __EUCLIDE_VECTOR_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {
@@ -13,6 +13,7 @@ class vector_ptr_const_iterator : public vector<T *>::const_iterator
 {
 	public :
 		vector_ptr_const_iterator(const typename vector<T *>::const_iterator& iterator) : vector<T *>::const_iterator(iterator) {}
+		vector_ptr_const_iterator(const typename vector<T *>::iterator& iterator) : vector<T *>::const_iterator(iterator) {}
 
 	public :
 		const T *operator->() const

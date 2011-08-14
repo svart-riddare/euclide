@@ -3,8 +3,10 @@
 
 /* -------------------------------------------------------------------------- */
 
+#include <climits>
 #include <cstdarg>
 #include <cstdlib>
+#include <cstring>
 
 /* -------------------------------------------------------------------------- */
 
@@ -52,8 +54,8 @@ using boost::tuples::make_tuple;
 
 /* -------------------------------------------------------------------------- */
 
-#include "euclide.h"
-#include "enumerations.h"
+#include "../interface/euclide.h"
+#include "enumerations/enumerations.h"
 
 /* -------------------------------------------------------------------------- */
 
@@ -68,8 +70,8 @@ using boost::tuples::make_tuple;
 
 /* -------------------------------------------------------------------------- */
 
-#include "constants.h"
-#include "tables.h"
+#include "constants/constants.h"
+#include "tables/tables.h"
 
 using euclide::constants::infinity;
 
@@ -84,7 +86,6 @@ namespace euclide
 
 /* -------------------------------------------------------------------------- */
 
-#include "tables.h"
 #include "problem.h"
 #include "board.h"
 

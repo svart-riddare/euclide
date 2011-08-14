@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_MATRIX_H
 #define __EUCLIDE_MATRIX_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {
@@ -15,7 +15,7 @@ class matrix : public array<array<T, N>, M>
 		matrix() {};
 
 		matrix(const T& value)
-			{ for (int n = 0; n < N; n++)  (*this)[n].assign(value); }
+			{ for (std::size_t n = 0; n < N; n++)  (*this)[n].assign(value); }
 
 	public :
 		typedef T value_type;

@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_BITSET_H
 #define __EUCLIDE_BITSET_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {

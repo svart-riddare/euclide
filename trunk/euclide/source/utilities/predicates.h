@@ -1,7 +1,7 @@
 #ifndef __EUCLIDE_PREDICATES_H
 #define __EUCLIDE_PREDICATES_H
 
-#include "includes.h"
+#include "../includes.h"
 
 namespace euclide
 {
