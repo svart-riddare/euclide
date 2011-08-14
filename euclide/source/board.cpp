@@ -583,10 +583,11 @@ void Board::optimizeLevelThree()
 
 	/* -- For each pair, take mutual obstructions between the two pieces into account -- */
 
-	bool assigned = false;
-	bool modified = false;
 	for (std::vector<OptimizeLevelThreeItem>::const_iterator pair = pairs.begin(); pair != pairs.end(); pair++)
 	{
+		bool assigned = false;
+		bool modified = false;
+
 		/* -- Let's not loose ourselves in infinite computations -- */
 
 		bool fast = pair->complexity >= 10000;
