@@ -42,13 +42,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\euclide\interface"
+				AdditionalIncludeDirectories="..\..\..\euclide\interface"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_SECURE_SCL=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS;DOS_EUCLIDE_CHECK_MEMORY_LEAKS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib"
-				OutputFile="../bin/dos-euclide-debug.exe"
+				OutputFile="../../bin/dos-euclide-debug.exe"
 				LinkIncremental="2"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
@@ -127,20 +127,20 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\euclide\interface"
+				AdditionalIncludeDirectories="..\..\..\euclide\interface"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_SECURE_SCL=0;_CRT_SECURE_NO_DEPRECATE;_CRT_NON_CONFORMING_SWPRINTFS"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="..\..\Euclide\Include"
+				AdditionalIncludeDirectories="..\..\..\Euclide\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -148,7 +148,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib"
-				OutputFile="../bin/dos-euclide.exe"
+				OutputFile="../../bin/dos-euclide.exe"
 				LinkIncremental="1"
 				GenerateManifest="false"
 				SubSystem="1"
@@ -190,23 +190,27 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath="..\source\console.cpp"
+				RelativePath="..\..\source\console-win.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\forsythe.cpp"
+				RelativePath="..\..\source\console.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\main.cpp"
+				RelativePath="..\..\source\forsythe.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\strings.cpp"
+				RelativePath="..\..\source\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\source\timer.cpp"
+				RelativePath="..\..\source\strings.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\timer.cpp"
 				>
 			</File>
 		</Filter>
@@ -215,53 +219,48 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath="..\source\colors.h"
+				RelativePath="..\..\source\colors.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\console.h"
+				RelativePath="..\..\source\console-win.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\forsythe.h"
+				RelativePath="..\..\source\console.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\includes.h"
+				RelativePath="..\..\source\forsythe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\resources.h"
+				RelativePath="..\..\source\includes.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\strings.h"
+				RelativePath="..\..\source\resources.h"
 				>
 			</File>
 			<File
-				RelativePath="..\source\timer.h"
+				RelativePath="..\..\source\strings.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
 			<File
-				RelativePath="..\source\dos-euclide.rc"
+				RelativePath="..\..\source\timer.h"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\bin\edupuis.txt"
+			RelativePath="..\..\bin\edupuis.txt"
 			>
 		</File>
 		<File
-			RelativePath="..\bin\no-captures.txt"
+			RelativePath="..\..\bin\no-captures.txt"
 			>
 		</File>
 		<File
-			RelativePath="..\bin\sample-input.txt"
+			RelativePath="..\..\bin\sample-input.txt"
 			>
 		</File>
 	</Files>

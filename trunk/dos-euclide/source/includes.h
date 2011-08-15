@@ -8,22 +8,30 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
+#include <cwchar>
 
 /* -------------------------------------------------------------------------- */
 
 #include <algorithm>
 #include <list>
+#include <memory>
+
+using std::auto_ptr;
 using std::list;
 
 /* -------------------------------------------------------------------------- */
 
-#include <windows.h>
-#include <tchar.h>
-#include <crtdbg.h>
+#ifndef EUCLIDE_LINUX
+	#include <windows.h>
+	#include <crtdbg.h>
 
-#undef min
-#undef max
+	#undef min
+	#undef max
+#else
+	#include <ncursesw/curses.h>
+#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -31,7 +39,7 @@ using std::list;
 
 /* -------------------------------------------------------------------------- */
 
-#include "resources.h"
+#include "strings.h"
 
 /* -------------------------------------------------------------------------- */
 

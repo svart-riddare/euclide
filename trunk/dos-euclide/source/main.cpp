@@ -1,8 +1,13 @@
 #include "includes.h"
-
 #include "forsythe.h"
-#include "console.h"
-#include "strings.h"
+
+#ifndef EUCLIDE_LINUX
+	#include "console-win.h"
+	typedef WinConsole DosConsole;
+#else
+	#include "console-linux.h"
+	typedef LinuxConsole DosConsole;
+#endif
 
 /* -------------------------------------------------------------------------- */
 
@@ -60,7 +65,7 @@ bool solveProblems(Console& console, const char *file)
 
 int _main(int numArguments, char *arguments[], char *environment[])
 {
-	Console console;
+	DosConsole console;
 	if (!console)
 		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
 

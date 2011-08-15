@@ -3,48 +3,51 @@
 namespace strings
 {
 
-static const size_t BufferSize = 256;
-static const int  NumBuffers = 5;
+typedef struct
+{
+	int stringId;
+	const wchar_t *string;
+
+} string;
 
 /* -------------------------------------------------------------------------- */
 
-LPCTSTR load(int stringId)
+#include "resources.h"
+
+/* -------------------------------------------------------------------------- */
+
+const wchar_t *load(int stringId)
 {
-	static TCHAR buffers[4][256];
-	static int index = 0;
+	int s = 0;
+	while (french[s].stringId && (french[s].stringId != stringId))
+		s++;
 
-	TCHAR *buffer = buffers[index++];
-	if (index >= (int)(sizeof(buffers) / sizeof(buffers[0])))
-		index = 0;
-
-	buffer[0] = '\0';
-	LoadString(NULL, stringId, buffer, sizeof(buffers[0]) / sizeof(buffers[0][0]));
-	return buffer;
+	return french[s].string;
 }
 
 /* -------------------------------------------------------------------------- */
 
-LPCTSTR load(EUCLIDE_Status status)
+const wchar_t *load(EUCLIDE_Status status)
 {
 	return load(1000 + status);
 }
 
-LPCTSTR load(EUCLIDE_Message message)
+const wchar_t *load(EUCLIDE_Message message)
 {
 	return load(2000 + message);
 }
 
-LPCTSTR load(Text text)
+const wchar_t *load(Text text)
 {
 	return load(3000 + text);
 }
 
-LPCTSTR load(Error error)
+const wchar_t *load(Error error)
 {
 	return load(4000 + error);
 }
 
-LPCTSTR load(Message message)
+const wchar_t *load(Message message)
 {
 	return load(5000 + message);
 }

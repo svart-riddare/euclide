@@ -1,4 +1,5 @@
 #include "forsythe.h"
+#include "strings.h"
 
 /* -------------------------------------------------------------------------- */
 
@@ -8,12 +9,7 @@ list<ForsytheSymbols> ForsytheString::symbols = ForsytheString::loadSymbols();
 
 list<ForsytheSymbols> ForsytheString::loadSymbols()
 {
-	char symbols[256];
-	symbols[0] = '\0';
-
-	LoadStringA(NULL, IDS_FORSYTHE, symbols, sizeof(symbols) / sizeof(symbols[0]));
-
-	return loadSymbols(symbols);
+	return loadSymbols(strings::load(strings::Forsythe));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -42,6 +38,21 @@ list<ForsytheSymbols> ForsytheString::loadSymbols(const char *symbols)
 }
 
 /* -------------------------------------------------------------------------- */
+
+list<ForsytheSymbols> ForsytheString::loadSymbols(const wchar_t *symbols)
+{
+	auto_ptr<char> ansisymbols(new char[wcslen(symbols) + 1]);
+
+	int k;
+	for (k = 0; symbols[k]; k++)
+		ansisymbols.get()[k] = symbols[k] & 0x7F;
+
+	ansisymbols.get()[k] = '\0';
+
+	return loadSymbols(ansisymbols.get());
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 ForsytheSymbols::ForsytheSymbols(const char *symbols)
@@ -49,12 +60,12 @@ ForsytheSymbols::ForsytheSymbols(const char *symbols)
 	king = queen = rook = bishop = knight = pawn = '\0';
 
 	if (symbols)
-		if ((king = toupper(symbols[0])) != '\0')
-			if ((queen = toupper(symbols[1])) != '\0')
-				if ((rook = toupper(symbols[2])) != '\0')
-					if ((bishop = toupper(symbols[3])) != '\0')
-						if ((knight = toupper(symbols[4])) != '\0')
-							pawn = toupper(symbols[5]);
+		if ((king = (char)toupper(symbols[0])) != '\0')
+			if ((queen = (char)toupper(symbols[1])) != '\0')
+				if ((rook = (char)toupper(symbols[2])) != '\0')
+					if ((bishop = (char)toupper(symbols[3])) != '\0')
+						if ((knight = (char)toupper(symbols[4])) != '\0')
+							pawn = (char)toupper(symbols[5]);
 }
 
 /* -------------------------------------------------------------------------- */
