@@ -16,7 +16,7 @@ Timer::operator double() const
 
 /* -------------------------------------------------------------------------- */
 
-Timer::operator LPCTSTR() const
+Timer::operator const wchar_t *() const
 {
 	double elapsed = (double)(*this);
 
@@ -26,12 +26,12 @@ Timer::operator LPCTSTR() const
 	unsigned int hours = (unsigned int)floor(elapsed / 3600.0);
 
 	if (hours > 0)
-		_sntprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), _T("%u:%02u:%02u.%02u"), hours, minutes, seconds, hundreths);
+		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u:%02u:%02u.%02u", hours, minutes, seconds, hundreths);
 	else
 	if (minutes > 0)
-		_sntprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), _T("%u:%02u.%02u"), minutes, seconds, hundreths);
+		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u:%02u.%02u", minutes, seconds, hundreths);
 	else
-		_sntprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), _T("%u.%02u"), seconds, hundreths);
+		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u.%02u", seconds, hundreths);
 
 	return buffer;
 }

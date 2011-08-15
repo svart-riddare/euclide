@@ -36,6 +36,7 @@ class ForsytheString
 		static list<ForsytheSymbols> symbols;
 		static list<ForsytheSymbols> loadSymbols();
 		static list<ForsytheSymbols> loadSymbols(const char *symbols);
+		static list<ForsytheSymbols> loadSymbols(const wchar_t *symbols);
 };
 
 /* -------------------------------------------------------------------------- */

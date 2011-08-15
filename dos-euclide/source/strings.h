@@ -10,6 +10,7 @@ namespace strings
 
 typedef enum
 {
+	Forsythe,
 	GlyphSymbols,
 	Moves,
 	HalfMove,
@@ -44,12 +45,12 @@ typedef enum
 
 /* -------------------------------------------------------------------------- */
 
-LPCTSTR load(int stringId);
-LPCTSTR load(EUCLIDE_Status status);
-LPCTSTR load(EUCLIDE_Message message);
-LPCTSTR load(Text text);
-LPCTSTR load(Error error);
-LPCTSTR load(Message message);
+const wchar_t *load(int stringId);
+const wchar_t *load(EUCLIDE_Status status);
+const wchar_t *load(EUCLIDE_Message message);
+const wchar_t *load(Text text);
+const wchar_t *load(Error error);
+const wchar_t *load(Message message);
 
 /* -------------------------------------------------------------------------- */
 

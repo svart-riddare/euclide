@@ -11,10 +11,10 @@ class Timer
 		Timer();
 
 		operator double() const;
-		operator LPCTSTR() const;
+		operator const wchar_t *() const;
 		
 	private :
-		mutable TCHAR buffer[32];
+		mutable wchar_t buffer[64];
 		clock_t start;
 };
 
