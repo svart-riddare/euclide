@@ -1564,6 +1564,16 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 					if (move->to() == squares[k ^ 1])
 						continue;
 
+					/* -- Check for illegal moves if we are a king -- */
+
+					if ((pieces[k]->man() == King) && (pieces[0]->color() != pieces[1]->color()))
+						if (tables::checks[move->to()][pieces[k ^ 1]->glyph()][squares[k ^ 1]])
+							continue;
+
+					if ((pieces[k ^ 1]->man() == King) && (pieces[0]->color() != pieces[1]->color()))
+						if (tables::checks[squares[k ^ 1]][pieces[k]->glyph()][move->from()])
+							continue;
+
 					/* -- Check that playing this move makes sense -- */
 
 					if (pieces[k]->_rdistances[move->to()] > pieces[k]->_availableMoves - nmoves[k] - 1)
