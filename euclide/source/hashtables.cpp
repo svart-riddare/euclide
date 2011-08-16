@@ -48,11 +48,20 @@ void MiniHashEntry::visited(const int moves[2], int requiredMoves)
 
 	for (int k = 0; k < _nvisits; k++)
 	{
-		if ((moves[0] <= _visits[k].first[0]) && (moves[1] <= _visits[k].first[0]))
+		if ((moves[0] <= _visits[k].first[0]) && (moves[1] <= _visits[k].first[1]))
 		{
 			_visits[k].first[0] = (int8_t)moves[0];
 			_visits[k].first[1] = (int8_t)moves[1];
 			minimize(_visits[k].second, (int16_t)requiredMoves);
+			
+			/* -- Remove useless entries -- */
+
+			while (++k < _nvisits)
+				if ((moves[0] <= _visits[k].first[0]) && (moves[1] <= _visits[k].first[1]))
+					_visits[k--] = _visits[--_nvisits];
+
+			/* -- Done -- */
+
 			return;
 		}
 	}

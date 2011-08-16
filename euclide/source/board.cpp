@@ -590,8 +590,8 @@ void Board::optimizeLevelThree()
 
 		/* -- Let's not loose ourselves in infinite computations -- */
 
-		bool fast = pair->complexity >= 10000;
-		if (pair->complexity >= 25000)
+		bool fast = pair->complexity >= 1000000;
+		if (pair->complexity >= 10000000)
 			break;
 
 		/* -- Mutual obstructions -- */
