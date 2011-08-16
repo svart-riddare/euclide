@@ -5,12 +5,12 @@
 
 static const string french[] =
 {
-	{ (1000 + EUCLIDE_STATUS_OUT_OF_MEMORY_ERROR),   L"Mémoire insuffisante" },
+	{ (1000 + EUCLIDE_STATUS_OUT_OF_MEMORY_ERROR),   L"M\xE9moire insuffisante" },
 	{ (1000 + EUCLIDE_STATUS_INTERNAL_LOGIC_ERROR),  L"Erreur algorithmique interne - Contactez l'auteur" },
-	{ (1000 + EUCLIDE_STATUS_INCORRECT_INPUT_ERROR), L"Problème invalide" },
-	{ (1000 + EUCLIDE_STATUS_KO),                    L"Problème insoluble" },
+	{ (1000 + EUCLIDE_STATUS_INCORRECT_INPUT_ERROR), L"Probl\xE8me invalide" },
+	{ (1000 + EUCLIDE_STATUS_KO),                    L"Probl\xE8me insoluble" },
 
-	{ (2000),                                        L"Analyse préliminaire..." },
+	{ (2000),                                        L"Analyse pr\xE9liminaire..." },
 
 	{ (3000 + Forsythe),                             L"RDTFCP|KQRBNP|KDTLSB|RDTACP|KQRBSP" },
 	{ (3000 + GlyphSymbols),                         L" RDTFCPRDTFCP" },
@@ -18,9 +18,9 @@ static const string french[] =
 	{ (3000 + HalfMove),                             L",5" },
 	{ (3000 + NoHalfMove),                           L",0" },
 
-	{ (4000 + NoArguments),                          L"Veuillez préciser un nom de fichier sur la ligne de commande" },
-	{ (4000 + InvalidArguments),                     L"Le problème donné en ligne de commande est invalide" },
-	{ (4000 + InvalidInputFile),                     L"Le fichier à analyser n'existe pas ou ne contient aucun problème" },
+	{ (4000 + NoArguments),                          L"Veuillez pr\xE9" L"ciser un nom de fichier sur la ligne de commande" },
+	{ (4000 + InvalidArguments),                     L"Le probl\xE8me donn\xE9 en ligne de commande est invalide" },
+	{ (4000 + InvalidInputFile),                     L"Le fichier \xE0 analyser n'existe pas ou ne contient aucun probl\xE8me" },
 	{ (4000 + UserInterruption),                     L"Analyse interrompue par l'utilisateur" },
 
 	{ (5000 + PressAnyKey),                          L"Appuyez sur une touche pour continuer..." },
