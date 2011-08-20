@@ -49,8 +49,8 @@ class Piece
 		void setPossibleSquares(const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(const Squares& captures);
 		void setMandatoryMoveConstraints(const Piece& piece, const Moves& moves);
-		bool setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves = NULL, bool isFast = true);
-		bool setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves = NULL, bool isFast = true);
+		bool setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves = NULL, int *requiredMovesA = NULL, int *requiredMovesB = NULL, bool isFast = true);
+		bool setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves = NULL, int *requiredMovesA = NULL, int *requiredMovesB = NULL, bool isFast = true);
 		
 		void synchronizeCastling(Piece& krook, Piece& qrook);
 		void optimizeCastling();
@@ -105,7 +105,7 @@ class Piece
 		bool mayReach(Square square) const;
 
 		void findMandatoryMoves();
-		int findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int recursion);
+		int findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int rmoves[2]);
 
 	private :
 		static inline bool isMovePossible(const Move *move)
