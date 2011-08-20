@@ -56,16 +56,16 @@ class Board
 		void setPossibleSquares(Man man, const Supermen& supermen, Color color, const Squares& squares, tribool captured, int availableMoves, int availableCaptures);
 		void setPossibleCaptures(Man man, Superman superman, Color color, const Squares& squares);
 
-		void optimizeLevelOne();
-		void optimizeLevelTwo();
-		void optimizeLevelThree();
+		bool optimizeLevelOne();
+		bool optimizeLevelTwo();
+		bool optimizeLevelThree();
 
 	private :
 		class OptimizeLevelThreeItem
 		{
 			public :
 				OptimizeLevelThreeItem() {}
-				OptimizeLevelThreeItem(Man manA, Man manB, Color colorA, Color colorB, int movesA, int movesB, int assignedMoves, int availableMoves) : manA(manA), manB(manB), colorA(colorA), colorB(colorB), movesA(movesA), movesB(movesB), assignedMoves(assignedMoves), availableMoves(availableMoves)
+				OptimizeLevelThreeItem(Man manA, Man manB, Color colorA, Color colorB, int movesA, int movesB, int assignedMoves, int assignedMovesA, int assignedMovesB, int availableMoves, int availableMovesA, int availableMovesB) : manA(manA), manB(manB), colorA(colorA), colorB(colorB), movesA(movesA), movesB(movesB), assignedMoves(assignedMoves), assignedMovesA(assignedMovesA), assignedMovesB(assignedMovesB), availableMoves(availableMoves), availableMovesA(availableMovesA), availableMovesB(availableMovesB)
 					{ complexity = std::min(movesA, movesB) * std::max(movesA, movesB) * (availableMoves - assignedMoves) * (availableMoves - assignedMoves); }
 				
 				bool operator<(const OptimizeLevelThreeItem& item) const
@@ -80,7 +80,11 @@ class Board
 				int movesB;
 	
 				int assignedMoves;
+				int assignedMovesA;
+				int assignedMovesB;
 				int availableMoves;
+				int availableMovesA;
+				int availableMovesB;
 
 				int complexity;
 		};
@@ -93,6 +97,9 @@ class Board
 
 		Assignations *_assignedMoves[NumColors];       /**< Assigned moves. */
 		Assignations *_assignedCaptures[NumColors];    /**< Assigned captures. */
+
+		int _moves[NumColors][NumMen];                 /**< Moves assigned to individual men. */
+		int _captures[NumColors][NumMen];              /**< Captures assigned to individual men. */
 };
 
 /* -------------------------------------------------------------------------- */

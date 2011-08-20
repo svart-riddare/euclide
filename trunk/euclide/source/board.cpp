@@ -24,6 +24,10 @@ Board::Board(const Position& whitePosition, const Position& blackPosition, const
 	_assignedCaptures[White] = new Assignations();
 	_assignedCaptures[Black] = new Assignations();
 
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			_moves[color][man] = _captures[color][man] = 0;
+
 	/* -- Initialize movement tables -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
@@ -137,7 +141,7 @@ int Board::distance(Man man, Superman superman, Color color, Square to) const
 	/* -- No promotion case -- */
 
 	if (man == superman)
-		return _pieces[color][man]->distance(to);
+		return std::max(_pieces[color][man]->distance(to), _moves[color][man]);
 
 	/* -- Handle promotion -- */
 
@@ -434,7 +438,7 @@ void Board::setPossibleCaptures(Man man, Superman superman, Color color, const S
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimizeLevelOne()
+bool Board::optimizeLevelOne()
 {
 	/* -- Loop over both colors -- */
 
@@ -494,11 +498,15 @@ void Board::optimizeLevelOne()
 		for (Superman superman = FirstSuperman; superman <= LastSuperman; superman++)
 			if (_pieces[color][superman])
 				_pieces[color][superman]->optimize();
+
+	/* -- Done -- */
+
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimizeLevelTwo()
+bool Board::optimizeLevelTwo()
 {
 	Moves moves;
 
@@ -537,11 +545,15 @@ void Board::optimizeLevelTwo()
 					if (_pieces[color][superman]->constrain())
 						constrain = true;
 	}
+
+	/* -- Done -- */
+
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Board::optimizeLevelThree()
+bool Board::optimizeLevelThree()
 {
 	/* -- Get implications of the current position -- */
 
@@ -569,7 +581,9 @@ void Board::optimizeLevelThree()
 					OptimizeLevelThreeItem pair(manA, manB, colorA, colorB, 
 						_pieces[colorA][manA]->moves(), _pieces[colorB][manB]->moves(),
 						(colorA == colorB) ? implications[colorA].requiredMoves(manA, manB) : (implications[colorA].requiredMoves(manA) + implications[colorB].requiredMoves(manB)),
-						(colorA == colorB) ? implications[colorA].availableMoves(manA, manB) : (implications[colorA].availableMoves(manA) + implications[colorB].availableMoves(manB)));
+						implications[colorA].requiredMoves(manA), implications[colorB].requiredMoves(manB),
+						(colorA == colorB) ? implications[colorA].availableMoves(manA, manB) : (implications[colorA].availableMoves(manA) + implications[colorB].availableMoves(manB)),
+						implications[colorA].availableMoves(manA), implications[colorB].availableMoves(manB));
 
 					pairs.push_back(pair);
 				}
@@ -584,24 +598,38 @@ void Board::optimizeLevelThree()
 	/* -- For each pair, take mutual obstructions between the two pieces into account -- */
 
 	for (std::vector<OptimizeLevelThreeItem>::const_iterator pair = pairs.begin(); pair != pairs.end(); pair++)
-	{
-		bool assigned = false;
+	{		
 		bool modified = false;
+		bool assigned = false;
+		bool assignedA = false;
+		bool assignedB = false;
 
 		/* -- Let's not loose ourselves in infinite computations -- */
 
-		bool fast = pair->complexity >= 1000000;
+		bool fast = pair->complexity >= 2500000;
 		if (pair->complexity >= 10000000)
 			break;
 
 		/* -- Mutual obstructions -- */
 
 		int requiredMoves = -1;
-		if (_pieces[pair->colorA][pair->manA]->setMutualObstructions(*_pieces[pair->colorB][pair->manB], pair->availableMoves, pair->assignedMoves, &requiredMoves, fast))
+		int requiredMovesA = -1;
+		int requiredMovesB = -1;
+
+		if (_pieces[pair->colorA][pair->manA]->setMutualObstructions(*_pieces[pair->colorB][pair->manB], pair->availableMoves, pair->assignedMoves, &requiredMoves, &requiredMovesA, &requiredMovesB, fast))
 			modified = true;
 
 		if ((requiredMoves > pair->assignedMoves) && (pair->colorA == pair->colorB))
 			assigned = true;
+		if ((requiredMovesA > pair->assignedMovesA) && !fast)
+			assignedA = true;
+		if ((requiredMovesB > pair->assignedMovesB) && !fast)
+			assignedB = true;
+
+		/* -- Store required moves -- */
+
+		fast || maximize(_moves[pair->colorA][pair->manA], requiredMovesA);
+		fast || maximize(_moves[pair->colorB][pair->manB], requiredMovesB);
 
 		/* -- If we have modified something, complete optimization now -- */
 
@@ -611,14 +639,25 @@ void Board::optimizeLevelThree()
 			_pieces[pair->colorB][pair->manB]->optimize();
 		}
 
-		/* -- If we require more moves than expected, keep information and break -- */
+		/* -- If we require more moves than expected, keep information and return now -- */
 
 		if (assigned)
 			_assignedMoves[pair->colorA]->push_back(Assignation((1 << pair->manA) | (1 << pair->manB), pair->colorA, requiredMoves));
-			
-		if (assigned && modified)
+		if (assignedA)
+			_assignedMoves[pair->colorA]->push_back(Assignation(pair->manA, pair->colorA, requiredMovesA));
+		if (assignedB)
+			_assignedMoves[pair->colorB]->push_back(Assignation(pair->manB, pair->colorB, requiredMovesB));
+
+		if (assigned || assignedA || assignedB)
+			return true;
+
+		if (modified)
 			break;
 	}
+
+	/* -- Done -- */
+
+	return false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -632,20 +671,22 @@ bool Board::optimize(int level, bool recursive)
 
 	/* -- Save number of possibles moves -- */
 
+	bool optimized = false;
 	int moves = this->moves();
 
 	/* -- Perform optimization -- */
 
 	if (level == 1)
-		optimizeLevelOne();
+		optimized |= optimizeLevelOne();
 	if (level == 2)
-		optimizeLevelTwo();
+		optimized |= optimizeLevelTwo();
 	if (level == 3)
-		optimizeLevelThree();
+		optimized |= optimizeLevelThree();
 
 	/* -- Have we optimized something ? -- */
 
-	bool optimized = (this->moves() < moves) ? true : false;
+	if (this->moves() < moves)
+		optimized = true;
 
 	/* -- Let's perform more computations if we have not optimized anything -- */
 

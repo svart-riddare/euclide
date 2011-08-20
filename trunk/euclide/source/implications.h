@@ -29,8 +29,8 @@ class Implication
 		Implication();
 
 	public :
-		void add(int requiredMoves, int requiredCaptures);
 		void add(int requiredMoves, int requiredCaptures, Square square, Superman superman, bool captured);
+		void max(int requiredMoves, int requiredCaptures);
 		void set(int extraMoves, int extraCaptures);
 
 	public :

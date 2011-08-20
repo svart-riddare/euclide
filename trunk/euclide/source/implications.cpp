@@ -28,25 +28,26 @@ Implication::Implication()
 
 /* -------------------------------------------------------------------------- */
 
-void Implication::add(int requiredMoves, int requiredCaptures)
-{
-	minimize(_requiredMoves, requiredMoves);
-	minimize(_requiredCaptures, requiredCaptures);
-}
-
-/* -------------------------------------------------------------------------- */
-
 void Implication::add(int assignedMoves, int assignedCaptures, Square square, Superman superman, bool captured)
 {
 	minimize(_assignedMoves, assignedMoves);
 	minimize(_assignedCaptures, assignedCaptures);
 
-	add(assignedMoves, assignedCaptures);
+	minimize(_requiredMoves, assignedMoves);
+	minimize(_requiredCaptures, assignedCaptures);
 
 	_squares[square] = true;
 	_supermen[superman] = true;
 
 	(captured ? _captured : _alive) = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Implication::max(int requiredMoves, int requiredCaptures)
+{
+	maximize(_requiredMoves, requiredMoves);
+	maximize(_requiredCaptures, requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -94,26 +95,38 @@ void Implications::constructor(const Position& position, const Assignations *ass
 		for (Targets::const_iterator target = partition->begin(); target != partition->end(); target++)
 			for (Destinations::const_iterator destination = target->begin(); destination != target->end(); destination++)
 				_implications[destination->man()].add(destination->requiredMoves(), destination->requiredCaptures(), destination->square(), destination->superman(), destination->captured());
-
-	/* -- Consider partitions as assignations -- */
-
-	for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
-		_movePartitions.push_back(Assignation(partition->men(), position.color(), partition->requiredMoves()));
-
-	for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
-		_capturePartitions.push_back(Assignation(partition->men(), position.color(), partition->requiredCaptures()));
 	
 	/* -- Process single-piece assignations -- */
 
 	if (assignedMoves)		
-		for (Assignations::const_iterator assignation = assignedMoves->begin(); assignation != assignedMoves->begin(); assignation++)
+		for (Assignations::const_iterator assignation = assignedMoves->begin(); assignation != assignedMoves->end(); assignation++)
 			if (assignation->men().count() == 1)
-				_implications[assignation->man()].add(assignation->assigned(), infinity);
+				_implications[assignation->man()].max(assignation->assigned(), 0);
 
 	if (assignedCaptures)
-		for (Assignations::const_iterator assignation = assignedCaptures->begin(); assignation != assignedCaptures->begin(); assignation++)
+		for (Assignations::const_iterator assignation = assignedCaptures->begin(); assignation != assignedCaptures->end(); assignation++)
 			if (assignation->men().count() == 1)
-				_implications[assignation->man()].add(infinity, assignation->assigned());
+				_implications[assignation->man()].max(0, assignation->assigned());
+
+	/* -- Consider partitions as assignations -- */
+
+	for (Partitions::const_iterator partition = position.begin(); partition != position.end(); partition++)
+	{
+		int requiredMoves = 0;
+		int requiredCaptures = 0;
+		
+		for (Man man = FirstMan; man <= LastMan; man++)
+		{
+			if (partition->men()[man])
+			{
+				requiredMoves += this->requiredMoves(man);
+				requiredCaptures += this->requiredCaptures(man);
+			}
+		}
+
+		_movePartitions.push_back(Assignation(partition->men(), partition->color(), std::max(requiredMoves, partition->requiredMoves())));
+		_capturePartitions.push_back(Assignation(partition->men(), partition->color(), std::max(requiredCaptures, partition->requiredCaptures())));
+	}
 
 	/* -- Process assignations -- */
 
@@ -205,7 +218,7 @@ void Implications::constructor(const Position& position, const Assignations *ass
 
 		partition->minimum(minimumMoves);
 
-		/* -- Save partition if is concern exactly two men -- */
+		/* -- Save partition if it concerns exactly two men -- */
 
 		if ((partition->minimum() < partition->assigned()) && (men.count() == 2))
 			_assignedMoves.push_back(*partition);
@@ -227,12 +240,12 @@ void Implications::constructor(const Position& position, const Assignations *ass
 
 		partition->minimum(minimumCaptures);
 
-		/* -- Save partition if is concern exactly two men -- */
+		/* -- Save partition if it concerns exactly two men -- */
 
 		if ((partition->minimum() < partition->assigned()) && (men.count() == 2))
 			_assignedCaptures.push_back(*partition);
 
-		/* -- Sum up number of required moves -- */
+		/* -- Sum up number of required captures -- */
 
 		_requiredCaptures += partition->assigned();
 	}

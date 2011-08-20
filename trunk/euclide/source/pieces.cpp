@@ -1491,14 +1491,17 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int recursion)
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int rmoves[2])
 {
 	int requiredMoves = infinity;
 
 	/* -- Check if we have achieved our goal -- */
 
 	if (pieces[0]->_possibleSquares[squares[0]] && pieces[1]->_possibleSquares[squares[1]])
+	{
 		requiredMoves = moves.size();
+		minimize(rmoves, nmoves, 2);
+	}
 
 	/* -- Return if performing more computations is useless -- */
 
@@ -1537,7 +1540,7 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 				if (possible)
 				{
 					squares[k] = pieces[k]->_xinitial;
-					minimize(requiredMoves, findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, assignedMoves, recursion));
+					minimize(requiredMoves, findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, assignedMoves, rmoves));
 					squares[k] = pieces[k]->_initial;
 				}
 			}
@@ -1587,7 +1590,7 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 					/* -- Recursive call -- */
 
-					int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, recursion + 1);
+					int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, rmoves);
 					
 					/* -- Update hash table and tag successful moves -- */
 
@@ -1621,17 +1624,23 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, bool isFast)
+bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool isFast)
 {
-	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, isFast);
+	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, requiredMovesA, requiredMovesB, isFast);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, bool isFast)
+bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool isFast)
 {
 	if (requiredMoves)
 		*requiredMoves = 0;
+
+	if (requiredMovesA)
+		*requiredMovesA = 0;
+
+	if (requiredMovesB)
+		*requiredMovesB = 0;
 
 	if (&piece == this)
 		return false;
@@ -1651,6 +1660,7 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 	Piece *pieces[2] = { this, &piece };
 
 	Square squares[2] = { pieces[0]->_initial, pieces[1]->_initial };
+	int rmoves[2] = { infinity, infinity };
 	int nmoves[2] = { 0, 0 };
 	Moves moves;
 
@@ -1665,12 +1675,18 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 
 	/* -- Recursively find the number of required moves for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, isFast ? assignedMoves : -1, 0);
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, isFast ? assignedMoves : -1, rmoves);
 
 	/* -- Save result -- */
 
 	if (requiredMoves)
 		*requiredMoves = requiredMovesForBothPieces;
+
+	if (requiredMovesA)
+		*requiredMovesA = rmoves[0];
+
+	if (requiredMovesB)
+		*requiredMovesB = rmoves[1];
 
 	/* -- Mark as impossible all moves that have not been played -- */
 
