@@ -1349,7 +1349,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 	/* -- Let's put aside castling for now and start from initial square -- */
 
-	if ((_initial != _xinitial) && piece.alive(false))
+	if (!_teleported && !_kcastling && !_qcastling && piece.alive(false))
 	{
 		Square square = piece._initial;
 		Obstructions obstructions(*_obstructions[square][piece.glyph()]);
