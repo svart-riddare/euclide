@@ -15,6 +15,7 @@ static const unsigned standard = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_
 static const unsigned question = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 static const unsigned copyright = FOREGROUND_RED | FOREGROUND_BLUE;
 static const unsigned freeMoves = FOREGROUND_GREEN;
+static const unsigned complexity = FOREGROUND_GREEN;
 
 static const unsigned whitePieces = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
 static const unsigned blackPieces = 0;
@@ -39,6 +40,7 @@ static const unsigned standard = COLOR_PAIR(COLOR_WHITE) | A_BOLD;
 static const unsigned question = COLOR_PAIR(COLOR_WHITE);
 static const unsigned copyright = COLOR_PAIR(COLOR_CYAN);
 static const unsigned freeMoves = COLOR_PAIR(COLOR_GREEN);
+static const unsigned complexity = COLOR_PAIR(COLOR_GREEN);
 
 static const unsigned whitePiecesOnLightSquares = COLOR_PAIR(12) | A_BOLD;
 static const unsigned whitePiecesOnDarkSquares = COLOR_PAIR(13) | A_BOLD;

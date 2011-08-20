@@ -89,6 +89,8 @@ typedef struct
 	int freeWhiteMoves;
 	int freeBlackMoves;
 
+	double complexity;
+
 } EUCLIDE_Deductions;
 
 /* -------------------------------------------------------------------------- */
@@ -98,7 +100,7 @@ typedef void *EUCLIDE_Handle;
 typedef void (*EUCLIDE_DisplayCopyrightFunction)(EUCLIDE_Handle handle, const wchar_t *copyright);
 typedef void (*EUCLIDE_DisplayProblemFunction)(EUCLIDE_Handle handle, const EUCLIDE_Problem *problem);
 typedef void (*EUCLIDE_DisplayMessageFunction)(EUCLIDE_Handle handle, EUCLIDE_Message message);
-typedef void (*EUCLIDE_DisplayFreeMovesFunction)(EUCLIDE_Handle handle, int whiteFreeMoves, int blackFreeMoves);
+typedef void (*EUCLIDE_DisplayProgressFunction)(EUCLIDE_Handle handle, int whiteFreeMoves, int blackFreeMoves, double complexity);
 typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_Handle handle, const EUCLIDE_Deductions *deductions);
 
 typedef struct
@@ -106,7 +108,7 @@ typedef struct
 	EUCLIDE_DisplayCopyrightFunction displayCopyright;
 	EUCLIDE_DisplayProblemFunction displayProblem;
 	EUCLIDE_DisplayMessageFunction displayMessage;
-	EUCLIDE_DisplayFreeMovesFunction displayFreeMoves;
+	EUCLIDE_DisplayProgressFunction displayProgress;
 	EUCLIDE_DisplayDeductionsFunction displayDeductions;
 
 	EUCLIDE_Handle handle;

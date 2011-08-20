@@ -16,7 +16,7 @@ Console::Console()
 	callbacks.displayCopyright = _displayCopyright;
 	callbacks.displayProblem = _displayProblem;
 	callbacks.displayMessage = _displayMessage;
-	callbacks.displayFreeMoves = _displayFreeMoves;
+	callbacks.displayProgress = _displayProgress;
 	callbacks.displayDeductions = _displayDeductions;
 
 	callbacks.handle = static_cast<EUCLIDE_Handle>(this);
@@ -132,12 +132,16 @@ void Console::displayProblem(const EUCLIDE_Problem *problem)
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayFreeMoves(int whiteFreeMoves, int blackFreeMoves)
+void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity)
 {
 	wchar_t string[32];
+	
 	swprintf(string, sizeof(string) / sizeof(string[0]), L"%d - %d", whiteFreeMoves, blackFreeMoves);
+	write(string, 16, true, 11, 2, colors::freeMoves);
 
-	write(string, 32, true, 11, 2, colors::freeMoves);
+	swprintf(string, sizeof(string) / sizeof(string[0]), L"%.2f", complexity);
+	write(string, 16, true, 27, 2, colors::complexity);
+
 	displayTimer();
 }
 
@@ -145,7 +149,7 @@ void Console::displayFreeMoves(int whiteFreeMoves, int blackFreeMoves)
 
 void Console::displayDeductions(const EUCLIDE_Deductions *deductions)
 {
-	displayFreeMoves(deductions->freeWhiteMoves, deductions->freeBlackMoves);
+	displayProgress(deductions->freeWhiteMoves, deductions->freeBlackMoves, deductions->complexity);
 	displayTimer();
 }
 

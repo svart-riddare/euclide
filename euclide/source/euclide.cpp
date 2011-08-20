@@ -153,8 +153,8 @@ void Euclide::analyseBasicConstraints()
 	
 		EUCLIDE_Deductions deductions = *this;
 
-		if (callbacks.displayFreeMoves)
-			(*callbacks.displayFreeMoves)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves);
+		if (callbacks.displayProgress)
+			(*callbacks.displayProgress)(callbacks.handle, deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
 
 		if (callbacks.displayDeductions)
 			(*callbacks.displayDeductions)(callbacks.handle, &deductions);
@@ -238,8 +238,34 @@ Euclide::operator EUCLIDE_Deductions() const
 						deductions[man].numMoves += board->moves(superman, color);
 	}
 
+	/* -- Get number of unassigned moves -- */
+
 	globalDeductions.freeWhiteMoves = problem->moves(White) - whitePosition->requiredMoves();
 	globalDeductions.freeBlackMoves = problem->moves(Black) - blackPosition->requiredMoves();
+
+	/* -- Estimate complexity -- */
+
+	double complexity = log(0.0 + problem->moves(White) + problem->moves(Black));
+	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		EUCLIDE_Deduction *deductions = (color == White) ? globalDeductions.whitePieces : globalDeductions.blackPieces;
+
+		for (Man man = FirstMan; man <= LastMan; man++)
+		{
+			EUCLIDE_Deduction *deduction = &deductions[man];
+
+			complexity += log(0.0 + deduction->numSquares);
+			if (deduction->numMoves > deduction->requiredMoves)
+				complexity += log(0.0 + deduction->numMoves - deduction->requiredMoves);
+		}
+	}
+
+	complexity += log(1.0 + globalDeductions.freeWhiteMoves);
+	complexity += log(1.0 + globalDeductions.freeBlackMoves);
+
+	globalDeductions.complexity = complexity / log(2.0);
+
+	/* -- Done -- */
 
 	return globalDeductions;
 }
