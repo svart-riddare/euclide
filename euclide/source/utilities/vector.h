@@ -16,8 +16,11 @@ class vector_ptr_const_iterator : public vector<T *>::const_iterator
 		vector_ptr_const_iterator(const typename vector<T *>::iterator& iterator) : vector<T *>::const_iterator(iterator) {}
 
 	public :
-		const T *operator->() const
+		inline const T *operator->() const
 			{ return **this; }
+
+		inline void operator++(int)
+			{ vector<T *>::const_iterator::operator++(); }
 };
 
 template <class T>
@@ -29,6 +32,9 @@ class vector_ptr_iterator : public vector<T *>::iterator
 	public :
 		T *operator->() const
 			{ return **this; }
+
+		inline void operator++(int)
+			{ vector<T *>::iterator::operator++(); }
 };
 
 /* -------------------------------------------------------------------------- */
