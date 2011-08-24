@@ -11,6 +11,7 @@
 
 /* -------------------------------------------------------------------------- */
 
+static
 bool solveProblem(Console& console, const char *forsytheString, int numHalfMoves) 
 {
 	ForsytheString problem(forsytheString, numHalfMoves);
@@ -23,17 +24,20 @@ bool solveProblem(Console& console, const char *forsytheString, int numHalfMoves
 	if (status != EUCLIDE_STATUS_OK)
 		console.displayError(strings::load(status));
 
-	console.wait();
+	console.done();
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
+static
 bool solveProblems(Console& console, const char *file)
 {
 	FILE *input = fopen(file, "r");
 	if (!input)
 		return false;
+
+	console << file;
 
 	const int bufferSize = 1024;
 	char *bufferA = new char[bufferSize];
@@ -63,7 +67,8 @@ bool solveProblems(Console& console, const char *file)
 
 /* -------------------------------------------------------------------------- */
 
-int _main(int numArguments, char *arguments[], char *environment[])
+static
+int _main(int numArguments, char *arguments[], char * /*environment*/[])
 {
 	DosConsole console;
 	if (!console)

@@ -15,6 +15,9 @@ typedef enum
 	Moves,
 	HalfMove,
 	NoHalfMove,
+	Input,
+	Output,
+	Score,
 	
 	NumTexts
 

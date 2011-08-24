@@ -149,7 +149,7 @@ void WinConsole::displayProblem(const EUCLIDE_Problem *problem)
 		int row = square % 8;
 		int index = 8 * (7 - row) + column;
 		
-		chessboard[index].Char.UnicodeChar = glyphs[glyph];
+		chessboard[index].Char.UnicodeChar = (WCHAR)toupper(glyphs[glyph]);
 		chessboard[index].Attributes = (((column & 1) ^ (row & 1)) ? colors::lightSquares : colors::darkSquares);
 		chessboard[index].Attributes |= (isWhiteGlyph ? colors::whitePieces : colors::blackPieces);
 	}
@@ -200,7 +200,7 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 
 			if (deduction->finalSquare >= 0)
 			{
-				characters[5].Char.UnicodeChar = symbols[deduction->initialGlyph];
+				characters[5].Char.UnicodeChar = (WCHAR)toupper(symbols[deduction->initialGlyph]);
 				characters[6].Char.UnicodeChar = (WCHAR)('a' + deduction->initialSquare / 8);
 				characters[7].Char.UnicodeChar = (WCHAR)('1' + deduction->initialSquare % 8);
 
@@ -209,7 +209,7 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 					characters[9].Char.UnicodeChar = '-';
 					characters[10].Char.UnicodeChar = '>';
 
-					characters[12].Char.UnicodeChar = symbols[deduction->promotionGlyph];
+					characters[12].Char.UnicodeChar = (WCHAR)toupper(symbols[deduction->promotionGlyph]);
 					characters[13].Char.UnicodeChar = (WCHAR)('a' + deduction->finalSquare / 8);
 					characters[14].Char.UnicodeChar = (WCHAR)('1' + deduction->finalSquare % 8);
 				}

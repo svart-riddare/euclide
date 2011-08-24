@@ -2,6 +2,7 @@
 #define __CONSOLE_H
 
 #include "includes.h"
+#include "output.h"
 #include "timer.h"
 
 /* -------------------------------------------------------------------------- */
@@ -14,6 +15,7 @@ class Console
 
 		virtual void reset();
 		virtual void clear();
+		virtual void done();
 		virtual bool wait();
 
 		virtual void displayTimer();
@@ -29,18 +31,21 @@ class Console
 		operator const EUCLIDE_Callbacks *() const;
 		bool operator!() const;
 
+		void operator<<(const char *inputName);
+
 	protected :
-		static void _displayCopyright(EUCLIDE_Handle handle, const wchar_t *copyright)                                   { return reinterpret_cast<Console *>(handle)->displayCopyright(copyright); }
-		static void _displayMessage(EUCLIDE_Handle handle, EUCLIDE_Message message)                                      { return reinterpret_cast<Console *>(handle)->displayMessage(message); }
-		static void _displayProblem(EUCLIDE_Handle handle, const EUCLIDE_Problem *problem)                               { return reinterpret_cast<Console *>(handle)->displayProblem(problem); }
-		static void _displayProgress(EUCLIDE_Handle handle, int whiteFreeMoves, int blackFreeMoves, double complexity)   { return reinterpret_cast<Console *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
-		static void _displayDeductions(EUCLIDE_Handle handle, const EUCLIDE_Deductions *deductions)                      { return reinterpret_cast<Console *>(handle)->displayDeductions(deductions); }
+		static void _displayCopyright(EUCLIDE_Handle handle, const wchar_t *copyright)                                   { reinterpret_cast<Console *>(handle)->displayCopyright(copyright); }
+		static void _displayMessage(EUCLIDE_Handle handle, EUCLIDE_Message message)                                      { reinterpret_cast<Console *>(handle)->displayMessage(message); }
+		static void _displayProblem(EUCLIDE_Handle handle, const EUCLIDE_Problem *problem)                               { reinterpret_cast<Console *>(handle)->displayProblem(problem); }
+		static void _displayProgress(EUCLIDE_Handle handle, int whiteFreeMoves, int blackFreeMoves, double complexity)   { reinterpret_cast<Console *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
+		static void _displayDeductions(EUCLIDE_Handle handle, const EUCLIDE_Deductions *deductions)                      { reinterpret_cast<Console *>(handle)->displayDeductions(deductions); }
 
 		virtual void write(const wchar_t *string, int x, int y, unsigned color);
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, unsigned color);
 
 	private :
 		EUCLIDE_Callbacks callbacks;
+		Output output;
 		Timer timer;
 
 	protected :

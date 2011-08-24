@@ -97,7 +97,7 @@ void LinuxConsole::displayProblem(const EUCLIDE_Problem *problem)
 		bool isLightSquare = ((square / 8) & 1) == ((square % 8) & 1);
 
 		move(7 - (square % 8), square / 8);
-		addch(glyphs[glyph] | (isWhiteGlyph ? (isLightSquare ? colors::whitePiecesOnLightSquares : colors::whitePiecesOnDarkSquares) : (isLightSquare ? colors::blackPiecesOnLightSquares : colors::blackPiecesOnDarkSquares)));
+		addch(toupper(glyphs[glyph]) | (isWhiteGlyph ? (isLightSquare ? colors::whitePiecesOnLightSquares : colors::whitePiecesOnDarkSquares) : (isLightSquare ? colors::blackPiecesOnLightSquares : colors::blackPiecesOnDarkSquares)));
 	}
 
 	Console::displayProblem(problem);
@@ -137,7 +137,7 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 			{
 				unsigned attribute =  color ? (deduction->captured ? colors::blackCaptures : colors::blackMoves) : (deduction->captured ? colors::whiteCaptures : colors::whiteMoves);
 
-				mvaddch(y, x + 5, symbols[deduction->initialGlyph] | attribute);
+				mvaddch(y, x + 5, toupper(symbols[deduction->initialGlyph]) | attribute);
 				mvaddch(y, x + 6, ('a' + deduction->initialSquare / 8) | attribute);
 				mvaddch(y, x + 7, ('1' + deduction->initialSquare % 8) | attribute);
 
@@ -145,7 +145,7 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 				{
 					mvaddch(y, x + 9, '-' | attribute);
 					mvaddch(y, x + 10, '>' | attribute);
-					mvaddch(y, x + 12, symbols[deduction->promotionGlyph] | attribute);
+					mvaddch(y, x + 12, toupper(symbols[deduction->promotionGlyph]) | attribute);
 					mvaddch(y, x + 13, ('a' + deduction->finalSquare / 8) | attribute);
 					mvaddch(y, x + 14, ('1' + deduction->finalSquare % 8) | attribute);
 				}
