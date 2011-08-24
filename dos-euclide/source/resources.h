@@ -13,10 +13,14 @@ static const string french[] =
 	{ (2000),                                        L"Analyse pr\xE9liminaire..." },
 
 	{ (3000 + Forsythe),                             L"RDTFCP|KQRBNP|KDTLSB|RDTACP|KQRBSP" },
-	{ (3000 + GlyphSymbols),                         L" RDTFCPRDTFCP" },
+	{ (3000 + GlyphSymbols),                         L" RDTFCPrdtcfp" },
 	{ (3000 + Moves),                                L"coups" },
 	{ (3000 + HalfMove),                             L",5" },
 	{ (3000 + NoHalfMove),                           L",0" },
+	{ (3000 + Input),                                L"Probl\xE8me analys\xE9 :" },
+	{ (3000 + Output),                               L"Verdict : " },
+	{ (3000 + Score),                                L"\xC9" L"chelle de difficulté =" },
+
 
 	{ (4000 + NoArguments),                          L"Veuillez pr\xE9" L"ciser un nom de fichier sur la ligne de commande" },
 	{ (4000 + InvalidArguments),                     L"Le probl\xE8me donn\xE9 en ligne de commande est invalide" },
@@ -40,10 +44,13 @@ static const string english[] =
 	{ (2000),                                        L"Static analysis..." },
 
 	{ (3000 + Forsythe),                             L"KQRBNP|RDTFCP|KDTLSB|RDTACP|KQRBSP" },
-	{ (3000 + GlyphSymbols),                         L" KQRBNPKQRBNP" },
+	{ (3000 + GlyphSymbols),                         L" KQRBNPkqrbnp" },
 	{ (3000 + Moves),                                L"moves" },
 	{ (3000 + HalfMove),                             L".5" },
 	{ (3000 + NoHalfMove),                           L".0" },
+	{ (3000 + Input),                                L"Input:" },
+	{ (3000 + Output),                               L"Result:" },
+	{ (3000 + Score),                                L"Score of" },
 
 	{ (4000 + NoArguments),                          L"Please specify an input file name on the command line" },
 	{ (4000 + InvalidArguments),                     L"Invalid problem given on command line" },

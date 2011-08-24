@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\output.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\strings.cpp"
 				>
 			</File>
@@ -236,6 +240,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\includes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\output.h"
 				>
 			</File>
 			<File

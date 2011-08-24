@@ -114,11 +114,20 @@ tcfd1fct/pppp1ppp/4pF2/8/4C3/rPP5/P2PPPPP/T1D1RFCT
 
 --------------------------------------------------------------
 
+Markus Ott
+Feenschach 1982
+P0005313
+
+tc2rfct/ppF1pppp/3p4/1dp5/1DP5/3P4/PPf1PPPP/TC2RFCT
+13
+
+--------------------------------------------------------------
+
 J. H. Turkstra
 The Problemist 1995
 P0005882
 
-tcfdrfct/pppp1pp1/4p3/8/5P2/2P3Pp/PP1PP2P/TCFRDFCT
+tcfrdfct/pppp1pp1/4p3/8/5P2/2P3Pp/PP1PP2P/TCFRDFCT
 14
 
 --------------------------------------------------------------
@@ -138,15 +147,6 @@ P0008558
 
 tcf2tr1/pppp3p/2c2R2/2f1ppp1/4P2d/8/PPPP1PPP/TCFD1FCT
 16
-
---------------------------------------------------------------
-
-Markus Ott
-Feenschach 1982
-P0005313
-
-tc2rfct/ppF1pppp/3p4/1dp5/1DP5/3P4/PPf1PPPP/TC2RFCT
-17
 
 --------------------------------------------------------------
 

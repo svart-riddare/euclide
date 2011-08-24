@@ -32,6 +32,7 @@ Console::~Console()
 
 void Console::reset()
 {
+	output.reset();
 	timer = Timer();
 	clear();
 }
@@ -40,6 +41,14 @@ void Console::reset()
 
 void Console::clear()
 {
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::done()
+{
+	output.done();
+	wait();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -77,6 +86,8 @@ void Console::displayMessage(const wchar_t *string)
 
 void Console::displayCopyright(const wchar_t *copyright)
 {
+	output.displayCopyright(copyright);
+
 	int length = (int)wcslen(copyright);
 	int x = width - length - 1;
 	if (x < 0)
@@ -90,6 +101,8 @@ void Console::displayCopyright(const wchar_t *copyright)
 
 void Console::displayMessage(EUCLIDE_Message message)
 {
+	output.displayMessage(message);
+
 	displayMessage(strings::load(message));
 	displayTimer();
 }
@@ -98,6 +111,8 @@ void Console::displayMessage(EUCLIDE_Message message)
 
 void Console::displayProblem(const EUCLIDE_Problem *problem)
 {
+	output.displayProblem(problem);
+
 	int numWhitePieces = 0;
 	int numBlackPieces = 0;
 
@@ -134,6 +149,8 @@ void Console::displayProblem(const EUCLIDE_Problem *problem)
 
 void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity)
 {
+	output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
+
 	wchar_t string[32];
 	
 	swprintf(string, sizeof(string) / sizeof(string[0]), L"%d - %d", whiteFreeMoves, blackFreeMoves);
@@ -149,6 +166,8 @@ void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double com
 
 void Console::displayDeductions(const EUCLIDE_Deductions *deductions)
 {
+	output.displayDeductions(deductions);
+
 	displayProgress(deductions->freeWhiteMoves, deductions->freeBlackMoves, deductions->complexity);
 	displayTimer();
 }
@@ -165,6 +184,13 @@ Console::operator const EUCLIDE_Callbacks *() const
 bool Console::operator!() const
 {
 	return !valid || abort;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::operator<<(const char *inputName)
+{
+	output.open(inputName);
 }
 
 /* -------------------------------------------------------------------------- */

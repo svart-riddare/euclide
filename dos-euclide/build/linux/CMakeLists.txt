@@ -12,6 +12,8 @@ set(SOURCES
 	../../source/forsythe.h
 	../../source/includes.h
 	../../source/main.cpp
+	../../source/output.cpp
+	../../source/output.h
 	../../source/resources.h
 	../../source/strings.cpp
 	../../source/strings.h
