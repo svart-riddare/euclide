@@ -245,7 +245,7 @@ Euclide::operator EUCLIDE_Deductions() const
 
 	/* -- Estimate complexity -- */
 
-	double complexity = log(0.0 + problem->moves(White) + problem->moves(Black));
+	double complexity = 0.0;
 	for (Color color = FirstColor; color <= LastColor; color++)
 	{
 		EUCLIDE_Deduction *deductions = (color == White) ? globalDeductions.whitePieces : globalDeductions.blackPieces;
