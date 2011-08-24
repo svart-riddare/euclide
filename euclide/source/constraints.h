@@ -33,6 +33,8 @@ class Constraint
 		int earliest(int offset) const;
 		int latest(int offset) const;
 
+		bool fatal() const;
+
 	private :
 		const Piece *_piece;       /**< Constraining piece. */
 

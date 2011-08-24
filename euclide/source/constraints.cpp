@@ -83,6 +83,13 @@ int Constraint::latest(int offset) const
 }
 
 /* -------------------------------------------------------------------------- */
+
+bool Constraint::fatal() const
+{
+	return (_follows && _preceedes && (_follows == _preceedes)) ? true : false;
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 Constraints::Constraints(Move *move)
@@ -112,6 +119,21 @@ bool Constraints::apply(void)
 {
 	int earliest = _move->earliest();
 	int latest = _move->latest();
+
+	/* -- Early exit -- */
+
+	if (!_move->possible())
+		return false;
+
+	/* -- Check for impossibilities -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+		for (Man man = FirstMan; man <= LastMan; man++)
+			if (_constraints[color][man] && _constraints[color][man]->fatal())
+				_move->invalidate();
+
+	if (!_move->possible())
+		return true;
 
 	/* -- Compute contraints -- */
 
