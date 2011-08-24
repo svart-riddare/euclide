@@ -116,6 +116,42 @@ void makeObstructions(bool castling)
 					if (!blocked)
 					{
 						if (glyph.isKing())
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
+								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
+									blocked = true;
+							
+						if (glyph.isKing())
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
+									blocked = true;
+
+						if (castling)
+							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
+								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
+									blocked = true;
+
+						if (blocked)
+							check = true;
+					}
+
+					if (!blocked)
+					{
+						if (glyph.isKing())
 							if ((abs(column - from.column()) <= 1) && (abs(row - from.row()) <= 1))
 								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
 									blocked = true;
@@ -174,42 +210,6 @@ void makeObstructions(bool castling)
 
 						if (blocked)
 							royal = true;
-					}
-
-					if (!blocked)
-					{
-						if (glyph.isKing())
-							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
-								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
-									blocked = true;
-
-						if (castling)
-							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
-								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
-									blocked = true;
-
-						if (castling)
-							if ((abs(column - to.column()) <= 1) && (abs(row - to.row()) <= 1))
-								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
-									blocked = true;
-							
-						if (glyph.isKing())
-							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
-								if ((horizontalDistance <= 1) && (verticalDistance <= 1))
-									blocked = true;
-
-						if (castling)
-							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
-								if ((glyph == WhiteKing) && (from == E1) && ((to == C1) || (to == G1)))
-									blocked = true;
-
-						if (castling)
-							if ((abs(column - to.column()) * abs(row - to.row())) == 2)
-								if ((glyph == BlackKing) && (from == E8) && ((to == C8) || (to == G8)))
-									blocked = true;
-
-						if (blocked)
-							check = true;
 					}
 
 					if (from == to)
