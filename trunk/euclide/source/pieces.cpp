@@ -1491,7 +1491,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int rmoves[2])
+int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmoves[2], Moves& moves, MiniHash& processed, int availableMoves, int assignedMoves, int maximumMoves, int rmoves[2])
 {
 	int requiredMoves = infinity;
 
@@ -1540,7 +1540,7 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 				if (possible)
 				{
 					squares[k] = pieces[k]->_xinitial;
-					minimize(requiredMoves, findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, assignedMoves, rmoves));
+					minimize(requiredMoves, findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, assignedMoves, maximumMoves, rmoves));
 					squares[k] = pieces[k]->_initial;
 				}
 			}
@@ -1590,12 +1590,12 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 					/* -- Recursive call -- */
 
-					int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, rmoves);
+					int result = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves - 1, assignedMoves, maximumMoves, rmoves);
 					
 					/* -- Update hash table and tag successful moves -- */
 
 					processed[squares[0]][squares[1]].visited(nmoves, result);
-					if (result < infinity)
+					if (result <= maximumMoves)
 						move->tag(true);
 
 					/* -- Update number of required moves -- */
@@ -1624,14 +1624,14 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool isFast)
+bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool fast)
 {
-	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, requiredMovesA, requiredMovesB, isFast);
+	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, requiredMovesA, requiredMovesB, fast);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool isFast)
+bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool fast)
 {
 	if (requiredMoves)
 		*requiredMoves = 0;
@@ -1655,6 +1655,11 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 	if ((_captured != false) || (piece._captured != false))
 		return false;
 
+	/* -- This function does not completely implement uncertain destinations -- */
+
+	if ((_possibleSquares.count() > 1) || (piece._possibleSquares.count() > 1))
+		fast = true;
+
 	/* -- Initialization -- */
 
 	Piece *pieces[2] = { this, &piece };
@@ -1675,24 +1680,24 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 
 	/* -- Recursively find the number of required moves for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, isFast ? assignedMoves : -1, rmoves);
+	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, fast ? assignedMoves : -1, availableMoves, rmoves);
 
 	/* -- Save result -- */
 
 	if (requiredMoves)
 		*requiredMoves = requiredMovesForBothPieces;
 
-	if (requiredMovesA)
+	if (requiredMovesA && !fast)
 		*requiredMovesA = rmoves[0];
 
-	if (requiredMovesB)
+	if (requiredMovesB && !fast)
 		*requiredMovesB = rmoves[1];
 
 	/* -- Mark as impossible all moves that have not been played -- */
 
 	bool modified = false;
 
-	if (!isFast)
+	if (!fast)
 	{
 		for (int k = 0; k < 2; k++)
 		{
