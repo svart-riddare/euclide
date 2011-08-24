@@ -24,13 +24,13 @@ bool MiniHashEntry::visited(const int moves[2], int *requiredMoves) const
 	assert(moves[0] <= 127);
 	assert(moves[1] <= 127);
 
-	/* -- Can we deduce the nmber of required moves from a previous visit ? -- */
+	/* -- Can we deduce the number of required moves from a previous visit ? -- */
 
 	for (int k = 0; k < _nvisits; k++)
 	{
 		if ((moves[0] >= _visits[k].first[0]) && (moves[1] >= _visits[k].first[1]))
 		{
-			minimize(*requiredMoves, (int)_visits[k].second);
+			minimize(*requiredMoves, (moves[0] - _visits[k].first[0]) + (moves[1] - _visits[k].first[1]) + _visits[k].second);
 			return true;
 		}
 	}

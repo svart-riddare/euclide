@@ -621,15 +621,15 @@ bool Board::optimizeLevelThree()
 
 		if ((requiredMoves > pair->assignedMoves) && (pair->colorA == pair->colorB))
 			assigned = true;
-		if ((requiredMovesA > pair->assignedMovesA) && !fast)
+		if (requiredMovesA > pair->assignedMovesA)
 			assignedA = true;
-		if ((requiredMovesB > pair->assignedMovesB) && !fast)
+		if (requiredMovesB > pair->assignedMovesB)
 			assignedB = true;
 
 		/* -- Store required moves -- */
 
-		fast || maximize(_moves[pair->colorA][pair->manA], requiredMovesA);
-		fast || maximize(_moves[pair->colorB][pair->manB], requiredMovesB);
+		maximize(_moves[pair->colorA][pair->manA], requiredMovesA);
+		maximize(_moves[pair->colorB][pair->manB], requiredMovesB);
 
 		/* -- If we have modified something, complete optimization now -- */
 
