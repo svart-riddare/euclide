@@ -13,7 +13,7 @@ static const string french[] =
 	{ (2000),                                        L"Analyse pr\xE9liminaire..." },
 
 	{ (3000 + Forsythe),                             L"RDTFCP|KQRBNP|KDTLSB|RDTACP|KQRBSP" },
-	{ (3000 + GlyphSymbols),                         L" RDTFCPrdtcfp" },
+	{ (3000 + GlyphSymbols),                         L" RDTFCPrdtfcp" },
 	{ (3000 + Moves),                                L"coups" },
 	{ (3000 + HalfMove),                             L",5" },
 	{ (3000 + NoHalfMove),                           L",0" },
