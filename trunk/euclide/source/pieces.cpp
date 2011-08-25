@@ -1431,7 +1431,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 	/* -- Let's do the same starting from the end -- */
 
-	if (piece.alive())
+	if (piece.alive() && (piece._possibleSquares.count() == 1))
 	{
 		/* -- Let's find ending square -- */
 
@@ -1632,13 +1632,6 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setMutualObstructions(Piece& piece, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool fast)
-{
-	return setMutualObstructions(piece, _availableMoves + piece._availableMoves, assignedMoves, requiredMoves, requiredMovesA, requiredMovesB, fast);
-}
-
-/* -------------------------------------------------------------------------- */
-
 bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assignedMoves, int *requiredMoves, int *requiredMovesA, int *requiredMovesB, bool fast)
 {
 	if (requiredMoves)
@@ -1655,18 +1648,13 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 
 	/* -- Skip useless computations -- */
 
-	if ((_availableMoves >= moves()) && (piece._availableMoves >= piece.moves()))
+	if (!moves() || !piece.moves())
 		return false;
 
 	/* -- This function does not implement captures yet -- */
 
-	if ((_captured != false) || (piece._captured != false))
+	if (_captured || indeterminate(_captured) || piece._captured || indeterminate(piece._captured))
 		return false;
-
-	/* -- This function does not completely implement uncertain destinations -- */
-
-	if ((_possibleSquares.count() > 1) || (piece._possibleSquares.count() > 1))
-		fast = true;
 
 	/* -- Initialization -- */
 
@@ -1688,12 +1676,12 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 
 	/* -- Recursively find the number of required moves for these two pieces -- */
 
-	int requiredMovesForBothPieces = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, fast ? assignedMoves : -1, availableMoves, rmoves);
+	int minimumRequiredMoves = findMutualObstructions(pieces, squares, nmoves, moves, processed, availableMoves, fast ? assignedMoves : -1, availableMoves, rmoves);
 
 	/* -- Save result -- */
 
 	if (requiredMoves)
-		*requiredMoves = requiredMovesForBothPieces;
+		*requiredMoves = minimumRequiredMoves;
 
 	if (requiredMovesA && !fast)
 		*requiredMovesA = rmoves[0];
