@@ -942,10 +942,18 @@ int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 					moves.push_back(&_imovements[move->from()][1]);
 			}
 			
-			/* -- Add mandatory move -- */
+			/* -- Add mandatory move, if there is no possible switchbacks -- */
 
-			moves.push_back(*move);			
-			square = move->to();
+			bool switchbacks = false;
+			for (Square to = FirstSquare; to <= LastSquare; to++)
+				if ((to != move->to()) && _movements[square][to].possible())
+					switchbacks = true;
+
+			if (!switchbacks)
+			{
+				moves.push_back(*move);			
+				square = move->to();
+			}
 		}
 	}
 
