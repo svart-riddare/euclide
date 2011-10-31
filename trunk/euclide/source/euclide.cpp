@@ -254,16 +254,16 @@ Euclide::operator EUCLIDE_Deductions() const
 		{
 			EUCLIDE_Deduction *deduction = &deductions[man];
 
-			complexity += log(0.0 + deduction->numSquares);
+			complexity += std::log(0.0 + deduction->numSquares);
 			if (deduction->numMoves > deduction->requiredMoves)
-				complexity += log(0.0 + deduction->numMoves - deduction->requiredMoves);
+				complexity += std::log(0.0 + deduction->numMoves - deduction->requiredMoves);
 		}
 	}
 
-	complexity += log(1.0 + globalDeductions.freeWhiteMoves);
-	complexity += log(1.0 + globalDeductions.freeBlackMoves);
+	complexity += std::log(1.0 + globalDeductions.freeWhiteMoves);
+	complexity += std::log(1.0 + globalDeductions.freeBlackMoves);
 
-	globalDeductions.complexity = complexity / log(2.0);
+	globalDeductions.complexity = complexity / std::log(2.0);
 
 	/* -- Done -- */
 
