@@ -4,6 +4,7 @@
 /* -------------------------------------------------------------------------- */
 
 #include <climits>
+#include <cmath>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstring>

@@ -19,7 +19,7 @@ static const string french[] =
 	{ (3000 + NoHalfMove),                           L",0" },
 	{ (3000 + Input),                                L"Probl\xE8me analys\xE9 :" },
 	{ (3000 + Output),                               L"Verdict : " },
-	{ (3000 + Score),                                L"\xC9" L"chelle de difficulté =" },
+	{ (3000 + Score),                                L"\xC9" L"chelle de difficult\xE9 =" },
 
 
 	{ (4000 + NoArguments),                          L"Veuillez pr\xE9" L"ciser un nom de fichier sur la ligne de commande" },
