@@ -1355,6 +1355,18 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 	if (moves.empty() || _moves.empty())
 		return;
 
+	/* -- The first rook move after castling occured after castling took place -- */
+
+	if (_teleported && piece.glyph().isKing() && (piece.color() == _color))
+	{
+		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+			if (move->possible() && (move->from() == _xinitial))
+				move->constraints()->mustFollow(&piece, moves[0]);
+
+		if (_imovements[_xinitial][0].possible())
+			_imovements[_xinitial][0].constraints()->mustFollow(&piece, moves[0]);
+	}
+
 	/* -- Let's put aside castling for now and start from initial square -- */
 
 	if (!_teleported && !_kcastling && !_qcastling && piece.alive(false))
