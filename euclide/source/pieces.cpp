@@ -945,8 +945,13 @@ int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 			/* -- Add mandatory move, if there is no possible switchbacks -- */
 
 			bool switchbacks = false;
+
 			for (Square to = FirstSquare; to <= LastSquare; to++)
-				if ((to != move->to()) && _movements[square][to].possible())
+				if ((to != move->to()) && _movements[move->from()][to].possible())
+					switchbacks = true;
+
+			for (Square from = FirstSquare; from <= LastSquare; from++)
+				if ((from != move->from()) && _movements[from][move->to()].possible())
 					switchbacks = true;
 
 			if (!switchbacks)
@@ -1164,10 +1169,10 @@ void Piece::optimize()
 		/* -- Remove optional moves that are out of bounds -- */
 
 		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-			move->bound(_imovements[move->from()][0].earliest(), _imovements[move->from()][0].latest());
+			move->bound(_imovements[move->from()][0].earliest(), move->latest());
 
 		for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
-			move->bound(_imovements[move->to()][1].earliest(), _imovements[move->to()][1].latest());
+			move->bound(move->earliest(), _imovements[move->to()][1].latest());
 
 		/* -- Keep only possible moves -- */
 
@@ -1369,7 +1374,7 @@ void Piece::setMandatoryMoveConstraints(const Piece& piece, const Moves& moves)
 
 	/* -- Let's put aside castling for now and start from initial square -- */
 
-	if (!_teleported && !_kcastling && !_qcastling && piece.alive(false))
+	if (!_teleported && piece.alive(false))
 	{
 		Square square = piece._initial;
 		Obstructions obstructions(*_obstructions[square][piece.glyph()]);
