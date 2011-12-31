@@ -20,7 +20,7 @@ void makeChecks(bool castling)
 
 		for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 		{
-			fprintf(file, "\t\t{ ", strings::glyphs[glyph]);
+			fprintf(file, "\t\t{ ");
 
 			for (Square square = FirstSquare; square <= LastSquare; square++)
 			{

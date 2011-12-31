@@ -79,6 +79,9 @@ class Piece
 		inline const Squares& squares() const
 			{ return _squares; }
 
+		inline const Move *move(int move) const
+			{ return _moves[move]; }
+
 		tribool alive(bool final = true) const;
 
 	protected :

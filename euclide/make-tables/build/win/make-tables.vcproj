@@ -205,10 +205,6 @@
 				RelativePath="..\..\source\make-tables.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\source\strings.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -220,10 +216,6 @@
 			</File>
 			<File
 				RelativePath="..\..\source\make-tables.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\source\strings.h"
 				>
 			</File>
 		</Filter>
@@ -256,6 +248,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\source\enumerations\squares.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\source\enumerations\strings.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\source\enumerations\strings.h"
 				>
 			</File>
 		</Filter>

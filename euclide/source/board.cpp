@@ -531,6 +531,10 @@ bool Board::optimizeLevelTwo()
 		}
 	}
 
+	/* -- Debug -- */
+
+	DebugConstraints(*this, DebugFile());
+
 	/* -- Apply these constraints -- */
 
 	bool constrain = true;

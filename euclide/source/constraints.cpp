@@ -11,7 +11,7 @@ Constraint::Constraint(const Piece *piece)
 	: _piece(piece)
 {
 	_follows = NULL;
-	_preceedes = NULL;
+	_precedes = NULL;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -49,19 +49,19 @@ bool Constraint::mustPreceed(const Move *move)
 
 	/* -- Check if we already know that -- */
 
-	if (_preceedes)
+	if (_precedes)
 	{
-		if (move->rdistance() < _preceedes->rdistance())
+		if (move->rdistance() < _precedes->rdistance())
 			return false;
 
-		if (move->rdistance() == _preceedes->rdistance())
-			if (move->incomplete() || !_preceedes->incomplete())
+		if (move->rdistance() == _precedes->rdistance())
+			if (move->incomplete() || !_precedes->incomplete())
 				return false;
 	}
 
 	/* -- If not, let's not forget it -- */
 
-	_preceedes = move;
+	_precedes = move;
 
 	/* -- Done -- */
 
@@ -79,14 +79,14 @@ int Constraint::earliest(int offset) const
 
 int Constraint::latest(int offset) const
 { 
-	return _preceedes ? _piece->latest() - _preceedes->rdistance() + 1 - offset : infinity;
+	return _precedes ? _piece->latest() - _precedes->rdistance() + 1 - offset : infinity;
 }
 
 /* -------------------------------------------------------------------------- */
 
 bool Constraint::fatal() const
 {
-	return (_follows && _preceedes && (_follows == _preceedes)) ? true : false;
+	return (_follows && _precedes && (_follows == _precedes)) ? true : false;
 }
 
 /* -------------------------------------------------------------------------- */

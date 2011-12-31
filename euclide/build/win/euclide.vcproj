@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_SECURE_SCL=1;_SCL_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_SECURE_SCL=1;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
@@ -113,7 +113,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_SECURE_SCL=0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_SECURE_SCL=0;_CRT_SECURE_NO_WARNINGS"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -189,6 +189,10 @@
 			</File>
 			<File
 				RelativePath="..\..\source\constraints.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\debug.cpp"
 				>
 			</File>
 			<File
@@ -281,6 +285,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\source\debug.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\source\destinations.h"
 				>
 			</File>
@@ -358,6 +366,14 @@
 			</File>
 			<File
 				RelativePath="..\..\source\enumerations\squares.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\enumerations\strings.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\source\enumerations\strings.h"
 				>
 			</File>
 		</Filter>

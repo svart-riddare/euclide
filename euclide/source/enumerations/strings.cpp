@@ -1,11 +1,33 @@
 #include "strings.h"
 
+namespace euclide
+{
 namespace strings
 {
 
 /* -------------------------------------------------------------------------- */
 
+const char *colors[NumColors] =
+{
+	"W", "B"
+};
+
+const char *xcolors[NumColors] =
+{
+	"White",
+	"Black"
+};
+
+/* -------------------------------------------------------------------------- */
+
 const char *glyphs[NumGlyphs] = 
+{
+	"?",
+	"K", "Q", "R", "B", "N", "P",
+	"K", "Q", "R", "B", "N", "P"
+};
+
+const char *xglyphs[NumGlyphs] = 
 {
 	"NoGlyph",
 	"WhiteKing",
@@ -19,7 +41,7 @@ const char *glyphs[NumGlyphs] =
 	"BlackRook",
 	"BlackBishop",
 	"BlackKnight",
-	"BlackPawn",
+	"BlackPawn"
 };
 
 /* -------------------------------------------------------------------------- */
@@ -33,7 +55,7 @@ const char *squares[NumSquares] =
 	"E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8",
 	"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8",
 	"G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8",
-	"H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8",
+	"H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8"
 };
 
 const char *columns[NumColumns] = 
@@ -62,11 +84,9 @@ const char *supermen[NumSupermen] =
 	"AQueen", "BQueen", "CQueen", "DQueen", "EQueen", "FQueen", "GQueen", "HQueen",
 	"ARook", "BRook", "CRook", "DRook", "ERook", "FRook", "GRook", "HRook",
 	"ABishop", "BBishop", "CBishop", "DBishop", "EBishop", "FBishop", "GBishop", "HBishop",
-	"AKnight", "BKnight", "CKnight", "DKnight", "EKnight", "FKnight", "GKnight", "HKnight",
+	"AKnight", "BKnight", "CKnight", "DKnight", "EKnight", "FKnight", "GKnight", "HKnight"
 };
-
-
 
 /* -------------------------------------------------------------------------- */
 
-}
+}}

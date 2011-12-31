@@ -16,7 +16,7 @@ void makeMovements(bool castling)
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n", strings::glyphs[glyph]);
+		fprintf(file, "\t{  /* %s */\n", strings::xglyphs[glyph]);
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 		{
@@ -102,7 +102,7 @@ void makeMovements(bool castling)
 
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n", strings::glyphs[glyph]);
+		fprintf(file, "\t{  /* %s */\n", strings::xglyphs[glyph]);
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 		{
