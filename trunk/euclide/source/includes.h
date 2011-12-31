@@ -89,6 +89,7 @@ namespace euclide
 
 #include "problem.h"
 #include "board.h"
+#include "debug.h"
 
 /* -------------------------------------------------------------------------- */
 

@@ -65,7 +65,7 @@ void makeConstraints(bool castling)
 				if (!interference)
 					continue;
 
-				fprintf(file, "\t/* %s, %s -> %s */\n", strings::glyphs[glyph], strings::squares[from], strings::squares[to]);
+				fprintf(file, "\t/* %s, %s -> %s */\n", strings::xglyphs[glyph], strings::squares[from], strings::squares[to]);
 
 				numConstraints[glyph][from][to] = std::max(horizontalDistance, verticalDistance) - 1;
 				assert(numConstraints[glyph][from][to] > 0);			
@@ -91,7 +91,7 @@ void makeConstraints(bool castling)
 	int index = 0;
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n", strings::glyphs[glyph]);
+		fprintf(file, "\t{  /* %s */\n", strings::xglyphs[glyph]);
 
 		for (Square from = FirstSquare; from <= LastSquare; from++)
 		{

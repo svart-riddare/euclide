@@ -35,11 +35,19 @@ class Constraint
 
 		bool fatal() const;
 
+	public :
+		const Piece *piece() const
+			{ return _piece; }
+		const Move *follows() const
+			{ return _follows; }
+		const Move *precedes() const
+			{ return _precedes; }
+
 	private :
 		const Piece *_piece;       /**< Constraining piece. */
 
 		const Move *_follows;      /**< Constrained move must be played after this move. NULL if none. */
-		const Move *_preceedes;    /**< Constrained move must be played before this move. NULL if none. */
+		const Move *_precedes;     /**< Constrained move must be played before this move. NULL if none. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -55,6 +63,12 @@ class Constraints
 		bool mustFollow(const Piece *piece, const Move *move, bool recursive = true);
 		bool mustPreceed(const Piece *piece, const Move *move, bool recursive = true);
 
+	public :
+		const Constraint *constraint(Color color, Man man) const
+			{ return _constraints[color][man]; }
+		const Move *move() const
+			{ return _move; }
+
 	private :
 		Constraint *constraint(const Piece *piece);
 
@@ -69,3 +83,4 @@ class Constraints
 
 #endif
 
+ 

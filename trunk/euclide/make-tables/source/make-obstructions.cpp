@@ -26,7 +26,7 @@ void makeObstructions(bool castling)
 			numObstructions[glyph][square] = 0;
 
 			if (glyph != NoGlyph)
-				fprintf(file, "\t/* %s, %s */\n", strings::glyphs[glyph], strings::squares[square]);
+				fprintf(file, "\t/* %s, %s */\n", strings::xglyphs[glyph], strings::squares[square]);
 
 			for (Square from = FirstSquare; from <= LastSquare; from++)
 			{
@@ -230,7 +230,7 @@ void makeObstructions(bool castling)
 	int index = 0;
 	for (Glyph glyph = FirstGlyph; glyph <= LastGlyph; glyph++)
 	{
-		fprintf(file, "\t{  /* %s */\n", strings::glyphs[glyph]);
+		fprintf(file, "\t{  /* %s */\n", strings::xglyphs[glyph]);
 
 		for (Square square = FirstSquare; square <= LastSquare; square++)
 		{

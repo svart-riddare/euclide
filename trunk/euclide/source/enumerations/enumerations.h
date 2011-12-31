@@ -6,5 +6,6 @@
 #include "glyphs.h"
 #include "men.h"
 #include "squares.h"
+#include "strings.h"
 
 #endif

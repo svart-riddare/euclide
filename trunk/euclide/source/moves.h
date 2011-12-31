@@ -88,6 +88,10 @@ class Move : public taggable<bool>
 		inline bool isObstruction(Square square) const
 			{ return _squares[square]; }
 
+	public :
+		inline Constraints *constraints() const
+			{ return _constraints; }
+
 	private :
 		Piece *_piece;                   /**< Moving piece. */
 

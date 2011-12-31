@@ -41,6 +41,10 @@ class Board
 		int getCaptures(Man man, Superman superman, Color color, Square from, Square to, vector<Squares>& captures) const;
 
 	public :
+		inline const Piece *piece(Color color, Superman superman) const
+			{ return _pieces[color][superman]; }
+
+	public :
 		bool optimize(int level = 1, bool recursive = true);
 
 	protected :
