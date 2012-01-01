@@ -64,17 +64,30 @@ void DebugConstraints(const Board& board, FILE *file)
 			if (!piece)
 				continue;
 
-			for (int m = 0; m < piece->moves(); m++)
+			Squares from, to;
+
+			int moves = piece->moves();
+			for (int m = 0; m < moves + 2 * NumSquares; m++)
 			{
-				const Move *move = piece->move(m);
+				const Move *move = (m < moves) ? piece->move(m) : piece->move((m - moves < NumSquares) ? (square_t)(m - moves) : UndefinedSquare, ((m - moves < NumSquares) ? UndefinedSquare : (square_t)(m - moves - NumSquares)));
 				if (!move->mandatory() || indeterminate(move->mandatory()))
 					continue;
+
+				if (!move->to().isValid() && from[move->from()])
+					continue;
+				if (!move->from().isValid() && to[move->to()])
+					continue;
+
+				if (move->from().isValid())
+					from[move->from()] = true;
+				if (move->to().isValid())
+					to[move->to()] = true;
 
 				const Constraints *constraints = move->constraints();
 				if (!constraints)
 					continue;
 				
-				fprintf(file, "%s move %s       [%2d, %2d]\n", strings::colors[piece->color()], PrintMove(move), move->earliest(), move->latest());
+				fprintf(file, "%s move %s       [%2d, %2d]\n", strings::xcolors[piece->color()], PrintMove(move), move->earliest(), move->latest());
 
 				for (Color xcolor = FirstColor; xcolor < NumColors; xcolor++)
 				{

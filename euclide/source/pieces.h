@@ -79,6 +79,8 @@ class Piece
 		inline const Squares& squares() const
 			{ return _squares; }
 
+		inline const Move *move(Square from, Square to) const
+			{ return from.isValid() ? to.isValid() ? &_movements[from][to] : &_imovements[from][0] : &_imovements[to][1]; }
 		inline const Move *move(int move) const
 			{ return _moves[move]; }
 
