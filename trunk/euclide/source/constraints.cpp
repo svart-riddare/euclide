@@ -135,6 +135,36 @@ bool Constraints::apply(void)
 	if (!_move->possible())
 		return true;
 
+	/* -- Ensure contraints are properly propagated -- */
+
+	for (Color color = FirstColor; color <= LastColor; color++)
+	{
+		for (Man man = FirstMan; man <= LastMan; man++)
+		{
+			if (_constraints[color][man] && _constraints[color][man]->follows())
+			{
+				const Move *move = _constraints[color][man]->follows();
+
+				for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
+					for (Man xman = FirstMan; xman <= LastMan; xman++)
+						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->follows())
+							if (move->constraints() && move->constraints()->constraint(xcolor, xman) && move->constraints()->constraint(xcolor, xman)->follows())
+								mustFollow(move->constraints()->constraint(xcolor, xman)->follows()->piece(), move->constraints()->constraint(xcolor, xman)->follows(), true);
+			}
+
+			if (_constraints[color][man] && _constraints[color][man]->precedes())
+			{
+				const Move *move = _constraints[color][man]->precedes();
+
+				for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
+					for (Man xman = FirstMan; xman <= LastMan; xman++)
+						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->precedes())
+							if (move->constraints() && move->constraints()->constraint(xcolor, xman) && move->constraints()->constraint(xcolor, xman)->precedes())
+								mustPreceed(move->constraints()->constraint(xcolor, xman)->precedes()->piece(), move->constraints()->constraint(xcolor, xman)->precedes(), true);
+			}
+		}
+	}
+
 	/* -- Compute contraints -- */
 
 	for (Color color = FirstColor; color <= LastColor; color++)
