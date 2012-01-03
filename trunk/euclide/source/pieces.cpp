@@ -983,6 +983,23 @@ int Piece::getMandatoryMoves(Moves& moves, bool incomplete) /*const*/
 		}
 	}
 
+	/* -- Save constraints associated to these mandatory moves -- */
+
+	if (!moves.empty())
+	{
+		for (Moves::iterator move = moves.begin(); move + 1 != moves.end(); move++)
+		{
+			Move *first = *(move + 0);
+			Move *second = *(move + 1);
+
+			if (!first->incomplete() || !second->incomplete())
+			{
+				first->constraints()->mustPreceed(this, second);
+				second->constraints()->mustFollow(this, first);
+			}
+		}
+	}
+
 	/* -- Return number of moves found -- */
 
 	return moves.size();
