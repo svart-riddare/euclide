@@ -36,11 +36,11 @@ class Constraint
 		bool fatal() const;
 
 	public :
-		const Piece *piece() const
+		inline const Piece *piece() const
 			{ return _piece; }
-		const Move *follows() const
+		inline const Move *follows() const
 			{ return _follows; }
-		const Move *precedes() const
+		inline const Move *precedes() const
 			{ return _precedes; }
 
 	private :
@@ -64,9 +64,14 @@ class Constraints
 		bool mustPreceed(const Piece *piece, const Move *move, bool recursive = true);
 
 	public :
-		const Constraint *constraint(Color color, Man man) const
+		inline const Constraint *constraint(Color color, Man man) const
 			{ return _constraints[color][man]; }
-		const Move *move() const
+		inline const Move *follows(Color color, Man man) const
+			{ return constraint(color, man) ? constraint(color, man)->follows() : NULL; }
+		inline const Move *precedes(Color color, Man man) const
+			{ return constraint(color, man) ? constraint(color, man)->precedes() : NULL; }
+
+		inline const Move *move() const
 			{ return _move; }
 
 	private :

@@ -22,8 +22,13 @@ class taggable
 		const T& tag(void) const
 			{ return _tag; }
 
+	public :
+		int& tags() const
+			{ return _tags; }
+
 	private :
 		mutable T _tag;
+		mutable int _tags;
 };
 
 /* -------------------------------------------------------------------------- */

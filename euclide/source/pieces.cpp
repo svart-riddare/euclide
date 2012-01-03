@@ -1592,6 +1592,12 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 					if (move->to() == squares[k ^ 1])
 						continue;
 
+					/* -- Check ordering constraints -- */
+
+					if (move->constraints() && move->constraints()->follows(pieces[k ^ 1]->color(), pieces[k ^ 1]->man()))
+						if (!move->constraints()->follows(pieces[k ^ 1]->color(), pieces[k ^ 1]->man())->tags())
+							continue;
+
 					/* -- Check for illegal moves if we are a king -- */
 
 					if ((pieces[k]->man() == King) && (pieces[0]->color() != pieces[1]->color()))
@@ -1612,6 +1618,10 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 					squares[k] = move->to();
 					moves.push_back(*move);
 					nmoves[k] += 1;
+					
+					pieces[k]->move(move->from(), UndefinedSquare)->tags() += 1;
+					pieces[k]->move(UndefinedSquare, move->to())->tags() += 1;
+					move->tags() += 1;
 
 					/* -- Recursive call -- */
 
@@ -1628,6 +1638,10 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 					minimize(requiredMoves, result);
 
 					/* -- Unplay the move -- */
+
+					pieces[k]->move(move->from(), UndefinedSquare)->tags() -= 1;
+					pieces[k]->move(UndefinedSquare, move->to())->tags() -= 1;
+					move->tags() -= 1;
 
 					nmoves[k] -= 1;
 					moves.pop_back();
@@ -1686,10 +1700,22 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 
 	MiniHash processed;
 
-	/* -- Tag all moves as unused -- */
+	/* -- Tag all moves as unused and unplayed -- */
 
 	for (int k = 0; k < 2; k++)
-		std::for_each(pieces[k]->_moves.begin(), pieces[k]->_moves.end(), boost::bind(&Move::tag, _1, false));
+	{
+		for (Moves::const_iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+		{
+			move->tag(false);
+			move->tags() = 0;
+		}
+
+		for (Square square = FirstSquare; square <= LastSquare; square++)
+		{
+			pieces[k]->move(square, UndefinedSquare)->tags() = 0;
+			pieces[k]->move(UndefinedSquare, square)->tags() = 0;
+		}
+	}
 
 	/* -- Recursively find the number of required moves for these two pieces -- */
 
