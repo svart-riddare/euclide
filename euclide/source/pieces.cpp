@@ -1272,6 +1272,52 @@ void Piece::optimize()
 bool Piece::constrain()
 {
 	bool modified = false;
+	if (!moves())
+		return false;
+
+	/* -- Propagate incomplete move constraints to complete moves -- */
+
+	std::pair<Move *, int> candidates[NumSquares][2];
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+		candidates[square][0].second = candidates[square][1].second = 0;
+
+	for (Moves::iterator move = _moves.begin(); move != _moves.end(); move++)
+	{
+		candidates[move->from()][0].first = *move;
+		candidates[move->from()][0].second += 1;
+		candidates[move->to()][1].first = *move;
+		candidates[move->to()][1].second += 1;
+	}
+
+	for (Square square = FirstSquare; square <= LastSquare; square++)
+	{
+		for (int direction = 0; direction < 2; direction++)
+		{
+			Move *move = candidates[square][direction].first;
+			if (candidates[square][direction].second != 1)
+				continue;
+
+			if (!move->mandatory())
+				continue;
+
+			if (!_imovements[square][direction].constraints())
+				continue;
+
+			for (Man man = FirstMan; man <= LastMan; man++)
+			{
+				for (Color color = FirstColor; color <= LastColor; color++)
+				{
+					if (_imovements[square][direction].constraints()->follows(color, man))
+						if (!move->constraints()->follows(color, man) || move->constraints()->follows(color, man))
+							move->constraints()->mustFollow(_imovements[square][direction].constraints()->follows(color, man)->piece(), _imovements[square][direction].constraints()->follows(color, man));
+
+					if (_imovements[square][direction].constraints()->precedes(color, man))
+						if (!move->constraints()->precedes(color, man) || move->constraints()->precedes(color, man))
+							move->constraints()->mustPreceed(_imovements[square][direction].constraints()->precedes(color, man)->piece(), _imovements[square][direction].constraints()->precedes(color, man));
+				}
+			}
+		}
+	}
 
 	/* -- Apply constraints to every move -- */
 
@@ -1282,15 +1328,10 @@ bool Piece::constrain()
 	/* -- Apply contraints to partial moves also -- */
 
 	for (Square square = FirstSquare; square <= LastSquare; square++)
-	{
-		if (_imovements[square][0].possible())
-			if (_imovements[square][0].constrain())
-				modified = true;
-
-		if (_imovements[square][1].possible())
-			if (_imovements[square][1].constrain())
-				modified = true;
-	}
+		for (int direction = 0; direction < 2; direction++)
+			if (_imovements[square][direction].possible())
+				if (_imovements[square][direction].constrain())
+					modified = true;
 
 	/* -- Optimize if necessary -- */
 
