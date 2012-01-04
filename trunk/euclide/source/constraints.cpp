@@ -147,9 +147,9 @@ bool Constraints::apply(void)
 
 				for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
 					for (Man xman = FirstMan; xman <= LastMan; xman++)
-						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->follows())
-							if (move->constraints() && move->constraints()->constraint(xcolor, xman) && move->constraints()->constraint(xcolor, xman)->follows())
-								mustFollow(move->constraints()->constraint(xcolor, xman)->follows()->piece(), move->constraints()->constraint(xcolor, xman)->follows(), true);
+						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->follows() || _constraints[xcolor][xman]->follows()->incomplete())
+							if (move->constraints() && move->constraints()->follows(xcolor, xman))
+								mustFollow(move->constraints()->follows(xcolor, xman)->piece(), move->constraints()->follows(xcolor, xman), true);
 			}
 
 			if (_constraints[color][man] && _constraints[color][man]->precedes())
@@ -158,9 +158,9 @@ bool Constraints::apply(void)
 
 				for (Color xcolor = FirstColor; xcolor <= LastColor; xcolor++)
 					for (Man xman = FirstMan; xman <= LastMan; xman++)
-						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->precedes())
-							if (move->constraints() && move->constraints()->constraint(xcolor, xman) && move->constraints()->constraint(xcolor, xman)->precedes())
-								mustPreceed(move->constraints()->constraint(xcolor, xman)->precedes()->piece(), move->constraints()->constraint(xcolor, xman)->precedes(), true);
+						if (!_constraints[xcolor][xman] || !_constraints[xcolor][xman]->precedes() || _constraints[xcolor][xman]->precedes()->incomplete())
+							if (move->constraints() && move->constraints()->precedes(xcolor, xman))
+								mustPreceed(move->constraints()->precedes(xcolor, xman)->piece(), move->constraints()->precedes(xcolor, xman), true);
 			}
 		}
 	}
