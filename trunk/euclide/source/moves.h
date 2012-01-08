@@ -11,7 +11,17 @@ class Piece;
 
 /* -------------------------------------------------------------------------- */
 
-class Move : public taggable<bool>
+struct MoveTag
+{
+	bool used;      /**< True if the move was used in at least one solution. */
+
+	int min;        /**< Minimum move rank in all solutions. */
+	int max;        /**< Maximum move rank in all solutions. */
+};
+
+/* -------------------------------------------------------------------------- */
+
+class Move : public taggable<MoveTag>
 {
 	public :
 		Move();
