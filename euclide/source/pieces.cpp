@@ -1689,7 +1689,19 @@ int Piece::findMutualObstructions(Piece *pieces[2], Square squares[2], int nmove
 
 					processed[squares[0]][squares[1]].visited(nmoves, result);
 					if (result <= maximumMoves)
-						move->tag(true);
+					{
+						if (move->tag().used)
+						{
+							minimize(move->tag().min, nmoves[0] + nmoves[1] - 1);
+							maximize(move->tag().max, nmoves[0] + nmoves[1] - 1);
+						}
+						else
+						{
+							move->tag().min = nmoves[0] + nmoves[1] - 1;
+							move->tag().max = nmoves[0] + nmoves[1] - 1;
+							move->tag().used = true;
+						}
+					}
 
 					/* -- Update number of required moves -- */
 
@@ -1764,7 +1776,7 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 	{
 		for (Moves::const_iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
 		{
-			move->tag(false);
+			move->tag().used = false;
 			move->tags() = 0;
 		}
 
@@ -1800,7 +1812,7 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 		{
 			for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
 			{
-				if (!move->tag())
+				if (!move->tag().used)
 				{
 					pieces[k]->_optimized = false;
 					move->invalidate();
@@ -1809,7 +1821,43 @@ bool Piece::setMutualObstructions(Piece& piece, int availableMoves, int assigned
 			}
 		}
 	}
-	
+
+	/* -- Set constraints on mandatory moves -- */
+
+	Moves mandatoryMoves[2];
+
+	for (int k = 0; k < 2; k++)
+		for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+			if (move->mandatory() && move->tag().used)
+				mandatoryMoves[k].push_back(*move);
+
+	if (mandatoryMoves[0].size() && mandatoryMoves[1].size())
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			for (Moves::iterator move = pieces[k]->_moves.begin(); move != pieces[k]->_moves.end(); move++)
+			{
+				Move *predecessor = NULL;
+				Move *successor = NULL;
+
+				for (Moves::iterator xmove = mandatoryMoves[k ^ 1].begin(); xmove != mandatoryMoves[k ^ 1].end(); xmove++)
+				{
+					if (xmove->tag().max < move->tag().min)
+						if (!predecessor || predecessor->tag().max < xmove->tag().max)
+							predecessor = *xmove;
+					if (xmove->tag().min > move->tag().max)
+						if (!successor || successor->tag().min > xmove->tag().min)
+							successor = *xmove;
+				}
+
+				if (predecessor)
+					move->constraints()->mustFollow(predecessor->piece(), predecessor);
+				if (successor)
+					move->constraints()->mustPreceed(successor->piece(), successor);
+			}
+		}
+	}
+
 	/* -- Return whether we have made some deductions or not -- */
 
 	return modified;

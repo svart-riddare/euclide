@@ -17,9 +17,7 @@ class taggable
 			{ _tag = tag; }
 
 	public :
-		void tag(const T& tag) const
-			{ _tag = tag; }		
-		const T& tag(void) const
+		T& tag(void) const
 			{ return _tag; }
 
 	public :
