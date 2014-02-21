@@ -651,6 +651,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 	}
 #endif
 
+	(void)Partie;
 	delete[] Output;
 }
 

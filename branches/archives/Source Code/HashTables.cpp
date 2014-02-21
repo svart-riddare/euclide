@@ -117,7 +117,7 @@ void PositionToHashEntry(const etatdujeu *Position, hashentry *HashEntry)
 			HashEntry->Position.CasesOccupees |= ((uint64_t)1 << i);
 
 			if (NombreDePieces < MaxHommes)
-				HashEntry->Position.Pieces[NombreDePieces++] = (Pieces[i] << 1) | (Couleurs[i] - 1);
+				HashEntry->Position.Pieces[NombreDePieces++] = (uint8_t)((Pieces[i] << 1) | (Couleurs[i] - 1));
 			else
 				HashEntry->Position.Pieces[NombreDePieces++ % MaxHommes] |= ((Pieces[i] << 1) | (Couleurs[i] - 1)) << 4;
 		}
