@@ -1273,10 +1273,10 @@ void AnalyseDesRoques(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int
 	if (Roi->ExPetitRoque)
 		ExtraPetitRoque += Roi->DeplacementsSiPetitRoque - Roi->Deplacements;
 
-	if (ToursExtraGrandRoque < UINT_MAX)
+	if ((ToursExtraGrandRoque < UINT_MAX) && (CompteurTours == NombreMaximum[TOUR]))
 		ExtraGrandRoque += ToursExtraGrandRoque;
 
-	if (ToursExtraPetitRoque < UINT_MAX)
+	if ((ToursExtraPetitRoque < UINT_MAX) && (CompteurTours == NombreMaximum[TOUR]))
 		ExtraPetitRoque += ToursExtraPetitRoque;
 
 	if (Roi->ExGrandRoque && CasesMortes[QuelleCase(C, Depart)])
