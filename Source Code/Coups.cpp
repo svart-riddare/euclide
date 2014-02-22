@@ -1117,10 +1117,8 @@ void CalculDesLiensDePriorite(pseudopartie *Partie)
 									if (!CoupsAssassins->Assassin && (CoupsAssassinsLibres < 2))
 										SuivrePossible = false;
 
-									if (!SuivrePossible) {
+									if (!SuivrePossible)
 										Coup->DoitPreceder[Coup->NombreDoitPreceder++] = CoupsAssassins;
-										Coup->DoitPreceder[Coup->NombreDoitPreceder++] = Bloqueur;
-									}
 								}
 							}
 							else {
