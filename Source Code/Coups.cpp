@@ -149,6 +149,20 @@ bool AnalysePhaseE(pseudopartie *Partie)
 
 	for (unsigned int i = PIONA; i < MaxHommes; i++) {
 		vie *PionBlanc = &Strategie->PiecesBlanches[i];
+		vie *PionNoir = &Strategie->PiecesNoires[i];
+
+		if (PionBlanc->TrajetSiPion->NombreDeCaptures || PionNoir->TrajetSiPion->NombreDeCaptures)
+			continue;
+			
+		if (PionBlanc->Promue && PionNoir->Capturee && (PionNoir->Assassin == PionBlanc))
+			return false;
+
+		if (PionNoir->Promue && PionBlanc->Capturee && (PionBlanc->Assassin == PionNoir))
+			return false;
+	}
+
+	for (unsigned int i = PIONA; i < MaxHommes; i++) {
+		vie *PionBlanc = &Strategie->PiecesBlanches[i];
 		if (PionBlanc->Promue || PionBlanc->Capturee)
 			continue;
 
