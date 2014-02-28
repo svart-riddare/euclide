@@ -1292,7 +1292,7 @@ bool IsCoupPossible(pieces Piece, cases De, cases Vers)
 
 unsigned int CombienDeCoups(pieces Piece, cases De, cases Vers, bool DeuxPourSwitchback)
 {
-	cases File[MaxCases];
+	cases File[MaxCases + 1];
 	unsigned int Push = 0;
 	unsigned int Pop = 0;
 
