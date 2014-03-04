@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+<META HTTP-EQUIV = "Content-Type" CONTENT = "text/html; charset=iso-8859-1">
+<META NAME = author CONTENT = "&Eacute;tienne Dupuis">
+<META NAME = copyright CONTENT = "Copyright 2000-2011, &Eacute;tienne Dupuis">
+<TITLE>Euclide 1.01 - Help File</TITLE>
+</HEAD>
+
+<BODY>
+
+<STYLE>
+	P { text-align: justify; }
+	TD { text-align: center; }
+	LI { text-align: justify; }
+</STYLE> 
+
+<!-- *********************************************************************** -->
+
+<H2>1. Introduction</H2>
+
+<P>
+<EM>Euclide</EM> is a software designed to solve exactly orthodox proofgames given a position and a number of halfmoves.
+It has not been designed to do anything else, where <I>anything else</I> even includes user-friendliness.
+</P>
+
+<P>
+It is distributed as freeware in the hope that it will help proofgame composers check the validity of their problems, i.e. verify the uniqueness of the intended solution.
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>2. What's New</H2>
+
+<P>
+Version 0.99 has two minor improvements :
+<UL>
+	<LI>The output file now contains a diagram.
+	<LI>The working directory no longer needs to be the install directory.
+</UL>
+</P>
+
+<P>
+Version 0.95 showcases the following major improvements :
+<UL>
+	<LI>Faster and larger hashtables.
+	<LI>Improved Linux integration.
+</UL>
+</P>
+
+<P>
+Version 0.92 had the following improvements :
+<UL>
+	<LI>The <CODE>S</CODE> key is trapped to skip the current strategy.
+	<LI>Euclide can be ran in batch mode.
+	<LI>Euclide can restart an interrupted analysis.
+	<LI>The output file has been made more readable.
+</UL>
+</P>
+
+<P>
+The initial released version was labelled 0.90. Versions 0.91, 0.93, 0.94, 0.96, 0.97, 0.98, 1.00 and 1.01 are bug fix releases.
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>3. Setup</H2>
+
+<P>
+Execute <CODE>euclide-setup.exe</CODE> to install the software.
+A folder will be created in your startup menu with everything needed to run <EM>Euclide</EM>.
+You may choose the language of the software by executing one of the script in the <CODE>Language Files</CODE> subfolder.
+If installing over a previous version, the setup program will prompt you before overwriting the input file.
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>4. Creating an input file</H2>
+
+<P>
+<EM>Euclide</EM> accepts as input a text file containing one or more problems.
+Each problem is described by a diagram in <A HREF = "http://en.wikipedia.org/wiki/Forsyth–Edwards_Notation">Forsythe notation</A> (FEN, also EPD) and a number of halfmoves.
+Here is a simple example, my first proofgame :
+</P>
+
+<PRE>
+&Eacute;tienne Dupuis
+Probleemblad, Mai-juin 1999
+1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
+22
+</PRE>
+
+<P>
+The input file can contain comments or additional information.
+<EM>Euclide</EM> will ignore them as long as the next line does not start by a digit (or white spaces followed by a digit).
+<EM>Natch</EM>'s input file can thus be feed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
+However, note that <EM>Euclide</EM> does not perform strong typechecking; a position containing an error may be interpreted as correct and thus analyzed. 
+</P>
+
+<P>
+The input can be specified in one of four languages :
+<CENTER><BR>
+<TABLE BORDER = 1 CELLPADDING = 4>
+	<TR>
+		<TH>Language group</TH>
+		<TH>King</TH>
+		<TH>Queen</TH>
+		<TH>Rook</TH>
+		<TH>Bishop</TH>
+		<TH>Knight</TH>
+		<TH>Pawn</TH>
+	</TR><TR>
+		<TD STYLE = "text-align: left">English</TD><TD>K</TD><TD>Q</TD><TD>R</TD><TD>B</TD><TD>N, S</TD><TD>P</TD>
+	</TR><TR>
+		<TD STYLE = "text-align: left">French</TD><TD>R</TD><TD>D</TD><TD>T</TD><TD>F</TD><TD>C</TD><TD>P</TD>
+	</TR><TR>
+		<TD STYLE = "text-align: left">German</TD><TD>K</TD><TD>D</TD><TD>T</TD><TD>L</TD><TD>S</TD><TD>B</TD>
+	</TR><TR>
+		<TD STYLE = "text-align: left">Italian</TD><TD>R</TD><TD>D</TD><TD>T</TD><TD>A</TD><TD>C</TD><TD>P</TD>
+	</TR>
+</TABLE>
+</CENTER>
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>5. Running the program</H2>
+
+<P>
+The program can be run directly from Windows by using the shortcuts created in the start menu. 
+Assuming you have not changed Euclide's installation folder, the input file is <CODE><NOBR>C:\Program Files\Euclide\Input.txt</NOBR></CODE> and the output file <CODE><NOBR>C:\Program Files\Euclide\Output.txt</NOBR></CODE>.
+They can be edited with Notepad or any text editor.
+</P>
+
+<P>
+From the DOS command prompt, the program can be run in two ways:
+<PRE>
+  Euclide <I>&lt;inputfile&gt;</I> <I>[&lt;outputfile&gt;]</I> <I>[options]</I>
+
+  Euclide <I>&lt;position&gt;</I> <I>&lt;halfmoves&gt;</I> <I>[&lt;outputfile&gt;]</I> <I>[options]</I>
+</PRE>
+</P>
+
+<P>
+If no output file is given, file <CODE><NOBR>Output.txt</NOBR></CODE> will be used.
+</P>
+
+<P>
+Available options are:
+<UL>
+	<LI><CODE>-b</CODE> or <CODE>--batch</CODE> will instruct Euclide not to wait for user input between problems.</LI>
+	<LI><CODE>-s<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to start solving from the <I>nth</I> strategy.
+	Note that reaching this strategy may take a substantial amount of time.</LI>
+	<LI><CODE>-m<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to allocate 2<SUP>n</SUP> bytes of memory for hashtables.
+	When this option is not used, Euclide automatically set this parameter according to the amount of free memory available.</LI>
+</UL>
+
+<P>
+When solving a problem, <EM>Euclide</EM> can be interrupted by pressing <CODE>Escape</CODE>. 
+Alternatively, if Euclide is deeply searching the move tree of a strategy which you think will yield no solution, you may press <CODE>S</CODE> to skip the current strategy.
+<EM>Euclide</EM> will stop working on the strategy and move on the next one.
+Note that the software may take some time before responding to key presses, hence do not hit <CODE>Escape</CODE> or <CODE>S</CODE> more than once before getting any reaction.
+If <EM>Euclide</EM> is searching very deeply into permutation trees or move trees, you may need to press <CODE>Ctrl-F4</CODE> to interrupt the program by brutally closing the DOS window.
+</P>
+
+<P>
+If <EM>Euclide</EM> is interrupted while solving a problem, for any reason whatsoever, relaunch <EM>Euclide</EM> with the same problem to continue the resolution where it was stopped.
+It is in fact an automatic use of option <CODE>-s</CODE>.
+The solver should pay attention to the fact that if one solution has been found before <EM>Euclide</EM> was interrupted, this solution will not be found when the resolution continues.
+The output file will contain information about the first strategy analysed when analysis does not start from scratch.
+</P> 
+
+<P>
+<EM>Euclide</EM> stops solving a problem either when it has been cooked (one or a few duals were found) or when it has been verified to have one, two or more unique solutions.
+<EM>Euclide</EM> considers a problem cooked if it finds more than one solution for the same strategy, hence problems with two different unique solutions will not be considered as cooked.
+This should almost always agree with the author's intention.
+Note that <EM>Euclide</EM> considers cooked a problem where the two solutions differ only by which piece executes a captureless circuit.
+</P>  
+
+<P>
+If given an input file, <EM>Euclide</EM> will ask after each problem if it should proceed to the next one in the file.
+Press <CODE>Escape</CODE> or the character <CODE>X</CODE> to quit, and any other key to continue.
+</P> 
+
+<P>
+<EM>Euclide</EM> writes all solutions found in a text file called <CODE>Output.txt</CODE>, unless a different name has been provided on the command line.
+The file is reset each time <EM>Euclide</EM> is launched, hence make a copy if you wish to keep its content.
+You may of course open it with any text editor and paste it's content in your email program for example.
+</P> 
+
+<!-- *********************************************************************** -->
+
+<H2>6. Bugs</H2>
+
+<P>
+<EM>Euclide</EM> has fairly complex builtin algorithms, hence bugs will certainly show up.
+Moreover, it has not been extensively tested.
+</P>
+
+<P>
+User interface bugs should not occur, as <EM>Euclide</EM> has very limited input/ouput.
+However, I have already noted that the <CODE>Escape</CODE> key is not correctly trapped under Windows NT.
+Use <CODE>X</CODE> instead.
+</P>
+
+<P>
+Algoritmic bugs will produce one of the following four results:<OL>
+	<LI>A crash;
+	<LI>An internal error, which will be displayed;
+	<LI>An invalid (illegal) solution;
+	<LI>No solution for a valid problem. Please carefully check the diagram position and the intended solution to make sure this event is not simply a mistake from your part. 
+</OL>
+In all cases, the author would be grateful if you could<OL>
+	<LI>Verify on the web, on <A HREF = "http://lestourtereaux.free.fr/euclide/">Euclide's home page</A> if there is a newer version that includes a correction;
+	<LI>Send the problem, along with the solution, to <A HREF = "mailto:euclide@lestourtereaux.fr">euclide@lestourtereaux.fr</A>.
+</OL>
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>7. Linux</H2>
+
+<P>
+Official Linux supports for <EM>Euclide</EM> has been introduced with version 0.95.
+However, as the author does not master this environment, there is no installation package.
+Linux users are invited to follow these steps to get <EM>Euclide</EM> working on Linux :
+<OL>
+	<LI>Install the following packages : <CODE>svn</CODE>, <CODE>g++</CODE> and <CODE>libncursesw5-dev</CODE>.
+		The first is required to retrieve the source code, the second is a C++ compiler while the third is a library required for compilation.</LI>
+	<LI>Get the source code : <CODE>svn checkout http://euclide.googlecode.com/svn/branches/archives euclide</CODE>.</LI>
+	<LI>Compile the source code : <CODE>make</CODE> in folder <CODE>euclide/Project Files</CODE>.
+	    This will create a file named <CODE>euclide</CODE> in the parent folder.</LI>
+	<LI>Run it, for example <CODE>./euclide Input.txt Output.txt</CODE>.</LI>
+</OL>
+There are almost no differences with the Windows implementation.
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>8. Mac OS X</H2>
+
+<P>
+Official Mac OS X support for <EM>Euclide </EM> has been introduced with version 0.97.
+However, as the author does not master this environment, there is no installation package.
+Using <EM>Euclide</EM> requires to use the terminal window as opposed to Apple's user friendly applications.
+Mac OS X users are invited to follow these steps to get <EM>Euclide</EM> working on Mac OS X :
+<OL>
+	<LI>Install <EM>Xcode</EM>, an integrated development environment for Apple's operating systems.
+	    <EM>Xcode</EM> can be found <A HREF="http://developer.apple.com/technologies/xcode.html">here</A>.</LI>
+	<LI>Using the <EM>Finder</EM>, create a folder where <EM>Euclide</EM> will be installed.</LI>
+	<LI>Open a terminal and execute the following command in the folder just created above :
+	     <CODE>svn checkout http://euclide.googlecode.com/svn/branches/archives .</CODE>
+		 Note the final dot which is part of the command.
+		 This will download <EM>Euclide</EM>'s source code.</LI>
+	<LI>Going back to the finder, locate, in <EM>Euclide</EM>'s folder, <EM>Project Files</EM>.
+	    In this folder, launch <CODE>Euclide.xcodeproj</CODE>. This will launch <EM>Xcode</EM>.</LI>
+	<LI>In the top left corner of the <EM>Xcode</EM> project window that appears, there is a small drow down menu to select compiler configuration.
+	    Choose <EM>Release</EM> configuration.</LI>
+	<LI>Build the program, using <CODE>Build</CODE> menu.
+	    The build process takes less than 10 seconds; you should see a <EM>Build succeeded</EM> message in the status bar when the process in complete.
+		You may then exit <EM>Xcode</EM>.</LI>
+	<LI>An executable called <CODE>Euclide</CODE> should then be available at the top level folder.
+	    Run <EM>Euclide</EM> to test that all is working correctly : <CODE>./Euclide Input.txt</CODE>.</LI>
+</OL>
+Note that the above steps have been tested on Mac OS X 10.6, known as <EM>Snow Leopard</EM>.
+The above steps are probably difficult for a casual Mac user but they nevertheless allow <EM>Euclide</EM> to be run for those that can follow them.
+</P>	 
+
+<!-- *********************************************************************** -->
+
+<H2>9. Random notes</H2>
+
+<P>
+<EM>Euclide</EM> is divided in four major parts.
+The first one, called the preliminary analysis, tries to make obvious deductions directly from the position.
+The second part builds all possible strategies by going through a large number of permutations.
+These permutations include which piece is which, which captured which, which promoted where, etc.
+The possible permutations are built from data provided by the preliminary analysis, without further analysis.
+As I understand it, <EM>Natch</EM> does these two parts simultaneously. 
+The reason why <EM>Euclide</EM> is so slow at finding strategies for problems involving a fair number of captured promoted pieces is a side effect of the separation of these two parts.  
+</P>
+
+<P>
+Then, for each strategy found, we apply the third and fourth part of the analysis.
+The third part, unique to <EM>Euclide</EM>, consists in the partial analysis of move dependencies.
+The sofwtare is sometimes able to reconstruct pieces of the proofgame and order moves within these fragments.
+The underlying code is fairly tricky, and can certainly be improved tremendously.
+You may think as this part as being <EM>Natch</EM>'s option <CODE>-k</CODE> builtin.
+Finally, the fourth part simply plays, from the initial position, moves until solutions are found or the move tree is exhausted.
+The computations of the third part are carefully used to truncate huge branches of moves.
+This truncation explains the relatively fast solution found to Unto Heinonen's problem given on <EM>Euclide</EM>'s home page.
+However, if not much was deduced from the third part, a great deal of speed is lost as compared to <EM>Natch</EM>. 
+</P> 
+
+<P>
+Most of the development of <EM>Euclide</EM> took place at the end of summer 2000, when I was (eagerly) waiting for my VISA for France.
+A second burst of activity to finish the third part occurred in January 2001, between two projects at the company where I was working then, before moving on to Cryo Networks and the <A HREF = "http://www.dunegenerations.com/">Dune Generations</A> team at the end of January.
+The easier fourth part was programmed sporadically, maybe one Sunday each three week, from February to May 2001.
+</P>
+
+<P>
+Note also that the code has <B>not</B> been speed optimized at all, and that this version will never be optimized; it would be a waste of time, as some crucial deduction algorithms (in particular the first two parts) must be entirely rewritten.
+</P>
+
+<!-- *********************************************************************** -->
+
+<H2>10. Acknowledgments</H2>
+
+<P>
+Pascal Wassong deserves the first place, as <EM>Euclide</EM> has been inspired by carefully watching <EM>Natch</EM> working.
+I met him in December 2000 in Paris (I moved from Hull, Qu&eacute;bec to Paris in October of the same year) to discuss of how we built our software.
+It is then for example that in one sentence from Pascal I understood what the hashtables were for.
+Who knows if I would have thought of them otherwise?
+Pascal also sent many test problems and bug reports when I completed the third part.
+</P>
+
+<P>
+Peter van den Heuvel, Joost de Heer, Gianni Donati, Reto Aschwanden &amp; Michel Caillaud carefully tested the program and (unfortunately!) sent many bug reports.
+Joost de Heer (Dutch), Thomas Brand (German), Juraj L&ouml;rinc (Slovak) and others provided translations.
+</P>
+
+<P>
+Christian Poisson then provided hundreds of proofgames taken from WinChlo&eacute;'s database.
+It provided an invaluable reference set to find one terrible bug and a few minor ones.
+</P>
+
+<P>
+The installation program was created with <A HREF = "http://www.jrsoftware.org/isinfo.php">Inno Setup</A>, by Russel Jordan, and with <A HREF = "http://www.istool.org/">ISTool</A>, by Bj&oslash;mar Hender.
+</P>
+
+<!-- *********************************************************************** -->
+
+<BR>
+<BR>
+&Eacute;tienne Dupuis, <A HREF = "mailto:euclide@lestourtereaux.fr">euclide@lestourtereaux.fr</A>
+
+</BODY>
+</HTML>
