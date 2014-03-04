@@ -1,0 +1,57 @@
+ PJSSVDK
+,
+tahov
+Stlac lubovolnu klavesu...
+Interna chyba! Prosim, kontaktujte autora.
+Analyza ukoncena.
+Nenajdene ziadne riesenie
+Jedno riesenie
+Jedine riesenie
+riesenia
+rozne riesenia
+Vedlajsie riesenia
+
+Analyza pesiakovej struktury
+Pocitanie figur
+Oznacovanie mrtvych poli
+Analyza pohybu
+Hladanie ciest
+Analyza strelcov
+Odmietanie ciest
+Rychla analyza brani
+Hladanie ciest branych figur
+Analyza rosad
+Analyza premenenych figur
+Generovanie permutacii
+Priprava pre prezeranie vsetkych moznych strategii
+Hladanie strategie
+Analyza strategie
+Znovuspustenie analyzy
+
+Prilis vela pesiakov!
+Prilis vela figur!
+Prilis vela premenenych figur!
+Obe strany musia mat prave jedneho krala!
+Ilegalna pesiakova struktura!
+Zmatok v jazyku pocas dekodovania EPD retazca.
+Chyba EPD retazca.
+Nedostatok tahov na dosiahnutie pozicie.
+Niektoré figury jednoducho nemozu byt tam, kde su.
+Nemozno vysvetlit niektore brania.
+Nemozno vysvetlit niektore premenene figury.
+Tento problem nema riesenie!
+Analyza prerusena uzivatelom.
+Chyba citania!
+[Euclide.exe] Nekorektne argumenty prikazoveho riadku.
+Problem nenajdeny.
+Dokazova partia prilis dlha pre analyzu.
+
+Analyzovany problem:
+Riesenie
+Vysledok:
+sekund
+Analyza prerusena
+<Vynechana> Strategia
+Analyza zapocata od strategie
+
+Juraj Lorinc
