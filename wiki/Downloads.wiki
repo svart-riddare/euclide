@@ -1,11 +1,11 @@
 #summary Euclide Downloads
 #labels Featured
 
-_Click on the version titles to download the corresponding version. The lastest version is [http://lestourtereaux.free.fr/euclide/euclide-setup-1.00.exe Euclide 1.00]._
+_Click on the version titles to download the corresponding version. The lastest version is [http://lestourtereaux.free.fr/euclide/euclide-setup-1.01.exe Euclide 1.01]._
 
 =Version History=
 
-===[http://lestourtereaux.free.fr/euclide/euclide-setup-1.00.exe Version 1.00]===
+===[http://lestourtereaux.free.fr/euclide/euclide-setup-1.01.exe Version 1.01]===
 
 Released in March 2014:
   * Minor enhancement regarding pawns crossings (issue 14).
