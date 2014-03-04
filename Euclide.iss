@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Euclide
-AppVerName=Euclide 1.00
+AppVerName=Euclide 1.01
 AppPublisher=Étienne Dupuis
 AppPublisherURL=http://lestourtereaux.free.fr/euclide/
 AppSupportURL=http://lestourtereaux.free.fr/euclide/
@@ -11,7 +11,7 @@ AppUpdatesURL=http://lestourtereaux.free.fr/euclide/
 DefaultDirName={pf}\Euclide
 DefaultGroupName=Euclide
 
-AppVersion=1.00
+AppVersion=1.01
 ; uncomment the following line if you want your installation to run on NT 3.51 too.
 ; MinVersion=4,3.51
 
