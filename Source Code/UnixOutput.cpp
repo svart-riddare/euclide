@@ -92,11 +92,11 @@ void OutputClear()
 	
 	strcpy(Tampon, EUCLIDE_VERSION);
 
-	char *CopySign = strchr(Tampon, '©');
+   char *CopySign = strchr(Tampon, '\xA9');
 	if (CopySign)
 		 *CopySign = 'c';
 
-	char *EAcute = strchr(Tampon, 'É');
+   char *EAcute = strchr(Tampon, '\xC9');
 	if (EAcute)
 		*EAcute = 'E';
 

@@ -100,7 +100,7 @@ void OutputClear()
 		Tampon = new char[WIDTH];
 	
 	strcpy(Tampon, EUCLIDE_VERSION);
-	char *CopySign = strchr(Tampon, '©');
+   char *CopySign = strchr(Tampon, '\xA9');
 	CharToOem(EUCLIDE_VERSION, Tampon);
 	if (CopySign)
 		 *CopySign = '\002';
@@ -596,7 +596,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 
 	if (Debug) {
 		fprintf(Debug, "\n********************************************************************************\n\n");
-		fprintf(Debug, "Stratégie #%u (%u)   %u - %u\n\n", Strategie->IDFinal, Strategie->IDPhaseA, Strategie->CoupsLibresBlancs, Strategie->CoupsLibresNoirs);
+      fprintf(Debug, "Strat\xE9gie #%u (%u)   %u - %u\n\n", Strategie->IDFinal, Strategie->IDPhaseA, Strategie->CoupsLibresBlancs, Strategie->CoupsLibresNoirs);
 		unsigned int z = 0;
 		
 		static char *String = NULL;
@@ -624,7 +624,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 
 				fprintf(Debug, "  %c%s%c%s                             %2u - %2u\n", PieceToChar(Coup->Type), De, Coup->Victime ? 'x' : '-', Vers, Coup->AuPlusTot, Coup->AuPlusTard);
 
-				fprintf(Debug, "    Après : ");
+            fprintf(Debug, "    Apr\xE8s : ");
 				for (unsigned int i = 0; i < Coup->NombreDoitSuivre; i++) {
 					const coup *C = Coup->DoitSuivre[i];
 
