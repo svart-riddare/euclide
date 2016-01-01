@@ -49,7 +49,7 @@ OBJECTS = $(patsubst %.cpp, %.o, $(FILES))
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(LFLAGS) $(OBJECTS) -o $(OUTPUT)/$(TARGET)
+	$(CC) $(OBJECTS) $(LFLAGS) -o $(OUTPUT)/$(TARGET)
 
 $(OBJECTS) : %.o : $(SOURCE)/%.cpp
 	$(CC) $(CFLAGS) -c "$<" -o $@ 

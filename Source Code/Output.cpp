@@ -93,7 +93,9 @@ const char *GetTexte(texte Texte, unsigned int LongueurMaximale, bool TailleExac
 	memcpy(Tampon, Textes[Texte], Longueur);
 	
 	if (TailleExacte) {
-		memset(&Tampon[Longueur], ' ', LongueurMaximale - Longueur);
+		if (LongueurMaximale > Longueur)
+			memset(&Tampon[Longueur], ' ', LongueurMaximale - Longueur);
+
 		Tampon[LongueurMaximale] = '\0';
 	}
 	else {
