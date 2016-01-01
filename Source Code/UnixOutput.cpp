@@ -418,11 +418,12 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie * /*Partie*/
 			attrset(Piece->Capturee ? COULEUR_BRUN : COULEUR_GRIS);
 			mvprintw(8 + i, 5 + ((Couleur == NOIRS) ? WIDTH / 2 : 0), Out);
 
-			if (Piece->Scenario && Piece->Coups) {
+			strcpy(Out, "  ");
+			if (Piece->Scenario && Piece->Coups)
 				sprintf(Out, "%2u", Piece->Coups);
-				attrset(COULEUR_BLANC);
-				mvprintw(8 + i, 1 + ((Couleur == NOIRS) ? WIDTH / 2 : 0), Out);
-			}
+
+			attrset(COULEUR_BLANC);
+			mvprintw(8 + i, 1 + ((Couleur == NOIRS) ? WIDTH / 2 : 0), Out);
 		}
 	}
 
