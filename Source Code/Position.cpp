@@ -1203,7 +1203,8 @@ void TrajectoiresDesPiecesCapturees(bonhomme Pieces[MaxHommes], couleurs Couleur
 			}
 		}
 
-		Verifier(PiecesPossible > 0);
+		if (!PiecesPossible)
+			ErreurEnonce(MESSAGE_AUCUNECAPTUREPOSSIBLE);
 
 		if (PiecesPossible == 1) {
 			Pieces[i].PieceDisparue = SeulePiece;
