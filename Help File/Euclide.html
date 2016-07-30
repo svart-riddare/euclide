@@ -35,7 +35,14 @@ It is distributed as freeware in the hope that it will help proofgame composers 
 <H2>2. What's New</H2>
 
 <P>
-Version 0.99 has two minor improvements :
+Version 1.10 adds new fetaures:
+<UL>
+	<LI>User constraints can be provided with each problem, to speed up solving of complex problems. See section 4.1 for documentation.
+</UL>
+</P>
+
+<P>
+Version 0.99 has two minor improvements:
 <UL>
 	<LI>The output file now contains a diagram.
 	<LI>The working directory no longer needs to be the install directory.
@@ -43,7 +50,7 @@ Version 0.99 has two minor improvements :
 </P>
 
 <P>
-Version 0.95 showcases the following major improvements :
+Version 0.95 showcases the following major improvements:
 <UL>
 	<LI>Faster and larger hashtables.
 	<LI>Improved Linux integration.
@@ -51,7 +58,7 @@ Version 0.95 showcases the following major improvements :
 </P>
 
 <P>
-Version 0.92 had the following improvements :
+Version 0.92 had the following improvements:
 <UL>
 	<LI>The <CODE>S</CODE> key is trapped to skip the current strategy.
 	<LI>Euclide can be ran in batch mode.
@@ -81,13 +88,14 @@ If installing over a previous version, the setup program will prompt you before 
 
 <P>
 <EM>Euclide</EM> accepts as input a text file containing one or more problems.
-Each problem is described by a diagram in <A HREF = "http://en.wikipedia.org/wiki/Forsyth–Edwards_Notation">Forsythe notation</A> (FEN, also EPD) and a number of halfmoves.
+Each problem is described by a diagram in <A HREF = "http://en.wikipedia.org/wiki/Forsyth–Edwards_Notation">Forsythe notation</A> (FEN, also EPD) 
+and a number of halfmoves, followed by optional contraints. Contraints are documented below, in section 4.1.
 Here is a simple example, my first proofgame :
 </P>
 
 <PRE>
 &Eacute;tienne Dupuis
-Probleemblad, Mai-juin 1999
+Probleemblad, May-June 1999
 1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
 22
 </PRE>
@@ -122,6 +130,66 @@ The input can be specified in one of four languages :
 	</TR>
 </TABLE>
 </CENTER>
+</P>
+
+<H3>4.1 User Defined Constraints </H3>
+
+<P>
+This section is intended for advanced users.
+</P>
+
+<P>
+Starting with version 1.10 of Euclide, user constraints may be appended to the number of half moves. 
+Constraints are strings describing piece's arrival, promotion or capture squares. For each strategy considered
+plausible by <EM>Euclide</EM>, a string describing the strategy is built, against which the constraints are
+mathced. This string description constains, for each of the 32 pieces, the following information:
+<I>Piece[=Promoition]->Square[(Capture)]</I>, where <I>Piece</I> is the piece type and initial position,
+<I>Promotion</I> is the promotion type and square, <I>Square</I> is the piece's final square and
+<I>Capture</I> is the capturing piece type and initial square, followed by an 'x' and the captured piece's initial square.
+Examples:
+<UL>
+	<LI><B>Ke1->e1</B> for a king that is on it's initial square, whether it moved or not;
+	<LI><B>Pa2=Rb8->a1</B> for a Pronkin rook;
+	<LI><B>Ra1->g6(Ph7xRa1)</B> for a captured rook;
+	<LI><B>Pa2=Qb8->h3(Pg2xh3)</B> for a promoted piece later captured.
+</UL>
+</P>
+
+<P>
+For each user defined constraint prefixed with a '+' (plus) sign, the strategy will be skipped if the description
+does not contain the constraint, i.e. the constraint must be satisfied for the strategy to be considered. For each user 
+defined constraint prefixed with a '-' (minus) sign, the strategy will be skipped if the description
+does contain the constraint, i.e. the constraint shall not be satisfied fot the strategy to be considered.
+</P>
+
+<P>
+Here are some examples of constraints, for the same input:
+<PRE>
+&Eacute;tienne Dupuis
+Probleemblad, July-August
+R6R/2ppp2b/1p2rkp1/1p1Q1p2/nrP1q2n/2NBPPN1/2PP2p1/R5KR
+55 +Ph2=Rh8->h1
+</PRE>
+<PRE>
+&Eacute;tienne Dupuis
+Probleemblad, July-August
+R6R/2ppp2b/1p2rkp1/1p1Q1p2/nrP1q2n/2NBPPN1/2PP2p1/R5KR
+55 +Ph2=Rh8->h1 -Pa2=Ra8->a8
+</PRE>
+<PRE>
+&Eacute;tienne Dupuis
+Probleemblad, July-August
+R6R/2ppp2b/1p2rkp1/1p1Q1p2/nrP1q2n/2NBPPN1/2PP2p1/R5KR
+55 +Rh8->h1 -Ra8->a8
+</PRE>
+Note that the third example requires that a rook h8 ends on h1; it could be the black rook or a promoted white pawn, 
+as <B>Rh8->h1</B> is a substring of <B>Ph2=Rh8->h1</B> and thus will match.
+</P>
+
+<P>
+Although user constraints are a powerful feature, extreme care must be taken while using it.
+If too many or incorrect constraints are given, <EM>Euclide</EM> may fail to find a cook.
+<B>In any case, a problem solved using user constraints should not be considered to be C+</B>.
 </P>
 
 <!-- *********************************************************************** -->

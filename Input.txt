@@ -6,6 +6,12 @@ Euclide web page example :
 	4n1n1/1ppbr1p1/4kpp1/2rp4/P6P/b4q2/1PPPPPP1/3nKBN1
 	52
 
+Showing how to use constraints :
+
+	Etienne Dupuis
+	Probleemblad, July-August 2001
+	R6R/2ppp2b/1p2rkp1/1p1Q1p2/nrP1q2n/2NBPPN1/2PP2p1/R5KR
+	55 +Ph2=Rh8->h1
 
 ----------------------------------------
 -- Messigny 2002 Solving Championship --
