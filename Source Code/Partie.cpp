@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "Constantes.h"
 #include "Coups.h"
 #include "Erreur.h"
@@ -16,6 +17,7 @@ static undo UndoTable[MaxUndos];
 
 /*************************************************************/
 
+bool Filtrer(const pseudopartie *PseudoPartie, const char *Filtres[], int NombreFiltres);
 etatdujeu *CreerPositionInitiale(unsigned int Strategie);
 contraintes *CreerContraintes(pseudopartie *PseudoPartie, unsigned int DemiCoups);
 void FigerCertainesPieces(const pseudopartie *PseudoPartie, etatdujeu *Position);
@@ -33,8 +35,11 @@ void ModifyWithUndo(undo *Undos, unsigned int *Nombre, const vie **Pointeur, vie
 
 /*************************************************************/
 
-unsigned int GenerationDesSolutions(pseudopartie *PseudoPartie, unsigned int DemiCoups, solution *Solutions, unsigned int MaxSolutions)
+unsigned int GenerationDesSolutions(pseudopartie *PseudoPartie, unsigned int DemiCoups, const char *Filtres[], int NombreFiltres, solution *Solutions, unsigned int MaxSolutions)
 {
+	if (Filtrer(PseudoPartie, Filtres, NombreFiltres))
+		return UINT_MAX - 1;
+
 	etatdujeu *PositionInitiale = CreerPositionInitiale(PseudoPartie->Strategie->IDFinal);
 	contraintes *Contraintes = CreerContraintes(PseudoPartie, DemiCoups);
 	FigerCertainesPieces(PseudoPartie, PositionInitiale);
@@ -1637,6 +1642,74 @@ void DeterminerLesCoupsPossibles(const etatdujeu *Position, deplacement *Deplace
 	}
 
 	*NombreDeplacements = Deplacement - &Deplacements[0];
+}
+
+/*************************************************************/
+
+bool Filtrer(const pseudopartie *PseudoPartie, const char *Filtres[], int NombreFiltres)
+{
+	if (!NombreFiltres)
+		return false;
+
+	char Description[1024];
+
+	char *Curseur = Description;
+	for (unsigned int i = 0; i < MaxHommes; i++) {
+		for (couleurs Couleur = BLANCS; Couleur <= NOIRS; Couleur++) {
+			const vie *Piece = (Couleur == BLANCS) ? &PseudoPartie->Strategie->PiecesBlanches[i] : &PseudoPartie->Strategie->PiecesNoires[i];
+
+			*Curseur++ = HommeToChar(i);
+			*Curseur++ = ColonneToChar(QuelleColonne(Piece->Depart));
+			*Curseur++ = RangeeToChar(QuelleRangee(Piece->Depart));
+
+			if (Piece->Promue)
+			{
+				*Curseur++ = '=';
+				*Curseur++ = PieceToChar(Piece->Scenario->Piece);
+				*Curseur++ = ColonneToChar(Piece->Scenario->Promotion);
+				*Curseur++ = RangeeToChar((Couleur == BLANCS) ? HUIT : UN);
+			}
+
+			*Curseur++ = '-';
+			*Curseur++ = '>';
+			if (Piece->Coups) {
+				*Curseur++ = ColonneToChar(QuelleColonne(Piece->Scenario->CaseFinale));
+				*Curseur++ = RangeeToChar(QuelleRangee(Piece->Scenario->CaseFinale));
+			}
+			else {
+				*Curseur++ = ColonneToChar(QuelleColonne(Piece->Depart));
+				*Curseur++ = RangeeToChar(QuelleRangee(Piece->Depart));
+			}
+
+			if (Piece->Capturee && Piece->Assassin)
+			{
+				*Curseur++ = '(';
+				*Curseur++ = HommeToChar(Piece->Assassin->Scenario->Homme);
+				*Curseur++ = ColonneToChar(QuelleColonne(Piece->Assassin->Depart));
+				*Curseur++ = RangeeToChar(QuelleRangee(Piece->Assassin->Depart));
+				*Curseur++ = 'x';
+				*Curseur++ = HommeToChar(i);
+				*Curseur++ = ColonneToChar(QuelleColonne(Piece->Depart));
+				*Curseur++ = RangeeToChar(QuelleRangee(Piece->Depart));
+				*Curseur++ = ')';
+			}
+
+			*Curseur++ = ' ';
+		}
+	}
+
+	*Curseur++ = '\0';
+
+	for (int Filtre = 0; Filtre < NombreFiltres; Filtre++)
+	{
+		bool Contient = strstr(Description, Filtres[Filtre] + 1) != NULL;
+		if (Contient && (Filtres[Filtre][0] == '-'))
+			return true;
+		if (!Contient && (Filtres[Filtre][0] == '+'))
+			return true;
+	}
+
+	return false;
 }
 
 /*************************************************************/

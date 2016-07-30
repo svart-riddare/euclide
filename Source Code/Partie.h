@@ -111,7 +111,7 @@ typedef struct _solution {
 
 /*************************************************************/
 
-unsigned int GenerationDesSolutions(pseudopartie *PseudoPartie, unsigned int DemiCoups, solution *Solutions, unsigned int MaxSolutions);
+unsigned int GenerationDesSolutions(pseudopartie *PseudoPartie, unsigned int DemiCoups, const char *Filtres[], int NombreFiltres, solution *Solutions, unsigned int MaxSolutions);
 
 /*************************************************************/
 

@@ -16,7 +16,7 @@
 
 /*************************************************************/
 
-bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsigned int ContinuerDe, bool ModeExpress)
+bool Main(const char *PositionEPD, unsigned int DemiCoups, const char *Contraintes[], int NombreContaintes, bool Continuer, unsigned int ContinuerDe, bool ModeExpress)
 {
 #ifndef NDEBUG
 	FILE *Debug = fopen("Debug.txt", "w");
@@ -57,15 +57,20 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 						Possible = false;
 				}
 
+				// DO NOT COMMIT
+				OutputStrategie(&Strategies->StrategieActuelle, Partie);
+
 				if (Possible)
 					Possible &= AnalysePhaseC(Partie);
 
-				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
+				// DO NOT COMMIT
+				OutputStrategie(&Strategies->StrategieActuelle, Partie);
 
 				if (Possible)
 					Possible &= AnalysePhaseD(Partie, Strategies->DemiCoups);
 
-				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
+				// DO NOT COMMIT
+				OutputStrategie(&Strategies->StrategieActuelle, Partie);
 
 				if (Possible)
 					Possible &= AnalysePhaseE(Partie);
@@ -78,7 +83,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, bool Continuer, unsig
 						Texte = MESSAGE_RECHERCHE;
 
 						solution Solutions[4];
-						unsigned int NouvellesSolutions = GenerationDesSolutions(Partie, Strategies->DemiCoups, Solutions, 4);
+						unsigned int NouvellesSolutions = GenerationDesSolutions(Partie, Strategies->DemiCoups, Contraintes, NombreContaintes,  Solutions, 4);
 						OutputDebutPartie(NULL);
 
 						if (NouvellesSolutions == UINT_MAX) {

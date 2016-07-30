@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,7 +90,7 @@ int main(int NombreArguments, char *Arguments[])
 	else
 	{
 		OutputFile(TroisiemeArgument);
-		Main(PremierArgument, atoi(SecondArgument), Continuer, ContinuerDe, ModeExpress);
+		Main(PremierArgument, atoi(SecondArgument), NULL, 0, Continuer, ContinuerDe, ModeExpress);
 	}
 
     MainEnd();
@@ -124,12 +125,33 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 
 	while (Encore) {
 		unsigned int Coups = 0;
+		int Scan = 0;
 				
-		if (sscanf(DemiCoups, "%u", &Coups) == 1) {
+		if (sscanf(DemiCoups, "%u%n", &Coups, &Scan) == 1) {
 			diagramme *Diagramme = EPDToDiagramme(EPD, Coups, false);
 			
 			if (Diagramme) {
-				Encore = Main(EPD, Coups, Continuer, ContinuerDe, ModeExpress);
+				int NombreContraintes = 0;
+				const char *Contraintes[32];
+				
+				while (NombreContraintes < 32) {
+					while (DemiCoups[Scan] && isspace(DemiCoups[Scan]))
+						Scan++;
+
+					if (DemiCoups[Scan] != '+' && DemiCoups[Scan] != '-')
+						break;
+
+					Contraintes[NombreContraintes++] = &DemiCoups[Scan];
+					while (DemiCoups[Scan] && !isspace(DemiCoups[Scan]))
+						Scan++;
+
+					if (!DemiCoups[Scan])
+						break;
+
+					DemiCoups[Scan++] = '\0';
+				}
+
+				Encore = Main(EPD, Coups, Contraintes, NombreContraintes, Continuer, ContinuerDe, ModeExpress);
 				Delete(Diagramme);				
 				NombreTrouve++;
 			}
