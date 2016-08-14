@@ -57,20 +57,17 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, const char *Contraint
 						Possible = false;
 				}
 
-				// DO NOT COMMIT
-				OutputStrategie(&Strategies->StrategieActuelle, Partie);
+				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
 
 				if (Possible)
 					Possible &= AnalysePhaseC(Partie);
 
-				// DO NOT COMMIT
-				OutputStrategie(&Strategies->StrategieActuelle, Partie);
+				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
 
 				if (Possible)
 					Possible &= AnalysePhaseD(Partie, Strategies->DemiCoups);
 
-				// DO NOT COMMIT
-				OutputStrategie(&Strategies->StrategieActuelle, Partie);
+				//OutputStrategie(&Strategies->StrategieActuelle, Partie);
 
 				if (Possible)
 					Possible &= AnalysePhaseE(Partie);
