@@ -6,11 +6,13 @@
 #include <climits>
 #include <cmath>
 #include <cstdarg>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 
 /* -------------------------------------------------------------------------- */
 
+#include <array>
 #include <algorithm>
 #include <bitset>
 #include <functional>
@@ -18,40 +20,22 @@
 #include <numeric>
 #include <list>
 #include <queue>
+#include <tuple>
 #include <vector>
 #include <utility>
 
+using std::array;
 using std::bitset;
 using std::list;
 using std::queue;
-using std::priority_queue;
-using std::vector;
 using std::pair;
+using std::priority_queue;
+using std::tuple;
+using std::vector;
+
+using std::get;
 using std::make_pair;
-
-/* -------------------------------------------------------------------------- */
-
-#define BOOST_ENABLE_ASSERT_HANDLER
-
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/logic/tribool.hpp>
-#include <boost/tuple/tuple.hpp>
-
-using boost::ref;
-using boost::cref;
-
-using boost::int8_t;
-using boost::int16_t;
-using boost::int32_t;
-
-using boost::logic::tribool;
-using boost::logic::indeterminate;
-
-using boost::tuples::get;
-using boost::tuples::tuple;
-using boost::tuples::make_tuple;
+using std::make_tuple;
 
 /* -------------------------------------------------------------------------- */
 
@@ -68,6 +52,11 @@ using boost::tuples::make_tuple;
 #include "utilities/predicates.h"
 #include "utilities/vector.h"
 #include "utilities/tag.h"
+
+#include "utilities/boost/tribool.hpp"
+
+using boost::logic::tribool;
+using boost::logic::indeterminate;
 
 /* -------------------------------------------------------------------------- */
 

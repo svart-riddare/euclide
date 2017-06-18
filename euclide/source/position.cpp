@@ -140,7 +140,7 @@ bool Position::analyseCaptures(const Board& board, Position& position)
 
 			for (int k = 0; k < (int)captures.size(); k++)
 			{
-				Capture *capture = &*std::find_if(position.captures.begin(), position.captures.end(), !boost::bind(&Capture::assigned, _1));
+				Capture *capture = &*std::find_if(position.captures.begin(), position.captures.end(), [](const Capture& capture) { return capture.assigned(); });
 				if (!capture)
 					abort(NoSolution);
 

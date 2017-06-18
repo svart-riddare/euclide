@@ -89,7 +89,7 @@ Target::Target(Color color, const Squares& squares)
 
 int Target::computeRequiredMoves(const Board& board)
 {
-	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredMoves, _1, cref(board)));
+	std::for_each(begin(), end(), [&](Destination& destination) { destination.computeRequiredMoves(board); });
 	return updateRequiredMoves();
 }
 
@@ -97,7 +97,7 @@ int Target::computeRequiredMoves(const Board& board)
 
 int Target::computeRequiredCaptures(const Board& board)
 {
-	std::for_each(begin(), end(), boost::bind(&Destination::computeRequiredCaptures, _1, cref(board)));
+	std::for_each(begin(), end(), [&](Destination& destination) { destination.computeRequiredCaptures(board); });
 	return updateRequiredCaptures();
 }
 
@@ -204,7 +204,7 @@ bool Target::setPossibleMen(const Men& men)
 
 	_men &= men;
 
-	iterator last = std::remove_if(begin(), end(), boost::bind(&Destination::isInMen, _1, cref(xmen)))	;
+	iterator last = std::remove_if(begin(), end(), [=](const Destination& destination) { return destination.isInMen(xmen); });
 	if (last == end())
 		return false;
 
@@ -232,7 +232,7 @@ bool Target::setPossibleSquares(const Squares& squares)
 
 	_squares &= squares;
 
-	iterator last = std::remove_if(begin(), end(), boost::bind(&Destination::isInSquares, _1, cref(xsquares)));
+	iterator last = std::remove_if(begin(), end(), [=](const Destination& destination) { return destination.isInSquares(xsquares); });
 	if (last == end())
 		return false;
 
@@ -252,7 +252,7 @@ bool Target::setPossibleSquares(const Squares& squares)
 
 bool Target::setAvailableMoves(int availableMoves)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughMoves, _1, availableMoves));
+	iterator last = std::remove_if(begin(), end(), [=](const Destination& destination) { return !destination.isEnoughMoves(availableMoves); });
 	if (last == end())
 		return false;
 
@@ -271,7 +271,7 @@ bool Target::setAvailableMoves(int availableMoves)
 
 bool Target::setAvailableCaptures(int availableCaptures)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughCaptures, _1, availableCaptures));
+	iterator last = std::remove_if(begin(), end(), [=](const Destination& destination) { return !destination.isEnoughCaptures(availableCaptures); });
 	if (last == end())
 		return false;
 
@@ -290,7 +290,7 @@ bool Target::setAvailableCaptures(int availableCaptures)
 
 bool Target::setAvailableMoves(const array<int, NumMen>& availableMoves)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughManMoves, _1, cref(availableMoves)));
+	iterator last = std::remove_if(begin(), end(), [&](const Destination& destination) { return !destination.isEnoughManMoves(availableMoves); });
 	if (last == end())
 		return false;
 
@@ -309,7 +309,7 @@ bool Target::setAvailableMoves(const array<int, NumMen>& availableMoves)
 
 bool Target::setAvailableCaptures(const array<int, NumMen>& availableCaptures)
 {
-	iterator last = std::remove_if(begin(), end(), !boost::bind(&Destination::isEnoughManCaptures, _1, cref(availableCaptures)));
+	iterator last = std::remove_if(begin(), end(), [&](const Destination& destination) { return !destination.isEnoughManCaptures(availableCaptures); });
 	if (last == end())
 		return false;
 

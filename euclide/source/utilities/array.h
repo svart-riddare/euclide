@@ -9,13 +9,13 @@ namespace euclide
 /* -------------------------------------------------------------------------- */
 
 template<class T, std::size_t N>
-class array : public boost::array<T, N>
+class array : public std::array<T, N>
 {
 	public :
 		array() {}
 	
 		array(const T& value)
-			{ boost::array<T, N>::assign(value); }
+			{ std::array<T, N>::assign(value); }
 };
 
 /* -------------------------------------------------------------------------- */

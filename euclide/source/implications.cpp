@@ -282,7 +282,7 @@ int Implications::requiredMoves(Man manA, Man manB) const
 
 	Men men = (1 << manA) | (1 << manB);
 	Assignations::const_iterator assignation = _assignedMoves.begin();
-	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedMoves.end(), boost::bind(&Assignation::isMen, _1, cref(men)))) != _assignedMoves.end())
+	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedMoves.end(), [=](const Assignation& assignation) { return assignation.isMen(men); })) != _assignedMoves.end())
 	{
 		maximize(requiredMoves, assignation->assigned());
 		assignation++;
@@ -299,7 +299,7 @@ int Implications::requiredCaptures(Man manA, Man manB) const
 
 	Men men = (1 << manA) | (1 << manB);
 	Assignations::const_iterator assignation = _assignedCaptures.begin();
-	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedCaptures.end(), boost::bind(&Assignation::isMen, _1, cref(men)))) != _assignedCaptures.end())
+	while ((assignation = std::find_if<Assignations::const_iterator>(assignation, _assignedCaptures.end(), [=](const Assignation& assignation) { return assignation.isMen(men); })) != _assignedCaptures.end())
 	{
 		maximize(requiredCaptures, assignation->assigned());
 		assignation++;

@@ -1260,7 +1260,7 @@ void Piece::optimize()
 
 	/* -- Sort moves -- */
 
-	std::sort(_moves.begin(), _moves.end(), boost::bind(isMoveEarlier, _1, _2, cref(*this)));
+	std::sort(_moves.begin(), _moves.end(), [=](const Move *moveA, const Move *moveB) { return isMoveEarlier(moveA, moveB, *this); });
 
 	/* -- All done -- */
 

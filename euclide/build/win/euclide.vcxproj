@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{79975B44-0FD3-46AA-8345-D6BE668A0865}</ProjectGuid>
+    <RootNamespace>euclide</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>Debug\</IntDir>
+    <TargetName>$(ProjectName)-debug</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>Release\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_SECURE_SCL=1;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>../../bin/$(ProjectName)-debug.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_SECURE_SCL=0;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableLanguageExtensions>true</DisableLanguageExtensions>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <OutputFile>../../bin/$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\assignations.cpp" />
+    <ClCompile Include="..\..\source\board.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4709;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4709;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\source\captures.cpp" />
+    <ClCompile Include="..\..\source\constants\copyright.cpp" />
+    <ClCompile Include="..\..\source\constants\infinity.cpp" />
+    <ClCompile Include="..\..\source\constraints.cpp" />
+    <ClCompile Include="..\..\source\debug.cpp" />
+    <ClCompile Include="..\..\source\destinations.cpp" />
+    <ClCompile Include="..\..\source\enumerations\errors.cpp" />
+    <ClCompile Include="..\..\source\enumerations\strings.cpp" />
+    <ClCompile Include="..\..\source\euclide.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4268;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\..\source\hashtables.cpp" />
+    <ClCompile Include="..\..\source\implications.cpp" />
+    <ClCompile Include="..\..\source\moves.cpp" />
+    <ClCompile Include="..\..\source\obstructions.cpp" />
+    <ClCompile Include="..\..\source\partitions.cpp" />
+    <ClCompile Include="..\..\source\pieces.cpp" />
+    <ClCompile Include="..\..\source\position.cpp" />
+    <ClCompile Include="..\..\source\problem.cpp" />
+    <ClCompile Include="..\..\source\tables\check-tables.cpp" />
+    <ClCompile Include="..\..\source\tables\constraint-tables.cpp" />
+    <ClCompile Include="..\..\source\tables\movement-tables.cpp" />
+    <ClCompile Include="..\..\source\tables\obstruction-tables.cpp" />
+    <ClCompile Include="..\..\source\targets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\interface\euclide.h" />
+    <ClInclude Include="..\..\source\assignations.h" />
+    <ClInclude Include="..\..\source\board.h" />
+    <ClInclude Include="..\..\source\captures.h" />
+    <ClInclude Include="..\..\source\constants\constants.h" />
+    <ClInclude Include="..\..\source\constraints.h" />
+    <ClInclude Include="..\..\source\debug.h" />
+    <ClInclude Include="..\..\source\destinations.h" />
+    <ClInclude Include="..\..\source\enumerations\colors.h" />
+    <ClInclude Include="..\..\source\enumerations\enumerations.h" />
+    <ClInclude Include="..\..\source\enumerations\errors.h" />
+    <ClInclude Include="..\..\source\enumerations\glyphs.h" />
+    <ClInclude Include="..\..\source\enumerations\men.h" />
+    <ClInclude Include="..\..\source\enumerations\squares.h" />
+    <ClInclude Include="..\..\source\enumerations\strings.h" />
+    <ClInclude Include="..\..\source\hashtables.h" />
+    <ClInclude Include="..\..\source\implications.h" />
+    <ClInclude Include="..\..\source\includes.h" />
+    <ClInclude Include="..\..\source\moves.h" />
+    <ClInclude Include="..\..\source\obstructions.h" />
+    <ClInclude Include="..\..\source\partitions.h" />
+    <ClInclude Include="..\..\source\pieces.h" />
+    <ClInclude Include="..\..\source\position.h" />
+    <ClInclude Include="..\..\source\problem.h" />
+    <ClInclude Include="..\..\source\tables\tables.h" />
+    <ClInclude Include="..\..\source\targets.h" />
+    <ClInclude Include="..\..\source\utilities\algorithm.h" />
+    <ClInclude Include="..\..\source\utilities\array.h" />
+    <ClInclude Include="..\..\source\utilities\bitset.h" />
+    <ClInclude Include="..\..\source\utilities\matrix.h" />
+    <ClInclude Include="..\..\source\utilities\pointer.h" />
+    <ClInclude Include="..\..\source\utilities\predicates.h" />
+    <ClInclude Include="..\..\source\utilities\tag.h" />
+    <ClInclude Include="..\..\source\utilities\vector.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
