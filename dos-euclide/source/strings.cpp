@@ -30,7 +30,7 @@ static const wchar_t *frenchStrings[] =
 
 static const wchar_t *frenchStatuses[] = 
 {
-	L"Probl\xE8me résolu",
+	L"Probl\xE8me r\xE9solu",
 	L"Probl\xE8me insoluble",
 	L"Erreur logicielle, contactez l'auteur",
 	L"Pointeur nul, contacter l'auteur",

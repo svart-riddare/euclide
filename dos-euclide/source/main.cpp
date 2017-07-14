@@ -59,19 +59,21 @@ bool solve(const Strings& strings, Console& console, const char *file)
 
 	int problems = 0;
 
-	fgets(bufferA, bufferSize, input);
-	while (fgets(bufferB, bufferSize, input) && !!console)
+	if (fgets(bufferA, bufferSize, input))
 	{
-		/* -- Solve any problem found (forsythe string on first line, number of moves on second line) -- */
+		while (fgets(bufferB, bufferSize, input) && !!console)
+		{
+			/* -- Solve any problem found (forsythe string on first line, number of moves on second line) -- */
 
-		int numHalfMoves;
-		if (sscanf(bufferB, "%d", &numHalfMoves) == 1)
-			if (solve(strings, console, bufferA, numHalfMoves))
-				problems++;
+			int numHalfMoves;
+			if (sscanf(bufferB, "%d", &numHalfMoves) == 1)
+				if (solve(strings, console, bufferA, numHalfMoves))
+					problems++;
 
-		/* -- Loop -- */
-		
-		std::swap(bufferA, bufferB);
+			/* -- Loop -- */
+
+			std::swap(bufferA, bufferB);
+		}
 	}
 
 	/* -- Done -- */

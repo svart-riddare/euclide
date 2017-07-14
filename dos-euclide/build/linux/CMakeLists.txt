@@ -14,7 +14,6 @@ set(SOURCES
 	../../source/main.cpp
 	../../source/output.cpp
 	../../source/output.h
-	../../source/resources.h
 	../../source/strings.cpp
 	../../source/strings.h
 	../../source/timer.cpp
@@ -37,7 +36,7 @@ target_link_libraries(dos-euclide euclide)
 
 # Compile options
 
-add_definitions(-DNDEBUG -DEUCLIDE_LINUX -g -O3 -Wall -Wextra -Wno-deprecated)
+add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra -Wpedantic)
 include_directories(../../../euclide/interface)
 
 # Dependent on ncurses library

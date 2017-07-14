@@ -4,12 +4,9 @@
 /* -------------------------------------------------------------------------- */
 
 #include <cassert>
-//#include <cctype>
-//#include <cmath>
+#include <climits>
 #include <cstdio>
-//#include <cstdlib>
-//#include <cstring>
-//#include <ctime>
+#include <cstring>
 #include <cwchar>
 
 /* -------------------------------------------------------------------------- */

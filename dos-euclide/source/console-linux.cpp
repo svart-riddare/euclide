@@ -4,6 +4,7 @@
 /* -------------------------------------------------------------------------- */
 
 LinuxConsole::LinuxConsole(const Strings& strings)
+	: Console(strings)
 {
 	setlocale(LC_ALL, "");
 
@@ -31,15 +32,15 @@ LinuxConsole::LinuxConsole(const Strings& strings)
 
 	/* -- Get console width & height -- */
 
-	width = getmaxx(stdscr);
-	height = getmaxy(stdscr);
+	_width = getmaxx(stdscr);
+	_height = getmaxy(stdscr);
 
-	if ((width < 64) || (height < 25))
+	if ((_width < 64) || (_height < 25))
 		return;
 
 	/* -- Clear input & output -- */
 
-	valid = true;
+	_valid = true;
 	clear();
 }
 
@@ -56,15 +57,11 @@ LinuxConsole::~LinuxConsole()
 
 void LinuxConsole::clear()
 {
-	wchar_t *blank = new wchar_t[width + 1];
+	const std::wstring blank(_width, ' ');
 
-	std::fill_n(blank, width, ' ');
-	blank[width] = '\0';
+	for (int y = 0; y < _height; y++)
+		write(blank.c_str(), 0, y, Colors::Standard);
 
-	for (int y = 0; y < height; y++)
-		write(blank, 0, y, colors::standard);
-
-	delete[] blank;
 	Console::clear();
 }
 
@@ -75,27 +72,27 @@ bool LinuxConsole::wait()
 	Console::wait();
 
 	if (getch() == 0x1B)
-		abort = true;
+		_abort = true;
 
-	write(L"", width - 1, true, 0, height - 1, colors::standard);
-	return !abort;
+	write(L"", _width - 1, true, 0, _height - 1, Colors::Standard);
+	return !_abort;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void LinuxConsole::displayProblem(const EUCLIDE_Problem *problem)
+void LinuxConsole::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	const wchar_t *glyphs = strings::load(strings::GlyphSymbols);
+	const wchar_t *glyphs = _strings[Strings::GlyphSymbols];
 
 	for (int square = 0; square < 64; square++)
 	{
-		EUCLIDE_Glyph glyph = problem->glyphs[square];
+		const EUCLIDE_Glyph glyph = problem.diagram[square];
 
-		bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
-		bool isLightSquare = ((square / 8) & 1) == ((square % 8) & 1);
+		const bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
+		const bool isLightSquare = ((square / 8) & 1) == ((square % 8) & 1);
 
 		move(7 - (square % 8), square / 8);
-		addch(toupper(glyphs[glyph]) | (isWhiteGlyph ? (isLightSquare ? colors::whitePiecesOnLightSquares : colors::whitePiecesOnDarkSquares) : (isLightSquare ? colors::blackPiecesOnLightSquares : colors::blackPiecesOnDarkSquares)));
+		addch(toupper(glyphs[glyph]) | (isWhiteGlyph ? (isLightSquare ? Colors::WhitePiecesOnLightSquares : Colors::WhitePiecesOnDarkSquares) : (isLightSquare ? Colors::BlackPiecesOnLightSquares : Colors::BlackPiecesOnDarkSquares)));
 	}
 
 	Console::displayProblem(problem);
@@ -103,65 +100,65 @@ void LinuxConsole::displayProblem(const EUCLIDE_Problem *problem)
 
 /* -------------------------------------------------------------------------- */
 
-void LinuxConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
+void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	const wchar_t *symbols = strings::load(strings::GlyphSymbols);
+	const wchar_t *symbols = _strings[Strings::GlyphSymbols];
 
 	for (int piece = 0; piece < 16; piece++)
 	{
 		for (int color = 0; color <= 1; color++)
 		{
-			const EUCLIDE_Deduction *deduction = color ? &deductions->blackPieces[piece] : &deductions->whitePieces[piece];
-			int x = color * width / 2;
-			int y = 8 + piece;
+			const EUCLIDE_Deduction& deduction = color ? deductions.blackPieces[piece] : deductions.whitePieces[piece];
+			const int x = color * _width / 2;
+			const int y = 8 + piece;
 
 			/* - Clear area -- */
 
 			move(y, x);
-			for (int k = 0; k < width / 2; k++)
-				addch(' ' | colors::standard);
+			for (int k = 0; k < _width / 2; k++)
+				addch(' ' | Colors::Standard);
 
 			/* -- Print required moves -- */
 
-			if (deduction->requiredMoves > 10)
-				mvaddch(y, x + 1, ('0' + deduction->requiredMoves / 10) | (color ? colors::numBlackMoves : colors::numWhiteMoves));
+			if (deduction.requiredMoves > 10)
+				mvaddch(y, x + 1, ('0' + deduction.requiredMoves / 10) | (color ? Colors::NumBlackMoves : Colors::NumWhiteMoves));
 
-			if (deduction->requiredMoves > 0)
-				mvaddch(y, x + 2, ('0' + deduction->requiredMoves % 10) | (color ? colors::numBlackMoves : colors::numWhiteMoves));
+			if (deduction.requiredMoves > 0)
+				mvaddch(y, x + 2, ('0' + deduction.requiredMoves % 10) | (color ? Colors::NumBlackMoves : Colors::NumWhiteMoves));
 
 			/* -- Print deduction -- */
 
-			if (deduction->finalSquare >= 0)
+			if (deduction.finalSquare >= 0)
 			{
-				unsigned attribute =  color ? (deduction->captured ? colors::blackCaptures : colors::blackMoves) : (deduction->captured ? colors::whiteCaptures : colors::whiteMoves);
+				const unsigned attribute =  color ? (deduction.captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction.captured ? Colors::WhiteCaptures : Colors::WhiteMoves);
 
-				mvaddch(y, x + 5, toupper(symbols[deduction->initialGlyph]) | attribute);
-				mvaddch(y, x + 6, ('a' + deduction->initialSquare / 8) | attribute);
-				mvaddch(y, x + 7, ('1' + deduction->initialSquare % 8) | attribute);
+				mvaddch(y, x + 5, toupper(symbols[deduction.initialGlyph]) | attribute);
+				mvaddch(y, x + 6, ('a' + deduction.initialSquare / 8) | attribute);
+				mvaddch(y, x + 7, ('1' + deduction.initialSquare % 8) | attribute);
 
-				if ((deduction->finalSquare != deduction->initialSquare) || (deduction->requiredMoves > 0))
+				if ((deduction.finalSquare != deduction.initialSquare) || (deduction.requiredMoves > 0))
 				{
 					mvaddch(y, x + 9, '-' | attribute);
 					mvaddch(y, x + 10, '>' | attribute);
-					mvaddch(y, x + 12, toupper(symbols[deduction->promotionGlyph]) | attribute);
-					mvaddch(y, x + 13, ('a' + deduction->finalSquare / 8) | attribute);
-					mvaddch(y, x + 14, ('1' + deduction->finalSquare % 8) | attribute);
+					mvaddch(y, x + 12, toupper(symbols[deduction.promotionGlyph]) | attribute);
+					mvaddch(y, x + 13, ('a' + deduction.finalSquare / 8) | attribute);
+					mvaddch(y, x + 14, ('1' + deduction.finalSquare % 8) | attribute);
 				}
 			}
 
 			/* -- Print number of possible squares -- */
 
-			if (deduction->numSquares > 1)
+			if (deduction.numSquares > 1)
 				for (int k = 0; k < 4; k++)
-					if (deduction->numSquares >= pow(10, k))
-						mvaddch(y, x + 24 - k, ('0' + (deduction->numSquares / (int)pow(10, k)) % 10) | (color ? colors::numBlackSquares : colors::numWhiteSquares));
+					if (deduction.numSquares >= pow(10, k))
+						mvaddch(y, x + 24 - k, ('0' + (deduction.numSquares / (int)pow(10, k)) % 10) | (color ? Colors::NumBlackSquares : Colors::NumWhiteSquares));
 
 			/* -- Print number of possible moves -- */
 
-			int numExtraMoves = deduction->numMoves - deduction->requiredMoves;
+			const int numExtraMoves = deduction.numMoves - deduction.requiredMoves;
 			for (int k = 0; k < 4; k++)
 				if (numExtraMoves >= pow(10, k))
-					mvaddch(y, x + 31 - k, ('0' + (numExtraMoves / (int)pow(10, k)) % 10) | (color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves));
+					mvaddch(y, x + 31 - k, ('0' + (numExtraMoves / (int)pow(10, k)) % 10) | (color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves));
 		}
 	}
 
@@ -170,7 +167,7 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 
 /* -------------------------------------------------------------------------- */
 
-void LinuxConsole::write(const wchar_t *string, int x, int y, unsigned color)
+void LinuxConsole::write(const wchar_t *string, int x, int y, Color color) const
 {
 	attrset(color);
 	mvaddwstr(y, x, string);
@@ -181,7 +178,7 @@ void LinuxConsole::write(const wchar_t *string, int x, int y, unsigned color)
 
 /* -------------------------------------------------------------------------- */
 
-void LinuxConsole::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, unsigned color)
+void LinuxConsole::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const
 {
 	Console::write(string, maxLength, fillWithBlanks, x, y, color);
 }
