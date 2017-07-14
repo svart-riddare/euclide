@@ -2,70 +2,58 @@
 
 /* -------------------------------------------------------------------------- */
 
-Output::Output()
+Output::Output(const Strings& strings, const char *inputFileName)
+	: _strings(strings), _file(nullptr)
 {
-	file = NULL;
-
 	reset();
-	memset(&callbacks, 0, sizeof(callbacks));
+	memset(&_callbacks, 0, sizeof(_callbacks));
 
-	callbacks.displayCopyright = _displayCopyright;
-	callbacks.displayProblem = _displayProblem;
-	callbacks.displayMessage = _displayMessage;
-	callbacks.displayProgress = _displayProgress;
-	callbacks.displayDeductions = _displayDeductions;
+	_callbacks.displayCopyright = displayCopyrightCallback;
+	_callbacks.displayProblem = displayProblemCallback;
+	_callbacks.displayMessage = displayMessageCallback;
+	_callbacks.displayProgress = displayProgressCallback;
+	_callbacks.displayDeductions = displayDeductionsCallback;
+	_callbacks.handle = this;
 
-	callbacks.handle = static_cast<EUCLIDE_Handle>(this);
-}
-
-/* -------------------------------------------------------------------------- */
-
-Output::Output(const char *inputName)
-{
-	file = NULL;
-	open(inputName);
-
-	reset();
-	memset(&callbacks, 0, sizeof(callbacks));
-
-	callbacks.displayCopyright = _displayCopyright;
-	callbacks.displayProblem = _displayProblem;
-	callbacks.displayMessage = _displayMessage;
-	callbacks.displayProgress = _displayProgress;
-	callbacks.displayDeductions = _displayDeductions;
-
-	callbacks.handle = static_cast<EUCLIDE_Handle>(this);
+	open(inputFileName);
 }
 
 /* -------------------------------------------------------------------------- */
 
 Output::~Output()
 {
-	if (file)
-		fclose(file);
+	if (_file)
+		fclose(_file);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::open(const char *inputName)
+void Output::open(const char *inputFileName)
 {
 	/* -- Close previously opened file -- */
 
-	if (file)
-		fclose(file);
+	if (_file)
+		fclose(_file);
+
+	_file = nullptr;
+
+	/* -- Early exit if no filename was provided -- */
+
+	if (!inputFileName || !*inputFileName)
+		return;
 
 	/* -- Create output file name from input file name -- */
 
-	char *outputName = new char[strlen(inputName) + 11];
-	strcpy(outputName, inputName);
+	char *outputFileName = new char[strlen(inputFileName) + strlen(".output.txt") + 1];
+	strcpy(outputFileName, inputFileName);
 
-	if (strrchr(inputName, '.'))
-		sprintf(strrchr(outputName, '.'), ".output%s", strrchr(inputName, '.'));
+	if (strrchr(inputFileName, '.'))
+		sprintf(strrchr(outputFileName, '.'), ".output%s", strrchr(inputFileName, '.'));
 	else
-		strcat(outputName, ".output.txt");
+		strcat(outputFileName, ".output.txt");
 
-	file = fopen(outputName, "w");
-	delete[] outputName;
+	_file = fopen(outputFileName, "w");
+	delete[] outputFileName;
 
 }
 
@@ -73,55 +61,51 @@ void Output::open(const char *inputName)
 
 void Output::reset()
 {
-	timer = Timer();
-	complexity = 0.0;
+	_timer = Timer();
+	_complexity = 0.0;
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Output::done()
 {
-	if (file)
+	if (_file)
 	{
-		fwprintf(file, L"%ls\n", strings::load(strings::Output));
-		fwprintf(file, L"\t%ls %.2f\n", strings::load(strings::Score), complexity);
-		fwprintf(file, L"\n\n");
+		fwprintf(_file, L"%ls\n", _strings[Strings::Output]);
+		fwprintf(_file, L"\t%ls %.2f\n", _strings[Strings::Score], _complexity);
+		fwprintf(_file, L"\n\n");
 	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayCopyright(const wchar_t *copyright)
+void Output::displayCopyright(const wchar_t *copyright) const
 {
-	wchar_t *string = new wchar_t[wcslen(copyright) + 7];
-	std::fill_n(string, wcslen(copyright) + 6, '-');
-	string[wcslen(copyright) + 6] = '\0';
+	std::string hyphens(wcslen(copyright) + 6, '-');
 
-	if (file)
+	if (_file)
 	{
-		fwprintf(file, L"%ls\n", string);
-		fwprintf(file, L"-- %ls --\n", copyright);
-		fwprintf(file, L"%ls\n", string);
-		fwprintf(file, L"\n");
-		fflush(file);
+		fwprintf(_file, L"%s\n", hyphens.c_str());
+		fwprintf(_file, L"-- %ls --\n", copyright);
+		fwprintf(_file, L"%s\n", hyphens.c_str());
+		fwprintf(_file, L"\n");
+		fflush(_file);
 	}
-
-	delete[] string;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayMessage(EUCLIDE_Message /*message*/)
+void Output::displayMessage(EUCLIDE_Message /*message*/) const
 {
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayProblem(const EUCLIDE_Problem *problem)
+void Output::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	const wchar_t *glyphs = strings::load(strings::GlyphSymbols);
+	const wchar_t *glyphs = _strings[Strings::GlyphSymbols];
 
-	if (file)
+	if (_file)
 	{
 		int white = 0;
 		int black = 0;
@@ -131,14 +115,14 @@ void Output::displayProblem(const EUCLIDE_Problem *problem)
 		{
 			for (int x = 0; x < 8; x++)
 			{
-				if (problem->glyphs[8 * x + y] != EUCLIDE_GLYPH_NONE)
+				if (problem.diagram[8 * x + y] != EUCLIDE_GLYPH_NONE)
 				{
 					if (k)
-						forsythe[n++] = (char)('0' + k);
+						forsythe[n++] = '0' + k;
 
-					forsythe[n++] = (char)glyphs[problem->glyphs[8 * x + y]];
-					white += (problem->glyphs[8 * x + y] <= EUCLIDE_GLYPH_WHITE_PAWN) ? 1 : 0;
-					black += (problem->glyphs[8 * x + y] >= EUCLIDE_GLYPH_BLACK_KING) ? 1 : 0;
+					forsythe[n++] = glyphs[problem.diagram[8 * x + y]];
+					white += (problem.diagram[8 * x + y] <= EUCLIDE_GLYPH_WHITE_PAWN) ? 1 : 0;
+					black += (problem.diagram[8 * x + y] >= EUCLIDE_GLYPH_BLACK_KING) ? 1 : 0;
 					k = 0;
 				}
 				else
@@ -148,55 +132,41 @@ void Output::displayProblem(const EUCLIDE_Problem *problem)
 			}
 
 			if (k)
-				forsythe[n++] = (char)('0' + k);
+				forsythe[n++] = '0' + k;
 
 			forsythe[n++] = y ? '/' : '\0';
 		}
 
-		fwprintf(file, L"%ls\n\t%hs\n\t%d\n\n", strings::load(strings::Input), forsythe, problem->numHalfMoves);
+		fwprintf(_file, L"%ls\n\t%hs\n\t%d\n\n", _strings[Strings::Input], forsythe, problem.numHalfMoves);
 
-		fprintf(file, "\t+---+---+---+---+---+---+---+---+\n\t");
+		fprintf(_file, "\t+---+---+---+---+---+---+---+---+\n\t");
 		for (int y = 8; y-- > 0; )
 		{
 			for (int x = 0; x < 8; x++)
-				fprintf(file, "| %c ",  glyphs[problem->glyphs[8 * x + y]]);
+				fprintf(_file, "| %c ",  glyphs[problem.diagram[8 * x + y]]);
 
-			fprintf(file, "|\n\t+---+---+---+---+---+---+---+---+\n\t");
+			fprintf(_file, "|\n\t+---+---+---+---+---+---+---+---+\n\t");
 		}
 
 		wchar_t buffer[48];
-		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%d%ls %ls", problem->numHalfMoves / 2, strings::load((problem->numHalfMoves & 1) ? strings::HalfMove : strings::NoHalfMove), strings::load(strings::Moves));
-		while ((int)wcslen(buffer) < 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0)) wcscat(buffer, L" ");
+		swprintf(buffer, countof(buffer), L"%d%ls%d %ls", problem.numHalfMoves / 2, _strings[Strings::Dot], (problem.numHalfMoves % 2) ? 5 : 0, _strings[Strings::Moves]);
+		while (int(wcslen(buffer)) < 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0)) wcscat(buffer, L" ");
 		swprintf(buffer + wcslen(buffer), 8, L"(%d+%d)", white, black);
-		fwprintf(file, L"%ls\n\n", buffer);
+		fwprintf(_file, L"%ls\n\n", buffer);
 	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayProgress(int /*whiteFreeMoves*/, int /*blackFreeMoves*/, double complexity)
+void Output::displayProgress(int /*whiteFreeMoves*/, int /*blackFreeMoves*/, double complexity) const
 {
-	this->complexity = complexity;	
+	_complexity = complexity;	
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayDeductions(const EUCLIDE_Deductions * /*deductions*/)
+void Output::displayDeductions(const EUCLIDE_Deductions& /*deductions*/) const
 {
-}
-
-/* -------------------------------------------------------------------------- */
-
-Output::operator const EUCLIDE_Callbacks *() const
-{
-	return &callbacks;
-}
-
-/* -------------------------------------------------------------------------- */
-
-bool Output::operator!() const
-{
-	return file ? false : true;
 }
 
 /* -------------------------------------------------------------------------- */

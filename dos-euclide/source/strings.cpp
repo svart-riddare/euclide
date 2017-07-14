@@ -1,57 +1,136 @@
 #include "strings.h"
 
-namespace strings
-{
+/* -------------------------------------------------------------------------- */
+/* -- French strings                                                       -- */
+/* -------------------------------------------------------------------------- */
 
-typedef struct
+static const wchar_t *frenchTexts[] = 
 {
-	int stringId;
-	const wchar_t *string;
+	L"Appuyez sur une touche pour continuer...",
+};
 
-} string;
+static const wchar_t *frenchErrors[] =
+{
+	L"Veuillez pr\xE9" L"ciser un nom de fichier sur la ligne de commande",
+	L"Le probl\xE8me donn\xE9 en ligne de commande est invalide",
+	L"Le fichier \xE0 analyser n'existe pas ou ne contient aucun probl\xE8me",
+	L"Analyse interrompue par l'utilisateur"
+};
+
+static const wchar_t *frenchStrings[] =
+{
+	L"RDTFCP|KQRBNP|KDTLSB|RDTACP|KQRBSP",
+	L" RDTFCPrdtfcp",
+	L"coups",
+	L",",
+	L"Probl\xE8me analys\xE9 :",
+	L"Verdict : ",
+	L"\xC9" L"chelle de difficult\xE9 ="
+};
+
+static const wchar_t *frenchStatuses[] = 
+{
+	L"Probl\xE8me résolu",
+	L"Probl\xE8me insoluble",
+	L"Erreur logicielle, contactez l'auteur",
+	L"Pointeur nul, contacter l'auteur",
+	L"Erreur syst\xE8me inattendue",
+	L"M\xE9moire insuffisante",
+	L"Probl\xE8me invalide"
+};
+
+static const wchar_t *frenchMessages[] =
+{
+	L"Analyse pr\xE9liminaire..."
+};
+
+static_assert(countof(frenchTexts) == Strings::NumTexts);
+static_assert(countof(frenchErrors) == Strings::NumErrors);
+static_assert(countof(frenchStrings) == Strings::NumStrings);
+static_assert(countof(frenchStatuses) == EUCLIDE_NUM_STATUSES);
+static_assert(countof(frenchMessages) == EUCLIDE_NUM_MESSAGES);
+
+/* -------------------------------------------------------------------------- */
+/* -- English strings                                                      -- */
+/* -------------------------------------------------------------------------- */
+
+static const wchar_t *englishTexts[] =
+{
+	L"Press any key to continue..."
+};
+
+static const wchar_t *englishErrors[] =
+{
+	L"Please specify an input file name on the command line",
+	L"Invalid problem given on command line",
+	L"Input file not found or empty",
+	L"Solving interrupted"
+};
+
+static const wchar_t *englishStrings[] =
+{
+	L"KQRBNP|RDTFCP|KDTLSB|RDTACP|KQRBSP",
+	L" KQRBNPkqrbnp",
+	L"moves",
+	L".",
+	L"Input:",
+	L"Result:",
+	L"Score of"
+};
+
+static const wchar_t *englishStatuses[] =
+{
+	L"Solved",
+	L"No solution",
+	L"Internal error",
+	L"Null pointer",
+	L"System error",
+	L"Memory error",
+	L"Invalid problem"
+};
+
+static const wchar_t *englishMessages[] =
+{
+	L"Static analysis..."
+};
+
+static_assert(countof(englishTexts) == Strings::NumTexts);
+static_assert(countof(englishErrors) == Strings::NumErrors);
+static_assert(countof(englishStrings) == Strings::NumStrings);
+static_assert(countof(englishStatuses) == EUCLIDE_NUM_STATUSES);
+static_assert(countof(englishMessages) == EUCLIDE_NUM_MESSAGES);
+
+/* -------------------------------------------------------------------------- */
+/* -- Strings implementation                                               -- */
+/* -------------------------------------------------------------------------- */
+
+Strings::Strings()
+{
+	/* -- Select French language if suitable, English otherwise -- */
+
+#ifdef EUCLIDE_WINDOWS
+	const bool french = (PRIMARYLANGID(GetUserDefaultUILanguage()) == LANG_FRENCH);
+#else
+	const bool french = false;
+#endif
+
+	if (french)
+	{
+		_texts = frenchTexts;
+		_errors = frenchErrors;
+		_strings = frenchStrings;
+		_statuses = frenchStatuses;
+		_messages = frenchMessages;
+	}
+	else
+	{
+		_texts = englishTexts;
+		_errors = englishErrors;
+		_strings = englishStrings;
+		_statuses = englishStatuses;
+		_messages = englishMessages;
+	}
+}
 
 /* -------------------------------------------------------------------------- */
 
-#include "resources.h"
-
-/* -------------------------------------------------------------------------- */
-
-const wchar_t *load(int stringId)
-{
-	int s = 0;
-	while (french[s].stringId && (french[s].stringId != stringId))
-		s++;
-
-	return french[s].string;
-}
-
-/* -------------------------------------------------------------------------- */
-
-const wchar_t *load(EUCLIDE_Status status)
-{
-	return load(1000 + status);
-}
-
-const wchar_t *load(EUCLIDE_Message message)
-{
-	return load(2000 + message);
-}
-
-const wchar_t *load(Text text)
-{
-	return load(3000 + text);
-}
-
-const wchar_t *load(Error error)
-{
-	return load(4000 + error);
-}
-
-const wchar_t *load(Message message)
-{
-	return load(5000 + message);
-}
-
-/* -------------------------------------------------------------------------- */
-
-}

@@ -1,55 +1,49 @@
 #include "console-win.h"
-#include "colors.h"
-#include "strings.h"
 
 /* -------------------------------------------------------------------------- */
 
-WinConsole::WinConsole()
+WinConsole::WinConsole(const Strings& strings)
+	: Console(strings)
 {
 	/* -- Initialize console handles -- */
 
-	output = GetStdHandle(STD_OUTPUT_HANDLE);
-	input = GetStdHandle(STD_INPUT_HANDLE);
+	_output = GetStdHandle(STD_OUTPUT_HANDLE);
+	_input = GetStdHandle(STD_INPUT_HANDLE);
 
-	if ((output == INVALID_HANDLE_VALUE) || (input == INVALID_HANDLE_VALUE))
+	if ((_output == INVALID_HANDLE_VALUE) || (_input == INVALID_HANDLE_VALUE))
 		return;
 
-	GetConsoleScreenBufferInfo(output, &initialState);
-	width = 2 * (std::min((int)initialState.dwSize.X, 120) / 2);
-	height = std::min((int)initialState.dwSize.Y, 25);
+	GetConsoleScreenBufferInfo(_output, &_initialState);
+	_width = 2 * (std::min<int>(_initialState.dwSize.X, 120) / 2);
+	_height = std::min<int>(_initialState.dwSize.Y, 25);
 
-	if ((width < 64) || (height < 25))
+	if ((_width < 64) || (_height < 25))
 		return;
 
-	GetConsoleMode(output, &initialOutputMode);
-	GetConsoleMode(input, &initialInputMode);
-	SetConsoleMode(input, ENABLE_PROCESSED_INPUT);
+	GetConsoleMode(_output, &_initialOutputMode);
+	GetConsoleMode(_input, &_initialInputMode);
+	SetConsoleMode(_input, ENABLE_PROCESSED_INPUT);
 		
 	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(output, &cursorInfo);
-	initialCursorVisibility = cursorInfo.bVisible;
+	GetConsoleCursorInfo(_output, &cursorInfo);
+	_initialCursorVisibility = cursorInfo.bVisible;
 	cursorInfo.bVisible = FALSE;
-	SetConsoleCursorInfo(output, &cursorInfo);
+	SetConsoleCursorInfo(_output, &cursorInfo);
 
-	SMALL_RECT window;
-	window.Bottom = (SHORT)(height - 1);
-	window.Right = (SHORT)(width - 1);
-	window.Left = 0;
-	window.Top = 0;
-
-	if ((initialState.srWindow.Bottom < window.Bottom) || (initialState.srWindow.Right < window.Right) || (initialState.srWindow.Left > window.Left) || (initialState.srWindow.Top > window.Top))
-		SetConsoleWindowInfo(output, TRUE, &window);
+	const SMALL_RECT window = { 0, 0, _width - 1, _height - 1};
+	if ((_initialState.srWindow.Bottom < window.Bottom) || (_initialState.srWindow.Right < window.Right) || (_initialState.srWindow.Left > window.Left) || (_initialState.srWindow.Top > window.Top))
+		SetConsoleWindowInfo(_output, TRUE, &window);
 
 	/* -- Allocate output buffer -- */
 
-	characters = new CHAR_INFO[16 * width];
+	_characters = new CHAR_INFO[16 * _width];
 
 	/* -- Clear input & output -- */
 
-	valid = true;
+	_valid = true;
 	clear();
 
-	FlushConsoleInputBuffer(input);
+	FlushConsoleInputBuffer(_input);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -59,32 +53,32 @@ WinConsole::~WinConsole()
 	/* -- Restore console output -- */
 
 	COORD cursor = { 0, 8 };
-	SetConsoleCursorPosition(output, cursor);
+	SetConsoleCursorPosition(_output, cursor);
 
-	int width = initialState.dwSize.X;
-	int height = initialState.dwSize.Y;
+	const int width = _initialState.dwSize.X;
+	const int height = _initialState.dwSize.Y;
 
 	DWORD written;
-	FillConsoleOutputAttribute(output, initialState.wAttributes, width * (height - 8), cursor, &written);
-	FillConsoleOutputCharacter(output, ' ', width * (height - 8), cursor, &written);
+	FillConsoleOutputAttribute(_output, _initialState.wAttributes, width * (height - 8), cursor, &written);
+	FillConsoleOutputCharacter(_output, ' ', width * (height - 8), cursor, &written);
 
 	cursor.Y++;
 
-	SetConsoleWindowInfo(output, TRUE, &initialState.srWindow);
-	SetConsoleTextAttribute(output, initialState.wAttributes);
-	SetConsoleCursorPosition(output, cursor);
+	SetConsoleWindowInfo(_output, TRUE, &_initialState.srWindow);
+	SetConsoleTextAttribute(_output, _initialState.wAttributes);
+	SetConsoleCursorPosition(_output, cursor);
 
 	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(output, &cursorInfo);
-	cursorInfo.bVisible = initialCursorVisibility;
-	SetConsoleCursorInfo(output, &cursorInfo);
+	GetConsoleCursorInfo(_output, &cursorInfo);
+	cursorInfo.bVisible = _initialCursorVisibility;
+	SetConsoleCursorInfo(_output, &cursorInfo);
 
-	SetConsoleMode(output, initialOutputMode);
-	SetConsoleMode(input, initialInputMode);
+	SetConsoleMode(_output, _initialOutputMode);
+	SetConsoleMode(_input, _initialInputMode);
 
 	/* -- Delete allocated resources -- */
 
-	delete characters;
+	delete[] _characters;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -92,17 +86,17 @@ WinConsole::~WinConsole()
 void WinConsole::clear()
 {
 	COORD cursor = { 0, 0 };
-	SetConsoleCursorPosition(output, cursor);
+	SetConsoleCursorPosition(_output, cursor);
 
-	int width = initialState.dwSize.X;
-	int height = initialState.dwSize.Y;
+	const int width = _initialState.dwSize.X;
+	const int height = _initialState.dwSize.Y;
 
 	DWORD written;
-	FillConsoleOutputCharacter(output, ' ', width * height, cursor, &written);
-	FillConsoleOutputAttribute(output, colors::standard, width * height, cursor, &written);
+	FillConsoleOutputCharacter(_output, ' ', width * height, cursor, &written);
+	FillConsoleOutputAttribute(_output, Colors::Standard, width * height, cursor, &written);
 
-	SetConsoleTextAttribute(output, initialState.wAttributes);
-	SetConsoleCursorPosition(output, cursor);
+	SetConsoleTextAttribute(_output, _initialState.wAttributes);
+	SetConsoleCursorPosition(_output, cursor);
 
 	Console::clear();
 }
@@ -113,73 +107,72 @@ bool WinConsole::wait()
 {
 	Console::wait();
 
-	FlushConsoleInputBuffer(input);
+	FlushConsoleInputBuffer(_input);
 
-	DWORD records;
+	DWORD records = 0;
 	INPUT_RECORD record;
-	record.EventType = 0;
-
 	ZeroMemory(&record, sizeof(record));
-
+	
+	record.EventType = 0;
 	while (record.EventType != KEY_EVENT)
-		if (!ReadConsoleInput(input, &record, 1, &records))
-			return abort = true, false;
+		if (!ReadConsoleInput(_input, &record, 1, &records))
+			return _abort = true, false;
 	
 	if (record.Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
-		abort = true;
+		_abort = true;
 
-	write(L"", width - 1, true, 0, height - 1, colors::standard);
-	return !abort;
+	write(L"", _width - 1, true, 0, _height - 1, Colors::Standard);
+	return !_abort;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void WinConsole::displayProblem(const EUCLIDE_Problem *problem)
+void WinConsole::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	const wchar_t *glyphs = strings::load(strings::GlyphSymbols);
+	const wchar_t *glyphs = _strings[Strings::GlyphSymbols];
 	CHAR_INFO chessboard[64];
 
 	for (int square = 0; square < 64; square++)
 	{
-		EUCLIDE_Glyph glyph = problem->glyphs[square];
+		const EUCLIDE_Glyph glyph = problem.diagram[square];
 
-		bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
+		const bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
 
-		int column = square / 8;
-		int row = square % 8;
-		int index = 8 * (7 - row) + column;
+		const int column = square / 8;
+		const int row = square % 8;
+		const int index = 8 * (7 - row) + column;
 		
-		chessboard[index].Char.UnicodeChar = (WCHAR)toupper(glyphs[glyph]);
-		chessboard[index].Attributes = (((column & 1) ^ (row & 1)) ? colors::lightSquares : colors::darkSquares);
-		chessboard[index].Attributes |= (isWhiteGlyph ? colors::whitePieces : colors::blackPieces);
+		chessboard[index].Char.UnicodeChar = toupper(glyphs[glyph]);
+		chessboard[index].Attributes = (((column & 1) ^ (row & 1)) ? Colors::LightSquares : Colors::DarkSquares);
+		chessboard[index].Attributes |= (isWhiteGlyph ? Colors::WhitePieces : Colors::BlackPieces);
 	}
 
-	COORD size = { 8, 8 };
-	COORD corner = { 0, 0 };
+	const COORD size = { 8, 8 };
+	const COORD corner = { 0, 0 };
 	SMALL_RECT window = { 0, 0, 7, 7 };
-	WriteConsoleOutput(output, chessboard, size, corner, &window);
+	WriteConsoleOutput(_output, chessboard, size, corner, &window);
 
 	Console::displayProblem(problem);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
+void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	const wchar_t *symbols = strings::load(strings::GlyphSymbols);
-	CHAR_INFO *characters = this->characters;
+	const wchar_t *symbols = _strings[Strings::GlyphSymbols];
+	CHAR_INFO *characters = this->_characters;
 	
 	for (int piece = 0; piece < 16; piece++)
 	{
 		for (int color = 0; color <= 1; color++)
 		{
-			const EUCLIDE_Deduction *deduction = color ? &deductions->blackPieces[piece] : &deductions->whitePieces[piece];
+			const EUCLIDE_Deduction *deduction = color ? &deductions.blackPieces[piece] : &deductions.whitePieces[piece];
 
 			/* -- Set default attributes and clear area -- */
 
-			for (int k = 0; k < width / 2; k++)
+			for (int k = 0; k < _width / 2; k++)
 			{
-				characters[k].Attributes = color ? (deduction->captured ? colors::blackCaptures : colors::blackMoves) : (deduction->captured ? colors::whiteCaptures : colors::whiteMoves);
+				characters[k].Attributes = color ? (deduction->captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction->captured ? Colors::WhiteCaptures : Colors::WhiteMoves);
 				characters[k].Char.UnicodeChar = ' ';
 			}
 
@@ -187,31 +180,31 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 
 			if (deduction->requiredMoves > 0)
 			{
-				characters[1].Attributes = color ? colors::numBlackMoves : colors::numWhiteMoves;
-				characters[2].Attributes = color ? colors::numBlackMoves : colors::numWhiteMoves;
+				characters[1].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
+				characters[2].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
 
 				if (deduction->requiredMoves > 9)
-					characters[1].Char.UnicodeChar = (WCHAR)('0' + (deduction->requiredMoves / 10 % 10));
+					characters[1].Char.UnicodeChar = '0' + (deduction->requiredMoves / 10 % 10);
 				
-				characters[2].Char.UnicodeChar = (WCHAR)('0' + deduction->requiredMoves % 10);
+				characters[2].Char.UnicodeChar = '0' + deduction->requiredMoves % 10;
 			}
 
 			/* -- Print deduction -- */
 
 			if (deduction->finalSquare >= 0)
 			{
-				characters[5].Char.UnicodeChar = (WCHAR)toupper(symbols[deduction->initialGlyph]);
-				characters[6].Char.UnicodeChar = (WCHAR)('a' + deduction->initialSquare / 8);
-				characters[7].Char.UnicodeChar = (WCHAR)('1' + deduction->initialSquare % 8);
+				characters[5].Char.UnicodeChar = toupper(symbols[deduction->initialGlyph]);
+				characters[6].Char.UnicodeChar = 'a' + (deduction->initialSquare / 8);
+				characters[7].Char.UnicodeChar = '1' + (deduction->initialSquare % 8);
 
 				if ((deduction->finalSquare != deduction->initialSquare) || (deduction->requiredMoves > 0))
 				{
 					characters[9].Char.UnicodeChar = '-';
 					characters[10].Char.UnicodeChar = '>';
 
-					characters[12].Char.UnicodeChar = (WCHAR)toupper(symbols[deduction->promotionGlyph]);
-					characters[13].Char.UnicodeChar = (WCHAR)('a' + deduction->finalSquare / 8);
-					characters[14].Char.UnicodeChar = (WCHAR)('1' + deduction->finalSquare % 8);
+					characters[12].Char.UnicodeChar = toupper(symbols[deduction->promotionGlyph]);
+					characters[13].Char.UnicodeChar = 'a' + (deduction->finalSquare / 8);
+					characters[14].Char.UnicodeChar = '1' + (deduction->finalSquare % 8);
 				}
 			}
 
@@ -220,21 +213,21 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 			if (deduction->numSquares > 1)
 			{
 				if (deduction->numSquares >= 10000)
-					characters[20].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 10000) % 10);
+					characters[20].Char.UnicodeChar = '0' + ((deduction->numSquares / 10000) % 10);
 				if (deduction->numSquares >= 1000)
-					characters[21].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 1000) % 10);
+					characters[21].Char.UnicodeChar = '0' + ((deduction->numSquares / 1000) % 10);
 				if (deduction->numSquares >= 100)
-					characters[22].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 100) % 10);
+					characters[22].Char.UnicodeChar = '0' + ((deduction->numSquares / 100) % 10);
 				if (deduction->numSquares >= 10)
-					characters[23].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 10) % 10);
+					characters[23].Char.UnicodeChar = '0' + ((deduction->numSquares / 10) % 10);
 				if (deduction->numSquares >= 1)
-					characters[24].Char.UnicodeChar = (WCHAR)('0' + (deduction->numSquares / 1) % 10);
+					characters[24].Char.UnicodeChar = '0' + ((deduction->numSquares / 1) % 10);
 
-				characters[20].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
-				characters[21].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
-				characters[22].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
-				characters[23].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
-				characters[24].Attributes = color ? colors::numBlackSquares : colors::numWhiteSquares;
+				characters[20].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				characters[21].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				characters[22].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				characters[23].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				characters[24].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
 			}
 
 			/* -- Print number of possible moves -- */
@@ -244,60 +237,57 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions *deductions)
 				int numExtraMoves = deduction->numMoves - deduction->requiredMoves;
 
 				if (numExtraMoves >= 10000)
-					characters[27].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 10000) % 10);
+					characters[27].Char.UnicodeChar = '0' + ((numExtraMoves / 10000) % 10);
 				if (numExtraMoves >= 1000)
-					characters[28].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 1000) % 10);
+					characters[28].Char.UnicodeChar = '0' + ((numExtraMoves / 1000) % 10);
 				if (numExtraMoves >= 100)
-					characters[29].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 100) % 10);
+					characters[29].Char.UnicodeChar = '0' + ((numExtraMoves / 100) % 10);
 				if (numExtraMoves >= 10)
-					characters[30].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 10) % 10);
+					characters[30].Char.UnicodeChar = '0' + ((numExtraMoves / 10) % 10);
 				if (numExtraMoves >= 1)
-					characters[31].Char.UnicodeChar = (WCHAR)('0' + (numExtraMoves / 1) % 10);
+					characters[31].Char.UnicodeChar = '0' + ((numExtraMoves / 1) % 10);
 
-				characters[27].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
-				characters[28].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
-				characters[29].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
-				characters[30].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
-				characters[31].Attributes = color ? colors::numBlackExtraMoves : colors::numWhiteExtraMoves;
+				characters[27].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+				characters[28].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+				characters[29].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+				characters[30].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+				characters[31].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
 			}
 
 
 			/* -- Move on -- */
 
-			characters += width / 2;
+			characters += _width / 2;
 		}
 	}
 
 	/* -- Output to screen -- */
 
-	COORD size = { (short)width, 16 };
-	COORD zero = { 0, 0 };
-	SMALL_RECT window = { 0, 8, (short)(width - 1), (short)(height - 1) };
-
-	WriteConsoleOutput(output, this->characters, size, zero, &window);
+	const COORD size = { _width, 16 };
+	const COORD zero = { 0, 0 };
+	SMALL_RECT window = { 0, 8, _width - 1, _height - 1 };
+	WriteConsoleOutput(_output, _characters, size, zero, &window);
 
 	Console::displayDeductions(deductions);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void WinConsole::write(const wchar_t *string, int x, int y, unsigned color)
+void WinConsole::write(const wchar_t *string, int x, int y, Color color) const
 {
-	DWORD written;
-	DWORD length = (DWORD)wcslen(string);
+	DWORD written = 0;
+	const COORD position = { x, y };
 
-	COORD position = { (SHORT)x, (SHORT)y };
-
-	SetConsoleTextAttribute(output, (WORD)color);
-	SetConsoleCursorPosition(output, position);
-	WriteConsole(output, string, length, &written, NULL);
+	SetConsoleTextAttribute(_output, color);
+	SetConsoleCursorPosition(_output, position);
+	WriteConsole(_output, string, wcslen(string), &written, NULL);
 
 	Console::write(string, x, y, color);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void WinConsole::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, unsigned color)
+void WinConsole::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const
 {
 	Console::write(string, maxLength, fillWithBlanks, x, y, color);
 }

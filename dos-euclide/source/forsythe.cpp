@@ -2,117 +2,51 @@
 #include "strings.h"
 
 /* -------------------------------------------------------------------------- */
-
-list<ForsytheSymbols> ForsytheString::symbols = ForsytheString::loadSymbols();
-
+/* -- ForsytheSymbols                                                      -- */
 /* -------------------------------------------------------------------------- */
 
-list<ForsytheSymbols> ForsytheString::loadSymbols()
+ForsytheSymbols::ForsytheSymbols(const wchar_t *symbols)
 {
-	return loadSymbols(strings::load(strings::Forsythe));
+	std::fill_n(_glyphs, countof(_glyphs), EUCLIDE_GLYPH_NONE);
+
+	assert(wcslen(symbols) >= 6);
+	_glyphs[toupper(symbols[0])] = EUCLIDE_GLYPH_WHITE_KING;
+	_glyphs[tolower(symbols[0])] = EUCLIDE_GLYPH_BLACK_KING;
+	_glyphs[toupper(symbols[1])] = EUCLIDE_GLYPH_WHITE_QUEEN;
+	_glyphs[tolower(symbols[1])] = EUCLIDE_GLYPH_BLACK_QUEEN;
+	_glyphs[toupper(symbols[2])] = EUCLIDE_GLYPH_WHITE_ROOK;
+	_glyphs[tolower(symbols[2])] = EUCLIDE_GLYPH_BLACK_ROOK;
+	_glyphs[toupper(symbols[3])] = EUCLIDE_GLYPH_WHITE_BISHOP;
+	_glyphs[tolower(symbols[3])] = EUCLIDE_GLYPH_BLACK_BISHOP;
+	_glyphs[toupper(symbols[4])] = EUCLIDE_GLYPH_WHITE_KNIGHT;
+	_glyphs[tolower(symbols[4])] = EUCLIDE_GLYPH_BLACK_KNIGHT;
+	_glyphs[toupper(symbols[5])] = EUCLIDE_GLYPH_WHITE_PAWN;
+	_glyphs[tolower(symbols[5])] = EUCLIDE_GLYPH_BLACK_PAWN;
 }
 
 /* -------------------------------------------------------------------------- */
+/* -- ForsytheString                                                       -- */
+/* -------------------------------------------------------------------------- */
 
-list<ForsytheSymbols> ForsytheString::loadSymbols(const char *symbols)
+ForsytheString::ForsytheString(const Strings& strings, const char *string, int numHalfMoves)
 {
-	list<ForsytheSymbols> list;
-	
-	while (symbols && (strlen(symbols) >= 6))
-	{
-		bool valid = true;
+	/* -- Reset problem -- */
 
-		for (int i = 0; i < 6; i++)
-			if (!isalpha(symbols[i]))
-				valid = false;
+	memset(&_problem, 0, sizeof(_problem));
+	_valid = false;
 
-		if (valid)
-			list.push_back(ForsytheSymbols(symbols));
+	/* -- Basic coherency checks -- */
 
-		symbols += 6;
-		if (*symbols)
-			symbols += 1;
-	}
-
-	return list;
-}
-
-/* -------------------------------------------------------------------------- */
-
-list<ForsytheSymbols> ForsytheString::loadSymbols(const wchar_t *symbols)
-{
-	auto_ptr<char> ansisymbols(new char[wcslen(symbols) + 1]);
-
-	int k;
-	for (k = 0; symbols[k]; k++)
-		ansisymbols.get()[k] = symbols[k] & 0x7F;
-
-	ansisymbols.get()[k] = '\0';
-
-	return loadSymbols(ansisymbols.get());
-}
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-ForsytheSymbols::ForsytheSymbols(const char *symbols)
-{
-	king = queen = rook = bishop = knight = pawn = '\0';
-
-	if (symbols)
-		if ((king = (char)toupper(symbols[0])) != '\0')
-			if ((queen = (char)toupper(symbols[1])) != '\0')
-				if ((rook = (char)toupper(symbols[2])) != '\0')
-					if ((bishop = (char)toupper(symbols[3])) != '\0')
-						if ((knight = (char)toupper(symbols[4])) != '\0')
-							pawn = (char)toupper(symbols[5]);
-}
-
-/* -------------------------------------------------------------------------- */
-
-EUCLIDE_Glyph ForsytheSymbols::operator[](char symbol) const
-{
-	if (toupper(symbol) == king)
-		return (symbol == king) ? EUCLIDE_GLYPH_WHITE_KING : EUCLIDE_GLYPH_BLACK_KING;
-
-	if (toupper(symbol) == queen)
-		return (symbol == queen) ? EUCLIDE_GLYPH_WHITE_QUEEN : EUCLIDE_GLYPH_BLACK_QUEEN;
-
-	if (toupper(symbol) == rook)
-		return (symbol == rook) ? EUCLIDE_GLYPH_WHITE_ROOK : EUCLIDE_GLYPH_BLACK_ROOK;
-
-	if (toupper(symbol) == bishop)
-		return (symbol == bishop) ? EUCLIDE_GLYPH_WHITE_BISHOP : EUCLIDE_GLYPH_BLACK_BISHOP;
-
-	if (toupper(symbol) == knight)
-		return (symbol == knight) ? EUCLIDE_GLYPH_WHITE_KNIGHT : EUCLIDE_GLYPH_BLACK_KNIGHT;
-
-	if (toupper(symbol) == pawn)
-		return (symbol == pawn) ? EUCLIDE_GLYPH_WHITE_PAWN : EUCLIDE_GLYPH_BLACK_PAWN;
-
-	return EUCLIDE_GLYPH_NONE;
-}
-
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-
-ForsytheString::ForsytheString(const char *string, int numHalfMoves)
-{
-	valid = false;
-
-	problem.numHalfMoves = numHalfMoves;
-	std::fill_n(problem.glyphs, 64, EUCLIDE_GLYPH_NONE);
-
-	if (numHalfMoves <= 0)
+	if (!string || (numHalfMoves <= 0))
 		return;
 
-	if (!string)
-		return;
+	/* -- Check multiple languages -- */
 
-	for (list<ForsytheSymbols>::const_iterator I = symbols.begin(); (I != symbols.end()) && !valid; I++)
+	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !_valid; symbols += 7)
 	{
-		const ForsytheSymbols symbols = *I;
-		const unsigned char *s = (const unsigned char *)string;
+		const ForsytheSymbols forsythe(symbols);
+
+		/* -- Parse Forsythe string -- */
 
 		int numWhiteKings = 0;
 		int numBlackKings = 0;
@@ -123,7 +57,7 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 		bool spaces = true;
 		bool valid = true;
 
-		while (*s && valid)
+		for (const char *s = string; *s && valid; s++)
 		{
 			if (isdigit(*s))
 			{
@@ -136,7 +70,7 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 				spaces = false;
 				column = 0;
 
-				if (row-- == 0)
+				if (!row--)
 					return;
 			}
 			else
@@ -148,7 +82,7 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 			else
 			if (isalpha(*s))
 			{
-				EUCLIDE_Glyph glyph = symbols[*s];
+				const EUCLIDE_Glyph glyph = forsythe[*s];
 
 				if (glyph == EUCLIDE_GLYPH_WHITE_KING)
 					numWhiteKings++;
@@ -163,28 +97,15 @@ ForsytheString::ForsytheString(const char *string, int numHalfMoves)
 				if (column > 7)
 					return;
 
-				problem.glyphs[8 * column + row] = glyph;
+				_problem.diagram[8 * column + row] = glyph;
 				column++;
 			}
-
-			s++;
 		}
 
 		if (valid && (numWhiteKings == 1) && (numBlackKings == 1))
-			this->valid = true;
+			_valid = true;
 	}
 }
 
-/* -------------------------------------------------------------------------- */
-
-ForsytheString::operator const EUCLIDE_Problem *() const
-{
-	if (!valid)
-		return NULL;
-
-	return &problem;
-}
-
-/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 

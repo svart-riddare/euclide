@@ -10,12 +10,11 @@ class Timer
 	public :
 		Timer();
 
-		operator double() const;
-		operator const wchar_t *() const;
-		
+		const wchar_t *elapsed() const;
+
 	private :
-		mutable wchar_t buffer[64];
-		clock_t start;
+		steady_clock::time_point _start;    /**< Starting time. */
+		mutable wchar_t _elapsed[64];       /**< Temporary buffer used to store elasped time as string. */
 };
 
 /* -------------------------------------------------------------------------- */

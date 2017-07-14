@@ -8,16 +8,13 @@
 class ForsytheSymbols
 {
 	public : 
-		ForsytheSymbols(const char *symbols);
-		EUCLIDE_Glyph operator[](char symbol) const;
+		ForsytheSymbols(const wchar_t *symbols);		
+
+		inline EUCLIDE_Glyph operator[](char symbol) const
+			{ return _glyphs[std::max('\0', symbol)]; }
 
 	private :
-		char king;
-		char queen;
-		char rook;
-		char bishop;
-		char knight;
-		char pawn;
+		EUCLIDE_Glyph _glyphs[CHAR_MAX + 1];    /**< Glyphs associated to characters. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -25,18 +22,17 @@ class ForsytheSymbols
 class ForsytheString
 {
 	public :
-		ForsytheString(const char *string, int numHalfMoves);
-		operator const EUCLIDE_Problem *() const;
+		ForsytheString(const Strings& strings, const char *string, int numHalfMoves);
+		
+	public :
+		inline operator const EUCLIDE_Problem *() const
+			{ return &_problem; }
+		inline bool operator!() const
+			{ return !_valid; }
 
 	private :
-		EUCLIDE_Problem problem;
-		bool valid;
-
-	private :
-		static list<ForsytheSymbols> symbols;
-		static list<ForsytheSymbols> loadSymbols();
-		static list<ForsytheSymbols> loadSymbols(const char *symbols);
-		static list<ForsytheSymbols> loadSymbols(const wchar_t *symbols);
+		EUCLIDE_Problem _problem;    /**< Problem description. */
+		bool _valid;                 /**< Set if the problem is valid. */
 };
 
 /* -------------------------------------------------------------------------- */

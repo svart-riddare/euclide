@@ -1,25 +1,20 @@
 #include "console.h"
-#include "colors.h"
-#include "strings.h"
 
 /* -------------------------------------------------------------------------- */
 
-Console::Console()
+Console::Console(const Strings& strings)
+	: _output(strings), _strings(strings), _width(0), _height(0), _valid(false), _abort(false)
 {
-	valid = false;
-	abort = false;
+	/* -- Initialize callbacks -- */
 
-	/* -- Initialize EUCLIDE_Callbacks structure -- */
+	memset(&_callbacks, 0, sizeof(_callbacks));
 
-	memset(&callbacks, 0, sizeof(callbacks));
-
-	callbacks.displayCopyright = _displayCopyright;
-	callbacks.displayProblem = _displayProblem;
-	callbacks.displayMessage = _displayMessage;
-	callbacks.displayProgress = _displayProgress;
-	callbacks.displayDeductions = _displayDeductions;
-
-	callbacks.handle = static_cast<EUCLIDE_Handle>(this);
+	_callbacks.displayCopyright = displayCopyrightCallback;
+	_callbacks.displayProblem = displayProblemCallback;
+	_callbacks.displayMessage = displayMessageCallback;
+	_callbacks.displayProgress = displayProgressCallback;
+	_callbacks.displayDeductions = displayDeductionsCallback;
+	_callbacks.handle = this;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -32,8 +27,8 @@ Console::~Console()
 
 void Console::reset()
 {
-	output.reset();
-	timer = Timer();
+	_output.reset();
+	_timer = Timer();
 	clear();
 }
 
@@ -47,7 +42,7 @@ void Console::clear()
 
 void Console::done()
 {
-	output.done();
+	_output.done();
 	wait();
 }
 
@@ -55,73 +50,75 @@ void Console::done()
 
 bool Console::wait()
 {
-	write(strings::load(strings::PressAnyKey), width - 1, true, 0, height - 1, colors::question);
-	return !abort;
+	write(_strings[Strings::PressAnyKey], _width - 1, true, 0, _height - 1, Colors::Question);
+	return !_abort;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayTimer()
+void Console::displayTimer() const
 {
 	wchar_t string[32];
-	swprintf(string, sizeof(string) / sizeof(string[0]), L"%16ls", (const wchar_t *)timer);
-	write(string, width - 17, 7, colors::timer);
+	swprintf(string, countof(string), L"%16ls", _timer.elapsed());
+	write(string, _width - 17, 7, Colors::Timer);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayError(const wchar_t *string)
+void Console::displayError(const wchar_t *string) const
 {
-	write(string, width - 10, true, 9, 4, colors::error);
+	write(string, _width - 10, true, 9, 4, Colors::Error);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayMessage(const wchar_t *string)
+void Console::displayMessage(const wchar_t *string) const
 {
-	write(string, width - 10, true, 9, 1, colors::standard);
+	write(string, _width - 10, true, 9, 1, Colors::Standard);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayCopyright(const wchar_t *copyright)
+void Console::displayCopyright(const wchar_t *copyright) const
 {
-	output.displayCopyright(copyright);
+	_output.displayCopyright(copyright);
 
-	int length = (int)wcslen(copyright);
-	int x = width - length - 1;
+	const int length = wcslen(copyright);
+	const int x = _width - length - 1;
 	if (x < 0)
 		return;
 
-	write(copyright, x, 0, colors::copyright);
+	write(copyright, x, 0, Colors::Copyright);
 	displayTimer();
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayMessage(EUCLIDE_Message message)
+void Console::displayMessage(EUCLIDE_Message message) const
 {
-	output.displayMessage(message);
+	_output.displayMessage(message);
 
-	displayMessage(strings::load(message));
+	displayMessage(_strings[message]);
 	displayTimer();
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayProblem(const EUCLIDE_Problem *problem)
+void Console::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	output.displayProblem(problem);
+	_output.displayProblem(problem);
+
+	/* -- Count number of pieces, by color -- */
 
 	int numWhitePieces = 0;
 	int numBlackPieces = 0;
 
 	for (int square = 0; square < 64; square++)
 	{
-		EUCLIDE_Glyph glyph = problem->glyphs[square];
+		EUCLIDE_Glyph glyph = problem.diagram[square];
 
-		bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
-		bool isBlackGlyph = ((glyph == EUCLIDE_GLYPH_BLACK_KING) || (glyph == EUCLIDE_GLYPH_BLACK_QUEEN) || (glyph == EUCLIDE_GLYPH_BLACK_ROOK) || (glyph == EUCLIDE_GLYPH_BLACK_BISHOP) || (glyph == EUCLIDE_GLYPH_BLACK_KNIGHT) || (glyph == EUCLIDE_GLYPH_BLACK_PAWN));
+		const bool isWhiteGlyph = ((glyph == EUCLIDE_GLYPH_WHITE_KING) || (glyph == EUCLIDE_GLYPH_WHITE_QUEEN) || (glyph == EUCLIDE_GLYPH_WHITE_ROOK) || (glyph == EUCLIDE_GLYPH_WHITE_BISHOP) || (glyph == EUCLIDE_GLYPH_WHITE_KNIGHT) || (glyph == EUCLIDE_GLYPH_WHITE_PAWN));
+		const bool isBlackGlyph = ((glyph == EUCLIDE_GLYPH_BLACK_KING) || (glyph == EUCLIDE_GLYPH_BLACK_QUEEN) || (glyph == EUCLIDE_GLYPH_BLACK_ROOK) || (glyph == EUCLIDE_GLYPH_BLACK_BISHOP) || (glyph == EUCLIDE_GLYPH_BLACK_KNIGHT) || (glyph == EUCLIDE_GLYPH_BLACK_PAWN));
 
 		if (isWhiteGlyph)
 			numWhitePieces++;
@@ -129,96 +126,70 @@ void Console::displayProblem(const EUCLIDE_Problem *problem)
 			numBlackPieces++;
 	}
 
-	const wchar_t *half = strings::load((problem->numHalfMoves & 1) ? strings::HalfMove : strings::NoHalfMove);
-	const wchar_t *moves = strings::load(strings::Moves);
+	/* -- Show number of half moves and number of pieces -- */
 
-	size_t length = 16 + wcslen(half) + wcslen(moves);
-	wchar_t *string = new wchar_t[length];
+	wchar_t string[32];
+
+	swprintf(string, countof(string), L"%d%ls%d %ls", problem.numHalfMoves / 2, _strings[Strings::Dot], 5 * (problem.numHalfMoves % 2), _strings[Strings::Moves]);
+	write(string, 32, true, 9, 7, Colors::Standard);
 	
-	swprintf(string, length, L"%d%ls %ls", problem->numHalfMoves / 2, half, moves);
-	write(string, 32, true, 9, 7, colors::standard);
+	swprintf(string, countof(string), L"(%d+%d)", numWhitePieces, numBlackPieces);
+	write(string, 16, true, 9, 6, Colors::Standard);
+
+	/* -- Show timer -- */
 	
-	swprintf(string, length, L"(%d+%d)", numWhitePieces, numBlackPieces);
-	write(string, 16, true, 9, 6, colors::standard);
 	displayTimer();
-
-	delete[] string;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity)
+void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const
 {
-	output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
+	_output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
 
 	wchar_t string[32];
 	
-	swprintf(string, sizeof(string) / sizeof(string[0]), L"%d - %d", whiteFreeMoves, blackFreeMoves);
-	write(string, 16, true, 11, 2, colors::freeMoves);
+	swprintf(string, countof(string), L"%d - %d", whiteFreeMoves, blackFreeMoves);
+	write(string, 16, true, 11, 2, Colors::FreeMoves);
 
-	swprintf(string, sizeof(string) / sizeof(string[0]), L"%.2f", complexity);
-	write(string, 16, true, 27, 2, colors::complexity);
+	swprintf(string, countof(string), L"%.2f", complexity);
+	write(string, 16, true, 27, 2, Colors::Complexity);
 
 	displayTimer();
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayDeductions(const EUCLIDE_Deductions *deductions)
+void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	output.displayDeductions(deductions);
+	_output.displayDeductions(deductions);
 
-	displayProgress(deductions->freeWhiteMoves, deductions->freeBlackMoves, deductions->complexity);
+	displayProgress(deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
 	displayTimer();
 }
 
 /* -------------------------------------------------------------------------- */
 
-Console::operator const EUCLIDE_Callbacks *() const
+void Console::open(const char *inputFileName)
 {
-	return &callbacks;
+	_output.open(inputFileName);
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Console::operator!() const
-{
-	return !valid || abort;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Console::operator<<(const char *inputName)
-{
-	output.open(inputName);
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Console::write(const wchar_t * /*string*/, int /*x*/, int /*y*/, unsigned /*color*/)
+void Console::write(const wchar_t * /*string*/, int /*x*/, int /*y*/, Color /*color*/) const
 {
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Console::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, unsigned color)
+void Console::write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const
 {
-	if (maxLength <= 0)
-		maxLength = (int)wcslen(string);
+	std::wstring text(string);
+	if (maxLength > 0)
+		text.resize(maxLength, fillWithBlanks ? ' ' : '\0');
 
-	int length = std::min((int)wcslen(string), maxLength);
-
-	wchar_t *text = new wchar_t[maxLength + 1];
-	wcsncpy(text, string, length);
-	text[maxLength] = '\0';
-	text[length] = '\0';
-
-	if (fillWithBlanks)
-		for (int k = length; k < maxLength; k++)
-			text[k] = ' ';
-
-	write(text, x, y, color);
-	delete[] text;
+	write(text.c_str(), x, y, color);
 }
 
 /* -------------------------------------------------------------------------- */

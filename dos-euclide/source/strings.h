@@ -3,61 +3,37 @@
 
 #include "includes.h"
 
-namespace strings
+/* -------------------------------------------------------------------------- */
+
+class Strings
 {
+	public:
+		typedef enum { PressAnyKey, NumTexts } Text;
+		typedef enum { NoArguments, InvalidArguments, InvalidInputFile, UserInterruption, NumErrors } Error;
+		typedef enum { ForsytheSymbols, GlyphSymbols, Moves, Dot, Input, Output, Score, NumStrings } String;		
 
-/* -------------------------------------------------------------------------- */
+	public:
+		Strings();
+		
+		inline const wchar_t *operator[](Text text) const
+			{ return _texts[text]; }
+		inline const wchar_t *operator[](Error error) const
+			{ return _errors[error]; }
+		inline const wchar_t *operator[](String string) const
+			{ return _strings[string]; } 
 
-typedef enum
-{
-	Forsythe,
-	GlyphSymbols,
-	Moves,
-	HalfMove,
-	NoHalfMove,
-	Input,
-	Output,
-	Score,
-	
-	NumTexts
+		inline const wchar_t *operator[](EUCLIDE_Status status) const
+			{ return _statuses[status]; }
+		inline const wchar_t *operator[](EUCLIDE_Message message) const
+			{ return _messages[message]; }
 
-} Text;
-
-/* -------------------------------------------------------------------------- */
-
-typedef enum
-{
-	NoArguments,
-	InvalidArguments,
-	InvalidInputFile,
-	UserInterruption,
-
-	NumErrors
-
-} Error;
-
-/* -------------------------------------------------------------------------- */
-
-typedef enum
-{
-	PressAnyKey,
-
-	NumMessages
-
-} Message;
-
-/* -------------------------------------------------------------------------- */
-
-const wchar_t *load(int stringId);
-const wchar_t *load(EUCLIDE_Status status);
-const wchar_t *load(EUCLIDE_Message message);
-const wchar_t *load(Text text);
-const wchar_t *load(Error error);
-const wchar_t *load(Message message);
-
-/* -------------------------------------------------------------------------- */
-
-}
+	private:
+		const wchar_t **_texts;           /**< Strings for each text defined above. */
+		const wchar_t **_errors;          /**< Strings for each error defined above. */
+		const wchar_t **_strings;         /**< Strings for each string defined above. */
+		const wchar_t **_statuses;        /**< Strings for Euclide statuses. */
+		const wchar_t **_messages;        /**< Strings for Euclide messages. */
+};
 
 /* -------------------------------------------------------------------------- */
 

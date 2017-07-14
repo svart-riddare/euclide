@@ -1,11 +1,9 @@
 #include "console-linux.h"
-#include "colors.h"
-#include "strings.h"
 #include <locale.h>
 
 /* -------------------------------------------------------------------------- */
 
-LinuxConsole::LinuxConsole()
+LinuxConsole::LinuxConsole(const Strings& strings)
 {
 	setlocale(LC_ALL, "");
 

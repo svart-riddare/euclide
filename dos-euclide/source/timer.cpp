@@ -4,36 +4,29 @@
 
 Timer::Timer()
 {
-	start = clock();
+	_start = steady_clock::now();
 }
 
 /* -------------------------------------------------------------------------- */
 
-Timer::operator double() const
+const wchar_t *Timer::elapsed() const
 {
-	return (double)(clock() - start) / CLOCKS_PER_SEC;
-}
+	const auto elapsed = duration_cast<milliseconds>(steady_clock::now() - _start);
 
-/* -------------------------------------------------------------------------- */
-
-Timer::operator const wchar_t *() const
-{
-	double elapsed = (double)(*this);
-
-	unsigned int hundreths = (unsigned int)floor(100.0 * modf(elapsed, &elapsed));
-	unsigned int seconds = (unsigned int)elapsed % 60;
-	unsigned int minutes = (unsigned int)floor(elapsed / 60.0) % 60;
-	unsigned int hours = (unsigned int)floor(elapsed / 3600.0);
+	const int thousandths = elapsed.count() % 1000;
+	const int seconds = (elapsed.count() / 1000) % 60;
+	const int minutes = (elapsed.count() / 60000) % 60;
+	const int hours = elapsed.count() / 3600000;
 
 	if (hours > 0)
-		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u:%02u:%02u.%02u", hours, minutes, seconds, hundreths);
-	else
+		swprintf(_elapsed, countof(_elapsed), L"%u:%02d:%02d.%03d", hours, minutes, seconds, thousandths);
+	else 
 	if (minutes > 0)
-		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u:%02u.%02u", minutes, seconds, hundreths);
+		swprintf(_elapsed, countof(_elapsed), L"%d:%02d.%03d", minutes, seconds, thousandths);
 	else
-		swprintf(buffer, sizeof(buffer) / sizeof(buffer[0]), L"%u.%02u", seconds, hundreths);
+		swprintf(_elapsed, countof(_elapsed), L"%d.%03d", seconds, thousandths);
 
-	return buffer;
+	return _elapsed;
 }
 
 /* -------------------------------------------------------------------------- */
