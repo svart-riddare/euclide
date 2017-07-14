@@ -1,15 +1,13 @@
-#include "constants.h"
+#include "includes.h"
 
-namespace euclide
+namespace Euclide
 { 
-namespace constants
-{
 
 /* -------------------------------------------------------------------------- */
 
-const wchar_t copyright[] = L"Euclide, \xA9" L"2000-2011, \xC9" L"tienne Dupuis";
+const wchar_t *Copyright = L"Euclide, \xA9" L"2000-2017, \xC9" L"tienne Dupuis";
 
 /* -------------------------------------------------------------------------- */
 
-}}
+}
 

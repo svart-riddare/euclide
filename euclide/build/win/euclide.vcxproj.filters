@@ -80,9 +80,6 @@
     <ClCompile Include="..\..\source\enumerations\strings.cpp">
       <Filter>Enumeration Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\constants\copyright.cpp">
-      <Filter>Constant Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\constants\infinity.cpp">
       <Filter>Constant Files</Filter>
     </ClCompile>
@@ -97,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="..\..\source\tables\obstruction-tables.cpp">
       <Filter>Table Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\copyright.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
