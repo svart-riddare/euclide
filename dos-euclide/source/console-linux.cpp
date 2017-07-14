@@ -140,7 +140,7 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 				{
 					mvaddch(y, x + 9, '-' | attribute);
 					mvaddch(y, x + 10, '>' | attribute);
-					mvaddch(y, x + 12, toupper(symbols[deduction.promotionGlyph]) | attribute);
+					mvaddch(y, x + 12, toupper(symbols[deduction.diagramGlyph]) | attribute);
 					mvaddch(y, x + 13, ('a' + deduction.finalSquare / 8) | attribute);
 					mvaddch(y, x + 14, ('1' + deduction.finalSquare % 8) | attribute);
 				}

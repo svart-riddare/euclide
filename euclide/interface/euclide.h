@@ -12,15 +12,16 @@ extern "C" {
 
 typedef enum
 {
-	EUCLIDE_STATUS_OK,         /**< One or more solutions found. */
-	EUCLIDE_STATUS_KO,         /**< No solutions found. */
-	EUCLIDE_STATUS_BUG,        /**< Unexpected bug. May only happen in debug builds. */
-	EUCLIDE_STATUS_NULL,       /**< Null pointer error. */
-	EUCLIDE_STATUS_ERROR,      /**< Unlikely system error. */
-	EUCLIDE_STATUS_MEMORY,     /**< Out of memory error. */
-	EUCLIDE_STATUS_INVALID,    /**< Invalid problem. */
+	EUCLIDE_STATUS_OK,               /**< One or more solutions found. */
+	EUCLIDE_STATUS_KO,               /**< No solutions found. */
+	EUCLIDE_STATUS_BUG,              /**< Unexpected bug. May only happen in debug builds. */
+	EUCLIDE_STATUS_NULL,             /**< Null pointer error. */
+	EUCLIDE_STATUS_ERROR,            /**< Unlikely system error. */
+	EUCLIDE_STATUS_MEMORY,           /**< Out of memory error. */
+	EUCLIDE_STATUS_INVALID,          /**< Invalid problem. */
+	EUCLIDE_STATUS_UNIMPLEMENTED,    /**< Unimplemented fairy piece or chess variant. */
 
-	EUCLIDE_NUM_STATUSES       /**< Number of different enumerated values. */
+	EUCLIDE_NUM_STATUSES             /**< Number of different enumerated values. */
 
 } EUCLIDE_Status;
 
@@ -28,22 +29,22 @@ typedef enum
 
 typedef enum
 {
-	EUCLIDE_GLYPH_NONE,
+	EUCLIDE_GLYPH_NONE,            /**< Empty square. */
 
-	EUCLIDE_GLYPH_WHITE_KING,
-	EUCLIDE_GLYPH_BLACK_KING,
-	EUCLIDE_GLYPH_WHITE_QUEEN,
-	EUCLIDE_GLYPH_BLACK_QUEEN,
-	EUCLIDE_GLYPH_WHITE_ROOK,
-	EUCLIDE_GLYPH_BLACK_ROOK,
-	EUCLIDE_GLYPH_WHITE_BISHOP,
-	EUCLIDE_GLYPH_BLACK_BISHOP,
-	EUCLIDE_GLYPH_WHITE_KNIGHT,
-	EUCLIDE_GLYPH_BLACK_KNIGHT,
-	EUCLIDE_GLYPH_WHITE_PAWN,
-	EUCLIDE_GLYPH_BLACK_PAWN,
+	EUCLIDE_GLYPH_WHITE_KING,      /**< White king symbol. Represents a standard king. */
+	EUCLIDE_GLYPH_BLACK_KING,      /**< Black king symbol. Represents a standard king. */
+	EUCLIDE_GLYPH_WHITE_QUEEN,     /**< White queen symbol. Represents a queen or a queen-like fairy piece. */
+	EUCLIDE_GLYPH_BLACK_QUEEN,     /**< Black queen symbol. Represents a queen or a queen-like fairy piece. */
+	EUCLIDE_GLYPH_WHITE_ROOK,      /**< White rook symbol. Represents a rook or a rook-like fairy piece. May castle with the king. */
+	EUCLIDE_GLYPH_BLACK_ROOK,      /**< Black rook symbol. Represents a rook or a rook-like fairy piece. May castle with the king. */
+	EUCLIDE_GLYPH_WHITE_BISHOP,    /**< White bishop symbol. Represents a bishop or a bishop-like fairy piece. */
+	EUCLIDE_GLYPH_BLACK_BISHOP,    /**< Black bishop symbol. Represents a bishop or a bishop-like fairy piece. */
+	EUCLIDE_GLYPH_WHITE_KNIGHT,    /**< White knight symbol. Represents a knight or a knight-like fairy piece. */
+	EUCLIDE_GLYPH_BLACK_KNIGHT,    /**< Black knight symbol. Represents a knight or a knight-like fairy piece. */
+	EUCLIDE_GLYPH_WHITE_PAWN,      /**< White pawn symbol. Represents a standard pawn. Promotes to any queen, rook, bishop or knight pieces upon reaching eight rank. */
+	EUCLIDE_GLYPH_BLACK_PAWN,      /**< Black pawn symbol. Represents a standard pawn. Promotes to any queen, rook, bishop or knight pieces upon reaching first rank. */
 
-	EUCLIDE_NUM_GLYPHS
+	EUCLIDE_NUM_GLYPHS             /**< Number of different glyphs. */
 
 } EUCLIDE_Glyph;
 
@@ -51,21 +52,21 @@ typedef enum
 
 typedef enum
 {
-	EUCLIDE_PIECE_NONE,
+	EUCLIDE_PIECE_NONE,           /**< No piece. */
 
 	/* -- Standard pieces -- */
 
-	EUCLIDE_PIECE_KING,
-	EUCLIDE_PIECE_QUEEN,
-	EUCLIDE_PIECE_ROOK,
-	EUCLIDE_PIECE_BISHOP,
-	EUCLIDE_PIECE_KNIGHT,
-	EUCLIDE_PIECE_PAWN,
+	EUCLIDE_PIECE_KING,           /**< Standard king. */
+	EUCLIDE_PIECE_QUEEN,          /**< Standard queen. */
+	EUCLIDE_PIECE_ROOK,           /**< Standard rook. */
+	EUCLIDE_PIECE_BISHOP,         /**< Standard bishop. */
+	EUCLIDE_PIECE_KNIGHT,         /**< Standard knight. */
+	EUCLIDE_PIECE_PAWN,           /**< Standard pawn. */
 
 	/* -- Fairy pieces -- */
 
-	EUCLIDE_PIECE_GRASSHOPPER,
-	EUCLIDE_PIECE_NIGHTRIDER,
+	EUCLIDE_PIECE_GRASSHOPPER,    /**< Grasshopper classic fairy piece. */
+	EUCLIDE_PIECE_NIGHTRIDER,     /**< Nighrider classic fairy piece. */
 
 	/* -- Knighted pieces -- */
 
@@ -88,7 +89,7 @@ typedef enum
 
 	/* -- Number of different pieces -- */
 	
-	EUCLIDE_NUM_PIECES
+	EUCLIDE_NUM_PIECES            /**< Number of different enumerated values. */
 
 } EUCLIDE_Piece;
 
@@ -96,7 +97,7 @@ typedef enum
 
 typedef enum
 {
-	EUCLIDE_VARIANT_NONE,              /**< Orthodoc chess. */
+	EUCLIDE_VARIANT_NONE,              /**< Orthodox chess. */
 
 	/* -- Move restriction variants -- */
 
@@ -111,7 +112,7 @@ typedef enum
 
 	/* -- Number of variants -- */
 
-	EUCLIDE_NUM_VARIANTS
+	EUCLIDE_NUM_VARIANTS               /**< Number of different variants. */
 
 } EUCLIDE_Variant;
 
@@ -122,7 +123,7 @@ typedef struct
 	EUCLIDE_Glyph initial[64];                   /**< Initial position. Standard initial position if board is empty. Squares are ordered as follow: A1, A2, ..., H7, H8. */
 	bool blackToMove;                            /**< If set, black should move first. */
 
-	EUCLIDE_Glyph diagram[64];                   /**< Target diagram position. Squares are ordered as follow: A1, A2, ..., H7, H8. */
+	EUCLIDE_Glyph diagram[64];                   /**< Target diagram position. Squares are ordered as follow: A1, A2, ..., H7, H8. No more than sixteen pieces of each color, including exactly one king. */
 	int numHalfMoves;                            /**< Number of half moves to reach diagram position from initial one. Zero is interpreted as unspecified. */
 
 	bool forbidWhiteKingSideCastling;            /**< White king side castling should be forbidden. */
@@ -148,29 +149,32 @@ typedef enum
 
 typedef struct
 {
-	EUCLIDE_Glyph initialGlyph;
-	EUCLIDE_Glyph promotionGlyph;
+	EUCLIDE_Glyph initialGlyph;           /**< Glyph, as given by user. */
+	EUCLIDE_Glyph diagramGlyph;           /**< Glyph after promotion, for pawns only, if known. */
 
-	int initialSquare;
-	int finalSquare;
+	int initialSquare;                    /**< Initial square, as given by user. A1 = 0, A2 = 1, ... */
+	int finalSquare;                      /**< Final square, if known, -1 otherwise. */
 	
-	int requiredMoves;
-	int numSquares;
-	int numMoves;
+	int requiredMoves;                    /**< Minimum number of moves required to reach final square, if known. */
+	int numSquares;                       /**< Number of different possible final squares for this piece. One if final square is known. */
+	int numMoves;                         /**< Number of different legal moves this piece may have performed on the board. At most number of required moves if the full path is known. */
 
-	bool captured;
+	bool captured;                        /**< Set if the piece has been captured and is no longer present on the board. */
 
 } EUCLIDE_Deduction;
 
 typedef struct
 {
-	EUCLIDE_Deduction whitePieces[16];
-	EUCLIDE_Deduction blackPieces[16];
+	EUCLIDE_Deduction whitePieces[16];    /**< White piece deductions. */
+	EUCLIDE_Deduction blackPieces[16];    /**< Black piece deductions. */
 
-	int freeWhiteMoves;
-	int freeBlackMoves;
+	int numWhitePieces;                   /**< Number of white pieces in above array. */
+	int numBlackPieces;                   /**< Number of black pieces in above array. */
 
-	double complexity;
+	int freeWhiteMoves;                   /**< Number of white moves not yet assigned to specific pieces. */
+	int freeBlackMoves;                   /**< Number of black moves not yet assigned to specific pieces. */
+
+	double complexity;                    /**< Abstract problem complexity. */
 
 } EUCLIDE_Deductions;
 
