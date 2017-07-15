@@ -40,7 +40,7 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 	if (!string || (numHalfMoves <= 0))
 		return;
 
-	/* -- Check multiple languages -- */
+	/* -- Check multiple languages for diagram description -- */
 
 	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !_valid; symbols += 7)
 	{
@@ -105,6 +105,10 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 		if (valid && (numWhiteKings == 1) && (numBlackKings == 1))
 			_valid = true;
 	}
+
+	/* -- Set number of moves -- */
+
+	_problem.numHalfMoves = numHalfMoves;
 }
 
 /* -------------------------------------------------------------------------- */

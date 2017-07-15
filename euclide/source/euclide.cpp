@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "problem.h"
 
 namespace Euclide
 {
@@ -21,6 +22,8 @@ class Euclide
 	private :
 		EUCLIDE_Configuration _configuration;    /**< Global configuration. */
 		EUCLIDE_Callbacks _callbacks;            /**< User defined callbacks. */
+
+		Problem _problem;                        /**< Current problem to solve. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -44,8 +47,14 @@ Euclide::~Euclide()
 
 void Euclide::solve(const EUCLIDE_Problem& problem)
 {
-	(void)(problem);
+	/* -- Display problem -- */
 
+	if (_callbacks.displayProblem)
+		(*_callbacks.displayProblem)(_callbacks.handle, &problem);
+
+	/* -- Reset solving state -- */
+
+	_problem = problem;
 	reset();
 }
 
@@ -79,8 +88,9 @@ EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configu
 	/* -- Create Euclide instance --  */
 
 	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(configuration ? *configuration : nullconfiguration, callbacks ? *callbacks : nullcallbacks)); } 
+	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
 	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
-	catch (EUCLIDE_Status status) { return status; }	
+	catch (EUCLIDE_Status status) { return status; }
 
 	/* -- Done -- */
 
@@ -96,6 +106,7 @@ EUCLIDE_Status EUCLIDE_problem(EUCLIDE_Handle euclide, const EUCLIDE_Problem *pr
 		return EUCLIDE_STATUS_NULL;
 
 	try { reinterpret_cast<Euclide::Euclide *>(euclide)->solve(*problem); }
+	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
 	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
 	catch (EUCLIDE_Status status) { return status; }	
 

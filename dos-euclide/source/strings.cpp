@@ -20,7 +20,7 @@ static const wchar_t *frenchErrors[] =
 static const wchar_t *frenchStrings[] =
 {
 	L"RDTFCP|KQRBNP|KDTLSB|RDTACP|KQRBSP",
-	L" RDTFCPrdtfcp",
+	L" RrDdTtFfCcPp",
 	L"coups",
 	L",",
 	L"Probl\xE8me analys\xE9 :",
@@ -71,7 +71,7 @@ static const wchar_t *englishErrors[] =
 static const wchar_t *englishStrings[] =
 {
 	L"KQRBNP|RDTFCP|KDTLSB|RDTACP|KQRBSP",
-	L" KQRBNPkqrbnp",
+	L" KkQqRrBbNnPp",
 	L"moves",
 	L".",
 	L"Input:",

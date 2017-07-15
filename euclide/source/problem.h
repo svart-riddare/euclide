@@ -3,7 +3,7 @@
 
 #include "includes.h"
 
-namespace euclide
+namespace Euclide
 {
 
 /* -------------------------------------------------------------------------- */
@@ -11,19 +11,22 @@ namespace euclide
 class Problem
 {
 	public :
-		Problem(const EUCLIDE_Problem *problem);
-
-		Glyph operator[](Square square) const;
-		
-		int moves(Color color) const;
-		int captures(Color color) const;
+		Problem();
+		Problem(const EUCLIDE_Problem& problem);
 
 	private :
-		Glyph glyphs[NumSquares];
-		int numHalfMoves;
+		array<Glyph, NumSquares> _initialPosition;    /**< Initial position. */
+		array<Glyph, NumSquares> _diagramPosition;    /**< Diagram position to be reached from the initial position. */
+		array<Piece, NumGlyphs> _pieces;              /**< Fairy pieces. */
+		Variant _variant;                             /**< Chess variant. */
+		
+		array<int, NumColors> _moves;                 /**< Available moves to reach the diagram position from the initial one. */
+		Color _turn;                                  /**< Whose side it is to move. */
 
-		int numWhiteMen;
-		int numBlackMen;
+		bool _forbidWhiteKingSideCastling;            /**< White castling with king rook is forbidden. */
+		bool _forbidWhiteQueenSideCastling;           /**< White castling with queen rook is forbidden. */
+		bool _forbidBlackKingSideCastling;            /**< Black castling with king rook is forbidden. */
+		bool _forbidBlackQueenSideCastling;           /**< Black castling with queen rook is forbidden. */
 };
 
 /* -------------------------------------------------------------------------- */

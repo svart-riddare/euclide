@@ -131,6 +131,7 @@ typedef struct
 	bool forbidWhiteQueenSideCastling;           /**< White queen side castling should be forbidden. */
 	bool forbidBlackQueenSideCastling;           /**< Black king side castling should be forbidden. */
 
+	EUCLIDE_Variant variant;                     /**< Chess variant. */
 	EUCLIDE_Piece pieces[EUCLIDE_NUM_GLYPHS];    /**< Fairy pieces. EUCLIDE_PIECE_NONE is replaced by the orthodox piece. Kings shall not be fairy. Promotion is restricted to these pieces. */
 
 } EUCLIDE_Problem;

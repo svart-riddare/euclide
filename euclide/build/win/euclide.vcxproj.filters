@@ -124,9 +124,6 @@
     <ClInclude Include="..\..\source\implications.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\includes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\moves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -140,9 +137,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\position.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\problem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\targets.h">
@@ -201,6 +195,15 @@
     </ClInclude>
     <ClInclude Include="..\..\source\utilities\vector.h">
       <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\definitions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\includes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\problem.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

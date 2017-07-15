@@ -261,12 +261,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\source\problem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\source\problem.cpp" />
     <ClCompile Include="..\..\source\tables\check-tables.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -306,6 +301,7 @@
     <ClInclude Include="..\..\source\constants\constants.h" />
     <ClInclude Include="..\..\source\constraints.h" />
     <ClInclude Include="..\..\source\debug.h" />
+    <ClInclude Include="..\..\source\definitions.h" />
     <ClInclude Include="..\..\source\destinations.h" />
     <ClInclude Include="..\..\source\enumerations\colors.h" />
     <ClInclude Include="..\..\source\enumerations\enumerations.h" />
