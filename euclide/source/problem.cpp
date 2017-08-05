@@ -39,9 +39,9 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	if (xstd::count(_initialPosition, BlackKing) != 1)
 		throw InvalidProblem;
 
-	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == White; }) > 16)
+	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == White; }) > MaxPieces)
 		throw InvalidProblem;
-	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == Black; }) > 16)
+	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == Black; }) > MaxPieces)
 		throw InvalidProblem;
 
 	/* -- Initialize diagram position -- */
