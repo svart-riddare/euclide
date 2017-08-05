@@ -81,13 +81,13 @@ void Output::done()
 
 void Output::displayCopyright(const wchar_t *copyright) const
 {
-	std::string hyphens(wcslen(copyright) + 6, '-');
+	std::wstring hyphens(wcslen(copyright) + 6, '-');
 
 	if (_file)
 	{
-		fwprintf(_file, L"%s\n", hyphens.c_str());
+		fwprintf(_file, L"%ls\n", hyphens.c_str());
 		fwprintf(_file, L"-- %ls --\n", copyright);
-		fwprintf(_file, L"%s\n", hyphens.c_str());
+		fwprintf(_file, L"%ls\n", hyphens.c_str());
 		fwprintf(_file, L"\n");
 		fflush(_file);
 	}
