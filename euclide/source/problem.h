@@ -17,7 +17,7 @@ class Problem
 	private :
 		array<Glyph, NumSquares> _initialPosition;    /**< Initial position. */
 		array<Glyph, NumSquares> _diagramPosition;    /**< Diagram position to be reached from the initial position. */
-		array<Piece, NumGlyphs> _pieces;              /**< Fairy pieces. */
+		array<Species, NumGlyphs> _pieces;            /**< Fairy pieces. */
 		Variant _variant;                             /**< Chess variant. */
 		
 		array<int, NumColors> _moves;                 /**< Available moves to reach the diagram position from the initial one. */

@@ -55,20 +55,20 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	/* -- Initialize fairy pieces -- */
 
 	for (int glyph = 0; glyph < NumGlyphs; glyph++)
-		_pieces[glyph] = static_cast<Piece>(problem.pieces[glyph]);
+		_pieces[glyph] = static_cast<Species>(problem.pieces[glyph]);
 
-	if (!xstd::all_of(_pieces, [](Piece piece) { return (piece >= 0) && (piece < NumPieces); }))
+	if (!xstd::all_of(_pieces, [](Species species) { return (species >= 0) && (species < NumSpecies); }))
 		throw InvalidProblem;
 
-	static const Piece nones[] = { None };
-	static const Piece kings[] = { King };
-	static const Piece queens[] = { Queen, Grasshopper, Amazon, Leo };
-	static const Piece rooks[] = { Rook, Empress, Pao };
-	static const Piece bishops[] = { Bishop, Princess, Vao };
-	static const Piece knights[] = { Knight, Nightrider, Alfil, Camel, Zebra, Mao };
-	static const Piece pawns[] = { Pawn };
+	static const Species nones[] = { None };
+	static const Species kings[] = { King };
+	static const Species queens[] = { Queen, Grasshopper, Amazon, Leo };
+	static const Species rooks[] = { Rook, Empress, Pao };
+	static const Species bishops[] = { Bishop, Princess, Vao };
+	static const Species knights[] = { Knight, Nightrider, Alfil, Camel, Zebra, Mao };
+	static const Species pawns[] = { Pawn };
 
-	static const struct { const Piece *pieces; int numPieces; } pieces[] = { 
+	static const struct { const Species *species; int numSpecies; } species[] = { 
 		{ nones, countof(nones) }, 
 		{ kings, countof(kings) }, { kings, countof(kings) }, 
 		{ queens, countof(queens) }, { queens, countof(queens) },
@@ -80,13 +80,13 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 
 	if (xstd::all(_pieces, None))
 		for (int glyph = 0; glyph < NumGlyphs; glyph++)
-			_pieces[glyph] = pieces[glyph].pieces[0];
+			_pieces[glyph] = species[glyph].species[0];
 
 	for (int glyph = 0; glyph < NumGlyphs; glyph++)
-		if (xstd::none(pieces[glyph].pieces, pieces[glyph].pieces + pieces[glyph].numPieces, _pieces[glyph]))
+		if (xstd::none(species[glyph].species, species[glyph].species + species[glyph].numSpecies, _pieces[glyph]))
 			throw InvalidProblem;
 
-	static const Piece unimplemented[] = { Grasshopper, Leo, Pao, Vao };
+	static const Species unimplemented[] = { Grasshopper, Leo, Pao, Vao };
 	for (int glyph = 0; glyph < NumGlyphs; glyph++)
 		if (xstd::any(unimplemented, unimplemented + countof(unimplemented), _pieces[glyph]))
 			throw UnimplementedFeature;

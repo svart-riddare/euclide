@@ -35,8 +35,8 @@ static inline Color color(Glyph glyph)
 /* -- Piece                                                                -- */
 /* -------------------------------------------------------------------------- */
 
-typedef enum { None, King, Queen, Rook, Bishop, Knight, Pawn, Grasshopper, Nightrider, Amazon, Empress, Princess, Alfil, Camel, Zebra, Leo, Pao, Vao, Mao, NumPieces } Piece;
-static_assert(NumPieces == EUCLIDE_NUM_PIECES);
+typedef enum { None, King, Queen, Rook, Bishop, Knight, Pawn, Grasshopper, Nightrider, Amazon, Empress, Princess, Alfil, Camel, Zebra, Leo, Pao, Vao, Mao, NumSpecies } Species;
+static_assert(NumSpecies == EUCLIDE_NUM_PIECES);
 
 /* -------------------------------------------------------------------------- */
 /* -- Variant                                                              -- */
