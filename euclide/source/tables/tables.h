@@ -1,13 +1,19 @@
 #ifndef __EUCLIDE_TABLES_H
 #define __EUCLIDE_TABLES_H
 
-#include "../enumerations/enumerations.h"
-#include <utility>
+#include "../includes.h"
 
-namespace euclide
+namespace Euclide
 {
-namespace tables
+namespace Tables
 {
+
+/* -------------------------------------------------------------------------- */
+
+void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant);
+
+
+#if 0
 
 /* -------------------------------------------------------------------------- */
 /* -- The movements table lists all legal moves (source square, destination
@@ -72,6 +78,8 @@ extern const Constraints constraints[NumGlyphs][NumSquares][NumSquares];
 extern const bool checks[NumSquares][NumGlyphs][NumSquares];
 
 /* -------------------------------------------------------------------------- */
+
+#endif
 
 }}
 

@@ -10,10 +10,10 @@
 #ifndef BOOST_LOGIC_TRIBOOL_HPP
 #define BOOST_LOGIC_TRIBOOL_HPP
 
-#define BOOST_CONSTEXPR
-#define BOOST_NOEXCEPT
+#define BOOST_CONSTEXPR constexpr
+#define BOOST_NOEXCEPT noexcept
 
-#include "tribool_fwd.hpp"
+namespace boost { namespace logic { class tribool; } }
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #  pragma once

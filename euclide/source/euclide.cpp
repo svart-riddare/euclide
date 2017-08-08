@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "problem.h"
+#include "pieces.h"
 
 namespace Euclide
 {
@@ -19,11 +20,18 @@ class Euclide
 	protected :
 		void reset();
 
-	private :
-		EUCLIDE_Configuration _configuration;    /**< Global configuration. */
-		EUCLIDE_Callbacks _callbacks;            /**< User defined callbacks. */
+		const EUCLIDE_Deductions& deductions() const;
 
-		Problem _problem;                        /**< Current problem to solve. */
+	private :
+		EUCLIDE_Configuration _configuration;      /**< Global configuration. */
+		EUCLIDE_Callbacks _callbacks;              /**< User defined callbacks. */
+
+		Problem _problem;                          /**< Current problem to solve. */
+
+		array<Pieces, NumColors> _pieces;          /**< Deductions on pieces. */
+
+	private :
+		mutable EUCLIDE_Deductions _deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -56,12 +64,79 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	_problem = problem;
 	reset();
+
+	/* -- Display analysis message -- */
+
+	if (_callbacks.displayMessage)
+		(*_callbacks.displayMessage)(_callbacks.handle, EUCLIDE_MESSAGE_ANALYZING);
+
+	/* -- Initialize pieces -- */
+
+	for (Glyph glyph : MostGlyphs())
+		for (Square square : AllSquares())
+			if (_problem.initialPosition(square) == glyph)
+				_pieces[color(glyph)].emplace_back(_problem, square);
+
+	/* -- Display current deductions -- */
+
+	if (_callbacks.displayDeductions)
+		(*_callbacks.displayDeductions)(_callbacks.handle, &deductions());
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Euclide::reset()
 {
+	_pieces[White].clear();
+	_pieces[Black].clear();
+}
+
+/* -------------------------------------------------------------------------- */
+
+const EUCLIDE_Deductions& Euclide::deductions() const
+{
+	memset(&_deductions, 0, sizeof(_deductions));
+
+	const int pieces[NumColors] = {
+		_deductions.numWhitePieces = std::min(_pieces[White].size(), countof(_deductions.whitePieces)),
+		_deductions.numBlackPieces = std::min(_pieces[Black].size(), countof(_deductions.blackPieces))
+	};
+
+	_deductions.freeWhiteMoves = _problem.moves(White) - xstd::sum(_pieces[White], 0, [](const Piece& piece) { return piece.requiredMoves(); });
+	_deductions.freeBlackMoves = _problem.moves(Black) - xstd::sum(_pieces[Black], 0, [](const Piece& piece) { return piece.requiredMoves(); });
+
+	if ((_deductions.freeWhiteMoves < 0) || (_deductions.freeBlackMoves < 0))
+		throw NoSolution;
+
+	_deductions.complexity += std::log(1.0 + _deductions.freeWhiteMoves);
+	_deductions.complexity += std::log(1.0 + _deductions.freeBlackMoves);
+
+	for (Color color : AllColors())
+	{
+		for (int k = 0; k < pieces[color]; k++)
+		{
+			EUCLIDE_Deduction& deduction = color ? _deductions.blackPieces[k] : _deductions.whitePieces[k];
+			const Piece& piece = _pieces[color][k];
+
+			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph(true));
+			deduction.diagramGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
+
+			deduction.initialSquare = static_cast<int>(piece.square(true));
+			deduction.finalSquare = static_cast<int>(piece.square());
+
+			deduction.requiredMoves = piece.requiredMoves();
+			deduction.numSquares = piece.squares().count();
+			deduction.numMoves = piece.moves();
+
+			deduction.captured = false;
+
+			_deductions.complexity += std::log(0.0 + deduction.numSquares);
+			_deductions.complexity += std::log(0.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
+		}
+	}
+
+	_deductions.complexity *= (1.0 / std::log(2.0));
+	return _deductions;
 }
 
 /* -------------------------------------------------------------------------- */

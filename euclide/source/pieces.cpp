@@ -1,10 +1,128 @@
 #include "pieces.h"
-#include "moves.h"
-#include "hashtables.h"
-#include "obstructions.h"
+#include "problem.h"
+#include "tables/tables.h"
 
-namespace euclide
+namespace Euclide
 {
+
+/* -------------------------------------------------------------------------- */
+
+Piece::Piece(const Problem& problem, Square square)
+{
+	assert(problem.initialPosition(square));
+
+	/* -- Piece characteristics -- */
+
+	_glyph = problem.initialPosition(square);
+	_color = Euclide::color(_glyph);
+	_species = problem.piece(_glyph);
+
+	_royal = (_species == King);
+
+	/* -- Initial square is known, final square not -- */
+
+	_initialSquare = square;
+	_finalSquare = Nowhere;
+
+	/* -- Has the piece been captured? -- */
+
+	_captured = (_royal || !problem.capturedPieces(_color)) ? tribool(false) : unknown;
+
+	/* -- Initialize legal moves -- */
+
+	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant());
+
+	/* -- Compute initial distances and perform basic initial deductions -- */
+
+	_availableMoves = problem.moves(_color);
+	_availableCaptures = problem.diagramPieces(_color) - problem.initialPieces(_color);
+
+	_distances = computeDistances(_initialSquare);
+	_captures.fill(0);
+
+	for (Square square : AllSquares())
+		if (_distances[square] <= _availableMoves)
+			_possibleSquares[square] = true;
+
+	if (_availableCaptures)
+		_possibleCaptures.set();
+
+	/* -- Restrict possible final squares if the piece was not captured -- */
+
+	if (!_captured)
+		for (Square square : AllSquares())
+			if (problem.diagramPosition(square) != _glyph)
+				_possibleSquares.reset(square);
+
+	/* -- Are there any possible final squares left? -- */
+
+	if (!_possibleSquares)
+		throw NoSolution;
+
+	if (_possibleSquares.count() == 1)
+		_finalSquare = _possibleSquares.first();
+
+	/* -- Compute minimum number of moves and captures performed by this piece -- */
+
+	_requiredMoves = _distances[*xstd::min_element(ValidSquares(_possibleSquares), [&](Square squareA, Square squareB) { return _distances[squareA] < _distances[squareB]; })];
+	_requiredCaptures = _captures[*xstd::min_element(ValidSquares(_possibleSquares), [&](Square squareA, Square squareB) { return _captures[squareA] < _captures[squareB]; })];
+}
+
+/* -------------------------------------------------------------------------- */
+
+Piece::~Piece()
+{
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeDistances(Square square) const
+{
+	/* -- Initialize distances -- */
+
+	array<int, NumSquares> distances;
+	distances.fill(Infinity);
+	distances[square] = 0;
+	
+	/* -- Initialize square queue -- */
+
+	std::queue<Square> squares;
+	squares.push(square);
+	
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square from = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square to : ValidSquares(_moves[from]))
+		{
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[to] < Infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[to] = distances[from] + 1;
+	
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(to);
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
+}
+
+/* -------------------------------------------------------------------------- */
+
+
+#if 0
 
 /* -------------------------------------------------------------------------- */
 
@@ -2011,5 +2129,7 @@ tribool Piece::alive(bool final) const
 }
 
 /* -------------------------------------------------------------------------- */
+
+#endif
 
 }

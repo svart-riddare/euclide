@@ -2,31 +2,24 @@
 #define __EUCLIDE_PIECES_H
 
 #include "includes.h"
-#include "moves.h"
-#include "hashtables.h"
 
-namespace euclide
+namespace Euclide
 {
 
-class Obstructions;
+class Problem;
 
 /* -------------------------------------------------------------------------- */
-
-/**
- * \class Piece
- * Representation of the legal/valid moves of a given piece. The list of valid
- * moves may not contain all legal moves if the solving engine finds that the
- * problem contraints prevent some legal moves from being played during the game.
- */
-
+/* -- class Piece                                                          -- */
 /* -------------------------------------------------------------------------- */
 
 class Piece
 {
 	public :
-		Piece(Superman superman, Color color, int moves);
+		Piece(const Problem& problem, Square square);
 		~Piece();
 
+
+#if 0
 		int distance(Square square) const;
 		int captures(Square square) const;
 		int rdistance(Square square) const;
@@ -56,17 +49,32 @@ class Piece
 
 		void optimize();
 		bool constrain();
-
+#endif
 	public :
-		inline Man man() const
-			{ return _superman.man(); }
-		inline Superman superman() const
-			{ return _superman; }
-		inline Glyph glyph() const
+		inline Glyph glyph(bool initial = false) const
 			{ return _glyph; }
 		inline Color color() const
 			{ return _color; }
+		inline Species species() const
+			{ return _species; }
 
+		inline Square square(bool initial = false) const
+			{ return initial ? _initialSquare : _finalSquare; }
+		inline Squares squares() const
+			{ return _possibleSquares; }
+
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
+
+		inline int moves() const
+			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
+
+	protected :
+		array<int, NumSquares> computeDistances(Square square) const;
+
+#if 0
 	public :
 		inline int earliest() const
 			{ return _earliest; }
@@ -118,15 +126,38 @@ class Piece
 			{ return !move->possible(); }
 		static inline bool isMoveEarlier(const Move *moveA, const Move *moveB, const Piece& piece)
 			{ return piece.distance(moveA->from()) < piece.distance(moveB->from()); }
+#endif
 
 	private :
+		Glyph _glyph;                         /**< Piece's glyph. */
+		Color _color;                         /**< Piece's color, implicit from glyph. */
+		Species _species;                     /**< Piece type. */
+
+		bool _royal;                          /**< A royal piece (the king) can not be captured and may not be left in check. */
+
+		Square _initialSquare;                /**< Piece's initial square. */
+		Square _finalSquare;                  /**< Piece's final square, if known. */
+
+		tribool _captured;                    /**< Set if the piece has been captured. */
+
+		Squares _possibleSquares;             /**< Possible final squares of this piece. */
+		Squares _possibleCaptures;            /**< Possible captures made by this piece. */
+		int _availableMoves;                  /**< Number of moves available for this piece. */
+		int _availableCaptures;               /**< Number of captures available for this piece. */
+		int _requiredMoves;                   /**< Minimum number of moves required by this piece. */
+		int _requiredCaptures;                /**< Minimum number of captures performed by this piece. */
+
+		array<int, NumSquares> _distances;    /**< Number of moves required to reach each square. */
+		array<int, NumSquares> _captures;     /**< Number of captures required to reach each square. */
+
+		array<Squares, NumSquares> _moves;    /**< Set of legal moves. */
+
+
+
+#if 0
 		Move _movements[NumSquares][NumSquares];               /**< All piece movements, one for each departure and arrival square. */
 		Move _imovements[NumSquares][2];                       /**< Incomplete movemvents, one for each departure and arrival square. */
 		Moves _moves;                                          /**< Possible piece movements. */
-
-		Superman _superman;                                    /**< Piece type. */
-		Glyph _glyph;                                          /**< Piece's figure. */
-		Color _color;                                          /**< Piece's color. */
 
 		Square _initial;                                       /**< Piece's initial square (promotion square for promoted pieces). */
 		Square _xinitial;                                      /**< Piece's alternative initial square (for rooks which have performed castling). */
@@ -148,11 +179,6 @@ class Piece
 
 		Squares _squares;                                      /**< List of squares that can be reached by the moving piece. */
 
-		Squares _possibleSquares;                              /**< List of possible final squares for this piece. */
-		Squares _possibleCaptures;                             /**< List of possible squares for captures made by this piece. */
-		int _availableMoves;                                   /**< Number of available moves for this piece. */
-		int _availableCaptures;                                /**< Number of available captures for this piece. */
-
 		int _earliest;                                         /**< Earliest move for this piece, counting from 1. May be undefined if piece has not moved. */
 		int _latest;                                           /**< Latest move for this piece, counting from 1. May be undefined if piece has not moved. */
 
@@ -160,7 +186,14 @@ class Piece
 
 		Obstructions *_obstructions[NumSquares][NumGlyphs];    /**< Obstruction tables, one for each blocked square for each figure type. */
 		Glyphs _validObstructions;                             /**< If true for a given figure, the obstrution table if unique for that figure; otherwise it points on the generic obstruction table. */
+#endif
 };
+
+/* -------------------------------------------------------------------------- */
+/* -- class Pieces                                                         -- */
+/* -------------------------------------------------------------------------- */
+
+typedef std::vector<Piece> Pieces;
 
 /* -------------------------------------------------------------------------- */
 

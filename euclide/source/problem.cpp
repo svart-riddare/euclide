@@ -24,7 +24,7 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		{ BlackPawn, A7 }, { BlackPawn, B7 }, { BlackPawn, C7 }, { BlackPawn, D7 }, { BlackPawn, E7 }, { BlackPawn, F7 }, { BlackPawn, G7 }, { BlackPawn, H7 }
 	};
 
-	for (int square = 0; square < NumSquares; square++)
+	for (Square square : AllSquares())
 		_initialPosition[square] = static_cast<Glyph>(problem.initial[square]);
 
 	if (!xstd::all_of(_initialPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
@@ -39,14 +39,9 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	if (xstd::count(_initialPosition, BlackKing) != 1)
 		throw InvalidProblem;
 
-	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == White; }) > MaxPieces)
-		throw InvalidProblem;
-	if (xstd::count_if(_initialPosition, [](Glyph glyph) { return color(glyph) == Black; }) > MaxPieces)
-		throw InvalidProblem;
-
 	/* -- Initialize diagram position -- */
 
-	for (int square = 0; square < NumSquares; square++)
+	for (Square square : AllSquares())
 		_diagramPosition[square] = static_cast<Glyph>(problem.diagram[square]);
 
 	if (!xstd::all_of(_diagramPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
@@ -54,7 +49,7 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 
 	/* -- Initialize fairy pieces -- */
 
-	for (int glyph = 0; glyph < NumGlyphs; glyph++)
+	for (Glyph glyph : AllGlyphs())
 		_pieces[glyph] = static_cast<Species>(problem.pieces[glyph]);
 
 	if (!xstd::all_of(_pieces, [](Species species) { return (species >= 0) && (species < NumSpecies); }))
@@ -82,12 +77,12 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		for (int glyph = 0; glyph < NumGlyphs; glyph++)
 			_pieces[glyph] = species[glyph].species[0];
 
-	for (int glyph = 0; glyph < NumGlyphs; glyph++)
+	for (Glyph glyph : AllGlyphs())
 		if (xstd::none(species[glyph].species, species[glyph].species + species[glyph].numSpecies, _pieces[glyph]))
 			throw InvalidProblem;
 
 	static const Species unimplemented[] = { Grasshopper, Leo, Pao, Vao };
-	for (int glyph = 0; glyph < NumGlyphs; glyph++)
+	for (Glyph glyph : AllGlyphs())
 		if (xstd::any(unimplemented, unimplemented + countof(unimplemented), _pieces[glyph]))
 			throw UnimplementedFeature;
 
@@ -127,6 +122,16 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		_forbidBlackKingSideCastling = true;
 	if ((_initialPosition[E8] != BlackKing) || (_initialPosition[A1] != BlackRook))
 		_forbidBlackQueenSideCastling = true;
+
+	/* -- Count number of pieces in diagrams -- */
+
+	for (Color color : AllColors())
+		if ((_initialPieces[color] = xstd::count_if(_initialPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > MaxPieces)
+			throw InvalidProblem;
+
+	for (Color color : AllColors())
+		if ((_diagramPieces[color] = xstd::count_if(_diagramPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > _initialPieces[color])
+			throw InvalidProblem;
 }
 
 /* -------------------------------------------------------------------------- */
