@@ -29,6 +29,7 @@ class Euclide
 		Problem _problem;                          /**< Current problem to solve. */
 
 		array<Pieces, NumColors> _pieces;          /**< Deductions on pieces. */
+		array<int, NumColors> _freeMoves;          /**< Unassigned moves. */
 
 	private :
 		mutable EUCLIDE_Deductions _deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
@@ -77,10 +78,29 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			if (_problem.initialPosition(square) == glyph)
 				_pieces[color(glyph)].emplace_back(_problem, square);
 
-	/* -- Display current deductions -- */
+	/* -- Repeat the following deductions until there is no improvements -- */
 
-	if (_callbacks.displayDeductions)
-		(*_callbacks.displayDeductions)(_callbacks.handle, &deductions());
+	for (bool update = true; update; )
+	{
+		update = false;
+
+		/* -- Compute free moves and captures -- */
+
+		for (Color color : AllColors())
+			_freeMoves[color] = _problem.moves(color) - xstd::sum(_pieces[color], 0, [](const Piece& piece) { return piece.requiredMoves(); });
+
+		/* -- Display current deductions -- */
+
+		if (_callbacks.displayDeductions)
+			(*_callbacks.displayDeductions)(_callbacks.handle, &deductions());
+
+		/* -- Assign free moves -- */
+
+		for (Color color : AllColors())
+			for (Piece& piece : _pieces[color])
+				if (piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color]))
+					update = true;
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -102,8 +122,8 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 		_deductions.numBlackPieces = std::min(_pieces[Black].size(), countof(_deductions.blackPieces))
 	};
 
-	_deductions.freeWhiteMoves = _problem.moves(White) - xstd::sum(_pieces[White], 0, [](const Piece& piece) { return piece.requiredMoves(); });
-	_deductions.freeBlackMoves = _problem.moves(Black) - xstd::sum(_pieces[Black], 0, [](const Piece& piece) { return piece.requiredMoves(); });
+	_deductions.freeWhiteMoves = _freeMoves[White];
+	_deductions.freeBlackMoves = _freeMoves[Black];
 
 	if ((_deductions.freeWhiteMoves < 0) || (_deductions.freeBlackMoves < 0))
 		throw NoSolution;
@@ -131,7 +151,7 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 			deduction.captured = false;
 
 			_deductions.complexity += std::log(0.0 + deduction.numSquares);
-			_deductions.complexity += std::log(0.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
+			_deductions.complexity += std::log(1.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
 		}
 	}
 

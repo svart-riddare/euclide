@@ -14,6 +14,7 @@
 #include <array>
 #include <algorithm>
 #include <bitset>
+#include <functional>
 #include <iterator>
 #include <new>
 #include <numeric>

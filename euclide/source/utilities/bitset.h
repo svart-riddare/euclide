@@ -2,6 +2,7 @@
 #define __EUCLIDE_BITSET_H
 
 #include "../includes.h"
+#include "iterator.h"
 #include <intrin.h>
 
 namespace Euclide
@@ -35,13 +36,13 @@ class BitSet
 
 		template <typename Predicate> inline
 		BitSet& set(const Predicate& predicate, bool value = true)
-			{ for (Type position : EnumRange<Type, Bits>) if (Predicate(position)) set(position, value); return *this; }
+			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) set(position, value); return *this; }
 		template <typename Predicate> inline
 		BitSet& reset(const Predicate& predicate)
-			{ for (Type position : EnumRange<Type, Bits>) if (Predicate(position)) reset(position); return *this; }
+			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) reset(position); return *this; }
 		template <typename Predicate> inline
 		BitSet& flip(const Predicate& predicate)
-			{ for (Type position : EnumRange<Type, Bits>) if (Predicate(position)) flip(position); return *this; }
+			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) flip(position); return *this; }
 
 	public :
 		inline bool test(Type position) const

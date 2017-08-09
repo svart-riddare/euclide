@@ -18,6 +18,8 @@ class Piece
 		Piece(const Problem& problem, Square square);
 		~Piece();
 
+		bool setAvailableMoves(int availableMoves);
+
 
 #if 0
 		int distance(Square square) const;
@@ -72,6 +74,9 @@ class Piece
 			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
 
 	protected :
+		void updateDeductions();
+		void updatePossibleMoves();
+
 		array<int, NumSquares> computeDistances(Square square) const;
 
 #if 0
