@@ -102,29 +102,16 @@ void Piece::updateDeductions()
 
 void Piece::updatePossibleMoves()
 {
-	array<Squares, NumSquares> moves;
+	/* -- Compute distances to closest possible final squares -- */
 
-	/* -- Recursive function used to try every possible path -- */
+	const array<int, NumSquares> distances = computeDistancesTo(_possibleSquares);
 
-	std::function<bool(Square, int)>
-	recursive = [&](Square from, int remainingMoves) -> bool
-	{
-		bool valid = _possibleSquares[from];
+	/* -- Eliminate moves that will never be used -- */
 
-		if (remainingMoves)
-			for (Square to : ValidSquares(_moves[from]))
-				if (recursive(to, remainingMoves - 1))
-					moves[from][to] = valid = true;
-
-		return valid;
-	};
-
-	recursive(_initialSquare, _availableMoves);
-
-	/* -- Remove useless moves -- */
-
-	for (Square square : AllSquares())
-		_moves[square] &= moves[square];
+	for (Square from : AllSquares())
+		for (Square to : ValidSquares(_moves[from]))
+			if (_distances[from] + 1 + distances[to] > _availableMoves)
+				_moves[from][to] = false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -172,7 +159,55 @@ array<int, NumSquares> Piece::computeDistances(Square square) const
 	return distances;
 }
 
+/* -------------------------------------------------------------------------- */
 
+array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
+{
+	/* -- Initialize distances and square queue -- */
+
+	array<int, NumSquares> distances;
+	std::queue<Square> squares;
+
+	distances.fill(Infinity);
+
+	for (Square square : AllSquares())
+		if ((distances[square] = destinations[square] ? 0 : Infinity) == 0)
+			squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square to = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square from : AllSquares())
+		{
+			/* -- Skip illegal moves -- */
+
+			if (!_moves[from][to])
+				continue;
+
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[from] < Infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[from] = distances[to] + 1;
+	
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(from);
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
+}
 
 
 #if 0

@@ -78,6 +78,7 @@ class Piece
 		void updatePossibleMoves();
 
 		array<int, NumSquares> computeDistances(Square square) const;
+		array<int, NumSquares> computeDistancesTo(Squares squares) const;
 
 #if 0
 	public :
