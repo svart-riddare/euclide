@@ -15,7 +15,7 @@ class Output
 		void open(const char *inputFileName);
 
 		void reset();
-		void done();
+		void done(EUCLIDE_Status status);
 
 		void displayCopyright(const wchar_t *copyright) const;
 		void displayMessage(EUCLIDE_Message message) const;

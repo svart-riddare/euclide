@@ -17,7 +17,7 @@ class Console
 
 		virtual void reset();
 		virtual void clear();
-		virtual void done();
+		virtual void done(EUCLIDE_Status status);
 		virtual bool wait();
 
 		virtual void displayTimer() const;

@@ -26,13 +26,13 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 
 	/* -- Solve problem -- */
 
-	EUCLIDE_Status status = EUCLIDE_solve(nullptr, problem, console);
+	const EUCLIDE_Status status = EUCLIDE_solve(nullptr, problem, console);
 	if (status != EUCLIDE_STATUS_OK)
 		console.displayError(strings[status]);
 
 	/* -- Done -- */
 
-	console.done();
+	console.done(status);
 	return true;
 }
 

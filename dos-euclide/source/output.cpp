@@ -67,12 +67,15 @@ void Output::reset()
 
 /* -------------------------------------------------------------------------- */
 
-void Output::done()
+void Output::done(EUCLIDE_Status status)
 {
 	if (_file)
 	{
 		fwprintf(_file, L"%ls\n", _strings[Strings::Output]);
-		fwprintf(_file, L"\t%ls %.2f\n", _strings[Strings::Score], _complexity);
+		if (status != EUCLIDE_STATUS_OK)
+			fwprintf(_file, L"\t%ls\n", _strings[status]);
+		else
+			fwprintf(_file, L"\t%ls %.2f\n", _strings[Strings::Score], _complexity);
 		fwprintf(_file, L"\n\n");
 	}
 }

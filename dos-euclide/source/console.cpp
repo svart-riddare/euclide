@@ -40,9 +40,9 @@ void Console::clear()
 
 /* -------------------------------------------------------------------------- */
 
-void Console::done()
+void Console::done(EUCLIDE_Status status)
 {
-	_output.done();
+	_output.done(status);
 	wait();
 }
 
