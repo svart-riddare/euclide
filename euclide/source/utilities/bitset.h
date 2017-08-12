@@ -180,16 +180,44 @@ class BitSet
 						Type _position;
 				};
 
+				class ConstBitSetIterator : public std::iterator<std::forward_iterator_tag, Type>
+				{
+					public :
+						ConstBitSetIterator() : _bits(0), _position(Bits) {}
+						ConstBitSetIterator(const BitSet& bitset) : _bits(bitset) { operator++(); }
+
+					public :
+						inline bool operator==(const ConstBitSetIterator& iterator) const
+							{ return _position == iterator._position; }
+						inline bool operator!=(const ConstBitSetIterator& iterator) const
+							{ return _position != iterator._position; }
+
+						inline ConstBitSetIterator& operator++()
+							{ intel::bsf(_bits, &_position) ? (_bits = intel::btr(_bits, _position)) : (_position = Bits); return *this; }
+
+						inline Type operator*() const
+							{ return static_cast<Type>(_position); }
+
+					private :
+						bits_t _bits;
+						int _position;
+				};
+
 				typedef BitSetIterator iterator;
-				typedef BitSetIterator const_iterator;
+				typedef ConstBitSetIterator const_iterator;
 
 			public :
 				BitSetRange(const BitSet& bitset) : _bitset(bitset) {}
 
-				inline BitSetIterator begin() const
+				inline BitSetIterator begin()
 					{ return BitSetIterator(_bitset); }
-				inline BitSetIterator end() const
+				inline BitSetIterator end()
 					{ return BitSetIterator(_bitset, static_cast<Type>(Bits)); }
+
+				inline ConstBitSetIterator begin() const
+					{ return ConstBitSetIterator(_bitset); }
+				inline ConstBitSetIterator end() const
+					{ return ConstBitSetIterator(); }
 
 			private :
 				const BitSet& _bitset;
