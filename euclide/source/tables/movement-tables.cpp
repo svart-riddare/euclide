@@ -106,8 +106,6 @@ void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Co
 		case King :
 			for (Square square : AllSquares())
 				(*moves)[square] = WazirMoves[cylindrical][square] | FerzMoves[cylindrical][square];
-			(*moves)[color ? E8 : E1].set(color ? G8 : G1);
-			(*moves)[color ? E8 : E1].set(color ? C8 : C1);
 			break;
 		case Queen :
 			for (Square square : AllSquares())

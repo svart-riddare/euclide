@@ -109,19 +109,10 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 
 	/* -- Set castling flags -- */
 
-	_forbidWhiteKingSideCastling = problem.forbidWhiteKingSideCastling;
-	_forbidWhiteQueenSideCastling = problem.forbidWhiteQueenSideCastling;
-	_forbidBlackKingSideCastling = problem.forbidBlackKingSideCastling;
-	_forbidBlackQueenSideCastling = problem.forbidBlackQueenSideCastling;
-
-	if ((_initialPosition[E1] != WhiteKing) || (_initialPosition[H1] != WhiteRook))
-		_forbidWhiteKingSideCastling = true;
-	if ((_initialPosition[E1] != WhiteKing) || (_initialPosition[A1] != WhiteRook))
-		_forbidWhiteQueenSideCastling = true;
-	if ((_initialPosition[E8] != BlackKing) || (_initialPosition[H1] != BlackRook))
-		_forbidBlackKingSideCastling = true;
-	if ((_initialPosition[E8] != BlackKing) || (_initialPosition[A1] != BlackRook))
-		_forbidBlackQueenSideCastling = true;
+	_castlings[White][KindSideCastling] = !problem.forbidWhiteKingSideCastling;
+	_castlings[White][QueenSideCastling] = !problem.forbidWhiteQueenSideCastling;
+	_castlings[Black][KindSideCastling] = !problem.forbidBlackKingSideCastling;
+	_castlings[Black][QueenSideCastling] = !problem.forbidBlackQueenSideCastling;
 
 	/* -- Count number of pieces in diagrams -- */
 

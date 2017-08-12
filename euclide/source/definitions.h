@@ -87,6 +87,22 @@ constexpr Square square(int col, int row)
 }
 
 /* -------------------------------------------------------------------------- */
+/* -- Castling                                                             -- */
+/* -------------------------------------------------------------------------- */
+
+typedef enum { KindSideCastling, QueenSideCastling, NumCastlingSides } CastlingSide;
+
+typedef EnumRange<CastlingSide, NumCastlingSides> AllCastlingSides;
+
+struct Castling { Square from; Square free; Square to; Square rook; };
+
+static const Castling Castlings[NumColors][NumCastlingSides] =
+{
+	{ { E1, F1, G1, H1 }, { E1, D1, C1, A1 } },
+	{ { E8, F8, G8, H8 }, { E8, D8, C8, A8 } }
+};
+
+/* -------------------------------------------------------------------------- */
 
 }
 

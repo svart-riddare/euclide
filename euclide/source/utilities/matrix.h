@@ -3,7 +3,7 @@
 
 #include "../includes.h"
 
-namespace euclide
+namespace Euclide
 {
 
 /* -------------------------------------------------------------------------- */

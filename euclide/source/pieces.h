@@ -77,7 +77,7 @@ class Piece
 		void updateDeductions();
 		void updatePossibleMoves();
 
-		array<int, NumSquares> computeDistances(Square square) const;
+		array<int, NumSquares> computeDistances(Square square, Square castling) const;
 		array<int, NumSquares> computeDistancesTo(Squares squares) const;
 
 #if 0
@@ -142,6 +142,7 @@ class Piece
 		bool _royal;                          /**< A royal piece (the king) can not be captured and may not be left in check. */
 
 		Square _initialSquare;                /**< Piece's initial square. */
+		Square _castlingSquare;               /**< Piece's initial square, for rooks that have castled. */
 		Square _finalSquare;                  /**< Piece's final square, if known. */
 
 		tribool _captured;                    /**< Set if the piece has been captured. */

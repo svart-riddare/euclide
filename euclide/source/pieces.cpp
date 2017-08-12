@@ -22,6 +22,7 @@ Piece::Piece(const Problem& problem, Square square)
 	/* -- Initial square is known, final square not -- */
 
 	_initialSquare = square;
+	_castlingSquare = square;
 	_finalSquare = Nowhere;
 
 	/* -- Has the piece been captured? -- */
@@ -36,6 +37,20 @@ Piece::Piece(const Problem& problem, Square square)
 	/* -- Initialize legal moves -- */
 
 	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant());
+
+	/* -- Handle castling -- */
+
+	if ((_glyph == WhiteKing) || (_glyph == BlackKing))
+		for (CastlingSide side : AllCastlingSides())
+			if (_initialSquare == Castlings[_color][side].from)
+				if (problem.castling(_color, side))
+					_moves[Castlings[_color][side].from][Castlings[_color][side].to] = true;
+
+	if ((_glyph == WhiteRook) || (_glyph == BlackRook))
+		for (CastlingSide side : AllCastlingSides())
+			if (_initialSquare == Castlings[_color][side].rook)
+				if (problem.castling(_color, side))
+					_castlingSquare = Castlings[_color][side].free;
 
 	/* -- Compute initial distances and perform basic initial deductions -- */
 
@@ -70,7 +85,7 @@ bool Piece::setAvailableMoves(int availableMoves)
 
 void Piece::updateDeductions()
 {
-	_distances = computeDistances(_initialSquare);
+	_distances = computeDistances(_initialSquare, _castlingSquare);
 	_captures.fill(0);
 
 	for (Square square : AllSquares())
@@ -116,18 +131,21 @@ void Piece::updatePossibleMoves()
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeDistances(Square square) const
+array<int, NumSquares> Piece::computeDistances(Square square, Square castling) const
 {
 	/* -- Initialize distances -- */
 
 	array<int, NumSquares> distances;
 	distances.fill(Infinity);
 	distances[square] = 0;
+	distances[castling] = 0;
 	
 	/* -- Initialize square queue -- */
 
 	Queue<Square, NumSquares> squares;
 	squares.push(square);
+	if (castling != square)
+		squares.push(castling);
 	
 	/* -- Loop until every reachable square has been handled -- */
 
