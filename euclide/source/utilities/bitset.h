@@ -2,8 +2,8 @@
 #define __EUCLIDE_BITSET_H
 
 #include "../includes.h"
+#include "intrinsics.h"
 #include "iterator.h"
-#include <intrin.h>
 
 namespace Euclide
 {
@@ -28,11 +28,11 @@ class BitSet
 			{ _bits = ~_bits; return *this; }
 
 		inline BitSet& set(Type position, bool value = true)
-			{ assert((position >= 0) && (position < Bits)); if (value) _bits |= (bits_t(1) << position); else reset(position); return *this; }
+			{ assert((position >= 0) && (position < Bits)); _bits = value ? intel::bts(_bits, position) : intel::btr(_bits, position); return *this; }
 		inline BitSet& reset(Type position)
-			{ assert((position >= 0) && (position < Bits)); _bits &= ~(bits_t(1) << position); return *this; }
+			{ assert((position >= 0) && (position < Bits)); _bits = intel::btr(_bits, position); return *this; }
 		inline BitSet& flip(Type position)
-			{ assert((position >= 0) && (position < Bits)); _bits ^= ~(bits_t(1) << position); return *this; }
+			{ assert((position >= 0) && (position < Bits)); _bits = intel::btc(_bits, position); return *this; }
 
 		template <typename Predicate> inline
 		BitSet& set(const Predicate& predicate, bool value = true)
@@ -46,7 +46,7 @@ class BitSet
 
 	public :
 		inline bool test(Type position) const
-			{ assert((position >= 0) && (position < Bits)); return ((_bits >> position) & 1); }
+			{ assert((position >= 0) && (position < Bits)); return intel::bt(_bits, position); }
 
 		inline bool all() const
 			{ return ~_bits == 0; }
@@ -61,15 +61,15 @@ class BitSet
 			{ return none(); }
 
 		inline int count() const
-			{ return __popcnt64(_bits); }
+			{ return intel::popcnt(_bits); }
 		inline int size() const
 			{ return Bits; }
 
 	public :
 		inline Type first() const
-			{ for (int position = 0; position < Bits; position++) if (test(static_cast<Type>(position))) return static_cast<Type>(position); return static_cast<Type>(Bits); }
+			{ int bit; return static_cast<Type>(intel::bsf(_bits, &bit) ? bit : Bits); }
 		inline Type next(int position) const
-			{ while (++position < Bits) if (test(static_cast<Type>(position))) return static_cast<Type>(position); return static_cast<Type>(Bits); }
+			{ int bit; return static_cast<Type>(intel::bsf(_bits >> position >> 1, &bit) ? bit + position + 1 : Bits); }
 
 	public :
 		inline BitSet& operator&=(const BitSet& bitset)

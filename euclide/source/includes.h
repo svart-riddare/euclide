@@ -3,6 +3,12 @@
 
 /* -------------------------------------------------------------------------- */
 
+#if defined(_MSC_VER) && defined(_M_X64)
+	#define EUCLIDE_WIN_IMPLEMENTATION
+#endif
+
+/* -------------------------------------------------------------------------- */
+
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -22,6 +28,12 @@
 #include <vector>
 
 using std::array;
+
+/* -------------------------------------------------------------------------- */
+
+#ifdef EUCLIDE_WIN_IMPLEMENTATION
+	#include <intrin.h>
+#endif
 
 /* -------------------------------------------------------------------------- */
 
