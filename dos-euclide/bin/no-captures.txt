@@ -300,7 +300,7 @@ Unto Heinonen
 Suomen Tehtäväniekat 1996
 P0008885
 
-tcFF2ct/D3dr2/pppppppp/8/P1P1P3/2f13f/1P3PPP/TC1R2CT
+tcFF2ct/D3dr2/pppppppp/8/P1P1P3/2fP3f/1P3PPP/TC1R2CT
 26
 
 --------------------------------------------------------------
