@@ -51,6 +51,7 @@ using namespace boost::logic;
 #include "utilities/algorithm.h"
 #include "utilities/bitset.h"
 #include "utilities/iterator.h"
+#include "utilities/queue.h"
 
 /* -------------------------------------------------------------------------- */
 

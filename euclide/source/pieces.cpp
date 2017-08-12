@@ -126,7 +126,7 @@ array<int, NumSquares> Piece::computeDistances(Square square) const
 	
 	/* -- Initialize square queue -- */
 
-	std::queue<Square> squares;
+	Queue<Square, NumSquares> squares;
 	squares.push(square);
 	
 	/* -- Loop until every reachable square has been handled -- */
@@ -166,7 +166,7 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 	/* -- Initialize distances and square queue -- */
 
 	array<int, NumSquares> distances;
-	std::queue<Square> squares;
+	Queue<Square, NumSquares> squares;
 
 	distances.fill(Infinity);
 
