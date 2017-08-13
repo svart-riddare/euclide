@@ -105,6 +105,15 @@ P0008144
 
 --------------------------------------------------------------
 
+Michel Caillaud - Jacques Rotenberg
+Problemkiste 1995
+P0006467
+
+tcfdrfct/pppp1ppp/8/8/4R3/5d2/PPPP1PPP/TC3FCT
+?12 - Nightriders
+
+--------------------------------------------------------------
+
 Alexander Kisljak
 Powerschennii Monarh 1993
 P0002790
@@ -150,6 +159,15 @@ tcf2tr1/pppp3p/2c2R2/2f1ppp1/4P2d/8/PPPP1PPP/TCFD1FCT
 
 --------------------------------------------------------------
 
+Andrew Buchanan
+Problemesis 2002
+P1265865
+
+tcFdrFct/p1p2ppp/3p4/1p2p3/3P2P1/4P3/PPP2P1P/TCfDRfCT
+16
+
+--------------------------------------------------------------
+
 Hans Gruber
 Problemkiste 1983
 P0002266
@@ -158,6 +176,15 @@ tcfdrfct/ppppp1pp/5p2/7D/4PP1R/7F/PPPP2PP/TCF3CT
 17
 
 (2 solutions)
+
+--------------------------------------------------------------
+
+Hans Gruber
+Schach 1983
+P1013615
+
+tcfd1fct/ppppp1pp/F3rp2/3D4/4P2R/5PP1/PPPP3P/TCF3CT
+17
 
 --------------------------------------------------------------
 
@@ -206,6 +233,24 @@ tcf3ct/pppp1ppp/7f/4p3/4d2r/5P2/PPPPP1PP/TCFDRFCT
 
 --------------------------------------------------------------
 
+Andrew Buchanan
+Retros Mailing List 2012
+P1292678
+
+tc1d1tr1/ppp1c1pp/2Ffpp/3p4/8/5PPP/PPPPPCf1/TCFD1TR1
+20
+
+--------------------------------------------------------------
+
+Hiroshi Nagano
+Tsume-Shogi Paradise 1995
+P1234952
+
+tcfd1f1t/ppppp1pp/5p2/3c3r/7C/5P2/PPPPP1PP/TCFDRFT1
+21
+
+--------------------------------------------------------------
+
 Bernd Scwharzkopf
 Der Hahn 1980
 P0005348
@@ -233,6 +278,15 @@ tc1dr2t/pppc2p1/3p4/4pp1p/7R/4PPPP/PPPP2ff/TCFD1FCT
 
 --------------------------------------------------------------
 
+Marco Bonavoglia
+Die Schwalbe 2012
+P1250607
+
+tc4ct/ppfdrfpp/2pppp2/DF6/6PP/5P2/PPPPPR2/TCF3CT
+22
+
+--------------------------------------------------------------
+
 Michel Caillaud
 Problemesis 1998
 P1000442
@@ -251,11 +305,29 @@ t1frdt2/pp1pcppp/2F1pF2/2p5/1P1c4/f4PP1/P1PPP2P/TC1RD1CT
 
 --------------------------------------------------------------
 
+Andrew Buchanan
+Problemesis 2002
+P1214067
+
+tCf1r1Ct/ppppdppp/3f4/4p3/3P4/4F3/PPPDPPPP/Tc1R1FcT
+23
+
+--------------------------------------------------------------
+
 Joost de Heer
 Messigny 2004
 P1017530
 
 tcf1t3/pppp1ppp/5c2/4p1f1/5rP1/7d/PPPPPP1P/TCFRDFCT
+23
+
+--------------------------------------------------------------
+
+Per Olin
+Messigny 2011
+P1203841
+
+t2r1fct/p1pppppp/1pc5/8/4P3/5FP1/PPPPTPdP/TCFDRfC1
 23
 
 --------------------------------------------------------------
@@ -296,6 +368,24 @@ rtt5/pppccppp/3dp3/1F1p2FD/1f1PP1f1/8/PPPCCPPP/RTT5
 
 --------------------------------------------------------------
 
+Joost de Heer
+Retros Mailing List 1995
+P0006319
+
+Fcfd1fct/pt1ppppp/r1pP4/1p6/4P3/8/PPP1CPPP/TCF2RDT
+!24 - Cooked
+
+--------------------------------------------------------------
+
+Olli Heimo
+Retros Mailing List 2007
+P1272252
+
+t1f2fct/pp1ppppp/1rp5/8/4PF2/D2P1C2/PPPcFPPP/T3RCdT
+25
+
+--------------------------------------------------------------
+
 Unto Heinonen
 Suomen Tehtäväniekat 1996
 P0008885
@@ -310,6 +400,15 @@ Springaren 2002
 P1016753
 
 5fct/ptppCppp/1rc1p1D1/dp4T1/P4Pf1/3P4/1PP1PRPP/2F2FCT
+26
+
+--------------------------------------------------------------
+
+Andrew Buchanan
+The Problemist 2013
+P1292674
+
+2rt1dct/p1p1Fppp/1p1ppc2/6f1/8/1C1PPF2/PPP1fPPP/2RT1DCT
 26
 
 --------------------------------------------------------------
@@ -341,6 +440,15 @@ t1fdrfct/ppppp2p/4Tpp1/4Dc1R/4P1PP/2C5/PPPP1P2/TCF2F2
 
 --------------------------------------------------------------
 
+Henryk Grudzinski
+Best Problems 2003
+P1106800
+
+1c1t1rc1/1pp2ppp/3ppd1t/p4f1F/3P1FDf/1TC1P3/PPP2PPP/2C2TR1
+28
+
+--------------------------------------------------------------
+
 Diyan Kostadinov
 Phénix 2004
 P1067779
@@ -359,6 +467,15 @@ tcfd1CFT/pppp1rp1/4p1c1/5p1p/7P/5PP1/PPPPPt1f/TCFDR3
 
 --------------------------------------------------------------
 
+Ivan Arandjelovic
+Diagrammes 1989
+P0001762
+
+F2c1fct/pt1ppppp/fTp2F2/rp2d3/P5D1/3PP3/1PP1CPPP/4R1CT
+!32 - Cooked
+
+--------------------------------------------------------------
+
 Noam D. Elkies
 U.S. Problem Bulletin 1995
 P0007041
@@ -373,6 +490,24 @@ Springaren 2001
 P1067418
 
 tcdr2ct/pfpp1ppp/2F2T2/1p1Pp3/1P1DP3/2F2C2/P1P1CPPP/2RTf3
+33
+
+--------------------------------------------------------------
+
+Andrew Buchanan
+Problemesis 2002
+P1265864
+
+tcfDR1ct/ppppf1p1/2F49/3P1pF1/5P2/4p1P1/PPP1P2P/TC1dr1ct
+33
+
+--------------------------------------------------------------
+
+Michel Caillaud
+Phénix 2014
+P1295956
+
+1c2cd1D/fpptr1pp/5t2/p2ppp2/8/4P2f/PPPP1PPP/TCF1RFCT
 33
 
 --------------------------------------------------------------
@@ -431,6 +566,15 @@ P0002234
 
 --------------------------------------------------------------
 
+Michel Caillaud
+The Problemist Supplement 2001-2002
+P1068379
+
+tcfd1fct/ppppp1pp/3T1p2/7D/Tr1PPFR1/1F3C2/PPPC1PPP/8
+37
+
+--------------------------------------------------------------
+
 Daniel E. Meinking
 Probleemblad 2003
 P1004470
@@ -467,12 +611,30 @@ tc4c1/p7/fpppRpp1/r1t1p1dp/7f/5P1P/PPPPP1P1/TCFD1FCT
 
 --------------------------------------------------------------
 
+Wiktor J. Peretjatko
+The Problemist 2005
+P1080458
+
+tc6/pppCcpp1/tTF5/T2pp1dp/P3r2P/1P4P1/ffPPPP1F/1C1DR3
+36
+
+--------------------------------------------------------------
+
 Michel Caillaud
 The Problemist Supplement 2001-2002
 P1063879
 
 tcfd1fct/ppppp1pp/3T1p2/7D/Tr1PPFR1/1F3C2/PPPC1PPP/8
 37
+
+--------------------------------------------------------------
+
+Itamar Faybish 
+Orbit 2007
+P1070017
+
+3drf1t/2pppppp/5F2/1p3D2/FPP2tP1/pf1P1P1P/P2CPT1C/Tc3Rc1
+38
 
 --------------------------------------------------------------
 
@@ -494,6 +656,15 @@ P1068156
 
 --------------------------------------------------------------
 
+Satoshi Hashimoto
+RIFACE 2013
+P1305683
+
+2rt1F2/3p1ppp/ppp2c1t/4c1CF/D3pR2/PPPPPPPP/3df2f/T5CT
+39
+
+--------------------------------------------------------------
+
 Costas Prentos, Andreï Frolkin
 Orbit 2006
 P1078545
@@ -508,6 +679,15 @@ Problemesis 2001
 P1013069
 
 tTfdrfc1/pFtp2pp/P3pF2/1pp1c3/3P1R2/4Pp2/1PP1DPPP/1CCT4
+40
+
+--------------------------------------------------------------
+
+Kostas Prentos - Andrey Frolkin
+Orbit 31 2006
+P1068545
+
+t2dr3/1pp2pDp/f3p2F/cTcp2p1/Ff5P/p1PP2Pt/PP1RPP2/C4TC1
 40
 
 --------------------------------------------------------------
@@ -539,6 +719,15 @@ t7/ppp5/2cp1c1p/drf2ppt/4p3/1PP2fP1/P2PPP1P/FDTFCRTC
 
 --------------------------------------------------------------
 
+Hitoshi Yanami
+Problem Paradise 1998
+P0008917
+
+ttrccd2/p1pppp1p/R4Tp1/Tp4d9/P3PF1P/1F1Pff2/1PP2PP1/1C4C1
+!42 - Cooked
+
+--------------------------------------------------------------
+
 Unto Heinonen
 Problem Bulletin 1993
 P0005845
@@ -548,12 +737,30 @@ P0005845
 
 --------------------------------------------------------------
 
+Alexander Kislyak
+Powerschennii Monarh 1993
+P0002779
+
+4D1r1/p1pp2pp/tpc2p2/1ftcp1f1/1FTCP1Fd/TPC2P2/P1PP2PP/6R1
+43
+
+--------------------------------------------------------------
+
+Mark Kirtley - Gianni Donati
+Messigny 2000
+P1068094
+
+t4Fr1/p1ppc1pp/F3pp2/1p2C1fP/PD2c2d/1C1PPfP1/1PP2Pt1/T3R2T
+!43 - Cooked
+
+--------------------------------------------------------------
+
 Daniel E. Meinking
 StrateGems 2003
 P1009422
 
 DFTfr1ct/3p1ppp/dpp5/p1PFp3/P1C5/1P4P1/3PPP1P/cCtfR2T
-43
+!43 - Cooked
 
 --------------------------------------------------------------
 
@@ -647,6 +854,15 @@ t5c1/3D2T1/Ff3r1F/pppppppp/PPPPPPPP/t5C1/3T1d1C/2Rf2c1
 
 --------------------------------------------------------------
 
+Rustam Ubaidullajew
+Scachmatnaja Komposizija 2003
+P1009465
+
+tcr2F1t/p1p1TpTD/3ppcp1/PF3d2/1p2P1P1/2fP3p/1PPCCPfP/4R3/5d2/PPPP1PPP/TC3FCT
+!48 - Cooked
+
+--------------------------------------------------------------
+
 Satoshi Hashimoto
 Probleemblad 2005
 P1068530
@@ -662,6 +878,14 @@ P0000271
 
 4f1r1/p1cp2pp/1pp2p2/1t1CptdF/1T1cPTDf/1PP2P2/P1CP2PP/4F1R1
 50
+
+--------------------------------------------------------------
+
+Alexander Kisljak
+Die Schwalbe 1992
+P0000280
+3d1fF1/p1pppp1T/2c2rpc/1p2t2p/P2T2P1/CPD2C2/t1PPPP1P/1fF1R3
+!50 - Cooked
 
 --------------------------------------------------------------
 
@@ -683,9 +907,27 @@ ccfdrft1/tppppppp/pF6/3F3T/1RDT1PPP/2CPP3/PPP4C/8
 
 --------------------------------------------------------------
 
+Rustam Ubaidullajew
+Probleemblad 2005
+P1080429
+
+tc1DRF1T//p1pp1/1pp1p1c1/7p/pP2t2P/3PPPPF/P1P5/TCfdrfC1
+51
+
+--------------------------------------------------------------
+
+Luigi Ceriani
+Fairy Chess Review 1939
+P0003038
+
+r1fTc3/ppp3pc/3ppp2/1Df4p/2F1t1tP/dT1PP3/PPPF1PPC/2R1C3
+!52 - Cooked
+
+--------------------------------------------------------------
+
 Luigi Ceriani
 Fairy Chess Review 1939 (v)
-P0003038
+P0005338
 
 2r1c3/pppf1pp1/D1Tppc2/TF5p/1d2t2P/f1FPPP2/PPP3PC/1R1tC3
 52
@@ -728,12 +970,30 @@ P0000345
 
 --------------------------------------------------------------
 
+Karlheinz Bachmann
+Die Schwalbe 1995
+P0005310
+
+4F3/p2CDfpr/1p1ppptp/2p1C1t1/2P1c1T1/1P1PPPTP/P2cdFPR/4f3
+!68 - Cooked
+
+--------------------------------------------------------------
+
 Michel Caillaud
 Die Schwalbe 1983
 P0002187
 
 T1r2RCT/1cpp1Dpp/p3pp2/1p3d1f/1P4PF/t1f2c1C/P1PPPP1P/t4F2
 77
+
+--------------------------------------------------------------
+
+Paul Raican
+Phénix 1991
+P0002759
+
+3D3t/2pp3R/2P1ppp/1p3Tfr/pP1c3F/2Ct1CPf/P2PPPFP/2c3Dt
+!77 - Cooked
 
 --------------------------------------------------------------
 
@@ -746,12 +1006,30 @@ P0006623
 
 --------------------------------------------------------------
 
+Paul Raican
+Diagrammes 1989
+P0004070
+
+3C2DR/p1p2c1p/3p1pp1/Pp5r/tPPP3F/T3p1Pf/$PPFP/cdf2CTt
+!84 - Cooked
+
+--------------------------------------------------------------
+
 Unto Heinonen
 Probleemblad 1991
 P0002554
 
 cF2d2C/RppCpp2/FD4p1/p1Tp3p/PfP4P/tP1f1TP1/r2PPP2/c5t1
 86
+
+--------------------------------------------------------------
+
+Unto Heinonen
+Die Schwalbe 1989
+P0000146
+
+cF2d2C/RppCpp2/FD3Tp1/p1Tp3p/PfP4P/tP1F2P1/r2PPP2/c5t1
+!87 - Cooked
 
 --------------------------------------------------------------
 
