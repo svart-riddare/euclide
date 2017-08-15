@@ -498,7 +498,7 @@ Andrew Buchanan
 Problemesis 2002
 P1265864
 
-tcfDR1ct/ppppf1p1/2F49/3P1pF1/5P2/4p1P1/PPP1P2P/TC1dr1ct
+tcfDR1ct/ppppf1p1/2F4p/3P1pF1/5P2/4p1P1/PPP1P2P/TC1dr1CT
 33
 
 --------------------------------------------------------------

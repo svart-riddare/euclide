@@ -124,8 +124,8 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 						forsythe[n++] = '0' + k;
 
 					forsythe[n++] = glyphs[problem.diagram[8 * x + y]];
-					white += (problem.diagram[8 * x + y] <= EUCLIDE_GLYPH_WHITE_PAWN) ? 1 : 0;
-					black += (problem.diagram[8 * x + y] >= EUCLIDE_GLYPH_BLACK_KING) ? 1 : 0;
+					white += (problem.diagram[8 * x + y] & 1) ? 1 : 0;
+					black += (problem.diagram[8 * x + y] & 1) ? 0 : 1;
 					k = 0;
 				}
 				else
