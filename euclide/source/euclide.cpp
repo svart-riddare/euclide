@@ -118,8 +118,8 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 	memset(&_deductions, 0, sizeof(_deductions));
 
 	const int pieces[NumColors] = {
-		_deductions.numWhitePieces = std::min(_pieces[White].size(), countof(_deductions.whitePieces)),
-		_deductions.numBlackPieces = std::min(_pieces[Black].size(), countof(_deductions.blackPieces))
+		_deductions.numWhitePieces = std::min<int>(_pieces[White].size(), countof(_deductions.whitePieces)),
+		_deductions.numBlackPieces = std::min<int>(_pieces[Black].size(), countof(_deductions.blackPieces))
 	};
 
 	_deductions.freeWhiteMoves = _freeMoves[White];

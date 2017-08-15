@@ -95,6 +95,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-debug-legacy.lib</OutputFile>
@@ -113,6 +114,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-debug.lib</OutputFile>
@@ -134,6 +136,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-legacy.lib</OutputFile>
@@ -156,6 +159,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName).lib</OutputFile>
@@ -175,12 +179,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\source\captures.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\source\constants\infinity.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -206,12 +204,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\source\enumerations\errors.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\source\enumerations\strings.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -249,12 +241,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\source\pieces.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\source\pieces.cpp" />
     <ClCompile Include="..\..\source\position.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -274,12 +261,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\source\tables\movement-tables.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\source\tables\movement-tables.cpp" />
     <ClCompile Include="..\..\source\tables\obstruction-tables.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -298,18 +280,10 @@
     <ClInclude Include="..\..\source\assignations.h" />
     <ClInclude Include="..\..\source\board.h" />
     <ClInclude Include="..\..\source\captures.h" />
-    <ClInclude Include="..\..\source\constants\constants.h" />
     <ClInclude Include="..\..\source\constraints.h" />
     <ClInclude Include="..\..\source\debug.h" />
     <ClInclude Include="..\..\source\definitions.h" />
     <ClInclude Include="..\..\source\destinations.h" />
-    <ClInclude Include="..\..\source\enumerations\colors.h" />
-    <ClInclude Include="..\..\source\enumerations\enumerations.h" />
-    <ClInclude Include="..\..\source\enumerations\errors.h" />
-    <ClInclude Include="..\..\source\enumerations\glyphs.h" />
-    <ClInclude Include="..\..\source\enumerations\men.h" />
-    <ClInclude Include="..\..\source\enumerations\squares.h" />
-    <ClInclude Include="..\..\source\enumerations\strings.h" />
     <ClInclude Include="..\..\source\hashtables.h" />
     <ClInclude Include="..\..\source\implications.h" />
     <ClInclude Include="..\..\source\includes.h" />
@@ -322,13 +296,12 @@
     <ClInclude Include="..\..\source\tables\tables.h" />
     <ClInclude Include="..\..\source\targets.h" />
     <ClInclude Include="..\..\source\utilities\algorithm.h" />
-    <ClInclude Include="..\..\source\utilities\array.h" />
     <ClInclude Include="..\..\source\utilities\bitset.h" />
+    <ClInclude Include="..\..\source\utilities\boost\tribool.hpp" />
+    <ClInclude Include="..\..\source\utilities\intrinsics.h" />
+    <ClInclude Include="..\..\source\utilities\iterator.h" />
     <ClInclude Include="..\..\source\utilities\matrix.h" />
-    <ClInclude Include="..\..\source\utilities\pointer.h" />
-    <ClInclude Include="..\..\source\utilities\predicates.h" />
-    <ClInclude Include="..\..\source\utilities\tag.h" />
-    <ClInclude Include="..\..\source\utilities\vector.h" />
+    <ClInclude Include="..\..\source\utilities\queue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

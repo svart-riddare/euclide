@@ -10,8 +10,13 @@
 #ifndef BOOST_LOGIC_TRIBOOL_HPP
 #define BOOST_LOGIC_TRIBOOL_HPP
 
-#define BOOST_CONSTEXPR constexpr
-#define BOOST_NOEXCEPT noexcept
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+  #define BOOST_CONSTEXPR
+  #define BOOST_NOEXCEPT
+#else
+  #define BOOST_CONSTEXPR constexpr
+  #define BOOST_NOEXCEPT noexcept
+#endif
 
 namespace boost { namespace logic { class tribool; } }
 

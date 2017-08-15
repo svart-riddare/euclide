@@ -12,17 +12,14 @@
     <Filter Include="Interface Files">
       <UniqueIdentifier>{bf2b45bf-dcab-44bd-ad7a-6b6ae015bbea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enumeration Files">
-      <UniqueIdentifier>{77e5001c-2177-488e-88a2-7b403a554580}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Constant Files">
-      <UniqueIdentifier>{5d1505ba-c75e-457a-8a91-93a019e2133e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Table Files">
       <UniqueIdentifier>{165a5de5-ceca-4e67-a80b-a1a39e1b20a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utility Files">
       <UniqueIdentifier>{fa1875f2-fb38-4744-8de9-0d837a49df62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility Files\Boost">
+      <UniqueIdentifier>{97c54e20-943c-4c24-84fe-7ebec435a910}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -77,12 +74,6 @@
     <ClCompile Include="..\..\source\targets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\enumerations\strings.cpp">
-      <Filter>Enumeration Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\constants\infinity.cpp">
-      <Filter>Constant Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\tables\check-tables.cpp">
       <Filter>Table Files</Filter>
     </ClCompile>
@@ -133,9 +124,6 @@
     <ClInclude Include="..\..\source\partitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\pieces.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -145,56 +133,8 @@
     <ClInclude Include="..\..\interface\euclide.h">
       <Filter>Interface Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\colors.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\enumerations.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\errors.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\glyphs.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\men.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\squares.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\enumerations\strings.h">
-      <Filter>Enumeration Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\constants\constants.h">
-      <Filter>Constant Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\tables\tables.h">
       <Filter>Table Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\algorithm.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\array.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\bitset.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\matrix.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\pointer.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\predicates.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\tag.h">
-      <Filter>Utility Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\utilities\vector.h">
-      <Filter>Utility Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\definitions.h">
       <Filter>Source Files</Filter>
@@ -204,6 +144,30 @@
     </ClInclude>
     <ClInclude Include="..\..\source\problem.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\algorithm.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\bitset.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\intrinsics.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\iterator.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\matrix.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\queue.h">
+      <Filter>Utility Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\pieces.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\utilities\boost\tribool.hpp">
+      <Filter>Utility Files\Boost</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

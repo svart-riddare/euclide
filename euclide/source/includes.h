@@ -42,6 +42,10 @@ using std::array;
 #define static_assert(expression) \
 	static_assert((expression), #expression)
 
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+	#define constexpr inline
+#endif
+
 /* -------------------------------------------------------------------------- */
 
 #include "utilities/boost/tribool.hpp"
