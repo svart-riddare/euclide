@@ -12,7 +12,7 @@ template <typename T, int MaxSize>
 class Queue
 {
 	public :
-		Queue() : _in(0), _out(0) {}
+		Queue() : _out(0), _in(0) {}
 
 		inline void push(const T& value)
 			{ _queue[_in++] = value; }

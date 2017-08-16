@@ -14,7 +14,7 @@ template <typename Type, int Bits>
 class BitSet
 {
 	private :
-		typename typedef std::conditional<Bits <= 32, uint32_t, uint64_t>::type bits_t;
+		typedef typename std::conditional<Bits <= 32, uint32_t, uint64_t>::type bits_t;
 		bits_t _bits;
 
 	public :
@@ -130,13 +130,13 @@ class BitSet
 		class ConstIterator : public BaseIterator<const BitSet>
 		{
 			public :
-				ConstIterator(const BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
+				ConstIterator(const BitSet& bitset, Type position) : BaseIterator<BitSet>(bitset, position) {}
 		};
 
 		class Iterator : public BaseIterator<BitSet>
 		{
 			public :
-				Iterator(BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
+				Iterator(BitSet& bitset, Type position) : BaseIterator<BitSet>(bitset, position) {}
 		};
 
 		inline ConstIterator begin() const

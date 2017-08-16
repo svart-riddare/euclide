@@ -17,7 +17,7 @@ static const int MaxPieces = 32;
 /* -------------------------------------------------------------------------- */
 
 typedef enum { Ok, NoSolution, AssertionFailed, NullPointer, SystemError, OutOfMemory, InvalidProblem, UnimplementedFeature, NumStatuses } Status;
-static_assert(NumStatuses == EUCLIDE_NUM_STATUSES);
+static_assert(NumStatuses == int(EUCLIDE_NUM_STATUSES));
 
 /* -------------------------------------------------------------------------- */
 /* -- Color                                                                -- */
@@ -32,7 +32,7 @@ typedef EnumRange<Color, NumColors> AllColors;
 /* -------------------------------------------------------------------------- */
 
 typedef enum { Empty, WhiteKing, BlackKing, WhiteQueen, BlackQueen, WhiteRook, BlackRook, WhiteBishop, BlackBishop, WhiteKnight, BlackKnight, WhitePawn, BlackPawn, NumGlyphs } Glyph;
-static_assert(NumGlyphs == EUCLIDE_NUM_GLYPHS);
+static_assert(NumGlyphs == int(EUCLIDE_NUM_GLYPHS));
 
 typedef EnumRange<Glyph, NumGlyphs> AllGlyphs;
 typedef EnumRange<Glyph, NumGlyphs, WhiteKing> MostGlyphs;
@@ -47,7 +47,7 @@ constexpr Color color(Glyph glyph)
 /* -------------------------------------------------------------------------- */
 
 typedef enum { None, King, Queen, Rook, Bishop, Knight, Pawn, Grasshopper, Nightrider, Amazon, Empress, Princess, Alfil, Camel, Zebra, Leo, Pao, Vao, Mao, NumSpecies } Species;
-static_assert(NumSpecies == EUCLIDE_NUM_PIECES);
+static_assert(NumSpecies == int(EUCLIDE_NUM_PIECES));
 
 typedef EnumRange<Species, NumSpecies> AllSpecies;
 
@@ -56,7 +56,7 @@ typedef EnumRange<Species, NumSpecies> AllSpecies;
 /* -------------------------------------------------------------------------- */
 
 typedef enum { Orthodox, Monocromatic, Bichromatic, Grid, Cylinder, NumVariants } Variant;
-static_assert(NumVariants == EUCLIDE_NUM_VARIANTS);
+static_assert(NumVariants == int(EUCLIDE_NUM_VARIANTS));
 
 typedef EnumRange<Variant, NumVariants> AllVariants;
 

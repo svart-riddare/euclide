@@ -22,7 +22,7 @@ bool none(Iterator first, Iterator last, const T& value)
 
 template<typename Iterator, typename T, typename X, typename Function> inline
 T sum(Iterator first, Iterator last, T zero, const Function& function)
-	{ return std::accumulate(first, last, zero, [&](T sum, const typename Collection::value_type& x) { return sum + function(x); }); }
+	{ return std::accumulate(first, last, zero, [&](T sum, const typename Iterator::value_type& x) { return sum + function(x); }); }
 
 /* -------------------------------------------------------------------------- */
 
@@ -89,7 +89,7 @@ typename Collection::const_iterator min_element(const Collection& collection, co
 	{ return std::move(std::min_element(std::begin(collection), std::end(collection), function)); }
 
 template <typename Collection, typename Function> inline
-Function for_each(const Collection&, const Function& function)
+Function for_each(const Collection& collection, const Function& function)
 	{ return std::move(std::for_each(std::begin(collection), std::end(collection), function)); }
 
 template <typename Collection, typename Predicate> inline
