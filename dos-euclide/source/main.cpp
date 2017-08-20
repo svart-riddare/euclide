@@ -12,7 +12,7 @@
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves) 
+bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, bool wait) 
 {
 	/* -- Parse forsythe string -- */
 
@@ -33,13 +33,16 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 	/* -- Done -- */
 
 	console.done(status);
+	if (wait || (status != EUCLIDE_STATUS_OK))
+		console.wait();
+
 	return true;
 }
 
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *file)
+bool solve(const Strings& strings, Console& console, const char *file, bool wait)
 {
 	/* -- Open input file -- */
 
@@ -67,7 +70,7 @@ bool solve(const Strings& strings, Console& console, const char *file)
 
 			int numHalfMoves;
 			if (sscanf(bufferB, "%d", &numHalfMoves) == 1)
-				if (solve(strings, console, bufferA, numHalfMoves))
+				if (solve(strings, console, bufferA, numHalfMoves, wait))
 					problems++;
 
 			/* -- Loop -- */
@@ -105,30 +108,33 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	/* -- Solve using input text file or with forsythe string on command line, wait for key input -- */
 
+	Strings::Error error = Strings::NumErrors;
+
 	switch (numArguments)
 	{
-		case 2 : 
-			if (!solve(strings, console, arguments[1]))
-			{
-				console.displayError(strings[Strings::InvalidInputFile]);
-				console.wait();
-			}
+		case 1 : 
+			error = Strings::NoArguments;
+			break;
 
+		case 2 : 
+			if (!solve(strings, console, arguments[1], true))
+				error = Strings::InvalidInputFile;
 			break;
 
 		case 3 :
-			if (!solve(strings, console, arguments[1], atoi(arguments[2])))
-			{
-				console.displayError(strings[Strings::InvalidArguments]);
-				console.wait();
-			}
-
+			if (!solve(strings, console, arguments[1], atoi(arguments[2]), true))
+				error = Strings::InvalidArguments;
 			break;
 
 		default :
-			console.displayError(strings[Strings::NoArguments]);
-			console.wait();
+			error = Strings::InvalidArguments;
 			break;
+	}
+
+	if (error < Strings::NumErrors)
+	{
+		console.displayError(strings[error]);
+		console.wait();
 	}
 
 	/* -- Done -- */

@@ -43,7 +43,6 @@ void Console::clear()
 void Console::done(EUCLIDE_Status status)
 {
 	_output.done(status);
-	wait();
 }
 
 /* -------------------------------------------------------------------------- */
