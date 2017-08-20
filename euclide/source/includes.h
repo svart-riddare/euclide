@@ -52,6 +52,9 @@ using std::array;
 BOOST_TRIBOOL_THIRD_STATE(unknown);
 using namespace boost::logic;
 
+static inline bool is(tribool value) { return bool(value); }
+static inline bool maybe(tribool value) { return bool(value) || unknown(value); }
+
 #include "utilities/algorithm.h"
 #include "utilities/bitset.h"
 #include "utilities/iterator.h"

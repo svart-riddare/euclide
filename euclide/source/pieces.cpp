@@ -32,7 +32,7 @@ Piece::Piece(const Problem& problem, Square square)
 	/* -- Initialize possible final squares -- */
 
 	for (Square square : AllSquares())
-		_possibleSquares.set(square, _captured || (problem.diagramPosition(square) == _glyph));
+		_possibleSquares.set(square, maybe(_captured) || (problem.diagramPosition(square) == _glyph));
 
 	/* -- Initialize legal moves -- */
 
