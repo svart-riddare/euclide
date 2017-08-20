@@ -112,12 +112,12 @@ bool WinConsole::wait()
 	DWORD records = 0;
 	INPUT_RECORD record;
 	ZeroMemory(&record, sizeof(record));
-	
+
 	record.EventType = 0;
-	while (record.EventType != KEY_EVENT)
+	while ((record.EventType != KEY_EVENT) || !record.Event.KeyEvent.bKeyDown)
 		if (!ReadConsoleInput(_input, &record, 1, &records))
 			return _abort = true, false;
-	
+
 	if (record.Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
 		_abort = true;
 
