@@ -73,6 +73,7 @@ static const uint64_t BishopMoves[2][NumSquares] = { MOVES(runner, 1, 1, false),
 static const uint64_t NightriderMoves[2][NumSquares] = { MOVES(runner, 1, 2, false), MOVES(runner, 1, 2, true) };
 
 static const uint64_t PawnMoves[2][NumColors][NumSquares] = { { MOVES(pawn, White, false, false), MOVES(pawn, Black, false, false) }, { MOVES(pawn, White, false, true), MOVES(pawn, Black, false, true) } };
+static const uint64_t PawnCaptures[2][NumColors][NumSquares] = { { MOVES(pawn, White, true, false), MOVES(pawn, Black, true, false) }, { MOVES(pawn, White, true, true), MOVES(pawn, Black, true, true) } };
 
 /* -------------------------------------------------------------------------- */
 
@@ -93,7 +94,7 @@ static const Squares GridSquares[NumSquares] =
 
 /* -------------------------------------------------------------------------- */
 
-void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant)
+void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant, tribool capture)
 {
 	const int cylindrical = (variant == Cylinder) ? 1 : 0;
 
@@ -121,7 +122,14 @@ void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Co
 			xstd::copy(KnightMoves[cylindrical], moves->begin());
 			break;
 		case Pawn :
-			xstd::copy(PawnMoves[cylindrical][color], moves->begin());
+			if (!capture)
+				xstd::copy(PawnMoves[cylindrical][color], moves->begin());
+			else
+			if (capture)
+				xstd::copy(PawnCaptures[cylindrical][color], moves->begin());
+			else
+				for (Square square : AllSquares())
+					(*moves)[square] = PawnMoves[cylindrical][color][square] | PawnCaptures[cylindrical][color][square];
 			break;
 		case Grasshopper :
 			for (Square square : AllSquares())

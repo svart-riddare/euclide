@@ -34,9 +34,14 @@ Piece::Piece(const Problem& problem, Square square)
 	for (Square square : AllSquares())
 		_possibleSquares.set(square, maybe(_captured) || (problem.diagramPosition(square) == _glyph));
 
+	/* -- Initialize number of available moves and captures -- */
+
+	_availableMoves = problem.moves(_color);
+	_availableCaptures = problem.diagramPieces(_color) - problem.initialPieces(_color);
+
 	/* -- Initialize legal moves -- */
 
-	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant());
+	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant(), _availableCaptures ? unknown : false);
 
 	/* -- Handle castling -- */
 
@@ -51,11 +56,6 @@ Piece::Piece(const Problem& problem, Square square)
 			if (_initialSquare == Castlings[_color][side].rook)
 				if (problem.castling(_color, side))
 					_castlingSquare = Castlings[_color][side].free;
-
-	/* -- Compute initial distances and perform basic initial deductions -- */
-
-	_availableMoves = problem.moves(_color);
-	_availableCaptures = problem.diagramPieces(_color) - problem.initialPieces(_color);
 
 	/* -- Update possible moves -- */
 

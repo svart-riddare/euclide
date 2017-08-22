@@ -10,7 +10,7 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
-void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant);
+void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant, tribool capture);
 
 
 #if 0
