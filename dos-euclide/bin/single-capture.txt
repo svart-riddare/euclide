@@ -1,0 +1,1040 @@
+
+Chess Problem Database Server
+K='Unique Proof Game' AND APIECES=31 AND NOT G='Fairies'
+
+--------------------------------------------------------------
+
+Joost de Heer
+Retros Mailing List 1996
+P0008139
+
+tcfd1fct/pppprppp/8/4D3/4P3/8/PPPP1PPP/TCF1RFCT
+5
+
+--------------------------------------------------------------
+
+Juha M. Saukkola
+Retros Mailing List 1996
+P0008140
+
+tcfdrfct/ppppp2p/8/5PpD/8/8/PPPP1PPP/TCF1RFCT
+5
+
+--------------------------------------------------------------
+
+François Labelle
+Messigny 2011
+P1268928
+
+tcfdrf1t/ppFppppp/8/3c4/3P4/8/PPP1PPPP/TC1DRFCT
+5
+
+tcfdrf1t/ppFppppp/8/3c4/3P4/8/PPP1PPPP/TC1DRFCT
+10
+
+--------------------------------------------------------------
+
+Henrik Juel
+Thema Danicum 1996
+P1000033
+
+Klaus Kiesow
+Die Schwalbe 2003
+P1007302
+
+tc1drfct/ppp1pppp/3p4/8/4P3/8/PPPP1PPP/TCFDRFCT
+7
+
+--------------------------------------------------------------
+
+Richard Stanley
+Retros Mailing List 1996
+P0008145
+
+tcfdrfct/ppppp2p/5p2/7F/8/4P3/PPPP1PPP/TCFDR1CT
+7
+
+--------------------------------------------------------------
+
+Martin Wolfgang Hoffmann
+Schweizerische Schachzeitung 1989
+P0002230
+
+tcfdrfct/pppp2pp/5p2/4p3/8/3P4/PPP1PPPP/TCF1RFCT
+8
+
+tcf1rfct/pppp2pp/5p2/4p3/8/3P4/PPP1PPPP/TCF1RFCT
+8
+
+--------------------------------------------------------------
+
+Richard Stanley, Noam D. Elkies
+Retros Mailing List 1996
+P0008147
+
+t1fdrfct/1ppppppp/p7/8/8/3cP3/PP1PCPPP/TCFDRF1T
+8
+
+--------------------------------------------------------------
+
+Klaus Kiesow
+Die Schwalbe 2003
+P1007303
+
+tcfdrfct/ppp2ppp/3pp3/8/8/1PP5/P2PPPPP/TCF1RFCT
+8
+
+--------------------------------------------------------------
+
+Andrew Buchanan
+PDB Website 2016
+P1322914
+
+1tfdrfct/pppppppp/8/8/5PR1/8/PPPPP1PP/TCFD1FCT
+8
+
+--------------------------------------------------------------
+
+T. Sztankovszky
+The Fairy Chess Review 1954
+P0006182
+
+tcfdrfct/pppppp1p/6p1/8/2P5/1P6/P2PPPPP/TC1DRFCT
+9
+
+--------------------------------------------------------------
+
+Thierry le Gleuher
+Messigny 1998
+P1000949
+
+tcfd1fct/pppp2pp/4rP2/4p3/8/7F/PPPPPP1P/TCFD1RCT
+9
+
+--------------------------------------------------------------
+
+Gianni Donati
+Probleemblad 1999
+P1001144
+
+1cfdrfct/pDpppppp/1p6/8/4P3/8/PPPP1PPP/TCF1RFCT
+9
+
+(Deux solutions)
+
+--------------------------------------------------------------
+
+Norbert Geissler
+Retros Mailing List 1996
+P0008152
+
+tcfdrfct/p1pppppp/8/8/3P4/D1F5/PP2PPPP/TCd1RFCT
+10
+
+--------------------------------------------------------------
+
+Noam D. Elkies
+Retros Mailing List 1996
+P0008167
+
+tcf1rf1t/pp1ppppp/8/d1F5/8/3P1c2/PPP1PPPP/TC1DRFCT
+10
+
+--------------------------------------------------------------
+
+Juha M. Saukkola
+Retros Mailing List 1996
+P0008143
+
+1cfdrfct/1ppppppp/5F2/p7/D7/1P6/P2PPPPP/TCt1RFCT
+10
+
+--------------------------------------------------------------
+
+Norbert Geissler
+Reros Mailing List 1996
+P0008159
+
+tcf1Ffct/ppp3pp/3d1pr1/3p4/4P3/8/PPP2PPP/TCFDRFCT
+11
+
+--------------------------------------------------------------
+
+Hans Gruber
+Problemkiste 1984
+P0006171
+
+tcfdrfct/pppp1p1p/8/4p1p1/1PDP4/8/P1PCPPPP/2RT1FCT
+12
+
+--------------------------------------------------------------
+
+Gianni Donati
+Retros Mailing List 1996
+P0008163
+
+tcfdrfct/pppppp1p/8/8/8/4TP2/PPPPPRP1/TCF1DFCc
+12
+
+--------------------------------------------------------------
+
+Olli Heimo
+Retros Mailing List 1996
+P1001180
+
+tcfd1tr1/pppp2pp/2c5/2f1pR2/4P1D1/8/PPPP1PPP/TCF2FCT
+12
+
+--------------------------------------------------------------
+
+Richard Stanley
+Retros Mailing List 1996
+P0008153
+
+tcfD1fct/ppp1rppp/1d2p3/4p3/8/8/PPP2PPP/TCFDRFCT
+13
+
+--------------------------------------------------------------
+
+Gianni Donati
+Retros Mailing List 1996
+P0008170
+
+tcfd2ct/pppp1ppp/4p3/8/1frP4/2C1P3/PPP2PPP/TCF1RD1T
+13
+
+--------------------------------------------------------------
+
+Gerd Wilts
+Problemist Yuga 1996
+P0008846
+
+2rt1fct/pppfpppp/8/8/c7/3d1P2/PPPPP1PP/TCFDRFCT
+13
+
+2rt1fct/pppfpppp/8/8/c7/3d1P2/PPPPP1PP/TCFDRFCT
+16
+
+--------------------------------------------------------------
+
+Michel Caillaud
+The Problemist 1995-1996
+P1068152
+
+t1f1rfct/ppp1pppp/8/3p4/7c/5P2/PPPPP1PP/TCFDRFCT
+13
+
+t1f1rfct/ppp1pppp/8/3p4/7c/5P2/PPPPP1PP/TCFDRFCT
+15
+
+--------------------------------------------------------------
+
+Mark Kirtley, Michel Caillaud
+Probleemblad 1999
+P1001145
+
+t2drfct/pp1ppppp/2p5/3Cc3/8/8/PPPPPPPP/TCFDRF1T
+13
+
+--------------------------------------------------------------
+
+Gerd Wilts, Norbert Geissler
+Retros Mailing List 1996
+P0006447
+
+tcf1rfct/ppp2pp1/8/3pp3/4PP2/6pR/PPPP1d1P/TCFD1CFT
+14
+
+--------------------------------------------------------------
+
+Olli Heimo
+Retros Mailing List 1996
+P0008164
+
+tc1drfct/ppp2ppp/1D2f3/4P3/8/P1R5/1PP1PPPP/TCFc1FCT
+14
+
+--------------------------------------------------------------
+
+Richard Stanley
+Retros Mailing List 1996
+P0008160
+
+tc1drfct/ppp1pppp/6D1/8/4P3/2P5/PPR1PPPP/TCFf1FCT
+14
+
+--------------------------------------------------------------
+
+Richard Stanley
+Retros Mailing List 1996
+P0008157
+
+tcf1rfct/ppp1pppp/8/8/2P5/4P1PD/PP2PPFP/TCFt1RCT
+14
+
+--------------------------------------------------------------
+
+Peter Wong
+Parallel Stragegy 2001
+P1004013
+
+t1fdrfct/pppppppp/8/8/6R1/4P1P1/PPPP1PFP/TCFD2Cc
+14
+
+--------------------------------------------------------------
+
+Dan Meinking
+Probleemblad 2004
+P1067982
+
+1td1rf1t/pppfcppp/2C5/3p4/3c4/1C6/PPPPPPPP/T1FDRF1T
+14
+
+--------------------------------------------------------------
+
+Henrik Juel
+Problemskak 2011
+P1185254
+
+tc1rdfct/ppp1pppp/3p4/1F6/3P2P1/5f2/PPP1CP1P/TCFRD2T
+14
+
+--------------------------------------------------------------
+
+Olli Heimo
+Retros Mailing List 1996
+P0008172
+
+tcf1dfct/ppppp1pp/8/5p2/5F2/3PPrPF/PPP1C2P/TC1D1TR1
+15
+
+--------------------------------------------------------------
+
+Joost de Heer
+Retros Mailing List 2005
+P1067838
+
+tcfdrfct/ppppp1pp/8/8/2F1P3/3t1P2/PPPP2PP/TCFDR2T
+15
+
+--------------------------------------------------------------
+
+Silvio Baier
+Die Schwalbe 2008
+P1080467
+
+tcf1dfct/ppp1pppp/8/2p5/6r1/8/PPP1PPPP/TCFDRFCT
+15
+
+--------------------------------------------------------------
+
+Ulrich Ring
+Rochade 1985
+P0002301
+
+F1tdrfct/pfpppppp/p5c1/8/7P/6P1/PPPPPP2/TCFDR1C1
+16
+
+--------------------------------------------------------------
+
+Satoshi Hashimoto
+StrateGems 1998
+P1000521
+
+tcf2fct/pppp2pp/8/5p1r/4p3/5d2/PPPPPPPP/TCFDRF1T
+16
+
+--------------------------------------------------------------
+
+Mario Parrinello
+PCCC Meeting 2000
+P1000735
+
+tcfd2ct/pppp1pfp/8/1F2p1P1/4P2r/3P1C2/PPP2PP1/T1FDR1CT
+17
+
+--------------------------------------------------------------
+
+Gianni Donati
+Probleemblad 2000
+P1001170
+
+tcfd2ct/pppp1ppp/3r4/4p3/8/1P2f3/P1PPP1PP/TCFDRFCT
+17
+
+--------------------------------------------------------------
+
+Itamar Faybish
+Problem Online 2005
+P1068139
+
+t1fd1fct/pp2p1pp/2p1rc2/1F3p2/8/4P3/PPPP1PPP/TCFDR1CT
+17
+
+--------------------------------------------------------------
+
+Silvio Baier
+Die Scwhalbe 2008
+P1080468
+
+tcfdrf2/ppppppp1/4t3/8/6p1/1c6/PPPPPPP1/TCFDRFCT
+17
+
+--------------------------------------------------------------
+
+Silvio Baier
+Die Schwalbe 2008
+P1080469
+
+tcfd1rct/ppp2ppp/3p4/3p4/5f2/8/PPPP1PPP/TCFDRFCT
+17
+
+--------------------------------------------------------------
+
+Yis Yoront
+Feenschach 1989
+P0005946
+
+1r1t1fct/pppcpp1p/2Fp4/6P1/4P1PT/1D1d3f/PPP&P2/TCF1R1C1
+18
+
+--------------------------------------------------------------
+
+Eyjolfur O. Eyjolfsson
+Probleemblad 2004
+P1067964
+
+t1ftr3/ppppcppp/8/2d1p3/8/f4P2/PPPPP1PP/TCFDRFCT
+18
+
+(Deux solutions)
+
+--------------------------------------------------------------
+
+Eyjolfur O. Eyjolfsson
+Probleemblad 2007
+P1070025
+
+t1fcr2t/pppp1ppp/5F2/4p1f1/3P1D2/2R5/PPPdPPP/TC3FCT
+18
+
+--------------------------------------------------------------
+
+Andrey Frolkin, Henri Nouguier
+Diagrammes 1990
+P0002320
+
+1FDBAD1F/CCCDCCC/2E1C3/8/3E3C/4C3/CCCC1CC1/FEDBA1E1
+?19 - Identify and color the pieces!
+
+--------------------------------------------------------------
+
+Andrew Buchanan
+Retros Mailing List 2003
+P1011910
+
+tct1f1r1/ppp2ppp/2pDpD1c/2f5/8/8/PPP1PPPP/TCF1RFCT
+19
+
+--------------------------------------------------------------
+
+Frank Christiaans
+Probleemblad 1991
+P0005925
+
+2rt1fct/ppp1ppp1/8/DF4Pp/3pP3/5Pcf/PPPPC2P/TCF2TR1
+20
+
+--------------------------------------------------------------
+
+Gerd Wilts
+Die Schwalbe 1994
+P0002233
+
+tc1d1f1t/ppp1pfpp/4pp2/1r5c/7P/4P3/PPPPRPP1/TCFCDF2
+20
+
+tc1d1f1t/ppp1pfpp/4pp2/1r5c/7P/4P3/PPPPRPP1/TCFCDF2
+25
+
+--------------------------------------------------------------
+
+Marek Kolcak
+PCCC Meeting 1999
+P1068157
+
+2fdrfct/1ppppppp/5F2/p1D5/3P2T1/4P1PC/PPP2PP1/TC2RF1t
+20
+
+--------------------------------------------------------------
+
+John Derek Beasley
+The Problemist 1993
+P0005907
+
+tcfdrf1t/ppppp1pp/5p2/8/4cC2/5P2/PPPPP1PR/TCFD1F1T
+21
+
+--------------------------------------------------------------
+
+Joost de Heer
+Problemesis 2002
+P1004222
+
+2r3ct/pppc1ppp/3pt3/4pfR1/1f1d4/5P2/PPPPP1P1/TCFD1FCT
+21
+
+--------------------------------------------------------------
+
+Silvio Baier
+Die Schwalbe 2008
+P1080470
+
+tcffr2r/ppp1cppp/1d2p3/4p3/8/8/PPP1PPP/TCFDRFCT
+21
+
+--------------------------------------------------------------
+
+Silvio Baier
+Retros Mailing List 2008
+P1070078
+
+tcfdrfct/ppp1pppp/8/5F2/4PF2/1D2P3/PPP2PPP/TC2R1CT
+22
+
+--------------------------------------------------------------
+
+Joost de Heer
+StrateGems 2008
+P1080530
+
+1cfd3t/tpp1cppp/rf1p1p2/p7/8/8/PPP1PPP/TCFDRFCT
+23
+
+--------------------------------------------------------------
+
+Unto Heinonen
+The Problemist 1991
+P0005909
+
+tcfdrfct/pppppppp/2D2T1F/8/2P1PP2/5C2/PP1C2PP/4RF1T
+24
+
+--------------------------------------------------------------
+
+Mario Parrinello
+Probleemblad 2000
+P1001061
+
+tcftrfcd/pppp1ppp/4pD2/1F6/P3P2R/3P1PP1/2PP4P/TC4CT
+24
+
+--------------------------------------------------------------
+
+Kevin James Begley, Kostas Prentos
+Phénix 2001
+P1004041
+
+tcDd1fct/pppf1ppp/3pr3/4p3/4P3/3P4/PPPR1PPP/2FF1CCT
+24
+
+--------------------------------------------------------------
+
+Ivan Denkovski
+Orbit 2002
+P1004456
+
+tcfdr1ct/ppppfppp/8/P7/2F5/2CP1P2/1PP2PPP/TCFDR2T
+24
+
+--------------------------------------------------------------
+
+Pascal Wassong
+Messigny 2009
+P1085393
+
+tcfdrf1t/pppp2p1/4p1c1/7F/3DP2R/5P1p/PPPPC1pP/TCF3T1
+24
+
+--------------------------------------------------------------
+
+Etienne Dupuis
+Problemesis 2001
+P1292800
+
+tCf1r1Ct/ppppdppp/8/4p3/3P4/2P5/PFP1PPPP/TcDR1FcT
+25
+
+--------------------------------------------------------------
+
+Juha M. Saukkola
+Retros Mailing List 1997
+P1004117
+
+t1f2fct/pp1ppppp/1d6/2p5/4c2r/TDP5/PP1PPPP1/TCF2FCR
+27
+
+--------------------------------------------------------------
+
+Anatoly Vasilenko, Andrey Frolkin
+FIDE-Tagung 2005
+P1068375
+
+2Ft1fct/pp3ppp/c1ppp3/8/P1RT1d1r/2CPFP2/1PP1PP1P/D5CT
+27
+
+--------------------------------------------------------------
+
+Eyjolfur O. Eyjolfsson
+Die Schwalbe 2006
+P1068410
+
+1CFtffct/ppp1pppp/3pD3/1r2PP2/3c4/3P4/PPP2P1P/TCF1R2T
+27
+
+--------------------------------------------------------------
+
+Andrey Frolkin, Nicolas Dupont, Andrew Buchanan
+Problemist of Ukraine
+P1292793
+
+1ct2fct/1p1ppppp/2p5/d6P/6P1/p4P2/PPPPPC2/TCFDRFrT
+27
+
+--------------------------------------------------------------
+
+Mario Parrinello
+Springaren 2000
+P1066709
+
+1c3rct/1pp3pp/3pppt1/D2f3P/TF1P3C/2R5/PPPdPPP1/T1f3FC1
+28
+
+--------------------------------------------------------------
+
+Andrey Frolkin, Kostas Prentos
+www.ajedrez.com.ar 2007
+P1240531
+
+tcfd4/pppp1rpp/5P2/5p2/1f1P4/t1P5/PP1FRPPP/C1TcDFCT
+30
+
+--------------------------------------------------------------
+
+Ladislav Packa
+Mat-Pat 1992
+P1257720
+
+1c1r3t/1p2cDpp/3p4/pFptp3/1F5R/PPPPPPPP/5ff1/TC2d1ct
+31
+
+--------------------------------------------------------------
+
+Michel Caillaud
+StrateGems 1998
+P1000528
+
+tc1f2C1/ppp1cp1p/3p2f1/4p1r1/7d/8/PPPPPtPP/TCFDRFCT
+31
+
+--------------------------------------------------------------
+
+Diyan Kostadinov
+Orbit 2005
+P1067835
+
+tc1DRfct/pp2p1pp/3pf3/2p5/2P1C3/P7/1P1PPPPP/1TFdrFCT
+31
+
+--------------------------------------------------------------
+
+Roberto Osorio, Jorge Joaquin Lois
+Messigny 2006
+P1080626
+
+1c2r1ct/2tp1ppp/1Dp1pT2/pP6/3PCC2/5PPP/1PP1Pdff/2FR1F1T
+31
+
+--------------------------------------------------------------
+
+Unto Heinonen
+Die Schwalbe 1997
+P0008561
+
+2r4t/pppcpp1p/5D2/3p4/PPPPPPPP/d1t2fT1/1f1c4/FC2RFCT
+32
+
+--------------------------------------------------------------
+
+Gianni Donati
+Probleemblad 2001
+P1301354
+
+tcfdrfct/2ppp3/6pT/p4D1F/4PpPp/2R3C1/PPPP1P1P/TCF5
+32
+
+--------------------------------------------------------------
+
+Gianni Donati
+StrateGems 2002
+P1004134
+
+tcfdrfct/pppp1p1p/2T1p1DF/P4PC1/3P2T1/4P1p1/1PP1F1P1/1C2R3
+32
+
+--------------------------------------------------------------
+
+Kostas Prentos
+Die Schwalbe 2010
+P1256157
+
+tc1R1ffr/ppp1dtpp/5c2/3Ppp2/7P/3P4/PPT1PPP1/TCFD1FC1
+32
+
+--------------------------------------------------------------
+
+Jasper van Atten
+The Problemist 1993
+P0005908
+
+t1f2fct/ppppp1pp/1F1r1p2/3Fd2D/2PCPcR1/2CP3T/PP3PPT/8
+!34 - Cooked
+
+--------------------------------------------------------------
+
+Nicolas Dupont
+Retros Mailing List 2003
+P1007272
+
+t6t/3PCrfD/5c1F/pppppppp/f2P2C1/d7/PP2PPPP/T3RF1T
+!34 - Cooked
+
+--------------------------------------------------------------
+
+Andrey Frolkin
+The Problemist 1985-1986
+P0002336
+
+r1Ft2c1/p3cpp1/1p1p4/t1fDp1Ff/6Pp/D3p2p/PPP1CP1R/TC2TF2
+35
+
+--------------------------------------------------------------
+
+Andray Frolkin
+The Problemist 1989
+P0002318
+
+TCF1RF2/1P1PPCP1/4P2T/PFP3PP/4P3/2P1C1P/PPP2P2/TCFDR2T
+?35 - Color the pieces!
+
+--------------------------------------------------------------
+
+Göran Wicklund
+Retros Mailing List 2003
+P1007275
+
+tc6/p1ptprFp/1C3pp1/1p5D/7R/PPPPPPPP/d1f3F1/T1f2cCT
+35
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+Die Schwalbe 2003
+P1007331
+
+tcf1rfct/pp1pp1pp/2p1Fp2/2F5/T1P1P2D/1PC3P1/P2PCPPR/7T
+35
+
+--------------------------------------------------------------
+
+Unto Heinonen
+The Problemist 1990
+P0005934
+
+t1fdrfct/ppppp1pp/4Tp1F/4c2R/P4P2/1PT1P3/2PP2P1/1C3FCD
+!36 - Cooked
+
+--------------------------------------------------------------
+
+Etienne Dupuis
+Problemesis 1999
+P1000448
+
+tc2rfct/pppTppd1/2Dp2p1/8/7p/7P/PPPPPPRP/TCF2FC1
+36
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+StrateGems 2002
+P1004137
+
+tcfd1fct/pppppp1p/P3FFp1/4PT2/2P4P/1T3D2/1PrCCPP1/4R3
+36
+
+--------------------------------------------------------------
+
+Wiktor J. Peretjakto
+The Problemist 2003
+P1009487
+
+rc4c1/pppF1pp1/TTtt1D2/3pp1fp/P6P/1P4P/f1PPP1F/1C2R1C1
+!36 - Cooked
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew, Igor A. Wereschtschagin
+FIDE-Tagung 2005
+P1068372
+
+rcfd2ct/pp1p1ppp/6Pr/R1D1fT2/2p1Pt2/C6C/PPP2P1P/2F2F1T
+36
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+Problemesis 2005
+P1068164
+
+t2drfct/1pp1ppp1/c7/1R1p3p/PP2P1F1/T2P4/1FPC1PPP/TC3f1D
+36
+
+--------------------------------------------------------------
+
+Paul Raican
+StrateGems 2005
+P1080569
+
+2r2fct/pp2pppp/2P5/P1p5/2P1FTPP/3d4/1P2PPt1/cCfDRfCT
+37
+
+--------------------------------------------------------------
+
+Ken Kousaka
+FIDE World Cup 2010
+P1106507
+
+7c/pppcrppf/2p1p3/2f4t/d2t3p/2P2P2/PP1PP1PP/TCF1RFCT
+37
+
+--------------------------------------------------------------
+
+Allan Bell
+Phénix 2010
+P1189480
+
+1cfd1t2/1ppppp1p/2R3pc/p3F3/P5t1/rPP1f1P1/C1DPPP1P/R4FCT
+37
+
+--------------------------------------------------------------
+
+Paul Monsky
+StrateGems 2010
+P1177429
+
+tcfR4/pp1p1tpp/2p2pc1/4p1d1/4P3/2P1CP2/PP1PD1PP/T1F1rFCT
+37
+
+--------------------------------------------------------------
+
+Jasper van Atten
+Die Schwalbe 1987
+P0000082
+
+T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1F/TCFDR1CT
+38
+
+--------------------------------------------------------------
+
+Jasper van Atten
+The Problemist 1987-1988
+P0002333
+
+tcf1Dfct/pppppFpp/2r2p1T/8/2P1PF2/2CPP1CP/PP4P1/6TR
+38
+
+--------------------------------------------------------------
+
+Peter Wong
+The PRoblemist 1993
+P0005900
+
+2c2f1c1/p1p12rd/Tp4pf/4t2p/P1t4P/1D4D1/1PP1PPP/1CFTRFC1
+38
+
+(Deux solutions)
+
+--------------------------------------------------------------
+
+Henrik Juel
+Probleemblad 1996
+P0007032
+
+tc1d1fc1/ppp1p1pD/3pf3/3t1p1p/5C2/P1P4P/1PrPPPP1/TCF1R2T
+38
+
+--------------------------------------------------------------
+
+Ion Murarasu, Vlaicu Crisan
+StrateGems 2010
+P11008002
+
+2Frt3/p1ppdf2/2cfpp1p/1p6/2P1P1ct/5C1p/PP1P1PPP/TCFD2R1
+38
+
+--------------------------------------------------------------
+
+Jasper van Atten
+The Problemist 1985
+P0005935
+
+2fdrf1t/p1ppp1pp/c1pTDp2/7c/P2F2P1/C2PPR2/1PP1tP1P/2CT4
+!39 - Cooked
+
+--------------------------------------------------------------
+
+Jasper van Atten
+Probleemblad 1993
+P0008425
+
+2rc4/1pp2ppp/2c1p3/p1p2f2/d1t1t3/f1P5/PP1PPPPP/TCF1RFCT
+39
+
+2rc4/1pp2ppp/2c1p3/p1p2f2/2t1t3/f1P5/PP1PPPPP/TCFdRFCT
+40
+
+--------------------------------------------------------------
+
+Andrey Frolkinn, Anatoly Vasilenko
+PCCC Meeting 2008
+P1070049
+
+3drfct/1p2p3/2pc2pt/pF1p3D/3TPFPp/3P1P2/PPP1p1fP/2C1C2R
+40
+
+--------------------------------------------------------------
+
+James Soliman
+StrateGems 2009
+P1088581
+
+tcf2fct/pp1ppppp/2p5/F6D/2P1P1FT/1PCPTP1R/1P4PP/5rC1
+40
+
+--------------------------------------------------------------
+
+Michel Caillaud
+Messigny 2011
+P1203826
+
+fTd4c/tTpc1p2/1prpp1p1/p1f4p/7P/1P6/1PPPPPP1/1CFDRFC1
+40
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+The Ural's Problemist 2003
+P1067433
+
+tcf1rfct/pp1ppppp/2p2T2/F2D3F/4P2T/1P1P1PR1/1PP3PP/1C2C3
+41
+
+--------------------------------------------------------------
+
+Valery Semenenko
+FIDE World Cup 2010
+P1106508
+
+tc1d2fr/ppp2c2/1D1p1ppp/3F1pf1/2P2P2/1P2PC2/Pt1P2PP/TC2F1R1
+42
+
+--------------------------------------------------------------
+
+Michel Caillaud, Noam Livnat
+StrateGems 1998
+P1000563
+
+1cfd1rct/2p1ppfp/p2T2p1/1D2F3/PpP1TPFR/3P2PC/1P2P2P/1C5t
+43
+
+--------------------------------------------------------------
+
+Alan Bell
+Phénix 2010
+P1189483
+
+2rc4/pp3ppp/1fcFptT1/T1ppPF2/d1f5/D1tP2PC/PPPC1P1P/2R5
+43
+
+--------------------------------------------------------------
+
+Andrey Frolkin, Kostas Prentos
+FIDE-Tagung 2005
+P1068371
+
+1tf3ct/1ppcpp1p/d1dp1C2/2f3pT/FD2PP2/R2Pr3/1FPC2PP/6CT
+45
+
+--------------------------------------------------------------
+
+Jasper van Atten
+Probleemblad 1985
+P0002315
+
+tcfrdfcR/ppppp2p/T3FppF/2DCC3/3P4/P3P3/1PP2PPP/T7
+46
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+Feenschach 2004
+P1013035
+
+tcfd1fct/ppppppFp/4T1P1/7D/T2P4/1P2PC2/P1P2PP1/3rCFR1
+46
+
+--------------------------------------------------------------
+
+Hans Gruber
+Rokada 1983
+P1013628
+
+tcf1rfct/pp1ppppp/2p4F/3F3P/1T4P1/D1P2P2/PPP1PR2/TC4CT
+50
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+Problemesis 2004
+P1017488
+
+Tcc5/C1ppr3/F2dpp/Rp2ffpp/DPC1P1tt/F1P5/C2P1PPP/T7
+51
+
+--------------------------------------------------------------
+
+Gligor Denkovski, Ivan Denkovsky
+Die Schwalbe 2009
+P1090548
+
+6c1/ppp1pp1p/3p1t1p/f2F2d1/PP2P1c1/tfF2r2/TTPPCP1P/1C1D3R
+51
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+StrateGems 2012
+P1288889
+
+rt1F4/p1fp2pc/F1c2p1p/dpp1p3/PP6/4P3/C1PP1PPP/Df2tRct
+54
+
+--------------------------------------------------------------
+
+Rustam Ubaidullajew
+Feenschach 2003
+P1011776
+
+t1T5/c2ppp1p/fp4p1/dpp3R1/rP1PP1T1/f1P2PP1/c1T1C2P/tF2DC2
+60
+
