@@ -31,7 +31,7 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		throw InvalidProblem;
 
 	if (xstd::all(_initialPosition, Empty))
-		for (int k = 0; k < countof(initialPosition); k++)
+		for (unsigned k = 0; k < countof(initialPosition); k++)
 			_initialPosition[initialPosition[k].square] = initialPosition[k].glyph;
 
 	if (xstd::count(_initialPosition, WhiteKing) != 1)

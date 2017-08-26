@@ -36,7 +36,7 @@ target_link_libraries(dos-euclide euclide)
 
 # Compile options
 
-add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra -Wpedantic)
+add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra)
 include_directories(../../../euclide/interface)
 
 # Dependent on ncurses library

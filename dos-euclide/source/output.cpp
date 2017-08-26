@@ -71,12 +71,12 @@ void Output::done(EUCLIDE_Status status)
 {
 	if (_file)
 	{
-		fwprintf(_file, L"%ls\n", _strings[Strings::Output]);
+		fprintf(_file, "%ls\n", _strings[Strings::Output]);
 		if (status != EUCLIDE_STATUS_OK)
-			fwprintf(_file, L"\t%ls\n", _strings[status]);
+			fprintf(_file, "\t%ls\n", _strings[status]);
 		else
-			fwprintf(_file, L"\t%ls %.2f\n", _strings[Strings::Score], _complexity);
-		fwprintf(_file, L"\n\n");
+			fprintf(_file, "\t%ls %.2f\n", _strings[Strings::Score], _complexity);
+		fprintf(_file, "\n\n");
 	}
 }
 
@@ -88,10 +88,10 @@ void Output::displayCopyright(const wchar_t *copyright) const
 
 	if (_file)
 	{
-		fwprintf(_file, L"%ls\n", hyphens.c_str());
-		fwprintf(_file, L"-- %ls --\n", copyright);
-		fwprintf(_file, L"%ls\n", hyphens.c_str());
-		fwprintf(_file, L"\n");
+		fprintf(_file, "%ls\n", hyphens.c_str());
+		fprintf(_file, "-- %ls --\n", copyright);
+		fprintf(_file, "%ls\n", hyphens.c_str());
+		fprintf(_file, "\n");
 		fflush(_file);
 	}
 }
@@ -140,7 +140,7 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 			forsythe[n++] = y ? '/' : '\0';
 		}
 
-		fwprintf(_file, L"%ls\n\t%hs\n\t%d\n\n", _strings[Strings::Input], forsythe, problem.numHalfMoves);
+		fprintf(_file, "%ls\n\t%hs\n\t%d\n\n", _strings[Strings::Input], forsythe, problem.numHalfMoves);
 
 		fprintf(_file, "\t+---+---+---+---+---+---+---+---+\n\t");
 		for (int y = 8; y-- > 0; )
@@ -155,7 +155,7 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 		swprintf(buffer, countof(buffer), L"%d%ls%d %ls", problem.numHalfMoves / 2, _strings[Strings::Dot], (problem.numHalfMoves % 2) ? 5 : 0, _strings[Strings::Moves]);
 		while (int(wcslen(buffer)) < 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0)) wcscat(buffer, L" ");
 		swprintf(buffer + wcslen(buffer), 8, L"(%d+%d)", white, black);
-		fwprintf(_file, L"%ls\n\n", buffer);
+		fprintf(_file, "%ls\n\n", buffer);
 	}
 }
 

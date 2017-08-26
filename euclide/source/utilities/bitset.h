@@ -14,7 +14,7 @@ template <typename Type, int Bits>
 class BitSet
 {
 	private :
-		typename typedef std::conditional<Bits <= 32, uint32_t, uint64_t>::type bits_t;
+		typedef typename std::conditional<Bits <= 32, uint32_t, uint64_t>::type bits_t;
 		bits_t _bits;
 
 	public :
@@ -119,58 +119,6 @@ class BitSet
 			{ assert((position >= 0) && (position < Bits)); return test(position); }
 		inline BitReference operator[](Type position)
 			{ assert((position >= 0) && (position < Bits)); return BitReference(*this, position); }
-
-	public :
-		template <typename BitSet>
-		class BaseIterator
-		{
-			public :
-				BaseIterator(BitSet& bitset, Type position) : _bitset(bitset), _position(position) {}
-
-			public :
-				inline bool operator==(const BaseIterator& iterator) const
-					{ return _position == iterator._position; }
-				inline bool operator!=(const BaseIterator& iterator) const
-					{ return _position != iterator._position; }
-				inline bool operator<=(const BaseIterator& iterator) const
-					{ return _position <= iterator._position; }
-				inline bool operator>=(const BaseIterator& iterator) const
-					{ return _position >= iterator._position; }
-				inline bool operator<(const BaseIterator& iterator) const
-					{ return _position < iterator._position; }
-				inline bool operator>(const BaseIterator& iterator) const
-					{ return _position > iterator._position; }
-
-			private :
-				BitSet& _bitset;
-				Type _position;
-		};
-
-		class Iterator : public BaseIterator<const BitSet>
-		{
-			public :
-				Iterator(const BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
-		};
-
-		class Iterator : public BaseIterator<BitSet>
-		{
-			public :
-				Iterator(BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
-		};
-
-		inline Iterator begin() const
-			{ return Iterator(*this, static_cast<Type>(0)); }
-		inline Iterator cbegin() const
-			{ return Iterator(*this, static_cast<Type>(0)); }
-		inline Iterator end() const
-			{ return Iterator(*this, static_cast<Type>(Bits)); }
-		inline Iterator cend() const
-			{ return Iterator(*this, static_cast<Type>(Bits)); }
-
-		inline Iterator begin()
-			{ return Iterator(*this, static_cast<Type>(0)); }
-		inline Iterator end()
-			{ return Iterator(*this, static_cast<Type>(Bits)); }
 
 	public :
 		class BitSetRange
