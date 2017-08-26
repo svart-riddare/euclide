@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "problem.h"
+#include "targets.h"
 #include "pieces.h"
 
 namespace Euclide
@@ -29,7 +30,10 @@ class Euclide
 		Problem _problem;                          /**< Current problem to solve. */
 
 		array<Pieces, NumColors> _pieces;          /**< Deductions on pieces. */
+		array<Targets, NumColors> _targets;        /**< Targets that must be fullfilled. */
+
 		array<int, NumColors> _freeMoves;          /**< Unassigned moves. */
+		array<int, NumColors> _freeCaptures;       /**< Unassigned captures. */
 
 	private :
 		mutable EUCLIDE_Deductions _deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
@@ -78,28 +82,65 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			if (_problem.initialPosition(square) == glyph)
 				_pieces[color(glyph)].emplace_back(_problem, square);
 
+	/* -- Initialize targets -- */
+
+	for (Glyph glyph : MostGlyphs())
+		for (Square square : AllSquares())
+			if (_problem.diagramPosition(square) == glyph)
+				_targets[color(glyph)].emplace_back(glyph, square);
+
 	/* -- Repeat the following deductions until there is no improvements -- */
 
 	for (bool update = true; update; )
 	{
 		update = false;
 
+		/* -- Assign moves and captures to targets -- */
+
+		for (Color color : AllColors())
+		{
+			for (Target& target : _targets[color])
+			{
+				Men men([&](Man man) { return (man < _pieces[color].size()) && _pieces[color][man].squares()[target.square()]; });
+				target.updatePossibleMen(men);
+
+				target.updateRequiredMoves(xstd::min(men.in(_pieces[color]), [](const Piece& piece) { return piece.requiredMoves(); }));
+				target.updateRequiredCaptures(xstd::min(men.in(_pieces[color]), [](const Piece& piece) { return piece.requiredCaptures(); }));
+			}
+		}
+
 		/* -- Compute free moves and captures -- */
 
 		for (Color color : AllColors())
-			_freeMoves[color] = _problem.moves(color) - xstd::sum(_pieces[color], 0, [](const Piece& piece) { return piece.requiredMoves(); });
+		{
+			_freeMoves[color] = _problem.moves(color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredMoves(); });
+			_freeCaptures[color] = _problem.capturedPieces(color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
+		}
 
 		/* -- Display current deductions -- */
 
 		if (_callbacks.displayDeductions)
 			(*_callbacks.displayDeductions)(_callbacks.handle, &deductions());
 
-		/* -- Assign free moves -- */
+		/* -- Assign free moves, free captures and possible squares -- */
 
 		for (Color color : AllColors())
+		{
 			for (Piece& piece : _pieces[color])
-				if (piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color]))
+			{
+				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color]);
+				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color]);
+
+#if 0
+				for (Target& target : _targets[color])
+					if (target.man() >= 0)
+						piece.setPossibleSquares((piece != _pieces[color][target.man()]) ? piece.squares() - Squares().set(target.square()) : Squares().set(target.square()));  // TODO : Improve
+#endif
+				
+				if (piece.update())
 					update = true;
+			}
+		}
 	}
 }
 

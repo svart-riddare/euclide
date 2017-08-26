@@ -9,7 +9,7 @@ namespace Euclide
 class Problem;
 
 /* -------------------------------------------------------------------------- */
-/* -- class Piece                                                          -- */
+/* -- Piece                                                                -- */
 /* -------------------------------------------------------------------------- */
 
 class Piece
@@ -18,7 +18,13 @@ class Piece
 		Piece(const Problem& problem, Square square);
 		~Piece();
 
-		bool setAvailableMoves(int availableMoves);
+		void setAvailableMoves(int availableMoves);
+		void setAvailableCaptures(int availableCaptures);
+
+		void setPossibleSquares(const Squares& squares);
+		void setPossibleCaptures(const Squares& captures);
+	
+		bool update();
 
 
 #if 0
@@ -72,6 +78,12 @@ class Piece
 
 		inline int moves() const
 			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
+
+	public :
+		inline bool operator==(const Piece& piece) const
+			{ return this == &piece; }
+		inline bool operator!=(const Piece& piece) const
+			{ return this != &piece; }
 
 	protected :
 		void updateDeductions();
@@ -159,6 +171,8 @@ class Piece
 
 		array<Squares, NumSquares> _moves;    /**< Set of legal moves. */
 
+		bool _update;                         /**< Set when deductions must be updated and update() shall return true. */
+
 
 
 #if 0
@@ -197,7 +211,7 @@ class Piece
 };
 
 /* -------------------------------------------------------------------------- */
-/* -- class Pieces                                                         -- */
+/* -- Pieces                                                               -- */
 /* -------------------------------------------------------------------------- */
 
 typedef std::vector<Piece> Pieces;

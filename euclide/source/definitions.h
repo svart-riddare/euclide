@@ -27,6 +27,11 @@ typedef enum { Neutral = -1, White, Black, NumColors } Color;
 
 typedef EnumRange<Color, NumColors> AllColors;
 
+constexpr Color operator!(Color color)
+{
+	return static_cast<Color>(1 - color);
+}
+
 /* -------------------------------------------------------------------------- */
 /* -- Glyph                                                                -- */
 /* -------------------------------------------------------------------------- */
@@ -101,6 +106,16 @@ static const Castling Castlings[NumColors][NumCastlingSides] =
 	{ { E1, F1, G1, H1 }, { E1, D1, C1, A1 } },
 	{ { E8, F8, G8, H8 }, { E8, D8, C8, A8 } }
 };
+
+/* -------------------------------------------------------------------------- */
+/* -- Man                                                                  -- */
+/* -------------------------------------------------------------------------- */
+
+typedef int Man;
+typedef BitSet<Man, MaxPieces> Men;
+
+typedef EnumRange<Man, MaxPieces> AllMen;
+typedef Men::BitSetRange ValidMen;
 
 /* -------------------------------------------------------------------------- */
 

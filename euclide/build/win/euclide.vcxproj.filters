@@ -127,9 +127,6 @@
     <ClInclude Include="..\..\source\position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\targets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\interface\euclide.h">
       <Filter>Interface Files</Filter>
     </ClInclude>
@@ -168,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\utilities\boost\tribool.hpp">
       <Filter>Utility Files\Boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\targets.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -29,19 +29,22 @@ Piece::Piece(const Problem& problem, Square square)
 
 	_captured = (_royal || !problem.capturedPieces(_color)) ? tribool(false) : unknown;
 
-	/* -- Initialize possible final squares -- */
+	/* -- Initialize number of available moves and captures -- */
+
+	_availableMoves = problem.moves(_color);
+	_availableCaptures = problem.diagramPieces(!_color) - problem.initialPieces(!_color);
+
+	/* -- Initialize possible final squares and capture squares -- */
 
 	for (Square square : AllSquares())
 		_possibleSquares.set(square, maybe(_captured) || (problem.diagramPosition(square) == _glyph));
 
-	/* -- Initialize number of available moves and captures -- */
-
-	_availableMoves = problem.moves(_color);
-	_availableCaptures = problem.diagramPieces(_color) - problem.initialPieces(_color);
+	if (_availableCaptures)
+		_possibleCaptures.set();
 
 	/* -- Initialize legal moves -- */
 
-	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant(), _availableCaptures ? unknown : false);
+	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant(), _availableCaptures ? unknown : tribool(false));
 
 	/* -- Handle castling -- */
 
@@ -59,7 +62,8 @@ Piece::Piece(const Problem& problem, Square square)
 
 	/* -- Update possible moves -- */
 
-	updateDeductions();
+	_update = true;
+	update();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -70,13 +74,57 @@ Piece::~Piece()
 
 /* -------------------------------------------------------------------------- */
 
-bool Piece::setAvailableMoves(int availableMoves)
+void Piece::setAvailableMoves(int availableMoves)
 {
 	if (availableMoves >= _availableMoves)
-		return false;
+		return;
 
 	_availableMoves = availableMoves;
+	_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setAvailableCaptures(int availableCaptures)
+{
+	if (availableCaptures >= _availableCaptures)
+		return;
+
+	_availableCaptures = availableCaptures;
+	_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setPossibleSquares(const Squares& squares)
+{
+	if ((_possibleSquares & squares) == _possibleSquares)
+		return;
+
+	_possibleSquares &= squares;
+	_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setPossibleCaptures(const Squares& squares)
+{
+	if ((_possibleCaptures & squares) == _possibleCaptures)
+		return;
+
+	_possibleCaptures &= squares;
+	_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Piece::update()
+{
+	if (!_update)
+		return false;
+
 	updateDeductions();
+	_update = false;
 
 	return true;
 }
@@ -105,8 +153,8 @@ void Piece::updateDeductions()
 
 	/* -- Compute minimum number of moves and captures performed by this piece -- */
 
-	_requiredMoves = _distances[*xstd::min_element(ValidSquares(_possibleSquares), [&](Square squareA, Square squareB) { return _distances[squareA] < _distances[squareB]; })];
-	_requiredCaptures = _captures[*xstd::min_element(ValidSquares(_possibleSquares), [&](Square squareA, Square squareB) { return _captures[squareA] < _captures[squareB]; })];
+	_requiredMoves = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _distances[square]; });
+	_requiredCaptures = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _captures[square]; });
 
 	/* -- Remove moves that will obviously never be played (to be improved) -- */
 

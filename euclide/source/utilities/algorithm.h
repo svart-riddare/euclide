@@ -24,6 +24,14 @@ template<typename Iterator, typename T, typename X, typename Function> inline
 T sum(Iterator first, Iterator last, T zero, const Function& function)
 	{ return std::accumulate(first, last, zero, [&](T sum, const typename Collection::value_type& x) { return sum + function(x); }); }
 
+template<typename Iterator, typename T, typename X, typename Function> inline
+T min(Iterator first, Iterator last, T initial, const Function& function)
+	{ return std::accumulate(first, last, initial, [&](T min, const typename Collection::value_type& x) { return std::min<T>(min, function(x)); }); }
+
+template<typename Iterator, typename T, typename X, typename Function> inline
+T max(Iterator first, Iterator last, T initial, const Function& function)
+	{ return std::accumulate(first, last, initial, [&](T max, const typename Collection::value_type& x) { return std::max<T>(max, function(x)); }); }
+
 /* -------------------------------------------------------------------------- */
 
 template <typename Collection, typename T> inline
@@ -41,6 +49,26 @@ bool none(const Collection& collection, const T& value)
 template<typename Collection, typename T, typename Function> inline
 T sum(const Collection& collection, T zero, const Function& function)
 	{ return std::accumulate(std::begin(collection), std::end(collection), zero, [&](T sum, const typename Collection::value_type& x) { return sum + function(x); }); }
+
+template<typename Collection, typename Function> inline
+int sum(const Collection& collection, const Function& function)
+	{ return xstd::sum(collection, 0, function); }
+
+template<typename Collection, typename T, typename Function> inline
+T min(const Collection& collection, T initial, const Function& function)
+	{ return std::accumulate(std::begin(collection), std::end(collection), initial, [&](T min, const typename Collection::value_type& x) { return std::min<T>(min, function(x)); }); }
+
+template<typename Collection, typename Function> inline
+int min(const Collection& collection, const Function& function)
+	{ return xstd::min(collection, std::numeric_limits<int>::max(), function); }
+
+template<typename Collection, typename T, typename Function> inline
+T max(const Collection& collection, T initial, const Function& function)
+	{ return std::accumulate(std::begin(collection), std::end(collection), initial, [&](T max, const typename Collection::value_type& x) { return std::max<T>(max, function(x)); }); }
+
+template<typename Collection, typename Function> inline
+int max(const Collection& collection, const Function& function)
+	{ return xstd::max(collection, std::numeric_limits<int>::min(), function); }
 
 /* -------------------------------------------------------------------------- */
 

@@ -20,6 +20,10 @@ class BitSet
 	public :
 		BitSet(bits_t bits = 0) : _bits(bits) {}
 
+		template <typename Predicate> inline
+		BitSet(const Predicate& predicate, bool value = true) : _bits(0)
+			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) set(position, value); }
+
 		inline BitSet& set()
 			{ _bits = ~bits_t(0); return *this; }
 		inline BitSet& reset()
@@ -78,6 +82,21 @@ class BitSet
 			{ _bits |= bitset._bits; return *this; }
 		inline BitSet& operator^=(const BitSet& bitset)
 			{ _bits ^= bitset._bits; return *this; }
+		inline BitSet& operator+=(const BitSet& bitset)
+			{ _bits |= bitset._bits; return *this; }
+		inline BitSet& operator-=(const BitSet& bitset)
+			{ _bits &= ~bitset._bits; return *this; }
+
+		inline BitSet operator&(const BitSet& bitset) const
+			{ return BitSet(*this) &= bitset; }
+		inline BitSet operator|(const BitSet& bitset) const
+			{ return BitSet(*this) |= bitset; }
+		inline BitSet operator^=(const BitSet& bitset) const
+			{ return BitSet(*this) ^= bitset; }
+		inline BitSet operator+(const BitSet& bitset) const
+			{ return BitSet(*this) += bitset; }
+		inline BitSet operator-(const BitSet& bitset) const
+			{ return BitSet(*this) -= bitset; }
 
 	public :
 		class BitReference
@@ -127,10 +146,10 @@ class BitSet
 				Type _position;
 		};
 
-		class ConstIterator : public BaseIterator<const BitSet>
+		class Iterator : public BaseIterator<const BitSet>
 		{
 			public :
-				ConstIterator(const BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
+				Iterator(const BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
 		};
 
 		class Iterator : public BaseIterator<BitSet>
@@ -139,14 +158,14 @@ class BitSet
 				Iterator(BitSet& bitset, Type position) : BaseIterator(bitset, position) {}
 		};
 
-		inline ConstIterator begin() const
-			{ return ConstIterator(*this, static_cast<Type>(0)); }
-		inline ConstIterator cbegin() const
-			{ return ConstIterator(*this, static_cast<Type>(0)); }
-		inline ConstIterator end() const
-			{ return ConstIterator(*this, static_cast<Type>(Bits)); }
-		inline ConstIterator cend() const
-			{ return ConstIterator(*this, static_cast<Type>(Bits)); }
+		inline Iterator begin() const
+			{ return Iterator(*this, static_cast<Type>(0)); }
+		inline Iterator cbegin() const
+			{ return Iterator(*this, static_cast<Type>(0)); }
+		inline Iterator end() const
+			{ return Iterator(*this, static_cast<Type>(Bits)); }
+		inline Iterator cend() const
+			{ return Iterator(*this, static_cast<Type>(Bits)); }
 
 		inline Iterator begin()
 			{ return Iterator(*this, static_cast<Type>(0)); }
@@ -157,11 +176,14 @@ class BitSet
 		class BitSetRange
 		{
 			public :
+				typedef Type value_type;
+
+			public :
 				class BitSetIterator : public std::iterator<std::forward_iterator_tag, Type>
 				{
 					public :
-						BitSetIterator(const BitSet& bitset) : _bitset(&bitset), _position(bitset.first()) {}
-						BitSetIterator(const BitSet& bitset, Type position) : _bitset(&bitset), _position(position) {}
+						BitSetIterator() : _bits(0), _position(Bits) {}
+						BitSetIterator(const BitSet& bitset) : _bits(bitset) { operator++(); }
 
 					public :
 						inline bool operator==(const BitSetIterator& iterator) const
@@ -170,33 +192,10 @@ class BitSet
 							{ return _position != iterator._position; }
 
 						inline BitSetIterator& operator++()
-							{ _position = _bitset->next(_position); return *this; }
-
-						inline Type operator*() const
-							{ return _position; }
-
-					private :
-						const BitSet *_bitset;
-						Type _position;
-				};
-
-				class ConstBitSetIterator : public std::iterator<std::forward_iterator_tag, Type>
-				{
-					public :
-						ConstBitSetIterator() : _bits(0), _position(Bits) {}
-						ConstBitSetIterator(const BitSet& bitset) : _bits(bitset) { operator++(); }
-
-					public :
-						inline bool operator==(const ConstBitSetIterator& iterator) const
-							{ return _position == iterator._position; }
-						inline bool operator!=(const ConstBitSetIterator& iterator) const
-							{ return _position != iterator._position; }
-
-						inline ConstBitSetIterator& operator++()
 							{ intel::bsf(_bits, &_position) ? (_bits = intel::btr(_bits, _position)) : (_position = Bits); return *this; }
 
 						inline Type operator*() const
-							{ return static_cast<Type>(_position); }
+							{ assert(_position < Bits); return static_cast<Type>(_position); }
 
 					private :
 						bits_t _bits;
@@ -204,20 +203,14 @@ class BitSet
 				};
 
 				typedef BitSetIterator iterator;
-				typedef ConstBitSetIterator const_iterator;
 
 			public :
 				BitSetRange(const BitSet& bitset) : _bitset(bitset) {}
 
-				inline BitSetIterator begin()
+				inline BitSetIterator begin() const
 					{ return BitSetIterator(_bitset); }
-				inline BitSetIterator end()
-					{ return BitSetIterator(_bitset, static_cast<Type>(Bits)); }
-
-				inline ConstBitSetIterator begin() const
-					{ return ConstBitSetIterator(_bitset); }
-				inline ConstBitSetIterator end() const
-					{ return ConstBitSetIterator(); }
+				inline BitSetIterator end() const
+					{ return BitSetIterator(); }
 
 			private :
 				const BitSet& _bitset;
@@ -225,6 +218,57 @@ class BitSet
 
 		inline BitSetRange range() const
 			{ return BitSetRange(*this); }
+
+	public :
+		template <typename Collection>
+		class BitSetSelection
+		{
+			public :
+				typedef typename Collection::value_type value_type;
+
+			public :
+				class BitSetIterator : public std::iterator<std::forward_iterator_tag, Type>
+				{
+					public :
+						BitSetIterator(const Collection& collection) : _collection(&collection), _bits(0), _position(Bits) {}
+						BitSetIterator(const Collection& collection, const BitSet& bitset) : _collection(&collection), _bits(bitset) { operator++(); }
+
+					public :
+						inline bool operator==(const BitSetIterator& iterator) const
+							{ return _position == iterator._position; }
+						inline bool operator!=(const BitSetIterator& iterator) const
+							{ return _position != iterator._position; }
+
+						inline BitSetIterator& operator++()
+							{ intel::bsf(_bits, &_position) ? (_bits = intel::btr(_bits, _position)) : (_position = Bits); return *this; }
+
+						inline typename Collection::const_reference operator*() const
+							{ return (*_collection)[_position]; }
+
+					private :
+						const Collection *_collection;
+						bits_t _bits;
+						int _position;
+				};
+
+				typedef BitSetIterator iterator;
+
+			public :
+				BitSetSelection(const Collection& collection, const BitSet& bitset) : _collection(collection), _bitset(bitset) {}
+
+				inline BitSetIterator begin() const
+					{ return BitSetIterator(_collection, _bitset); }
+				inline BitSetIterator end() const
+					{ return BitSetIterator(_collection); }
+
+			private :
+				const Collection& _collection;
+				const BitSet& _bitset;
+		};
+
+		template <typename Collection>
+		inline BitSetSelection<Collection> in(const Collection& collection) const
+			{ return BitSetSelection<Collection>(collection, *this); }
 };
 
 /* -------------------------------------------------------------------------- */
