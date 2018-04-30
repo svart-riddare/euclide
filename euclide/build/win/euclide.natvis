@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="boost::logic::tribool">
+    <DisplayString Condition="value==indeterminate_value">unknown</DisplayString>
+    <DisplayString Condition="value==false_value">false</DisplayString>
+    <DisplayString Condition="value==true_value">true</DisplayString>
+  </Type>
+
+  <Type Name="Euclide::BitSet&lt;enum Euclide::Square,64&gt;">
+    <DisplayString Condition="_bits==0xFFFFFFFFFFFFFFFF">Anywhere</DisplayString>
+    <DisplayString Condition="_bits==0x0000000000000000">Nowhere</DisplayString>
+    <DisplayString>{_bits,x}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="bit" InitialValue="0"/>
+        <Loop>
+          <If Condition="_bits >> bit &amp; 1">
+            <Item>(Square)(bit)</Item>
+          </If>
+          <Exec>bit++</Exec>
+          <Break Condition="bit >= 64"/>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="Euclide::BitSet&lt;*,*&gt;" >
+    <DisplayString Condition="_bits==($T1)(-1)">Any</DisplayString>
+    <DisplayString Condition="_bits==($T1)(0)">None</DisplayString>
+    <DisplayString>{_bits,x}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="bit" InitialValue="0"/>
+        <Loop>
+          <If Condition="_bits >> bit &amp; 1">
+            <Item>($T1)(bit)</Item>
+          </If>
+          <Exec>bit++</Exec>
+          <Break Condition="bit >= $T2"/>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

@@ -170,4 +170,7 @@
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="euclide.natvis" />
+  </ItemGroup>
 </Project>

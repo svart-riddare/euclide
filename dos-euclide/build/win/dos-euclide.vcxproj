@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,26 +22,27 @@
     <ProjectGuid>{4FBA6E2A-47F7-4E5C-AA48-AFB1BF4F36BE}</ProjectGuid>
     <RootNamespace>dos-euclide</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -107,7 +108,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4838</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
@@ -131,7 +132,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4838</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
@@ -157,7 +158,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4838</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\Euclide\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -185,7 +186,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4244;4267;4512</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4838</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>..\..\..\Euclide\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
