@@ -119,7 +119,10 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		for (Color color : AllColors())
 		{
 			_freeMoves[color] = _problem.moves(color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredMoves(); });
-			_freeCaptures[color] = _problem.capturedPieces(color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
+			_freeCaptures[color] = _problem.capturedPieces(!color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
+
+			if ((_freeMoves[color] < 0) || (_freeCaptures[color] < 0))
+				throw NoSolution;
 		}
 
 		/* -- Display current deductions -- */

@@ -100,7 +100,10 @@ class Piece
 		void updatePossibleMoves();
 
 		array<int, NumSquares> computeDistances(Square square, Square castling) const;
-		array<int, NumSquares> computeDistancesTo(Squares squares) const;
+		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
+
+		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
+		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
 
 #if 0
 	public :
@@ -157,34 +160,35 @@ class Piece
 #endif
 
 	private :
-		Glyph _glyph;                         /**< Piece's glyph. */
-		Color _color;                         /**< Piece's color, implicit from glyph. */
-		Species _species;                     /**< Piece type. */
+		Glyph _glyph;                                 /**< Piece's glyph. */
+		Color _color;                                 /**< Piece's color, implicit from glyph. */
+		Species _species;                             /**< Piece type. */
 
-		bool _royal;                          /**< A royal piece (the king) can not be captured and may not be left in check. */
+		bool _royal;                                  /**< A royal piece (the king) can not be captured and may not be left in check. */
 
-		Square _initialSquare;                /**< Piece's initial square. */
-		Square _castlingSquare;               /**< Piece's initial square, for rooks that have castled. */
-		Square _finalSquare;                  /**< Piece's final square, if known. */
+		Square _initialSquare;                        /**< Piece's initial square. */
+		Square _castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
+		Square _finalSquare;                          /**< Piece's final square, if known. */
 
-		tribool _captured;                    /**< Set if the piece has been captured. */
-		tribool _promoted;                    /**< Set if the piece has been promoted. */
+		tribool _captured;                            /**< Set if the piece has been captured. */
+		tribool _promoted;                            /**< Set if the piece has been promoted. */
 
-		Glyphs _glyphs;                       /**< Piece's possible glyphs after promotion. */
+		Glyphs _glyphs;                               /**< Piece's possible glyphs after promotion. */
 
-		Squares _possibleSquares;             /**< Possible final squares of this piece. */
-		Squares _possibleCaptures;            /**< Possible captures made by this piece. */
-		int _availableMoves;                  /**< Number of moves available for this piece. */
-		int _availableCaptures;               /**< Number of captures available for this piece. */
-		int _requiredMoves;                   /**< Minimum number of moves required by this piece. */
-		int _requiredCaptures;                /**< Minimum number of captures performed by this piece. */
+		Squares _possibleSquares;                     /**< Possible final squares of this piece. */
+		Squares _possibleCaptures;                    /**< Possible captures made by this piece. */
+		int _availableMoves;                          /**< Number of moves available for this piece. */
+		int _availableCaptures;                       /**< Number of captures available for this piece. */
+		int _requiredMoves;                           /**< Minimum number of moves required by this piece. */
+		int _requiredCaptures;                        /**< Minimum number of captures performed by this piece. */
 
-		array<int, NumSquares> _distances;    /**< Number of moves required to reach each square. */
-		array<int, NumSquares> _captures;     /**< Number of captures required to reach each square. */
+		array<int, NumSquares> _distances;            /**< Number of moves required to reach each square. */
+		array<int, NumSquares> _captures;             /**< Number of captures required to reach each square. */
 
-		array<Squares, NumSquares> _moves;    /**< Set of legal moves. */
+		array<Squares, NumSquares> _moves;            /**< Set of legal moves. */
+		const array<Squares, NumSquares> *_xmoves;    /**< Set of moves that must be captures, or null if there are no restrictions. */
 
-		bool _update;                         /**< Set when deductions must be updated and update() shall return true. */
+		bool _update;                                 /**< Set when deductions must be updated and update() shall return true. */
 
 
 

@@ -51,7 +51,10 @@ Piece::Piece(const Problem& problem, Square square)
 
 	/* -- Initialize legal moves -- */
 
-	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant(), _availableCaptures ? unknown : tribool(false));
+	Tables::initializeLegalMoves(&_moves, &_xmoves, _species, _color, problem.variant(), _availableCaptures ? unknown : tribool(false));
+
+	_distances.fill(0);
+	_captures.fill(0);
 
 	/* -- Handle castling -- */
 
@@ -152,14 +155,16 @@ bool Piece::update()
 void Piece::updateDeductions()
 {
 	_distances = computeDistances(_initialSquare, _castlingSquare);
-	_captures.fill(0);
+	if (_xmoves)
+		_captures = computeCaptures(_initialSquare, _castlingSquare);
 
 	for (Square square : AllSquares())
 		if (_distances[square] > _availableMoves)
 			_possibleSquares[square] = false;
 
-	if (_availableCaptures)
-		_possibleCaptures.set();
+	for (Square square : AllSquares())
+		if (_captures[square] > _availableCaptures)
+			_possibleCaptures[square] = false;
 
 	/* -- Are there any possible final squares left? -- */
 
@@ -193,6 +198,18 @@ void Piece::updatePossibleMoves()
 		for (Square to : ValidSquares(_moves[from]))
 			if (_distances[from] + 1 + distances[to] > _availableMoves)
 				_moves[from][to] = false;
+
+	/* -- Same with required captures -- */
+
+	if (_xmoves)
+	{
+		const array<int, NumSquares> captures = computeCapturesTo(_possibleSquares);
+
+		for (Square from : AllSquares())
+			for (Square to : ValidSquares(_moves[from]))
+				if (_captures[from] + (*_xmoves)[from][to] > _availableCaptures)
+					_moves[from][to] = false;
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -292,6 +309,110 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 
 	return distances;
 }
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeCaptures(Square square, Square castling) const
+{
+	assert(_xmoves);
+
+	/* -- Initialize captures -- */
+
+	array<int, NumSquares> captures;
+	captures.fill(Infinity);
+	captures[square] = 0;
+	captures[castling] = 0;
+
+	/* -- Initialize square queue -- */
+
+	Queue<Square, NumSquares> squares;
+	squares.push(square);
+	if (castling != square)
+		squares.push(castling);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square from = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square to : ValidSquares(_moves[from]))
+		{
+			/* -- This square may have been attained using less captures -- */
+
+			const int required = captures[from] + (*_xmoves)[from][to];
+			if (required >= captures[to])
+				continue;
+
+			/* -- Set required captures -- */
+
+			captures[to] = required;
+
+			/* -- Add it to queue of squares -- */
+
+			squares.push(to);
+		}
+	}
+
+	/* -- Done -- */
+
+	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
+{
+	/* -- Initialize captures and square queue -- */
+
+	array<int, NumSquares> captures;
+	Queue<Square, NumSquares> squares;
+
+	captures.fill(Infinity);
+
+	for (Square square : AllSquares())
+		if ((captures[square] = destinations[square] ? 0 : Infinity) == 0)
+			squares.push(square);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square to = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square from : AllSquares())
+		{
+			/* -- Skip illegal moves -- */
+
+			if (!_moves[from][to])
+				continue;
+
+			/* -- This square may have been attained using less captures -- */
+
+			const int required = captures[to] + (*_xmoves)[from][to];
+			if (required >= captures[from])
+				continue;
+
+			/* -- Set square required number of captures -- */
+
+			captures[from] = required;
+
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(from);
+		}
+	}
+
+	/* -- Done -- */
+
+	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
 
 
 #if 0

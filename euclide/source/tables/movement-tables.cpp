@@ -61,19 +61,19 @@ static constexpr uint64_t pawn(Square square, Color color, bool capture, bool cy
 	type(H1, x, y, c), type(H2, x, y, c), type(H3, x, y, c), type(H4, x, y, c), type(H5, x, y, c), type(H6, x, y, c), type(H7, x, y, c), type(H8, x, y, c) \
 }
 
-static const uint64_t WazirMoves[2][NumSquares] = { MOVES(leaper, 0, 1, false), MOVES(leaper, 0, 1, true) };
-static const uint64_t FerzMoves[2][NumSquares] = { MOVES(leaper, 1, 1, false), MOVES(leaper, 1, 1, true) };
-static const uint64_t KnightMoves[2][NumSquares] = { MOVES(leaper, 1, 2, false), MOVES(leaper, 1, 2, true) };
-static const uint64_t AlfilMoves[2][NumSquares] = { MOVES(leaper, 2, 2, false), MOVES(leaper, 2, 2, true) };
-static const uint64_t CamelMoves[2][NumSquares] = { MOVES(leaper, 1, 3, false), MOVES(leaper, 1, 3, true) };
-static const uint64_t ZebraMoves[2][NumSquares] = { MOVES(leaper, 2, 3, false), MOVES(leaper, 2, 3, true) };
+static const array<Squares, NumSquares> WazirMoves[2] = { MOVES(leaper, 0, 1, false), MOVES(leaper, 0, 1, true) };
+static const array<Squares, NumSquares> FerzMoves[2] = { MOVES(leaper, 1, 1, false), MOVES(leaper, 1, 1, true) };
+static const array<Squares, NumSquares> KnightMoves[2] = { MOVES(leaper, 1, 2, false), MOVES(leaper, 1, 2, true) };
+static const array<Squares, NumSquares> AlfilMoves[2] = { MOVES(leaper, 2, 2, false), MOVES(leaper, 2, 2, true) };
+static const array<Squares, NumSquares> CamelMoves[2] = { MOVES(leaper, 1, 3, false), MOVES(leaper, 1, 3, true) };
+static const array<Squares, NumSquares> ZebraMoves[2] = { MOVES(leaper, 2, 3, false), MOVES(leaper, 2, 3, true) };
 
-static const uint64_t RookMoves[2][NumSquares] = { MOVES(runner, 0, 1, false), MOVES(runner, 0, 1, true) };
-static const uint64_t BishopMoves[2][NumSquares] = { MOVES(runner, 1, 1, false), MOVES(runner, 1, 1, true) };
-static const uint64_t NightriderMoves[2][NumSquares] = { MOVES(runner, 1, 2, false), MOVES(runner, 1, 2, true) };
+static const array<Squares, NumSquares> RookMoves[2] = { MOVES(runner, 0, 1, false), MOVES(runner, 0, 1, true) };
+static const array<Squares, NumSquares> BishopMoves[2] = { MOVES(runner, 1, 1, false), MOVES(runner, 1, 1, true) };
+static const array<Squares, NumSquares> NightriderMoves[2] = { MOVES(runner, 1, 2, false), MOVES(runner, 1, 2, true) };
 
-static const uint64_t PawnMoves[2][NumColors][NumSquares] = { { MOVES(pawn, White, false, false), MOVES(pawn, Black, false, false) }, { MOVES(pawn, White, false, true), MOVES(pawn, Black, false, true) } };
-static const uint64_t PawnCaptures[2][NumColors][NumSquares] = { { MOVES(pawn, White, true, false), MOVES(pawn, Black, true, false) }, { MOVES(pawn, White, true, true), MOVES(pawn, Black, true, true) } };
+static const array<Squares, NumSquares> PawnMoves[2][NumColors] = { { MOVES(pawn, White, false, false), MOVES(pawn, Black, false, false) }, { MOVES(pawn, White, false, true), MOVES(pawn, Black, false, true) } };
+static const array<Squares, NumSquares> PawnCaptures[2][NumColors] = { { MOVES(pawn, White, true, false), MOVES(pawn, Black, true, false) }, { MOVES(pawn, White, true, true), MOVES(pawn, Black, true, true) } };
 
 /* -------------------------------------------------------------------------- */
 
@@ -94,7 +94,7 @@ static const Squares GridSquares[NumSquares] =
 
 /* -------------------------------------------------------------------------- */
 
-void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Color color, Variant variant, tribool capture)
+void initializeLegalMoves(array<Squares, NumSquares> *moves, const array<Squares, NumSquares> **captures, Species species, Color color, Variant variant, tribool capture)
 {
 	const int cylindrical = (variant == Cylinder) ? 1 : 0;
 
@@ -190,6 +190,12 @@ void initializeLegalMoves(array<Squares, NumSquares> *moves, Species species, Co
 	if (variant == Grid)
 		for (Square square : AllSquares())
 			(*moves)[square] &= ~GridSquares[square];
+
+	/* -- Return table of required captures -- */
+
+	*captures = nullptr;
+	if (maybe(capture) && (species == Pawn))
+		*captures = &PawnCaptures[cylindrical][color];
 
 	/* -- Done -- */
 }
