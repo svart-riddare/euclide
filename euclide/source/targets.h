@@ -6,6 +6,8 @@
 namespace Euclide
 {
 
+class Targets;
+
 /* -------------------------------------------------------------------------- */
 /* -- Target                                                               -- */
 /* -------------------------------------------------------------------------- */
@@ -20,7 +22,9 @@ class Target
 		int updateRequiredCaptures(int requiredCaptures)
 			{ return xstd::maximize(_requiredCaptures, requiredCaptures); }
 
-		void updatePossibleMen(const Men& men);
+		void updatePossibleMen(const Men& men);		
+		
+		bool applyPigeonHolePrinciple(Targets& targets) const;
 
 	public :
 		inline Glyph glyph() const
@@ -35,7 +39,7 @@ class Target
 		inline int requiredCaptures() const
 			{ return _requiredCaptures; }
 
-		inline Men men() const
+		inline const Men& men() const
 			{ return _men; }
 		inline Man man() const
 			{ return _man; }
@@ -56,7 +60,41 @@ class Target
 /* -- Targets                                                              -- */
 /* -------------------------------------------------------------------------- */
 
-typedef std::vector<Target> Targets;
+class Targets : public std::vector<Target>
+{
+	public :
+		void update();
+};
+
+/* -------------------------------------------------------------------------- */
+/* -- TargetPartition                                                      -- */
+/* -------------------------------------------------------------------------- */
+
+class TargetPartition
+{
+	public :
+		bool merge(const Target& target);
+
+	public :
+		inline const Squares& squares() const
+			{ return _squares; }
+		inline const Men& men() const
+			{ return _men; }
+
+	private :
+		Squares _squares;    /**< Target squares for these targets. */
+		Men _men;            /**< Possible men for these targets. */
+};
+
+/* -------------------------------------------------------------------------- */
+/* -- TargetPartitions                                                     -- */
+/* -------------------------------------------------------------------------- */
+
+class TargetPartitions : public std::vector<TargetPartition>
+{
+	public :
+		TargetPartitions(const Targets& targets);
+};
 
 /* -------------------------------------------------------------------------- */
 

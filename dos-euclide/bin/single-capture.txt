@@ -242,7 +242,7 @@ Gerd Wilts, Norbert Geissler
 Retros Mailing List 1996
 P0006447
 
-tcf1rfct/ppp2pp1/8/3pp3/4PP2/6pR/PPPP1d1P/TCFD1CFT
+tcf1rfct/ppp2pp1/8/3pp3/4PP2/6pR/PPPP1d1P/TCFD1FCT
 14
 
 --------------------------------------------------------------
@@ -607,7 +607,7 @@ Mario Parrinello
 Springaren 2000
 P1066709
 
-1c3rct/1pp3pp/3pppt1/D2f3P/TF1P3C/2R5/PPPdPPP1/T1f3FC1
+1c3rct/1pp3pp/3pppt1/D2f3P/TF1P3C/2R5/PPPdPPP1/T1f2FC1
 28
 
 --------------------------------------------------------------
@@ -625,7 +625,7 @@ Ladislav Packa
 Mat-Pat 1992
 P1257720
 
-1c1r3t/1p2cDpp/3p4/pFptp3/1F5R/PPPPPPPP/5ff1/TC2d1ct
+1c1r3t/1p2cDpp/3p4/pFptp3/1F5R/PPPPPPPP/5ff1/TC2d1CT
 31
 
 --------------------------------------------------------------
@@ -715,7 +715,7 @@ Andrey Frolkin
 The Problemist 1985-1986
 P0002336
 
-r1Ft2c1/p3cpp1/1p1p4/t1fDp1Ff/6Pp/D3p2p/PPP1CP1R/TC2TF2
+r1Ft2c1/p3cpp1/1p1p4/t1fDp1Ff/6Pp/d3P2P/PPP1CP1R/TC2TF2
 35
 
 --------------------------------------------------------------
@@ -841,7 +841,7 @@ Jasper van Atten
 Die Schwalbe 1987
 P0000082
 
-T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1F/TCFDR1CT
+T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1f/TCFDR1CT
 38
 
 --------------------------------------------------------------
@@ -999,7 +999,7 @@ Hans Gruber
 Rokada 1983
 P1013628
 
-tcf1rfct/pp1ppppp/2p4F/3F3P/1T4P1/D1P2P2/PPP1PR2/TC4CT
+tcf1rfct/pp1ppppp/2p4F/3F3P/1T4P1/D1P2P2/PPP1PR2/TC4C1
 50
 
 --------------------------------------------------------------
@@ -1026,7 +1026,7 @@ Rustam Ubaidullajew
 StrateGems 2012
 P1288889
 
-rt1F4/p1fp2pc/F1c2p1p/dpp1p3/PP6/4P3/C1PP1PPP/Df2tRct
+rt1F4/p1fp2pc/F1c2p1p/dpp1p3/PP6/4P3/C1PP1PPP/Df2tRCT
 54
 
 --------------------------------------------------------------

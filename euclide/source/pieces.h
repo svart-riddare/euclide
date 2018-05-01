@@ -18,6 +18,8 @@ class Piece
 		Piece(const Problem& problem, Square square);
 		~Piece();
 
+		void setCaptured(bool captured);
+
 		void setAvailableMoves(int availableMoves);
 		void setAvailableCaptures(int availableCaptures);
 
@@ -66,9 +68,17 @@ class Piece
 		inline Species species() const
 			{ return _species; }
 
+		inline tribool captured() const
+			{ return _captured; }
+		inline tribool promoted() const
+			{ return _promoted; }
+
+		inline const Glyphs& glyphs() const
+			{ return _glyphs; }
+
 		inline Square square(bool initial = false) const
 			{ return initial ? _initialSquare : _finalSquare; }
-		inline Squares squares() const
+		inline const Squares& squares() const
 			{ return _possibleSquares; }
 
 		inline int requiredMoves() const
@@ -158,6 +168,9 @@ class Piece
 		Square _finalSquare;                  /**< Piece's final square, if known. */
 
 		tribool _captured;                    /**< Set if the piece has been captured. */
+		tribool _promoted;                    /**< Set if the piece has been promoted. */
+
+		Glyphs _glyphs;                       /**< Piece's possible glyphs after promotion. */
 
 		Squares _possibleSquares;             /**< Possible final squares of this piece. */
 		Squares _possibleCaptures;            /**< Possible captures made by this piece. */

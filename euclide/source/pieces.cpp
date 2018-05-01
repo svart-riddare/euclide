@@ -25,19 +25,26 @@ Piece::Piece(const Problem& problem, Square square)
 	_castlingSquare = square;
 	_finalSquare = Nowhere;
 
-	/* -- Has the piece been captured? -- */
+	/* -- Has the piece been captured or promoted? -- */
 
 	_captured = (_royal || !problem.capturedPieces(_color)) ? tribool(false) : unknown;
+	_promoted = (_species == Pawn) ? unknown : tribool(false);
+
+	_glyphs.set(_glyph);
+	if (maybe(_captured))
+		_glyphs.set(Empty);
+	if (maybe(_promoted))
+		_glyphs.set([&](Glyph glyph) { return Euclide::color(glyph) == _color; });
 
 	/* -- Initialize number of available moves and captures -- */
 
 	_availableMoves = problem.moves(_color);
-	_availableCaptures = problem.diagramPieces(!_color) - problem.initialPieces(!_color);
+	_availableCaptures = problem.initialPieces(!_color) - problem.diagramPieces(!_color);
 
 	/* -- Initialize possible final squares and capture squares -- */
 
 	for (Square square : AllSquares())
-		_possibleSquares.set(square, maybe(_captured) || (problem.diagramPosition(square) == _glyph));
+		_possibleSquares.set(square, maybe(_captured) || (problem.diagramPosition(square) == _glyph) || (maybe(_promoted) && (Euclide::color(problem.diagramPosition(square)) == _color)));
 
 	if (_availableCaptures)
 		_possibleCaptures.set();
@@ -70,6 +77,17 @@ Piece::Piece(const Problem& problem, Square square)
 
 Piece::~Piece()
 {
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setCaptured(bool captured)
+{
+	if (!unknown(_captured))
+		return;
+
+	_captured = captured;
+	_update = true;
 }
 
 /* -------------------------------------------------------------------------- */

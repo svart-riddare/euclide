@@ -5,6 +5,9 @@
       <UniqueIdentifier>{acd4894a-97fa-4ba0-b2c1-49b7e52dd8ba}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
     </Filter>
+    <Filter Include="Problem Files">
+      <UniqueIdentifier>{049e0a74-2680-49b9-9b92-31983f1893a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\console-win.cpp">
@@ -56,8 +59,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\bin\edupuis.txt" />
-    <Text Include="..\..\bin\no-captures.txt" />
-    <Text Include="..\..\bin\sample-input.txt" />
+    <Text Include="..\..\bin\sample-input.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\bin\no-captures.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\bin\edupuis.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\bin\single-capture.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

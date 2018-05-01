@@ -39,6 +39,7 @@ constexpr Color operator!(Color color)
 typedef enum { Empty, WhiteKing, BlackKing, WhiteQueen, BlackQueen, WhiteRook, BlackRook, WhiteBishop, BlackBishop, WhiteKnight, BlackKnight, WhitePawn, BlackPawn, NumGlyphs } Glyph;
 static_assert(NumGlyphs == int(EUCLIDE_NUM_GLYPHS));
 
+typedef BitSet<Glyph, NumGlyphs> Glyphs;
 typedef EnumRange<Glyph, NumGlyphs> AllGlyphs;
 typedef EnumRange<Glyph, NumGlyphs, WhiteKing> MostGlyphs;
 

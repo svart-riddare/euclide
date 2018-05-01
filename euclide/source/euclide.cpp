@@ -99,14 +99,19 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (Color color : AllColors())
 		{
-			for (Target& target : _targets[color])
+			const Pieces& pieces = _pieces[color];
+			Targets& targets = _targets[color];
+
+			for (Target& target : targets)
 			{
-				Men men([&](Man man) { return (man < _pieces[color].size()) && _pieces[color][man].squares()[target.square()]; });
+				Men men([&](Man man) { return (man < pieces.size()) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
 				target.updatePossibleMen(men);
 
-				target.updateRequiredMoves(xstd::min(men.in(_pieces[color]), [](const Piece& piece) { return piece.requiredMoves(); }));
-				target.updateRequiredCaptures(xstd::min(men.in(_pieces[color]), [](const Piece& piece) { return piece.requiredCaptures(); }));
+				target.updateRequiredMoves(xstd::min(men.in(pieces), [](const Piece& piece) { return piece.requiredMoves(); }));
+				target.updateRequiredCaptures(xstd::min(men.in(pieces), [](const Piece& piece) { return piece.requiredCaptures(); }));
 			}
+
+			targets.update();
 		}
 
 		/* -- Compute free moves and captures -- */
@@ -126,17 +131,25 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (Color color : AllColors())
 		{
-			for (Piece& piece : _pieces[color])
+			Pieces& pieces = _pieces[color];
+
+			TargetPartitions partitions(_targets[color]);
+
+			for (const TargetPartition& partition : partitions)
+				if (partition.men().count() <= partition.squares().count())
+					for (Man man : ValidMen(partition.men()))
+						pieces[man].setCaptured(false);
+
+			for (const TargetPartition& partition : partitions)
+				for (Man man : ValidMen(partition.men()))
+					if (!maybe(pieces[man].captured()))
+						pieces[man].setPossibleSquares(partition.squares());
+
+			for (Piece& piece : pieces)
 			{
 				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color]);
 				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color]);
-
-#if 0
-				for (Target& target : _targets[color])
-					if (target.man() >= 0)
-						piece.setPossibleSquares((piece != _pieces[color][target.man()]) ? piece.squares() - Squares().set(target.square()) : Squares().set(target.square()));  // TODO : Improve
-#endif
-				
+			
 				if (piece.update())
 					update = true;
 			}

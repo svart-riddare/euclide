@@ -243,6 +243,7 @@
     <Text Include="..\..\bin\edupuis.txt" />
     <Text Include="..\..\bin\no-captures.txt" />
     <Text Include="..\..\bin\sample-input.txt" />
+    <Text Include="..\..\bin\single-capture.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\euclide\build\win\euclide.vcxproj">

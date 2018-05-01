@@ -98,6 +98,26 @@ class BitSet
 		inline BitSet operator-(const BitSet& bitset) const
 			{ return BitSet(*this) -= bitset; }
 
+		inline bool operator==(const BitSet& bitset) const
+			{ return _bits == bitset._bits; }
+		inline bool operator!=(const BitSet& bitset) const
+			{ return _bits != bitset._bits; }
+		inline bool operator<=(const BitSet& bitset) const
+			{ return (_bits & ~bitset._bits) == 0; }
+		inline bool operator>=(const BitSet& bitset) const
+			{ return (~_bits & bitset._bits) == 0; }
+		inline bool operator<(const BitSet& bitset) const
+			{ return (*this <= bitset) && (*this != bitset); }
+		inline bool operator>(const BitSet& bitset) const
+			{ return (*this >= bitset) && (*this != bitset); }
+
+		inline BitSet operator~() const
+			{ return BitSet(*this).flip(); }
+
+	public :
+		static BitSet mask(int n)
+			{ return BitSet((n < Bits) ? (bits_t(1) << n) - 1 : std::numeric_limits<bits_t>::max()); }
+
 	public :
 		class BitReference
 		{

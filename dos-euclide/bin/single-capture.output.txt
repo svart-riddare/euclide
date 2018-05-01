@@ -26,7 +26,7 @@ Problème analysé :
 	2,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 80.78
+	Échelle de difficulté = 17.04
 
 
 -----------------------------------------
@@ -57,7 +57,7 @@ Problème analysé :
 	2,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 122.34
+	Échelle de difficulté = 11.75
 
 
 -----------------------------------------
@@ -88,7 +88,7 @@ Problème analysé :
 	2,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 122.34
+	Échelle de difficulté = 1.58
 
 
 -----------------------------------------
@@ -119,7 +119,7 @@ Problème analysé :
 	5,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 213.00
+	Échelle de difficulté = 101.83
 
 
 -----------------------------------------
@@ -150,7 +150,7 @@ Problème analysé :
 	3,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 209.38
+	Échelle de difficulté = 97.19
 
 
 -----------------------------------------
@@ -181,7 +181,7 @@ Problème analysé :
 	3,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 159.80
+	Échelle de difficulté = 52.51
 
 
 -----------------------------------------
@@ -212,7 +212,7 @@ Problème analysé :
 	4,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 205.52
+	Échelle de difficulté = 102.73
 
 
 -----------------------------------------
@@ -243,7 +243,7 @@ Problème analysé :
 	4,0 coups                 (15+15)
 
 Verdict : 
-	Échelle de difficulté = 384.95
+	Échelle de difficulté = 112.27
 
 
 -----------------------------------------
@@ -274,7 +274,7 @@ Problème analysé :
 	4,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 157.90
+	Échelle de difficulté = 47.96
 
 
 -----------------------------------------
@@ -305,7 +305,7 @@ Problème analysé :
 	4,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 197.63
+	Échelle de difficulté = 86.62
 
 
 -----------------------------------------
@@ -336,7 +336,7 @@ Problème analysé :
 	4,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 155.41
+	Échelle de difficulté = 69.29
 
 
 -----------------------------------------
@@ -367,7 +367,7 @@ Problème analysé :
 	4,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 213.18
+	Échelle de difficulté = 110.70
 
 
 -----------------------------------------
@@ -398,7 +398,7 @@ Problème analysé :
 	4,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 126.74
+	Échelle de difficulté = 17.98
 
 
 -----------------------------------------
@@ -429,7 +429,7 @@ Problème analysé :
 	4,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 208.60
+	Échelle de difficulté = 109.23
 
 
 -----------------------------------------
@@ -460,7 +460,7 @@ Problème analysé :
 	5,0 coups                 (15+16)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 58.21
 
 
 -----------------------------------------
@@ -491,7 +491,7 @@ Problème analysé :
 	5,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 202.51
+	Échelle de difficulté = 44.83
 
 
 -----------------------------------------
@@ -522,7 +522,7 @@ Problème analysé :
 	5,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 219.42
+	Échelle de difficulté = 73.96
 
 
 -----------------------------------------
@@ -553,7 +553,7 @@ Problème analysé :
 	5,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 210.92
+	Échelle de difficulté = 4.25
 
 
 -----------------------------------------
@@ -584,7 +584,7 @@ Problème analysé :
 	6,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 244.67
+	Échelle de difficulté = 75.87
 
 
 -----------------------------------------
@@ -615,7 +615,7 @@ Problème analysé :
 	6,0 coups                 (15+16)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 59.04
 
 
 -----------------------------------------
@@ -646,7 +646,7 @@ Problème analysé :
 	6,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 163.27
+	Échelle de difficulté = 26.82
 
 
 -----------------------------------------
@@ -677,7 +677,7 @@ Problème analysé :
 	6,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 216.78
+	Échelle de difficulté = 90.03
 
 
 -----------------------------------------
@@ -708,7 +708,7 @@ Problème analysé :
 	6,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 164.03
+	Échelle de difficulté = 56.30
 
 
 -----------------------------------------
@@ -739,7 +739,7 @@ Problème analysé :
 	6,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 238.12
+	Échelle de difficulté = 99.41
 
 
 -----------------------------------------
@@ -770,7 +770,7 @@ Problème analysé :
 	8,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 241.13
+	Échelle de difficulté = 162.84
 
 
 -----------------------------------------
@@ -801,7 +801,7 @@ Problème analysé :
 	6,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 238.51
+	Échelle de difficulté = 96.21
 
 
 -----------------------------------------
@@ -832,7 +832,7 @@ Problème analysé :
 	7,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 240.80
+	Échelle de difficulté = 141.82
 
 
 -----------------------------------------
@@ -863,7 +863,7 @@ Problème analysé :
 	6,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 226.92
+	Échelle de difficulté = 129.56
 
 
 -----------------------------------------
@@ -871,7 +871,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	tcf1rfct/ppp2pp1/8/3pp3/4PP2/6pR/PPPP1d1P/TCFD1CFT
+	tcf1rfct/ppp2pp1/8/3pp3/4PP2/6pR/PPPP1d1P/TCFD1FCT
 	14
 
 	+---+---+---+---+---+---+---+---+
@@ -889,12 +889,12 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	| P | P | P | P |   | d |   | P |
 	+---+---+---+---+---+---+---+---+
-	| T | C | F | D |   | C | F | T |
+	| T | C | F | D |   | F | C | T |
 	+---+---+---+---+---+---+---+---+
 	7,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 159.39
+	Échelle de difficulté = 51.89
 
 
 -----------------------------------------
@@ -925,7 +925,7 @@ Problème analysé :
 	7,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 163.58
+	Échelle de difficulté = 53.15
 
 
 -----------------------------------------
@@ -956,7 +956,7 @@ Problème analysé :
 	7,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 189.24
+	Échelle de difficulté = 112.60
 
 
 -----------------------------------------
@@ -987,7 +987,7 @@ Problème analysé :
 	7,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 164.03
+	Échelle de difficulté = 51.57
 
 
 -----------------------------------------
@@ -1018,7 +1018,7 @@ Problème analysé :
 	7,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 221.37
+	Échelle de difficulté = 93.13
 
 
 -----------------------------------------
@@ -1049,7 +1049,7 @@ Problème analysé :
 	7,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 205.95
+	Échelle de difficulté = 122.90
 
 
 -----------------------------------------
@@ -1080,7 +1080,7 @@ Problème analysé :
 	7,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 207.57
+	Échelle de difficulté = 98.51
 
 
 -----------------------------------------
@@ -1111,7 +1111,7 @@ Problème analysé :
 	7,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 165.35
+	Échelle de difficulté = 59.23
 
 
 -----------------------------------------
@@ -1142,7 +1142,7 @@ Problème analysé :
 	7,5 coups                 (15+16)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 155.42
 
 
 -----------------------------------------
@@ -1173,7 +1173,7 @@ Problème analysé :
 	7,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 166.15
+	Échelle de difficulté = 89.12
 
 
 -----------------------------------------
@@ -1204,7 +1204,7 @@ Problème analysé :
 	8,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 208.42
+	Échelle de difficulté = 124.24
 
 
 -----------------------------------------
@@ -1235,7 +1235,7 @@ Problème analysé :
 	8,0 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 167.44
+	Échelle de difficulté = 91.66
 
 
 -----------------------------------------
@@ -1266,7 +1266,7 @@ Problème analysé :
 	8,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 221.74
+	Échelle de difficulté = 120.35
 
 
 -----------------------------------------
@@ -1297,7 +1297,7 @@ Problème analysé :
 	8,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 231.07
+	Échelle de difficulté = 141.96
 
 
 -----------------------------------------
@@ -1328,7 +1328,7 @@ Problème analysé :
 	8,5 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 241.24
+	Échelle de difficulté = 126.58
 
 
 -----------------------------------------
@@ -1359,7 +1359,7 @@ Problème analysé :
 	8,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 212.51
+	Échelle de difficulté = 90.74
 
 
 -----------------------------------------
@@ -1390,7 +1390,7 @@ Problème analysé :
 	8,5 coups                 (15+16)
 
 Verdict : 
-	Échelle de difficulté = 231.32
+	Échelle de difficulté = 145.56
 
 
 -----------------------------------------
@@ -1421,7 +1421,7 @@ Problème analysé :
 	9,0 coups                 (15+15)
 
 Verdict : 
-	Échelle de difficulté = 410.78
+	Échelle de difficulté = 233.54
 
 
 -----------------------------------------
@@ -1452,7 +1452,7 @@ Problème analysé :
 	9,0 coups                 (16+15)
 
 Verdict : 
-	Échelle de difficulté = 242.75
+	Échelle de difficulté = 160.89
 
 
 -----------------------------------------
@@ -1483,7 +1483,7 @@ Problème analysé :
 	9,0 coups                 (15+15)
 
 Verdict : 
-	Échelle de difficulté = 411.08
+	Échelle de difficulté = 189.20
 
 
 -----------------------------------------
@@ -1514,7 +1514,7 @@ Problème analysé :
 	9,5 coups                 (16+15)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 142.97
 
 
 -----------------------------------------
@@ -1545,7 +1545,7 @@ Problème analysé :
 	10,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 233.23
+	Échelle de difficulté = 92.08
 
 
 -----------------------------------------
@@ -1576,7 +1576,7 @@ Problème analysé :
 	10,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 188.48
+	Échelle de difficulté = 89.66
 
 
 -----------------------------------------
@@ -1607,7 +1607,7 @@ Problème analysé :
 	12,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 227.73
+	Échelle de difficulté = 146.96
 
 
 -----------------------------------------
@@ -1638,7 +1638,7 @@ Problème analysé :
 	10,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 193.86
+	Échelle de difficulté = 97.66
 
 
 -----------------------------------------
@@ -1669,7 +1669,7 @@ Problème analysé :
 	10,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 242.87
+	Échelle de difficulté = 159.98
 
 
 -----------------------------------------
@@ -1700,7 +1700,7 @@ Problème analysé :
 	10,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 226.68
+	Échelle de difficulté = 138.36
 
 
 -----------------------------------------
@@ -1731,7 +1731,7 @@ Problème analysé :
 	11,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 249.53
+	Échelle de difficulté = 163.80
 
 
 -----------------------------------------
@@ -1762,7 +1762,7 @@ Problème analysé :
 	11,5 coups                (14+16)
 
 Verdict : 
-	Échelle de difficulté = 189.53
+	Échelle de difficulté = 108.60
 
 
 -----------------------------------------
@@ -1793,7 +1793,7 @@ Problème analysé :
 	12,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 241.15
+	Échelle de difficulté = 176.03
 
 
 -----------------------------------------
@@ -1824,7 +1824,7 @@ Problème analysé :
 	12,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 255.06
+	Échelle de difficulté = 161.40
 
 
 -----------------------------------------
@@ -1855,7 +1855,7 @@ Problème analysé :
 	12,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 257.35
+	Échelle de difficulté = 167.36
 
 
 -----------------------------------------
@@ -1886,7 +1886,7 @@ Problème analysé :
 	12,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 276.43
+	Échelle de difficulté = 153.94
 
 
 -----------------------------------------
@@ -1917,7 +1917,7 @@ Problème analysé :
 	12,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 169.42
+	Échelle de difficulté = 64.33
 
 
 -----------------------------------------
@@ -1948,7 +1948,7 @@ Problème analysé :
 	13,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 246.60
+	Échelle de difficulté = 157.26
 
 
 -----------------------------------------
@@ -1979,7 +1979,7 @@ Problème analysé :
 	13,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 229.06
+	Échelle de difficulté = 116.81
 
 
 -----------------------------------------
@@ -2010,7 +2010,7 @@ Problème analysé :
 	13,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 255.22
+	Échelle de difficulté = 148.75
 
 
 -----------------------------------------
@@ -2041,7 +2041,7 @@ Problème analysé :
 	13,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 256.61
+	Échelle de difficulté = 99.31
 
 
 -----------------------------------------
@@ -2049,7 +2049,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	1c3rct/1pp3pp/3pppt1/D2f3P/TF1P3C/2R5/PPPdPPP1/T1f3FC
+	1c3rct/1pp3pp/3pppt1/D2f3P/TF1P3C/2R5/PPPdPPP1/T1f2FC1
 	28
 
 	+---+---+---+---+---+---+---+---+
@@ -2067,12 +2067,12 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	| P | P | P | d | P | P | P |   |
 	+---+---+---+---+---+---+---+---+
-	| T |   | f |   |   |   | F | C |
+	| T |   | f |   |   | F | C |   |
 	+---+---+---+---+---+---+---+---+
 	14,0 coups                (16+15)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 105.95
 
 
 -----------------------------------------
@@ -2103,7 +2103,7 @@ Problème analysé :
 	15,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 270.48
+	Échelle de difficulté = 180.42
 
 
 -----------------------------------------
@@ -2111,7 +2111,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	1c1r3t/1p2cDpp/3p4/pFptp3/1F5R/PPPPPPPP/5ff1/TC2d1ct
+	1c1r3t/1p2cDpp/3p4/pFptp3/1F5R/PPPPPPPP/5ff1/TC2d1CT
 	31
 
 	+---+---+---+---+---+---+---+---+
@@ -2129,12 +2129,12 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	|   |   |   |   |   | f | f |   |
 	+---+---+---+---+---+---+---+---+
-	| T | C |   |   | d |   | c | t |
+	| T | C |   |   | d |   | C | T |
 	+---+---+---+---+---+---+---+---+
-	15,5 coups                (14+17)
+	15,5 coups                (16+15)
 
 Verdict : 
-	Problème invalide
+	Échelle de difficulté = 116.40
 
 
 -----------------------------------------
@@ -2165,7 +2165,7 @@ Problème analysé :
 	15,5 coups                (16+15)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 170.46
 
 
 -----------------------------------------
@@ -2196,7 +2196,7 @@ Problème analysé :
 	15,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 238.70
+	Échelle de difficulté = 140.18
 
 
 -----------------------------------------
@@ -2227,7 +2227,7 @@ Problème analysé :
 	15,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 244.02
+	Échelle de difficulté = 161.18
 
 
 -----------------------------------------
@@ -2258,7 +2258,7 @@ Problème analysé :
 	16,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 265.10
+	Échelle de difficulté = 191.00
 
 
 -----------------------------------------
@@ -2289,7 +2289,7 @@ Problème analysé :
 	16,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 259.56
+	Échelle de difficulté = 172.69
 
 
 -----------------------------------------
@@ -2320,7 +2320,7 @@ Problème analysé :
 	16,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 271.23
+	Échelle de difficulté = 98.42
 
 
 -----------------------------------------
@@ -2351,7 +2351,7 @@ Problème analysé :
 	16,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 270.31
+	Échelle de difficulté = 172.24
 
 
 -----------------------------------------
@@ -2359,7 +2359,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	r1Ft2c1/p3cpp1/1p1p4/t1fDp1Ff/6Pp/D3p2p/PPP1CP1R/TC2TF2
+	r1Ft2c1/p3cpp1/1p1p4/t1fDp1Ff/6Pp/d3P2P/PPP1CP1R/TC2TF2
 	35
 
 	+---+---+---+---+---+---+---+---+
@@ -2373,16 +2373,16 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	|   |   |   |   |   |   | P | p |
 	+---+---+---+---+---+---+---+---+
-	| D |   |   |   | p |   |   | p |
+	| d |   |   |   | P |   |   | P |
 	+---+---+---+---+---+---+---+---+
 	| P | P | P |   | C | P |   | R |
 	+---+---+---+---+---+---+---+---+
 	| T | C |   |   | T | F |   |   |
 	+---+---+---+---+---+---+---+---+
-	17,5 coups                (15+16)
+	17,5 coups                (16+15)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 177.52
 
 
 -----------------------------------------
@@ -2413,7 +2413,7 @@ Problème analysé :
 	17,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 191.65
+	Échelle de difficulté = 134.83
 
 
 -----------------------------------------
@@ -2444,7 +2444,7 @@ Problème analysé :
 	17,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 256.33
+	Échelle de difficulté = 179.71
 
 
 -----------------------------------------
@@ -2475,7 +2475,7 @@ Problème analysé :
 	18,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 244.22
+	Échelle de difficulté = 165.53
 
 
 -----------------------------------------
@@ -2506,7 +2506,7 @@ Problème analysé :
 	18,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 246.10
+	Échelle de difficulté = 168.18
 
 
 -----------------------------------------
@@ -2537,7 +2537,7 @@ Problème analysé :
 	18,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 255.13
+	Échelle de difficulté = 178.85
 
 
 -----------------------------------------
@@ -2568,7 +2568,7 @@ Problème analysé :
 	18,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 254.20
+	Échelle de difficulté = 188.96
 
 
 -----------------------------------------
@@ -2599,7 +2599,7 @@ Problème analysé :
 	18,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 251.23
+	Échelle de difficulté = 156.28
 
 
 -----------------------------------------
@@ -2630,7 +2630,7 @@ Problème analysé :
 	18,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 256.58
+	Échelle de difficulté = 161.41
 
 
 -----------------------------------------
@@ -2638,7 +2638,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1F/TCFDR1CT
+	T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1f/TCFDR1CT
 	38
 
 	+---+---+---+---+---+---+---+---+
@@ -2654,14 +2654,14 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	|   | F |   |   | t |   | P |   |
 	+---+---+---+---+---+---+---+---+
-	| d | P | P | P | P | P |   | F |
+	| d | P | P | P | P | P |   | f |
 	+---+---+---+---+---+---+---+---+
 	| T | C | F | D | R |   | C | T |
 	+---+---+---+---+---+---+---+---+
-	19,0 coups                (17+14)
+	19,0 coups                (16+15)
 
 Verdict : 
-	Problème invalide
+	Échelle de difficulté = 193.40
 
 
 -----------------------------------------
@@ -2692,7 +2692,7 @@ Problème analysé :
 	19,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 248.32
+	Échelle de difficulté = 166.91
 
 
 -----------------------------------------
@@ -2723,7 +2723,7 @@ Problème analysé :
 	19,0 coups                (16+13)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 200.41
 
 
 -----------------------------------------
@@ -2754,7 +2754,7 @@ Problème analysé :
 	19,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 262.29
+	Échelle de difficulté = 170.59
 
 
 -----------------------------------------
@@ -2785,7 +2785,7 @@ Problème analysé :
 	19,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 272.38
+	Échelle de difficulté = 198.56
 
 
 -----------------------------------------
@@ -2816,7 +2816,7 @@ Problème analysé :
 	19,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 257.35
+	Échelle de difficulté = 168.22
 
 
 -----------------------------------------
@@ -2847,7 +2847,7 @@ Problème analysé :
 	20,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 260.78
+	Échelle de difficulté = 171.64
 
 
 -----------------------------------------
@@ -2878,7 +2878,7 @@ Problème analysé :
 	20,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 294.13
+	Échelle de difficulté = 211.98
 
 
 -----------------------------------------
@@ -2909,7 +2909,7 @@ Problème analysé :
 	20,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 253.93
+	Échelle de difficulté = 179.87
 
 
 -----------------------------------------
@@ -2940,7 +2940,7 @@ Problème analysé :
 	20,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 254.61
+	Échelle de difficulté = 171.09
 
 
 -----------------------------------------
@@ -2971,7 +2971,7 @@ Problème analysé :
 	20,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 257.30
+	Échelle de difficulté = 183.29
 
 
 -----------------------------------------
@@ -3002,7 +3002,7 @@ Problème analysé :
 	21,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 260.75
+	Échelle de difficulté = 201.37
 
 
 -----------------------------------------
@@ -3033,7 +3033,7 @@ Problème analysé :
 	21,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 266.96
+	Échelle de difficulté = 195.17
 
 
 -----------------------------------------
@@ -3095,7 +3095,7 @@ Problème analysé :
 	22,5 coups                (15+16)
 
 Verdict : 
-	Problème insoluble
+	Échelle de difficulté = 193.82
 
 
 -----------------------------------------
@@ -3126,7 +3126,7 @@ Problème analysé :
 	23,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 250.01
+	Échelle de difficulté = 167.27
 
 
 -----------------------------------------
@@ -3157,7 +3157,7 @@ Problème analysé :
 	23,0 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 277.60
+	Échelle de difficulté = 174.30
 
 
 -----------------------------------------
@@ -3165,7 +3165,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	tcf1rfct/pp1ppppp/2p4F/3F3P/1T4P1/D1P2P2/PPP1PR2/TC4CT
+	tcf1rfct/pp1ppppp/2p4F/3F3P/1T4P1/D1P2P2/PPP1PR2/TC4C1
 	50
 
 	+---+---+---+---+---+---+---+---+
@@ -3183,12 +3183,12 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	| P | P | P |   | P | R |   |   |
 	+---+---+---+---+---+---+---+---+
-	| T | C |   |   |   |   | C | T |
+	| T | C |   |   |   |   | C |   |
 	+---+---+---+---+---+---+---+---+
-	25,0 coups                (17+15)
+	25,0 coups                (16+15)
 
 Verdict : 
-	Problème invalide
+	Échelle de difficulté = 185.50
 
 
 -----------------------------------------
@@ -3219,7 +3219,7 @@ Problème analysé :
 	25,5 coups                (16+15)
 
 Verdict : 
-	Échelle de difficulté = 266.19
+	Échelle de difficulté = 202.30
 
 
 -----------------------------------------
@@ -3250,7 +3250,7 @@ Problème analysé :
 	25,5 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 248.00
+	Échelle de difficulté = 169.24
 
 
 -----------------------------------------
@@ -3258,7 +3258,7 @@ Verdict :
 -----------------------------------------
 
 Problème analysé :
-	rt1F4/p1fp2pc/F1c2p1p/dpp1p3/PP6/4P3/C1PP1PPP/Df2tRct
+	rt1F4/p1fp2pc/F1c2p1p/dpp1p3/PP6/4P3/C1PP1PPP/Df2tRCT
 	54
 
 	+---+---+---+---+---+---+---+---+
@@ -3276,12 +3276,12 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	| C |   | P | P |   | P | P | P |
 	+---+---+---+---+---+---+---+---+
-	| D | f |   |   | t | R | c | t |
+	| D | f |   |   | t | R | C | T |
 	+---+---+---+---+---+---+---+---+
-	27,0 coups                (13+18)
+	27,0 coups                (15+16)
 
 Verdict : 
-	Problème invalide
+	Échelle de difficulté = 206.29
 
 
 -----------------------------------------
@@ -3312,6 +3312,6 @@ Problème analysé :
 	30,0 coups                (15+16)
 
 Verdict : 
-	Échelle de difficulté = 266.96
+	Échelle de difficulté = 189.15
 
 
