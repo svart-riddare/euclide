@@ -132,6 +132,9 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		/* -- Assign free moves, free captures and possible squares -- */
 
+		std::vector<Piece *> updated;
+		updated.reserve(2 * MaxPieces);
+
 		for (Color color : AllColors())
 		{
 			Pieces& pieces = _pieces[color];
@@ -154,9 +157,24 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color]);
 			
 				if (piece.update())
-					update = true;
+					updated.push_back(&piece);
 			}
 		}
+
+		/* -- Apply basic obstructions -- */
+
+		for (Piece *blocker : updated)
+			if (!is(blocker->captured()))
+				if (blocker->stops().count() < 8)
+					for (Color color : AllColors())
+						for (Piece& piece : _pieces[color])
+							if (&piece != blocker)
+								piece.bypassObstacles(blocker->stops());
+
+		/* -- If pieces were updated, loop -- */
+
+		if (!updated.empty())
+			update = true;
 	}
 }
 

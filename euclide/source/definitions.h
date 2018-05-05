@@ -77,6 +77,9 @@ typedef BitSet<Square, NumSquares> Squares;
 typedef EnumRange<Square, NumSquares> AllSquares;
 typedef Squares::BitSetRange ValidSquares;
 
+typedef array<Squares, NumSquares> ArrayOfSquares;
+typedef array<ArrayOfSquares, NumSquares> MatrixOfSquares;
+
 constexpr int col(Square square)
 {
 	return square >> 3;

@@ -49,12 +49,23 @@ Piece::Piece(const Problem& problem, Square square)
 	if (_availableCaptures)
 		_possibleCaptures.set();
 
-	/* -- Initialize legal moves -- */
+	/* -- Initialize legal moves and move tables -- */
 
-	Tables::initializeLegalMoves(&_moves, &_xmoves, _species, _color, problem.variant(), _availableCaptures ? unknown : tribool(false));
+	Tables::initializeLegalMoves(&_moves, _species, _color, problem.variant(), _availableCaptures ? unknown : tribool(false));
+	_xmoves = Tables::getCaptureMoves(_species, _color, problem.variant());
+
+	_constraints = Tables::getMoveConstraints(_species, problem.variant(), false);
+	_xconstraints = Tables::getMoveConstraints(_species, problem.variant(), true);
+
+	/* -- Distances will be computed later -- */
 
 	_distances.fill(0);
 	_captures.fill(0);
+
+	/* -- Squares crossed will also be filled later -- */
+
+	_stops.set();
+	_route.set();
 
 	/* -- Handle castling -- */
 
@@ -139,6 +150,19 @@ void Piece::setPossibleCaptures(const Squares& squares)
 
 /* -------------------------------------------------------------------------- */
 
+void Piece::bypassObstacles(const Squares& obstacles)
+{
+	if ((obstacles & _route).none())
+		return;
+
+	for (Square from : ValidSquares(_stops))
+		for (Square to : ValidSquares(_moves[from]))
+			if (obstacles <= (*_constraints)[from][to])
+				_moves[from][to] = false, _update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Piece::update()
 {
 	if (!_update)
@@ -182,6 +206,19 @@ void Piece::updateDeductions()
 	/* -- Remove moves that will obviously never be played (to be improved) -- */
 
 	updatePossibleMoves();
+
+	/* -- Get all squares the piece may have crossed or stopped on -- */
+
+	_stops = _possibleSquares;
+	_stops.set(_initialSquare);
+	_stops.set(_castlingSquare);
+	for (Square from : AllSquares())
+		_stops |= _moves[from];
+
+	_route = _stops;
+	for (Square from : AllSquares())
+		for (Square to : ValidSquares(_moves[from]))
+			_route |= (*_constraints)[from][to];
 }
 
 /* -------------------------------------------------------------------------- */

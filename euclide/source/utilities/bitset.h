@@ -19,6 +19,7 @@ class BitSet
 
 	public :
 		BitSet(bits_t bits = 0) : _bits(bits) {}
+		BitSet(Type position) : _bits(bits_t(1) << position) {}
 
 		template <typename Predicate> inline
 		BitSet(const Predicate& predicate, bool value = true) : _bits(0)

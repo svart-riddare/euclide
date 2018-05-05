@@ -10,8 +10,10 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
-void initializeLegalMoves(array<Squares, NumSquares> *moves, const array<Squares, NumSquares> **captures, Species species, Color color, Variant variant, tribool capture);
+void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, Variant variant, tribool capture);
 
+const ArrayOfSquares *getCaptureMoves(Species species, Color color, Variant variant);
+const MatrixOfSquares *getMoveConstraints(Species species, Variant variant, bool capture);
 
 #if 0
 
