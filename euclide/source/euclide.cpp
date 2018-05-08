@@ -102,16 +102,18 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			const Pieces& pieces = _pieces[color];
 			Targets& targets = _targets[color];
 
-			for (Target& target : targets)
+			do
 			{
-				Men men([&](Man man) { return (man < pieces.size()) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
-				target.updatePossibleMen(men);
+				for (Target& target : targets)
+				{
+					Men men([&](Man man) { return (man < pieces.size()) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
+					men = target.updatePossibleMen(men);
 
-				target.updateRequiredMoves(xstd::min(men.in(pieces), [](const Piece& piece) { return piece.requiredMoves(); }));
-				target.updateRequiredCaptures(xstd::min(men.in(pieces), [](const Piece& piece) { return piece.requiredCaptures(); }));
-			}
+					target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredMoves(target.square()); }));
+					target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredCaptures(target.square()); }));
+				}
 
-			targets.update();
+			} while (targets.update());
 		}
 
 		/* -- Compute free moves and captures -- */
@@ -139,7 +141,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		{
 			Pieces& pieces = _pieces[color];
 
-			TargetPartitions partitions(_targets[color]);
+			TargetPartitions partitions(pieces, _targets[color]);
 
 			for (const TargetPartition& partition : partitions)
 				if (partition.men().count() <= partition.squares().count())
@@ -153,8 +155,10 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 			for (Piece& piece : pieces)
 			{
-				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color]);
-				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color]);
+				const Man man = std::distance(pieces.data(), &piece);
+
+				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color] - partitions.unassignedRequiredMoves() + partitions.unassignedRequiredMoves(man));
+				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color] - partitions.unassignedRequiredCaptures() + partitions.unassignedRequiredCaptures(man));
 			
 				if (piece.update())
 					updated.push_back(&piece);

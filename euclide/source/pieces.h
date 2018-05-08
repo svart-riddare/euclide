@@ -56,6 +56,11 @@ class Piece
 		inline int requiredCaptures() const
 			{ return _requiredCaptures; }
 
+		inline int requiredMoves(Square square) const
+			{ return _distances[square]; }
+		inline int requiredCaptures(Square square) const
+			{ return _captures[square]; }
+
 		inline int moves() const
 			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
 
@@ -121,7 +126,7 @@ class Piece
 /* -- Pieces                                                               -- */
 /* -------------------------------------------------------------------------- */
 
-typedef std::vector<Piece> Pieces;
+class Pieces : public std::vector<Piece> {};
 
 /* -------------------------------------------------------------------------- */
 

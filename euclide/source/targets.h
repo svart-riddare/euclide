@@ -7,6 +7,7 @@ namespace Euclide
 {
 
 class Targets;
+class Pieces;
 
 /* -------------------------------------------------------------------------- */
 /* -- Target                                                               -- */
@@ -22,7 +23,7 @@ class Target
 		int updateRequiredCaptures(int requiredCaptures)
 			{ return xstd::maximize(_requiredCaptures, requiredCaptures); }
 
-		void updatePossibleMen(const Men& men);		
+		const Men& updatePossibleMen(const Men& men);		
 		
 		bool applyPigeonHolePrinciple(Targets& targets) const;
 
@@ -63,7 +64,7 @@ class Target
 class Targets : public std::vector<Target>
 {
 	public :
-		void update();
+		bool update();
 };
 
 /* -------------------------------------------------------------------------- */
@@ -73,7 +74,10 @@ class Targets : public std::vector<Target>
 class TargetPartition
 {
 	public :
+		TargetPartition();
+
 		bool merge(const Target& target);
+		void assign(const Pieces& pieces);
 
 	public :
 		inline const Squares& squares() const
@@ -81,9 +85,25 @@ class TargetPartition
 		inline const Men& men() const
 			{ return _men; }
 
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
+
+		inline int unassignedRequiredMoves() const
+			{ return _unassignedRequiredMoves; }
+		inline int unassignedRequiredCaptures() const
+			{ return _unassignedRequiredCaptures; }
+
 	private :
-		Squares _squares;    /**< Target squares for these targets. */
-		Men _men;            /**< Possible men for these targets. */
+		Squares _squares;                   /**< Target squares for these targets. */
+		Men _men;                           /**< Possible men for these targets. */
+
+		int _requiredMoves;                 /**< Required moves. */
+		int _requiredCaptures;              /**< Required captures. */
+
+		int _unassignedRequiredMoves;       /**< Required moves unassigned to a specific piece. */
+		int _unassignedRequiredCaptures;    /**< Required captures unassigned to a specific piece. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -93,7 +113,38 @@ class TargetPartition
 class TargetPartitions : public std::vector<TargetPartition>
 {
 	public :
-		TargetPartitions(const Targets& targets);
+		TargetPartitions(const Pieces& pieces, const Targets& targets);
+
+	public :
+		inline int requiredMoves() const
+			{ return _requiredMoves; }
+		inline int requiredCaptures() const
+			{ return _requiredCaptures; }
+
+		inline int unassignedRequiredMoves() const
+			{ return _unassignedRequiredMoves; }
+		inline int unassignedRequiredCaptures() const
+			{ return _unassignedRequiredCaptures; }
+
+		inline int requiredMoves(Man man) const
+			{ return _map[man]->requiredMoves(); }
+		inline int requiredCaptures(Man man) const
+			{ return _map[man]->requiredCaptures(); }
+
+		inline int unassignedRequiredMoves(Man man) const
+			{ return _map[man]->unassignedRequiredMoves(); }
+		inline int unassignedRequiredCaptures(Man man) const
+			{ return _map[man]->unassignedRequiredCaptures(); }
+
+	private :
+		int _requiredMoves;                                /**< Required moves. */
+		int _requiredCaptures;                             /**< Required capture. */
+
+		int _unassignedRequiredMoves;                      /**< Required moves unassigned to a specific piece. */
+		int _unassignedRequiredCaptures;                   /**< Required captures unassigned to a specific piece. */
+
+		array<const TargetPartition *, MaxPieces> _map;    /**< Quick map between men and partitions. */
+		TargetPartition _null;                             /**< Null partition, used in above map. */
 };
 
 /* -------------------------------------------------------------------------- */
