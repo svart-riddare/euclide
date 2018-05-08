@@ -106,32 +106,51 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	if (!console)
 		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
 
-	/* -- Solve using input text file or with forsythe string on command line, wait for key input -- */
+	/* -- Parse arguments, either a file path or a forsythe string -- */
 
-	Strings::Error error = Strings::NumErrors;
+	Strings::Error error = (numArguments > 1) ? Strings::NumErrors : Strings::NoArguments;
 
-	switch (numArguments)
+	const char *problems = nullptr, *moves = nullptr;
+	bool wait = false;
+
+	for (int argument = 1; argument < numArguments; argument++)
 	{
-		case 1 : 
-			error = Strings::NoArguments;
-			break;
-
-		case 2 : 
-			if (!solve(strings, console, arguments[1], true))
-				error = Strings::InvalidInputFile;
-			break;
-
-		case 3 :
-			if (!solve(strings, console, arguments[1], atoi(arguments[2]), true))
+		if (arguments[argument][0] != '-')
+		{
+			if (!problems)
+				problems = arguments[argument];
+			else
+			if (!moves)
+				moves = arguments[argument];
+			else
 				error = Strings::InvalidArguments;
-			break;
-
-		default :
+		}
+		else
+		if (strcmp(arguments[argument], "--wait") == 0)
+			wait = true;
+		else
 			error = Strings::InvalidArguments;
-			break;
 	}
 
-	if (error < Strings::NumErrors)
+	/* -- Solve problems -- */
+
+	if (problems && moves)
+	{
+		if (!solve(strings, console, problems, atoi(moves), wait))
+			error = Strings::InvalidArguments;
+	}
+	else
+	if (problems)
+	{
+		if (!solve(strings, console, problems, wait))
+			error = Strings::InvalidInputFile;
+	}
+
+	/* -- Show error -- */
+
+	const bool failed = (error < Strings::NumErrors);
+
+	if (failed)
 	{
 		console.displayError(strings[error]);
 		console.wait();
@@ -139,7 +158,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	/* -- Done -- */
 
-	return 0;
+	return failed ? 1 : 0;
 }
 
 /* -------------------------------------------------------------------------- */
