@@ -100,6 +100,10 @@ template <typename Collection, typename Predicate> inline
 typename Collection::size_type count_if(const Collection& collection, const Predicate& predicate)
 	{ return std::count_if(std::begin(collection), std::end(collection), predicate); }
 
+template <typename Collection, typename Function> inline
+Function for_each(const Collection& collection, const Function& function)
+	{ return std::move(std::for_each(std::begin(collection), std::end(collection), function)); }
+
 template <typename Collection> inline
 typename Collection::const_iterator max_element(const Collection& collection)
 	{ return std::move(std::max_element(std::begin(collection), std::end(collection))); }
@@ -116,13 +120,17 @@ template <typename Collection, typename Function> inline
 typename Collection::const_iterator min_element(const Collection& collection, const Function& function)
 	{ return std::move(std::min_element(std::begin(collection), std::end(collection), function)); }
 
-template <typename Collection, typename Function> inline
-Function for_each(const Collection& collection, const Function& function)
-	{ return std::move(std::for_each(std::begin(collection), std::end(collection), function)); }
-
 template <typename Collection, typename Predicate> inline
 bool none_of(const Collection& collection, const Predicate& predicate)
 	{ return std::none_of(std::begin(collection), std::end(collection), predicate); }
+
+template <typename Collection> inline
+void sort(Collection& collection)
+	{ return std::sort(std::begin(collection), std::end(collection)); }
+
+template<typename Collection, typename Comparison> inline
+void sort(Collection& collection, const Comparison& comparison)
+	{ return std::sort(std::begin(collection), std::end(collection), comparison); }
 
 /* -------------------------------------------------------------------------- */
 

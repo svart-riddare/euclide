@@ -7,9 +7,9 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
-static constexpr uint64_t leaper(Square /*from*/, Square to, bool capture)
+static constexpr uint64_t leaper(Square from, Square to, bool capture)
 {
-	return uint64_t(!capture) << to;
+	return (uint64_t(1) << from) | (uint64_t(!capture) << to);
 }
 
 static constexpr int gcd(int m, int n)
@@ -22,14 +22,14 @@ static constexpr int delta(int z, int n)
 	return (z && n) ? z / gcd((z > 0) ? z : -z, (n > 0) ? n : -n) : (z ? (z > 0) ? 1 : -1 : 0);
 }
 
-static constexpr uint64_t runner(Square from, Square to, int dx, int dy)
+static constexpr uint64_t runner(Square from, Square to, int dx, int dy, bool capture)
 {
-	return (from != to) ? (uint64_t(1) << to) | runner(from, Euclide::square(col(to) - dx, row(to) - dy), dx, dy) : 0;
+	return (uint64_t(!capture) << to) | ((from != to) ? runner(from, Euclide::square(col(to) - dx, row(to) - dy), dx, dy, false) : 0);
 }
 
 static constexpr uint64_t runner(Square from, Square to, bool capture)
 {
-	return runner(from, to, delta(col(to) - col(from), row(to) - row(from)), delta(row(to) - row(from), col(to) - col(from))) & ~leaper(from, to, !capture);
+	return runner(from, to, delta(col(to) - col(from), row(to) - row(from)), delta(row(to) - row(from), col(to) - col(from)), capture);
 }
 
 static constexpr uint64_t pawn(Square from, Square to, bool capture)

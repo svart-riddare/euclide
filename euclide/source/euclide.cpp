@@ -17,6 +17,7 @@ class Euclide
 		~Euclide();
 
 		void solve(const EUCLIDE_Problem& problem);
+		int update(std::vector<Piece *>& pieces);
 
 	protected :
 		void reset();
@@ -89,12 +90,33 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			if (_problem.diagramPosition(square) == glyph)
 				_targets[color(glyph)].emplace_back(glyph, square);
 
+	/* -- Local array to store pieces -- */
+
+	std::vector<Piece *> pieces;
+	pieces.reserve(2 * MaxPieces);
+	for (Color color : AllColors())
+		for (Piece& piece : _pieces[color])
+			pieces.push_back(&piece);
+
+	/* -- Castling pieces -- */
+
+	typedef struct { Piece *king, *rook; } CastlingPieces;
+	CastlingPieces castlingPieces[NumColors][NumCastlingSides] = {
+		{ { nullptr, nullptr }, { nullptr, nullptr } } , { { nullptr, nullptr }, { nullptr, nullptr } } };
+
+	for (Color color : AllColors())
+		for (CastlingSide side : AllCastlingSides())
+			for (Piece& piece : _pieces[color])			
+				if (maybe(piece.castling(side)))
+					if (piece.species() == King)
+						castlingPieces[color][side].king = &piece;
+					else
+						castlingPieces[color][side].rook = &piece;
+
 	/* -- Repeat the following deductions until there is no improvements -- */
 
-	for (bool update = true; update; )
+	for (bool loop = true; loop; )
 	{
-		update = false;
-
 		/* -- Assign moves and captures to targets -- */
 
 		for (Color color : AllColors())
@@ -134,9 +156,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		/* -- Assign free moves, free captures and possible squares -- */
 
-		std::vector<Piece *> updated;
-		updated.reserve(2 * MaxPieces);
-
 		for (Color color : AllColors())
 		{
 			Pieces& pieces = _pieces[color];
@@ -159,27 +178,87 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color] - partitions.unassignedRequiredMoves() + partitions.unassignedRequiredMoves(man));
 				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color] - partitions.unassignedRequiredCaptures() + partitions.unassignedRequiredCaptures(man));
-			
-				if (piece.update())
-					updated.push_back(&piece);
 			}
 		}
 
+		/* -- Ensure castling is coherent -- */
+
+		for (Color color : AllColors())
+		{
+			for (CastlingSide side : AllCastlingSides())
+			{
+				Piece *king = castlingPieces[color][side].king;
+				Piece *rook = castlingPieces[color][side].rook;
+
+				if (king && rook)
+				{
+					if (!unknown(king->castling(side)))
+						rook->setCastling(side, king->castling(side));
+					if (!unknown(rook->castling(side)))
+						king->setCastling(side, rook->castling(side));
+				}
+				else
+				{
+					if (king)
+						king->setCastling(side, false);
+					if (rook)
+						rook->setCastling(side, false);
+				}
+			}
+		}
+
+		/* -- Update pieces -- */
+
+		update(pieces);
+
+		/* -- Sort pieces by number of moves -- */
+
+		xstd::sort(pieces, [](const Piece *pieceA, const Piece *pieceB) { return pieceA->moves() < pieceB->moves(); });
+
 		/* -- Apply basic obstructions -- */
 
-		for (Piece *blocker : updated)
+		const int stopThreshold = 8;
+
+		for (Piece *blocker : pieces)
 			if (!is(blocker->captured()))
-				if (blocker->stops().count() < 8)
-					for (Color color : AllColors())
-						for (Piece& piece : _pieces[color])
-							if (&piece != blocker)
-								piece.bypassObstacles(blocker->stops());
+				if (blocker->stops().count() < stopThreshold)
+					for (Piece *piece : pieces)
+						if (piece != blocker)
+							piece->bypassObstacles(blocker->stops());
 
-		/* -- If pieces were updated, loop -- */
+		/* -- Update pieces -- */
 
-		if (!updated.empty())
-			update = true;
+		if (update(pieces))
+			continue;
+
+		/* -- Mutual obstructions between two pieces -- */
+
+		for (unsigned pieceA = 0; pieceA < pieces.size(); pieceA++)
+			for (unsigned pieceB = pieceA + 1; pieceB < pieces.size(); pieceB++)
+				pieces[pieceA]->mutualInteractions(*pieces[pieceB], _freeMoves, false);
+
+		/* -- Update pieces -- */
+
+		if (update(pieces))
+			continue;
+
+		/* -- Done -- */
+
+		loop = false;
 	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Euclide::update(std::vector<Piece *>& pieces)
+{
+	unsigned updated = 0;
+
+	for (unsigned piece = 0; piece < pieces.size(); piece++)
+		if (pieces[piece]->update())
+			std::swap(pieces[piece], pieces[updated++]);
+
+	return updated;
 }
 
 /* -------------------------------------------------------------------------- */

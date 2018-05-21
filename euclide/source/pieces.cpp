@@ -1,6 +1,7 @@
 #include "pieces.h"
 #include "problem.h"
 #include "tables/tables.h"
+#include "cache.h"
 
 namespace Euclide
 {
@@ -61,6 +62,8 @@ Piece::Piece(const Problem& problem, Square square)
 
 	_distances.fill(0);
 	_captures.fill(0);
+	_rdistances.fill(0);
+	_rcaptures.fill(0);
 
 	/* -- Squares crossed will also be filled later -- */
 
@@ -69,17 +72,19 @@ Piece::Piece(const Problem& problem, Square square)
 
 	/* -- Handle castling -- */
 
+	std::fill_n(_castling, NumCastlingSides, false);
+
 	if ((_glyph == WhiteKing) || (_glyph == BlackKing))
 		for (CastlingSide side : AllCastlingSides())
 			if (_initialSquare == Castlings[_color][side].from)
 				if (problem.castling(_color, side))
-					_moves[Castlings[_color][side].from][Castlings[_color][side].to] = true;
+					_moves[Castlings[_color][side].from][Castlings[_color][side].to] = true, _castling[side] = unknown;
 
 	if ((_glyph == WhiteRook) || (_glyph == BlackRook))
 		for (CastlingSide side : AllCastlingSides())
 			if (_initialSquare == Castlings[_color][side].rook)
 				if (problem.castling(_color, side))
-					_castlingSquare = Castlings[_color][side].free;
+					_castlingSquare = Castlings[_color][side].free, _castling[side] = unknown;
 
 	/* -- Update possible moves -- */
 
@@ -91,6 +96,29 @@ Piece::Piece(const Problem& problem, Square square)
 
 Piece::~Piece()
 {
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setCastling(CastlingSide side, bool castling)
+{
+	if (!unknown(_castling[side]))
+		return;
+
+	/* -- Prohibit castling moves -- */
+
+	if (!castling)
+	{
+		if (_royal)
+			_moves[Castlings[_color][side].from][Castlings[_color][side].to] = false;
+
+		_castlingSquare = _initialSquare;
+	}
+
+	/* -- Update state -- */
+
+	_castling[side] = castling;
+	_update = true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -159,6 +187,61 @@ void Piece::bypassObstacles(const Squares& obstacles)
 		for (Square to : ValidSquares(_moves[from]))
 			if (obstacles <= (*_constraints)[from][to])
 				_moves[from][to] = false, _update = true;
+
+	/* -- Castling -- */
+
+	if (_castlingSquare != _initialSquare)
+		for (CastlingSide side : AllCastlingSides())
+			if (obstacles <= (*_constraints)[Castlings[_color][side].rook][Castlings[_color][side].free])
+				setCastling(side, false);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast)
+{
+	const int requiredMoves = _requiredMoves + piece._requiredMoves;
+
+	/* -- Don't bother if these two pieces can not interact with each other -- */
+
+	if (!(_route & piece._route))
+		return requiredMoves;
+
+	/* -- Castling is not yet properly handled -- */
+
+	if ((_castlingSquare != _initialSquare) || (piece._castlingSquare != piece._initialSquare))
+		return requiredMoves;
+
+	/* -- Don't bother if both pieces have huge degrees of liberty -- */
+
+	const int threshold = 1000;
+	if (moves() * piece.moves() > threshold)
+		return requiredMoves;
+
+	/* -- Play all possible moves with these two pieces -- */
+
+	array<State, 2> states = {
+		State(*this, _requiredMoves + freeMoves[_color]),
+		State(piece, piece._requiredMoves + freeMoves[piece._color])
+	};
+
+	const int availableMoves = requiredMoves + freeMoves[_color] + ((_color != piece._color) ? freeMoves[!_color] : 0);
+
+	TwoPieceCache cache;
+	const int newRequiredMoves = play(states, availableMoves, fast ? requiredMoves : -1, availableMoves, cache);
+
+	/* -- Remove never played moves -- */
+
+	if (!fast)
+		for (const State& state : states)
+			for (Square square : AllSquares())
+				if (state.moves[square] < state.piece._moves[square])
+					state.piece._moves[square] = state.moves[square], state.piece._update = true;
+
+	/* -- Done -- */
+
+	assert(newRequiredMoves >= requiredMoves);
+	return newRequiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -178,17 +261,23 @@ bool Piece::update()
 
 void Piece::updateDeductions()
 {
+	/* -- Compute distances -- */
+
 	_distances = computeDistances(_initialSquare, _castlingSquare);
 	if (_xmoves)
 		_captures = computeCaptures(_initialSquare, _castlingSquare);
 
-	for (Square square : AllSquares())
+	for (Square square : ValidSquares(_possibleSquares))
 		if (_distances[square] > _availableMoves)
 			_possibleSquares[square] = false;
 
-	for (Square square : AllSquares())
+	for (Square square : ValidSquares(_possibleCaptures))
 		if (_captures[square] > _availableCaptures)
 			_possibleCaptures[square] = false;
+
+	_rdistances = computeDistancesTo(_possibleSquares);
+	if (_xmoves)
+		_rcaptures = computeCapturesTo(_possibleSquares);
 
 	/* -- Are there any possible final squares left? -- */
 
@@ -203,9 +292,18 @@ void Piece::updateDeductions()
 	_requiredMoves = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _distances[square]; });
 	_requiredCaptures = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _captures[square]; });
 
-	/* -- Remove moves that will obviously never be played (to be improved) -- */
+	/* -- Remove moves that will obviously never be played -- */
 
-	updatePossibleMoves();
+	for (Square from : AllSquares())
+		for (Square to : ValidSquares(_moves[from]))
+			if (_distances[from] + 1 + _rdistances[to] > _availableMoves)
+				_moves[from][to] = false;
+
+	if (_xmoves)
+		for (Square from : AllSquares())
+			for (Square to : ValidSquares(_moves[from]))
+				if (_captures[from] + (*_xmoves)[from][to] + _rcaptures[to] > _availableCaptures)
+					_moves[from][to] = false;
 
 	/* -- Get all squares the piece may have crossed or stopped on -- */
 
@@ -219,34 +317,6 @@ void Piece::updateDeductions()
 	for (Square from : AllSquares())
 		for (Square to : ValidSquares(_moves[from]))
 			_route |= (*_constraints)[from][to];
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Piece::updatePossibleMoves()
-{
-	/* -- Compute distances to closest possible final squares -- */
-
-	const array<int, NumSquares> distances = computeDistancesTo(_possibleSquares);
-
-	/* -- Eliminate moves that will never be used -- */
-
-	for (Square from : AllSquares())
-		for (Square to : ValidSquares(_moves[from]))
-			if (_distances[from] + 1 + distances[to] > _availableMoves)
-				_moves[from][to] = false;
-
-	/* -- Same with required captures -- */
-
-	if (_xmoves)
-	{
-		const array<int, NumSquares> captures = computeCapturesTo(_possibleSquares);
-
-		for (Square from : AllSquares())
-			for (Square to : ValidSquares(_moves[from]))
-				if (_captures[from] + (*_xmoves)[from][to] > _availableCaptures)
-					_moves[from][to] = false;
-	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -447,6 +517,101 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 	/* -- Done -- */
 
 	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache)
+{
+	int requiredMoves = Infinity;
+
+	/* -- Check if we have achieved our goal -- */
+
+	if (states[0].piece._possibleSquares[states[0].square] && states[1].piece._possibleSquares[states[1].square])
+	{
+		xstd::minimize(states[0].requiredMoves, states[0].playedMoves);
+		xstd::minimize(states[1].requiredMoves, states[1].playedMoves);
+		requiredMoves = states[0].playedMoves + states[1].playedMoves;
+
+		/* -- Early exit for fast version -- */
+
+		if (requiredMoves <= assignedMoves)
+			return requiredMoves;
+	}
+
+	/* -- Break recursion if there are no more moves available -- */
+
+	if (availableMoves <= 0)
+		return requiredMoves;
+
+	/* -- Check for cache hit -- */
+
+	if (cache.hit(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, &requiredMoves))
+		return requiredMoves;
+
+	/* -- Loop over both pieces -- */
+
+	for (int k = 0; k < 2; k++)
+	{
+		State& state = states[k];
+		Piece& piece = state.piece;
+		const Square from = state.square;
+		const Square other = states[k ^ 1].square;
+
+		/* -- Check if there are any moves left for this piece -- */
+
+		if (state.availableMoves <= 0)
+			continue;
+
+		/* -- Loop over all moves -- */
+
+		for (Square to : ValidSquares(piece._moves[from]))
+		{
+			/* -- Move could be blocked by other pieces -- */
+
+			if ((*piece._constraints)[from][to][other])
+				continue;
+
+			/* -- Reject move if it brings us to far away -- */
+
+			if (1 + piece._rdistances[to] > std::min(availableMoves, state.availableMoves))
+				continue;
+
+			/* -- Play move -- */
+
+			state.availableMoves -= 1;
+			state.playedMoves += 1;
+			state.square = to;
+
+			/* -- Recursion -- */
+
+			const int myRequiredMoves = play(states, availableMoves - 1, assignedMoves, maximumMoves, cache);
+
+			/* -- Cache this position, for tremendous speedups -- */
+
+			cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves);
+
+			/* -- Label all valid moves that can be used to reach our goals -- */
+
+			if (myRequiredMoves <= maximumMoves)
+				state.moves[from][to] = true;
+
+			/* -- Undo move -- */
+
+			state.availableMoves += 1;
+			state.playedMoves -= 1;
+			state.square = from;
+
+			/* -- Update required moves and early exit for fast version -- */
+
+			if (xstd::minimize(requiredMoves, myRequiredMoves) <= assignedMoves)
+				return requiredMoves;
+		}
+	}
+
+	/* -- Done -- */
+
+	return requiredMoves;
 }
 
 /* -------------------------------------------------------------------------- */

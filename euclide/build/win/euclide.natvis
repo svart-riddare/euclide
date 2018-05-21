@@ -79,21 +79,150 @@
     </Expand>
   </Type>
 
-<!--
-  <Type Name="std::array&lt;int,64&gt;">
-    <DisplayString>Hello</DisplayString>
+  <Type Name="std::array&lt;Euclide::BitSet&lt;enum Euclide::Square,64&gt;,64&gt;">
+    <DisplayString>{{ NumSquares }}</DisplayString>
     <Expand>
       <CustomListItems>
-        <Variable Name="square" InitialValue="0"/>
-        <Loop>
-          <Item Name="A1" Condition="square==0">square</Item>
-          <Exec>bit++</Exec>
-          <Break Condition="bit >= square"/>
-        </Loop>
+        <Item Name="[A1]">_Elems[0]</Item>
+        <Item Name="[A2]">_Elems[1]</Item>
+        <Item Name="[A3]">_Elems[2]</Item>
+        <Item Name="[A4]">_Elems[3]</Item>
+        <Item Name="[A5]">_Elems[4]</Item>
+        <Item Name="[A6]">_Elems[5]</Item>
+        <Item Name="[A7]">_Elems[6]</Item>
+        <Item Name="[A8]">_Elems[7]</Item>
+        <Item Name="[B1]">_Elems[8]</Item>
+        <Item Name="[B2]">_Elems[9]</Item>
+        <Item Name="[B3]">_Elems[10]</Item>
+        <Item Name="[B4]">_Elems[11]</Item>
+        <Item Name="[B5]">_Elems[12]</Item>
+        <Item Name="[B6]">_Elems[13]</Item>
+        <Item Name="[B7]">_Elems[14]</Item>
+        <Item Name="[B8]">_Elems[15]</Item>
+        <Item Name="[C1]">_Elems[16]</Item>
+        <Item Name="[C2]">_Elems[17]</Item>
+        <Item Name="[C3]">_Elems[18]</Item>
+        <Item Name="[C4]">_Elems[19]</Item>
+        <Item Name="[C5]">_Elems[20]</Item>
+        <Item Name="[C6]">_Elems[21]</Item>
+        <Item Name="[C7]">_Elems[22]</Item>
+        <Item Name="[C8]">_Elems[23]</Item>
+        <Item Name="[D1]">_Elems[24]</Item>
+        <Item Name="[D2]">_Elems[25]</Item>
+        <Item Name="[D3]">_Elems[26]</Item>
+        <Item Name="[D4]">_Elems[27]</Item>
+        <Item Name="[D5]">_Elems[28]</Item>
+        <Item Name="[D6]">_Elems[29]</Item>
+        <Item Name="[D7]">_Elems[30]</Item>
+        <Item Name="[D8]">_Elems[31]</Item>
+        <Item Name="[E1]">_Elems[32]</Item>
+        <Item Name="[E2]">_Elems[33]</Item>
+        <Item Name="[E3]">_Elems[34]</Item>
+        <Item Name="[E4]">_Elems[35]</Item>
+        <Item Name="[E5]">_Elems[36]</Item>
+        <Item Name="[E6]">_Elems[37]</Item>
+        <Item Name="[E7]">_Elems[38]</Item>
+        <Item Name="[E8]">_Elems[39]</Item>
+        <Item Name="[F1]">_Elems[40]</Item>
+        <Item Name="[F2]">_Elems[41]</Item>
+        <Item Name="[F3]">_Elems[42]</Item>
+        <Item Name="[F4]">_Elems[43]</Item>
+        <Item Name="[F5]">_Elems[44]</Item>
+        <Item Name="[F6]">_Elems[45]</Item>
+        <Item Name="[F7]">_Elems[46]</Item>
+        <Item Name="[F8]">_Elems[47]</Item>
+        <Item Name="[G1]">_Elems[48]</Item>
+        <Item Name="[G2]">_Elems[49]</Item>
+        <Item Name="[G3]">_Elems[50]</Item>
+        <Item Name="[G4]">_Elems[51]</Item>
+        <Item Name="[G5]">_Elems[52]</Item>
+        <Item Name="[G6]">_Elems[53]</Item>
+        <Item Name="[G7]">_Elems[54]</Item>
+        <Item Name="[G8]">_Elems[55]</Item>
+        <Item Name="[H1]">_Elems[56]</Item>
+        <Item Name="[H2]">_Elems[57]</Item>
+        <Item Name="[H3]">_Elems[58]</Item>
+        <Item Name="[H4]">_Elems[59]</Item>
+        <Item Name="[H5]">_Elems[60]</Item>
+        <Item Name="[H6]">_Elems[61]</Item>
+        <Item Name="[H7]">_Elems[62]</Item>
+        <Item Name="[H8]">_Elems[63]</Item>
       </CustomListItems>
     </Expand>
   </Type>
--->
+
+  <Type Name="std::array&lt;std::array&lt;Euclide::BitSet&lt;enum Euclide::Square,64&gt;,64&gt;,64&gt;">
+    <DisplayString>{{ NumSquares }}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Item Name="[A1]">_Elems[0]</Item>
+        <Item Name="[A2]">_Elems[1]</Item>
+        <Item Name="[A3]">_Elems[2]</Item>
+        <Item Name="[A4]">_Elems[3]</Item>
+        <Item Name="[A5]">_Elems[4]</Item>
+        <Item Name="[A6]">_Elems[5]</Item>
+        <Item Name="[A7]">_Elems[6]</Item>
+        <Item Name="[A8]">_Elems[7]</Item>
+        <Item Name="[B1]">_Elems[8]</Item>
+        <Item Name="[B2]">_Elems[9]</Item>
+        <Item Name="[B3]">_Elems[10]</Item>
+        <Item Name="[B4]">_Elems[11]</Item>
+        <Item Name="[B5]">_Elems[12]</Item>
+        <Item Name="[B6]">_Elems[13]</Item>
+        <Item Name="[B7]">_Elems[14]</Item>
+        <Item Name="[B8]">_Elems[15]</Item>
+        <Item Name="[C1]">_Elems[16]</Item>
+        <Item Name="[C2]">_Elems[17]</Item>
+        <Item Name="[C3]">_Elems[18]</Item>
+        <Item Name="[C4]">_Elems[19]</Item>
+        <Item Name="[C5]">_Elems[20]</Item>
+        <Item Name="[C6]">_Elems[21]</Item>
+        <Item Name="[C7]">_Elems[22]</Item>
+        <Item Name="[C8]">_Elems[23]</Item>
+        <Item Name="[D1]">_Elems[24]</Item>
+        <Item Name="[D2]">_Elems[25]</Item>
+        <Item Name="[D3]">_Elems[26]</Item>
+        <Item Name="[D4]">_Elems[27]</Item>
+        <Item Name="[D5]">_Elems[28]</Item>
+        <Item Name="[D6]">_Elems[29]</Item>
+        <Item Name="[D7]">_Elems[30]</Item>
+        <Item Name="[D8]">_Elems[31]</Item>
+        <Item Name="[E1]">_Elems[32]</Item>
+        <Item Name="[E2]">_Elems[33]</Item>
+        <Item Name="[E3]">_Elems[34]</Item>
+        <Item Name="[E4]">_Elems[35]</Item>
+        <Item Name="[E5]">_Elems[36]</Item>
+        <Item Name="[E6]">_Elems[37]</Item>
+        <Item Name="[E7]">_Elems[38]</Item>
+        <Item Name="[E8]">_Elems[39]</Item>
+        <Item Name="[F1]">_Elems[40]</Item>
+        <Item Name="[F2]">_Elems[41]</Item>
+        <Item Name="[F3]">_Elems[42]</Item>
+        <Item Name="[F4]">_Elems[43]</Item>
+        <Item Name="[F5]">_Elems[44]</Item>
+        <Item Name="[F6]">_Elems[45]</Item>
+        <Item Name="[F7]">_Elems[46]</Item>
+        <Item Name="[F8]">_Elems[47]</Item>
+        <Item Name="[G1]">_Elems[48]</Item>
+        <Item Name="[G2]">_Elems[49]</Item>
+        <Item Name="[G3]">_Elems[50]</Item>
+        <Item Name="[G4]">_Elems[51]</Item>
+        <Item Name="[G5]">_Elems[52]</Item>
+        <Item Name="[G6]">_Elems[53]</Item>
+        <Item Name="[G7]">_Elems[54]</Item>
+        <Item Name="[G8]">_Elems[55]</Item>
+        <Item Name="[H1]">_Elems[56]</Item>
+        <Item Name="[H2]">_Elems[57]</Item>
+        <Item Name="[H3]">_Elems[58]</Item>
+        <Item Name="[H4]">_Elems[59]</Item>
+        <Item Name="[H5]">_Elems[60]</Item>
+        <Item Name="[H6]">_Elems[61]</Item>
+        <Item Name="[H7]">_Elems[62]</Item>
+        <Item Name="[H8]">_Elems[63]</Item>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
   <Type Name="Euclide::BitSet&lt;enum Euclide::Square,64&gt;">
     <DisplayString Condition="_bits==0xFFFFFFFFFFFFFFFF">Anywhere</DisplayString>
     <DisplayString Condition="_bits==0x0000000000000000">Nowhere</DisplayString>

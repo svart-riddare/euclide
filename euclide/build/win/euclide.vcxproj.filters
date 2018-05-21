@@ -47,9 +47,6 @@
     <ClCompile Include="..\..\source\euclide.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\hashtables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\implications.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -89,6 +86,9 @@
     <ClCompile Include="..\..\source\copyright.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\cache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\assignations.h">
@@ -107,9 +107,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\destinations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\hashtables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\implications.h">
@@ -167,6 +164,9 @@
       <Filter>Utility Files\Boost</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\targets.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\cache.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

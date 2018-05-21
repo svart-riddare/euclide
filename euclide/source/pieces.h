@@ -7,6 +7,7 @@ namespace Euclide
 {
 
 class Problem;
+class TwoPieceCache;
 
 /* -------------------------------------------------------------------------- */
 /* -- Piece                                                                -- */
@@ -18,6 +19,7 @@ class Piece
 		Piece(const Problem& problem, Square square);
 		~Piece();
 
+		void setCastling(CastlingSide side, bool castling);
 		void setCaptured(bool captured);
 
 		void setAvailableMoves(int availableMoves);
@@ -27,6 +29,7 @@ class Piece
 		void setPossibleCaptures(const Squares& captures);
 
 		void bypassObstacles(const Squares& obstacles);
+		int mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast);
 	
 		bool update();
 
@@ -38,6 +41,8 @@ class Piece
 		inline Species species() const
 			{ return _species; }
 
+		inline tribool castling(CastlingSide side) const
+			{ return _castling[side]; }
 		inline tribool captured() const
 			{ return _captured; }
 		inline tribool promoted() const
@@ -85,6 +90,23 @@ class Piece
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
 
+	protected :
+		struct State
+		{
+			Piece& piece;                   /**< Piece referenced by this state. */
+			
+			int availableMoves;             /**< Number of available moves for this piece. */
+			int requiredMoves;              /**< Number of moves required for this piece. */
+			int playedMoves;                /**< Number of moves currently played. */
+
+			ArrayOfSquares moves;           /**< All moves that leads to the possible final squares in time. */
+			Square square;                  /**< Current square. */
+
+			State(Piece& piece, int availableMoves) : piece(piece), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare) {}
+		};
+
+		static int play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache);
+
 	private :
 		Glyph _glyph;                                 /**< Piece's glyph. */
 		Color _color;                                 /**< Piece's color, implicit from glyph. */
@@ -96,6 +118,7 @@ class Piece
 		Square _castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
 		Square _finalSquare;                          /**< Piece's final square, if known. */
 
+		tribool _castling[NumCastlingSides];          /**< Set if the piece has performed castling. */
 		tribool _captured;                            /**< Set if the piece has been captured. */
 		tribool _promoted;                            /**< Set if the piece has been promoted. */
 
@@ -109,8 +132,10 @@ class Piece
 		int _requiredCaptures;                        /**< Minimum number of captures performed by this piece. */
 
 		array<int, NumSquares> _distances;            /**< Number of moves required to reach each square. */
+		array<int, NumSquares> _rdistances;           /**< Number of moves required to reach one of the final squares. */
 		array<int, NumSquares> _captures;             /**< Number of captures required to reach each square. */
-
+		array<int, NumSquares> _rcaptures;            /**< Number of moves required to reach one of the final squares. */
+	
 		ArrayOfSquares _moves;                        /**< Set of legal moves. */
 		const ArrayOfSquares *_xmoves;                /**< Set of moves that must be captures, or null if there are no restrictions. */
 		const MatrixOfSquares *_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */

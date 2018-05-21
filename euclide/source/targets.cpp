@@ -135,8 +135,8 @@ void TargetPartition::assign(const Pieces& pieces)
 			requiredCaptures += men[k]->requiredCaptures(squares[k]);
 		}
 
-		minRequiredMoves = std::min(minRequiredMoves, requiredMoves);
-		minRequiredCaptures = std::min(minRequiredCaptures, requiredCaptures);
+		xstd::minimize(minRequiredMoves, requiredMoves);
+		xstd::minimize(minRequiredCaptures, requiredCaptures);
 
 		if ((minRequiredMoves <= _requiredMoves) && (minRequiredCaptures <= _requiredCaptures))
 			break;		

@@ -15,7 +15,10 @@ class matrix : public array<array<T, N>, M>
 		matrix() {};
 
 		matrix(const T& value)
-			{ for (std::size_t n = 0; n < N; n++)  (*this)[n].assign(value); }
+			{ fill(value); }
+
+		void fill(const T& value)
+			{ for (std::size_t n = 0; n < N; n++)  (*this)[n].fill(value); }
 
 	public :
 		typedef T value_type;

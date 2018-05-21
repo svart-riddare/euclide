@@ -95,7 +95,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <DisableSpecificWarnings>4244;4267;4457</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4456;4457</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-debug-legacy.lib</OutputFile>
@@ -113,7 +113,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <DisableSpecificWarnings>4244;4267;4457</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4456;4457</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-debug.lib</OutputFile>
@@ -135,7 +135,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <DisableSpecificWarnings>4244;4267;4457</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4456;4457</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <OutputFile>../../bin/$(ProjectName)-legacy.lib</OutputFile>
@@ -158,7 +158,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <DisableSpecificWarnings>4244;4267;4457</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;4456;4457</DisableSpecificWarnings>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Lib>
@@ -178,6 +178,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\source\cache.cpp" />
     <ClCompile Include="..\..\source\captures.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -210,12 +211,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\source\euclide.cpp">
-    </ClCompile>
-    <ClCompile Include="..\..\source\hashtables.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\source\implications.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -269,12 +264,12 @@
     <ClInclude Include="..\..\interface\euclide.h" />
     <ClInclude Include="..\..\source\assignations.h" />
     <ClInclude Include="..\..\source\board.h" />
+    <ClInclude Include="..\..\source\cache.h" />
     <ClInclude Include="..\..\source\captures.h" />
     <ClInclude Include="..\..\source\constraints.h" />
     <ClInclude Include="..\..\source\debug.h" />
     <ClInclude Include="..\..\source\definitions.h" />
     <ClInclude Include="..\..\source\destinations.h" />
-    <ClInclude Include="..\..\source\hashtables.h" />
     <ClInclude Include="..\..\source\implications.h" />
     <ClInclude Include="..\..\source\includes.h" />
     <ClInclude Include="..\..\source\moves.h" />

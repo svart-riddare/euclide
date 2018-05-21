@@ -22,12 +22,14 @@
 #include <bitset>
 #include <functional>
 #include <iterator>
+#include <map>
 #include <new>
 #include <numeric>
 #include <queue>
 #include <vector>
 
 using std::array;
+using std::tuple;
 
 /* -------------------------------------------------------------------------- */
 
