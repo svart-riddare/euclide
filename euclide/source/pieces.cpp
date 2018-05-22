@@ -105,6 +105,13 @@ void Piece::setCastling(CastlingSide side, bool castling)
 	if (!unknown(_castling[side]))
 		return;
 
+	/* -- King can only castle on one side -- */
+
+	if (castling && _royal)
+		for (CastlingSide other : AllCastlingSides())
+			if (side != other)
+				setCastling(other, false);
+
 	/* -- Prohibit castling moves -- */
 
 	if (!castling)
@@ -207,14 +214,9 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	if (!(_route & piece._route))
 		return requiredMoves;
 
-	/* -- Castling is not yet properly handled -- */
-
-	if ((_castlingSquare != _initialSquare) || (piece._castlingSquare != piece._initialSquare))
-		return requiredMoves;
-
 	/* -- Don't bother if both pieces have huge degrees of liberty -- */
 
-	const int threshold = 1000;
+	const int threshold = 5000;
 	if (moves() * piece.moves() > threshold)
 		return requiredMoves;
 
@@ -261,11 +263,25 @@ bool Piece::update()
 
 void Piece::updateDeductions()
 {
-	/* -- Compute distances -- */
+	/* -- Castling for rooks -- */
 
-	_distances = computeDistances(_initialSquare, _castlingSquare);
+	if (_castlingSquare != _initialSquare)
+		if (!_moves[_castlingSquare] && !_possibleSquares[_castlingSquare])
+			for (CastlingSide side : AllCastlingSides())
+				setCastling(side, false);
+
+	if (_castlingSquare != _initialSquare)
+		if (!_moves[_initialSquare] && !_possibleSquares[_initialSquare])
+			for (CastlingSide side : AllCastlingSides())
+				setCastling(side, true);
+
+	/* -- Compute distances -- */	
+
+	const bool castling = xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(_castling[side]); });
+
+	_distances = computeDistances(castling ? _castlingSquare : _initialSquare, _castlingSquare);
 	if (_xmoves)
-		_captures = computeCaptures(_initialSquare, _castlingSquare);
+		_captures = computeCaptures(castling ? _castlingSquare : _initialSquare, _castlingSquare);
 
 	for (Square square : ValidSquares(_possibleSquares))
 		if (_distances[square] > _availableMoves)
@@ -304,6 +320,14 @@ void Piece::updateDeductions()
 			for (Square to : ValidSquares(_moves[from]))
 				if (_captures[from] + (*_xmoves)[from][to] + _rcaptures[to] > _availableCaptures)
 					_moves[from][to] = false;
+
+	/* -- No castling if corresponding king moves are not present -- */
+
+	if (_royal)
+		for (CastlingSide side : AllCastlingSides())
+			if (maybe(_castling[side]))
+				if (!_moves[Castlings[_color][side].from][Castlings[_color][side].to])
+					setCastling(side, false);
 
 	/* -- Get all squares the piece may have crossed or stopped on -- */
 
@@ -541,7 +565,7 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 	/* -- Break recursion if there are no more moves available -- */
 
-	if (availableMoves <= 0)
+	if (availableMoves < 0)
 		return requiredMoves;
 
 	/* -- Check for cache hit -- */
@@ -557,6 +581,26 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 		Piece& piece = state.piece;
 		const Square from = state.square;
 		const Square other = states[k ^ 1].square;
+
+		/* -- Teleportation when castling -- */
+
+		if (state.teleportation && !state.playedMoves)
+		{
+			const bool friends = (states[0].piece._color == states[1].piece._color);
+			const Square king = (states[k ^ 1].piece._royal && friends) ? other : Nowhere;
+			const Square pivot = std::find_if(Castlings[piece._color], Castlings[piece._color] + NumCastlingSides, [=](const Castling& castling) { return castling.rook == from; })->to;
+		
+			if ((king != Nowhere) ? (king == pivot) : !(*piece._constraints)[piece._initialSquare][piece._castlingSquare][other])
+			{
+				state.square = piece._castlingSquare;
+				state.teleportation = false;
+
+				xstd::minimize(requiredMoves, play(states, availableMoves, assignedMoves, maximumMoves, cache));
+
+				state.teleportation = true;
+				state.square = piece._initialSquare;
+			}
+		}
 
 		/* -- Check if there are any moves left for this piece -- */
 

@@ -100,6 +100,14 @@ template <typename Collection, typename Predicate> inline
 typename Collection::size_type count_if(const Collection& collection, const Predicate& predicate)
 	{ return std::count_if(std::begin(collection), std::end(collection), predicate); }
 
+template <typename Collection, typename T> inline
+typename Collection::const_iterator find(const Collection& collection, const T& value)
+	{ return std::find(std::begin(collection), std::end(collection), value); }
+
+template <typename Collection, typename Predicate> inline
+typename Collection::const_iterator find_if(const Collection& collection, const Predicate& predicate)
+	{ return std::find_if(std::begin(collection), std::end(collection), predicate); }
+
 template <typename Collection, typename Function> inline
 Function for_each(const Collection& collection, const Function& function)
 	{ return std::move(std::for_each(std::begin(collection), std::end(collection), function)); }

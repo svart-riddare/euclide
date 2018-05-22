@@ -14,9 +14,18 @@ struct EnumRange
 	class EnumIterator
 	{
 		public :
+			typedef std::forward_iterator_tag iterator_category;
+			typedef Enum value_type;
+			typedef int difference_type;
+			typedef Enum *pointer;
+			typedef Enum& reference;
+
+		public :
 			EnumIterator(int value) : _value(value) {}
 
 		public :
+			inline bool operator==(const EnumIterator& iterator) const
+				{ return _value == iterator._value; }
 			inline bool operator!=(const EnumIterator& iterator) const
 				{ return _value != iterator._value; }
 

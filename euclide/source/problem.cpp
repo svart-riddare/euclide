@@ -109,9 +109,9 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 
 	/* -- Set castling flags -- */
 
-	_castlings[White][KindSideCastling] = !problem.forbidWhiteKingSideCastling;
+	_castlings[White][KingSideCastling] = !problem.forbidWhiteKingSideCastling;
 	_castlings[White][QueenSideCastling] = !problem.forbidWhiteQueenSideCastling;
-	_castlings[Black][KindSideCastling] = !problem.forbidBlackKingSideCastling;
+	_castlings[Black][KingSideCastling] = !problem.forbidBlackKingSideCastling;
 	_castlings[Black][QueenSideCastling] = !problem.forbidBlackQueenSideCastling;
 
 	/* -- Count number of pieces in diagrams -- */

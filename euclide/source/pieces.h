@@ -94,6 +94,7 @@ class Piece
 		struct State
 		{
 			Piece& piece;                   /**< Piece referenced by this state. */
+			bool teleportation;             /**< Piece can be teleported (castling rook). */
 			
 			int availableMoves;             /**< Number of available moves for this piece. */
 			int requiredMoves;              /**< Number of moves required for this piece. */
@@ -102,7 +103,7 @@ class Piece
 			ArrayOfSquares moves;           /**< All moves that leads to the possible final squares in time. */
 			Square square;                  /**< Current square. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare) {}
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation(piece._initialSquare != piece._castlingSquare), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare) {}
 		};
 
 		static int play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache);
