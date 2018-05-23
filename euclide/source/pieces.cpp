@@ -42,6 +42,9 @@ Piece::Piece(const Problem& problem, Square square)
 	_availableMoves = problem.moves(_color);
 	_availableCaptures = problem.initialPieces(!_color) - problem.diagramPieces(!_color);
 
+	_requiredMoves = 0;
+	_requiredCaptures = 0;
+
 	/* -- Initialize possible final squares and capture squares -- */
 
 	for (Square square : AllSquares())
@@ -232,6 +235,12 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	TwoPieceCache cache;
 	const int newRequiredMoves = play(states, availableMoves, fast ? requiredMoves : -1, availableMoves, cache);
 
+	/* -- Store required moves for each piece, if greater than the previously computed values -- */
+
+	for (const State& state : states)
+		if (state.requiredMoves > state.piece._requiredMoves)
+			state.piece._requiredMoves = state.requiredMoves, state.piece._update = true;
+
 	/* -- Remove never played moves -- */
 
 	if (!fast)
@@ -305,8 +314,8 @@ void Piece::updateDeductions()
 
 	/* -- Compute minimum number of moves and captures performed by this piece -- */
 
-	_requiredMoves = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _distances[square]; });
-	_requiredCaptures = xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _captures[square]; });
+	xstd::maximize(_requiredMoves, xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _distances[square]; }));
+	xstd::maximize(_requiredCaptures, xstd::min(ValidSquares(_possibleSquares), [&](Square square) { return _captures[square]; }));
 
 	/* -- Remove moves that will obviously never be played -- */
 
