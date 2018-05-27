@@ -355,13 +355,23 @@ void Piece::updateDeductions()
 				if (_captures[from] + (*_xmoves)[from][to] + _rcaptures[to] > _availableCaptures)
 					_moves[from][to] = false;
 
-	/* -- No castling if corresponding king moves are not present -- */
+	/* -- Update castling state according to corresponding king moves -- */
 
 	if (_royal)
+	{
 		for (CastlingSide side : AllCastlingSides())
+		{
 			if (maybe(_castling[side]))
+			{
 				if (!_moves[Castlings[_color][side].from][Castlings[_color][side].to])
 					setCastling(side, false);
+
+				if (_moves[Castlings[_color][side].from].count() == 1)
+					if (_moves[Castlings[_color][side].from][Castlings[_color][side].to])
+						setCastling(side, true);
+			}
+		}
+	}
 
 	/* -- Get all squares the piece may have crossed or stopped on -- */
 
