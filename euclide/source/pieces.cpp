@@ -61,6 +61,11 @@ Piece::Piece(const Problem& problem, Square square)
 	_constraints = Tables::getMoveConstraints(_species, problem.variant(), false);
 	_xconstraints = Tables::getMoveConstraints(_species, problem.variant(), true);
 
+	/* -- Initialize occupied squares -- */
+
+	for (Square square : AllSquares())
+		_occupied[square].pieces.fill(nullptr);
+
 	/* -- Distances will be computed later -- */
 
 	_distances.fill(0);
@@ -238,20 +243,40 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	/* -- Store required moves for each piece, if greater than the previously computed values -- */
 
 	for (const State& state : states)
+		if (state.requiredMoves >= Infinity)
+			throw NoSolution;
+
+	for (const State& state : states)
 		if (state.requiredMoves > state.piece._requiredMoves)
 			state.piece._requiredMoves = state.requiredMoves, state.piece._update = true;
 
-	/* -- Remove never played moves -- */
+	/* -- Remove never played moves and keep track of occupied squares -- */
 
 	if (!fast)
+	{
 		for (const State& state : states)
+		{
 			for (Square square : AllSquares())
+			{
 				if (state.moves[square] < state.piece._moves[square])
 					state.piece._moves[square] = state.moves[square], state.piece._update = true;
 
+				if (state.squares[square].count() == 1)
+				{
+					const Square occupied = state.squares[square].first();
+					if (!state.piece._occupied[square].squares[occupied])
+					{
+						state.piece._occupied[square].squares[occupied] = true;
+						state.piece._occupied[square].pieces[occupied] = &states[&state == &states[0]].piece;
+						state.piece._update = true;
+					}
+				}
+			}
+		}
+	}
+
 	/* -- Done -- */
 
-	assert(newRequiredMoves >= requiredMoves);
 	return newRequiredMoves;
 }
 
@@ -350,6 +375,29 @@ void Piece::updateDeductions()
 	for (Square from : AllSquares())
 		for (Square to : ValidSquares(_moves[from]))
 			_route |= (*_constraints)[from][to];
+
+	/* -- Update occupied squares -- */
+
+	for (Square square : AllSquares())
+	{
+		for (bool loop = true; loop; )
+		{
+			loop = false;
+			for (Square occupied : ValidSquares(_occupied[square].squares))
+			{
+				for (Square other : ValidSquares(_occupied[square].pieces[occupied]->_occupied[occupied].squares))
+				{
+					if (!_occupied[square].squares[other])
+					{
+						_occupied[square].pieces[other] = _occupied[square].pieces[occupied]->_occupied[occupied].pieces[other];
+						_occupied[square].squares[other] = true;
+						loop = true;
+					}
+				}
+			}
+		}
+	}
+
 }
 
 /* -------------------------------------------------------------------------- */
@@ -562,9 +610,16 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 	if (states[0].piece._possibleSquares[states[0].square] && states[1].piece._possibleSquares[states[1].square])
 	{
+		/* -- Get required moves -- */
+
 		xstd::minimize(states[0].requiredMoves, states[0].playedMoves);
 		xstd::minimize(states[1].requiredMoves, states[1].playedMoves);
 		requiredMoves = states[0].playedMoves + states[1].playedMoves;
+
+		/* -- Label occupied squares -- */
+
+		states[0].squares[states[0].square][states[1].square] = true;
+		states[1].squares[states[1].square][states[0].square] = true;
 
 		/* -- Early exit for fast version -- */
 
@@ -587,16 +642,18 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 	for (int k = 0; k < 2; k++)
 	{
 		State& state = states[k];
+		State& xstate = states[k ^ 1];
 		Piece& piece = state.piece;
+		Piece& xpiece = xstate.piece;
 		const Square from = state.square;
-		const Square other = states[k ^ 1].square;
+		const Square other = xstate.square;
 
 		/* -- Teleportation when castling -- */
 
 		if (state.teleportation && !state.playedMoves)
 		{
-			const bool friends = (states[0].piece._color == states[1].piece._color);
-			const Square king = (states[k ^ 1].piece._royal && friends) ? other : Nowhere;
+			const bool friends = (piece._color == xpiece._color);
+			const Square king = (xpiece._royal && friends) ? other : Nowhere;
 			const Square pivot = std::find_if(Castlings[piece._color], Castlings[piece._color] + NumCastlingSides, [=](const Castling& castling) { return castling.rook == from; })->to;
 		
 			if ((king != Nowhere) ? (king == pivot) : !(*piece._constraints)[piece._initialSquare][piece._castlingSquare][other])
@@ -604,7 +661,11 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 				state.square = piece._castlingSquare;
 				state.teleportation = false;
 
-				xstd::minimize(requiredMoves, play(states, availableMoves, assignedMoves, maximumMoves, cache));
+				const int myRequiredMoves = play(states, availableMoves, assignedMoves, maximumMoves, cache);
+				if (myRequiredMoves <= maximumMoves)
+					state.squares[from][other] = true, xstate.squares[other][from] = true;
+
+				xstd::minimize(requiredMoves, myRequiredMoves);
 
 				state.teleportation = true;
 				state.square = piece._initialSquare;
@@ -622,7 +683,12 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 		{
 			/* -- Move could be blocked by other pieces -- */
 
-			if ((*piece._constraints)[from][to][other])
+			bool blocked = (*piece._constraints)[from][to][other];
+			for (Square square : ValidSquares(xpiece._occupied[other].squares))
+				if ((*piece._constraints)[from][to][square])
+					blocked = true;
+
+			if (blocked)
 				continue;
 
 			/* -- Reject move if it brings us to far away -- */
@@ -644,10 +710,14 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 			cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves);
 
-			/* -- Label all valid moves that can be used to reach our goals -- */
+			/* -- Label all valid moves that can be used to reach our goals and squares that were occupied -- */
 
 			if (myRequiredMoves <= maximumMoves)
+			{
 				state.moves[from][to] = true;
+				state.squares[from][other] = true;
+				xstate.squares[other][from] = true;
+			}
 
 			/* -- Undo move -- */
 

@@ -101,6 +101,7 @@ class Piece
 			int playedMoves;                /**< Number of moves currently played. */
 
 			ArrayOfSquares moves;           /**< All moves that leads to the possible final squares in time. */
+			ArrayOfSquares squares;         /**< Occupied pair of squares. */
 			Square square;                  /**< Current square. */
 
 			State(Piece& piece, int availableMoves) : piece(piece), teleportation(piece._initialSquare != piece._castlingSquare), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare) {}
@@ -141,6 +142,9 @@ class Piece
 		const ArrayOfSquares *_xmoves;                /**< Set of moves that must be captures, or null if there are no restrictions. */
 		const MatrixOfSquares *_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */
 		const MatrixOfSquares *_xconstraints;         /**< Capture move constraints, i.e. squares that must be empty for each possible capture. */
+		
+		struct Occupied { Squares squares; array<Piece *, NumSquares> pieces; };
+		array<Occupied, NumSquares> _occupied;        /**< Occupied squares, for each square the piece may lie. */
 
 		Squares _stops;                               /**< Set of all squares on which the piece may have stopped. */
 		Squares _route;                               /**< Set of all squares the piece may have crossed or stopped. */
