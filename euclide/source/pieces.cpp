@@ -225,8 +225,11 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	/* -- Don't bother if both pieces have huge degrees of liberty -- */
 
 	const int threshold = 5000;
-	if (moves() * piece.moves() > threshold)
+	if (moves() * piece.moves() > 4 * threshold)
 		return requiredMoves;
+
+	if (moves() * piece.moves() > threshold)
+		fast = true;
 
 	/* -- Play all possible moves with these two pieces -- */
 
@@ -240,11 +243,15 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	TwoPieceCache cache;
 	const int newRequiredMoves = play(states, availableMoves, fast ? requiredMoves : -1, availableMoves, cache);
 
-	/* -- Store required moves for each piece, if greater than the previously computed values -- */
+	if (newRequiredMoves >= Infinity)
+		throw NoSolution;
 
-	for (const State& state : states)
-		if (state.requiredMoves >= Infinity)
-			throw NoSolution;
+	/* -- Early exit if we have not performed all computations -- */
+
+	if (fast)
+		return newRequiredMoves;
+
+	/* -- Store required moves for each piece, if greater than the previously computed values -- */
 
 	for (const State& state : states)
 		if (state.requiredMoves > state.piece._requiredMoves)
@@ -252,24 +259,21 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 
 	/* -- Remove never played moves and keep track of occupied squares -- */
 
-	if (!fast)
+	for (const State& state : states)
 	{
-		for (const State& state : states)
+		for (Square square : AllSquares())
 		{
-			for (Square square : AllSquares())
-			{
-				if (state.moves[square] < state.piece._moves[square])
-					state.piece._moves[square] = state.moves[square], state.piece._update = true;
+			if (state.moves[square] < state.piece._moves[square])
+				state.piece._moves[square] = state.moves[square], state.piece._update = true;
 
-				if (state.squares[square].count() == 1)
+			if (state.squares[square].count() == 1)
+			{
+				const Square occupied = state.squares[square].first();
+				if (!state.piece._occupied[square].squares[occupied])
 				{
-					const Square occupied = state.squares[square].first();
-					if (!state.piece._occupied[square].squares[occupied])
-					{
-						state.piece._occupied[square].squares[occupied] = true;
-						state.piece._occupied[square].pieces[occupied] = &states[&state == &states[0]].piece;
-						state.piece._update = true;
-					}
+					state.piece._occupied[square].squares[occupied] = true;
+					state.piece._occupied[square].pieces[occupied] = &states[&state == &states[0]].piece;
+					state.piece._update = true;
 				}
 			}
 		}
