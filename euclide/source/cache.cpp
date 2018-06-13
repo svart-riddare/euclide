@@ -32,13 +32,13 @@ void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB, 
 	if (movesA < movesB)
 		if ((movesA < line[1].movesA) || ((movesA == line[1].movesA) && (movesB < line[1].movesB)))
 			line[1] = entry;
-	
+
 	if (movesA == movesB)
 		if (movesA < line[2].movesA)
 			line[2] = entry;
 
 	if (movesA > movesB)
-		if ((movesB < line[3].movesB) || (movesB == line[3].movesB) && (movesA < line[3].movesA))
+		if ((movesB < line[3].movesB) || ((movesB == line[3].movesB) && (movesA < line[3].movesA)))
 			line[3] = entry;
 }
 

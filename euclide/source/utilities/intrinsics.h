@@ -15,7 +15,7 @@ static inline bool bt(uint32_t bits, int bit)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return _bittest(reinterpret_cast<const long *>(&bits), bit) ? true : false;
 #else
-	return ((bits >> bits) & 1) ? true : false;
+	return ((bits >> bit) & 1) ? true : false;
 #endif
 }
 

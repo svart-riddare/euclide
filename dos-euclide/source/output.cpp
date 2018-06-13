@@ -140,7 +140,7 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 			forsythe[n++] = y ? '/' : '\0';
 		}
 
-		fprintf(_file, "%ls\n\t%hs\n\t%d\n\n", _strings[Strings::Input], forsythe, problem.numHalfMoves);
+		fprintf(_file, "%ls\n\t%s\n\t%d\n\n", _strings[Strings::Input], forsythe, problem.numHalfMoves);
 
 		fprintf(_file, "\t+---+---+---+---+---+---+---+---+\n\t");
 		for (int y = 8; y-- > 0; )

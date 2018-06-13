@@ -26,11 +26,11 @@ T sum(Iterator first, Iterator last, T zero, const Function& function)
 
 template<typename Iterator, typename T, typename X, typename Function> inline
 T min(Iterator first, Iterator last, T initial, const Function& function)
-	{ return std::accumulate(first, last, initial, [&](T min, const typename Collection::value_type& x) { return std::min<T>(min, function(x)); }); }
+	{ return std::accumulate(first, last, initial, [&](T min, const typename Iterator::value_type& x) { return std::min<T>(min, function(x)); }); }
 
 template<typename Iterator, typename T, typename X, typename Function> inline
 T max(Iterator first, Iterator last, T initial, const Function& function)
-	{ return std::accumulate(first, last, initial, [&](T max, const typename Collection::value_type& x) { return std::max<T>(max, function(x)); }); }
+	{ return std::accumulate(first, last, initial, [&](T max, const typename Iterator::value_type& x) { return std::max<T>(max, function(x)); }); }
 
 /* -------------------------------------------------------------------------- */
 

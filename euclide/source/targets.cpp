@@ -186,7 +186,7 @@ TargetPartitions::TargetPartitions(const Pieces& pieces, const Targets& targets)
 			updated = false;
 			for (int target : TargetPool::BitSetRange(pool))
 				if (partition.merge(targets[target]))
-					updated = pool.reset(target), true;
+					updated = (pool.reset(target), true);
 		}
 
 		push_back(partition);
