@@ -7,6 +7,10 @@
 	#define EUCLIDE_WIN_IMPLEMENTATION
 #endif
 
+#if defined(__GNUC__) && defined(__x86_64__)
+	#define EUCLIDE_LINUX_IMPLEMENTATION
+#endif
+
 /* -------------------------------------------------------------------------- */
 
 #include <cassert>

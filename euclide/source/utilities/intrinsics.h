@@ -101,11 +101,15 @@ static inline bool bsf(uint32_t bits, int *bit)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return _BitScanForward(reinterpret_cast<unsigned long *>(bit), bits) ? true : false;
 #else
+#ifdef EUCLIDE_LINUX_IMPLEMENTATION
+	return bits ? *bit = __builtin_ctz(bits), true : false;
+#else
 	for (int k = 0; bits; k++, bits >>= 1)
 		if (bits & 1)
 			return (*bit = k), true;
 
 	return false;
+#endif
 #endif
 }
 
@@ -114,11 +118,15 @@ static inline bool bsf(uint64_t bits, int *bit)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return _BitScanForward64(reinterpret_cast<unsigned long *>(bit), bits) ? true : false;
 #else
+#ifdef EUCLIDE_LINUX_IMPLEMENTATION
+	return bits ? *bit = __builtin_ctzl(bits), true : false;
+#else
 	for (int k = 0; bits; k++, bits >>= 1)
 		if (bits & 1)
 			return (*bit = k), true;
 
 	return false;
+#endif
 #endif
 }
 
@@ -129,13 +137,17 @@ static inline int popcnt(uint32_t bits)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return __popcnt(bits);
 #else
+#ifdef EUCLIDE_LINUX_IMPLEMENTATION
+	return __builtin_popcount(bits);
+#else
 	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 }; 
-	
+
 	int count = 0;
 	for ( ; bits; bits >>= 4) 
 		count += popcnt[bits & 15]; 
-	
+
 	return count;
+#endif
 #endif
 }
 
@@ -144,13 +156,17 @@ static inline int popcnt(uint64_t bits)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return __popcnt64(bits);
 #else
+#ifdef EUCLIDE_LINUX_IMPLEMENTATION
+	return __builtin_popcountl(bits);
+#else
 	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 }; 
-	
+
 	int count = 0;
 	for ( ; bits; bits >>= 4) 
 		count += popcnt[bits & 15]; 
-	
+
 	return count;
+#endif
 #endif
 }
 

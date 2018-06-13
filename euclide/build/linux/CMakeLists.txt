@@ -43,9 +43,8 @@ set_target_properties(euclide PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../bin/)
 
 # Compilation flags
 
-add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra)
+add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra -mavx)
 
 foreach(FILE ${TABLES})
 	set_source_files_properties(${FILE} PROPERTIES COMPILE_FLAGS -O0)
 endforeach()
-
