@@ -179,7 +179,7 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 
 	/* -- Restrict legal moves according to variant -- */
 
-	if (variant == Monocromatic)
+	if (variant == Monochromatic)
 		for (Square square : AllSquares())
 			(*moves)[square] &= (WhiteSquares[square] ? WhiteSquares : BlackSquares);
 

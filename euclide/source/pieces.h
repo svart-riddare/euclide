@@ -28,7 +28,7 @@ class Piece
 		void setPossibleSquares(const Squares& squares);
 		void setPossibleCaptures(const Squares& captures);
 
-		void bypassObstacles(const Squares& obstacles);
+		void bypassObstacles(const Piece& blocker);
 		int mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast);
 	
 		bool update();
@@ -142,12 +142,14 @@ class Piece
 		const ArrayOfSquares *_xmoves;                /**< Set of moves that must be captures, or null if there are no restrictions. */
 		const MatrixOfSquares *_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */
 		const MatrixOfSquares *_xconstraints;         /**< Capture move constraints, i.e. squares that must be empty for each possible capture. */
+		const ArrayOfSquares *_checks;                /**< For each square, set of squares on which the enemy king is in check. */
 		
 		struct Occupied { Squares squares; array<Piece *, NumSquares> pieces; };
 		array<Occupied, NumSquares> _occupied;        /**< Occupied squares, for each square the piece may lie. */
 
 		Squares _stops;                               /**< Set of all squares on which the piece may have stopped. */
 		Squares _route;                               /**< Set of all squares the piece may have crossed or stopped. */
+		Squares _threats;                             /**< Set of all squares on which the enemy king is threatened. */
 
 		bool _update;                                 /**< Set when deductions must be updated and update() shall return true. */
 };

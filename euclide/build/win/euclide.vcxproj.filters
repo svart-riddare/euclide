@@ -80,9 +80,6 @@
     <ClCompile Include="..\..\source\tables\movement-tables.cpp">
       <Filter>Table Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\tables\obstruction-tables.cpp">
-      <Filter>Table Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\copyright.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

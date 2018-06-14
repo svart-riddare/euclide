@@ -911,7 +911,7 @@ Rustam Ubaidullajew
 Probleemblad 2005
 P1080429
 
-tc1DRF1T//p1pp1/1pp1p1c1/7p/pP2t2P/3PPPPF/P1P5/TCfdrfC1
+tc1DRF1T/3p1pp1/1pp1p1c1/7p/pP2t2P/3PPPPF/P1P5/TCfdrfC1
 51
 
 --------------------------------------------------------------

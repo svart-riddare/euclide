@@ -61,6 +61,8 @@ Piece::Piece(const Problem& problem, Square square)
 	_constraints = Tables::getMoveConstraints(_species, problem.variant(), false);
 	_xconstraints = Tables::getMoveConstraints(_species, problem.variant(), true);
 
+	_checks = Tables::getUnstoppableChecks(_species, _color, problem.variant());
+
 	/* -- Initialize occupied squares -- */
 
 	for (Square square : AllSquares())
@@ -193,15 +195,17 @@ void Piece::setPossibleCaptures(const Squares& squares)
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::bypassObstacles(const Squares& obstacles)
+void Piece::bypassObstacles(const Piece& blocker)
 {
-	if ((obstacles & _route).none())
-		return;
+	const Squares& obstacles = blocker.stops();
 
-	for (Square from : ValidSquares(_stops))
-		for (Square to : ValidSquares(_moves[from]))
-			if (obstacles <= (*_constraints)[from][to])
-				_moves[from][to] = false, _update = true;
+	/* -- Blocked movements -- */
+
+	if ((obstacles & _route).any())
+		for (Square from : ValidSquares(_stops))
+			for (Square to : ValidSquares(_moves[from]))
+				if (obstacles <= (*_constraints)[from][to])
+					_moves[from][to] = false, _update = true;
 
 	/* -- Castling -- */
 
@@ -209,6 +213,15 @@ void Piece::bypassObstacles(const Squares& obstacles)
 		for (CastlingSide side : AllCastlingSides())
 			if (obstacles <= (*_constraints)[Castlings[_color][side].rook][Castlings[_color][side].free])
 				setCastling(side, false);
+
+	/* -- Checks -- */
+
+	if (_royal && (blocker._color != _color) && (obstacles.count() == 1))
+		for (Square check : ValidSquares((*blocker._checks)[obstacles.first()]))
+			if (_route[check])
+				for (Square from : ValidSquares(_stops))
+					if (_moves[from][check])
+						_moves[from][check] = false, _update = true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -216,20 +229,23 @@ void Piece::bypassObstacles(const Squares& obstacles)
 int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast)
 {
 	const int requiredMoves = _requiredMoves + piece._requiredMoves;
+	const bool enemies = _color != piece._color;
 
 	/* -- Don't bother if these two pieces can not interact with each other -- */
 
-	if (!(_route & piece._route))
+	const Squares routes[2] = { 
+		_route | ((enemies && piece._royal) ? _threats : Squares()),
+		piece._route | ((enemies && _royal) ? piece._threats : Squares())
+	};
+
+	if (!(routes[0] & routes[1]))
 		return requiredMoves;
 
 	/* -- Don't bother if both pieces have huge degrees of liberty -- */
 
 	const int threshold = 5000;
-	if (moves() * piece.moves() > 4 * threshold)
-		return requiredMoves;
-
 	if (moves() * piece.moves() > threshold)
-		fast = true;
+		return requiredMoves;
 
 	/* -- Play all possible moves with these two pieces -- */
 
@@ -238,7 +254,7 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 		State(piece, piece._requiredMoves + freeMoves[piece._color])
 	};
 
-	const int availableMoves = requiredMoves + freeMoves[_color] + ((_color != piece._color) ? freeMoves[!_color] : 0);
+	const int availableMoves = requiredMoves + freeMoves[_color] + (enemies ? freeMoves[!_color] : 0);
 
 	TwoPieceCache cache;
 	const int newRequiredMoves = play(states, availableMoves, fast ? requiredMoves : -1, availableMoves, cache);
@@ -389,6 +405,10 @@ void Piece::updateDeductions()
 	for (Square from : AllSquares())
 		for (Square to : ValidSquares(_moves[from]))
 			_route |= (*_constraints)[from][to];
+
+	_threats.reset();
+	for (Square square : ValidSquares(_stops))
+		_threats |= (*_checks)[square];
 
 	/* -- Update occupied squares -- */
 
@@ -661,12 +681,12 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 		Piece& xpiece = xstate.piece;
 		const Square from = state.square;
 		const Square other = xstate.square;
+		const bool friends = (piece._color == xpiece._color);
 
 		/* -- Teleportation when castling -- */
 
 		if (state.teleportation && !state.playedMoves)
-		{
-			const bool friends = (piece._color == xpiece._color);
+		{			
 			const Square king = (xpiece._royal && friends) ? other : Nowhere;
 			const Square pivot = std::find_if(Castlings[piece._color], Castlings[piece._color] + NumCastlingSides, [=](const Castling& castling) { return castling.rook == from; })->to;
 		
@@ -691,6 +711,11 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 		if (state.availableMoves <= 0)
 			continue;
 
+		/* -- Check that the enemy is not in check -- */
+
+		if (xpiece._royal && !friends && (*piece._checks)[from][other])
+			continue;
+
 		/* -- Loop over all moves -- */
 
 		for (Square to : ValidSquares(piece._moves[from]))
@@ -708,6 +733,11 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 			/* -- Reject move if it brings us to far away -- */
 
 			if (1 + piece._rdistances[to] > std::min(availableMoves, state.availableMoves))
+				continue;
+
+			/* -- Reject move if we move into check -- */
+
+			if (piece._royal && !friends && (*xpiece._checks)[other][to])
 				continue;
 
 			/* -- Play move -- */

@@ -224,7 +224,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				if (blocker->stops().count() < stopThreshold)
 					for (Piece *piece : pieces)
 						if (piece != blocker)
-							piece->bypassObstacles(blocker->stops());
+							piece->bypassObstacles(*blocker);
 
 		/* -- Update pieces -- */
 
