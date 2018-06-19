@@ -292,6 +292,9 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 					state.piece._update = true;
 				}
 			}
+
+			if (state.distances[square] > state.piece._distances[square])
+				state.piece._distances[square] = state.distances[square], state.piece._update = true;
 		}
 	}
 
@@ -333,7 +336,7 @@ void Piece::updateDeductions()
 
 	const bool castling = xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(_castling[side]); });
 
-	_distances = computeDistances(castling ? _castlingSquare : _initialSquare, _castlingSquare);
+	updateDistances(castling);
 	if (_xmoves)
 		_captures = computeCaptures(castling ? _castlingSquare : _initialSquare, _castlingSquare);
 
@@ -432,6 +435,16 @@ void Piece::updateDeductions()
 		}
 	}
 
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::updateDistances(bool castling)
+{
+	const array<int, NumSquares> distances = computeDistances(castling ? _castlingSquare : _initialSquare, _castlingSquare);
+
+	for (Square square : AllSquares())
+		xstd::maximize(_distances[square], distances[square]);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -636,7 +649,7 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache)
+int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate)
 {
 	int requiredMoves = Infinity;
 
@@ -697,7 +710,12 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 				const int myRequiredMoves = play(states, availableMoves, assignedMoves, maximumMoves, cache);
 				if (myRequiredMoves <= maximumMoves)
-					state.squares[from][other] = true, xstate.squares[other][from] = true;
+				{
+					state.squares[from][other] = true;
+					xstate.squares[other][from] = true;
+
+					state.distances[piece._castlingSquare] = 0;
+				}
 
 				xstd::minimize(requiredMoves, myRequiredMoves);
 
@@ -735,6 +753,12 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 			if (1 + piece._rdistances[to] > std::min(availableMoves, state.availableMoves))
 				continue;
 
+			/* -- Reject move if we have taken a shortcut -- */
+
+			if (state.playedMoves + 1 < piece._distances[to])
+				if (!invalidate || ((*invalidate = true), true))
+					continue;
+
 			/* -- Reject move if we move into check -- */
 
 			if (piece._royal && !friends && (*xpiece._checks)[other][to])
@@ -748,11 +772,13 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 			/* -- Recursion -- */
 
-			const int myRequiredMoves = play(states, availableMoves - 1, assignedMoves, maximumMoves, cache);
+			bool shortcuts = false;
+			const int myRequiredMoves = play(states, availableMoves - 1, assignedMoves, maximumMoves, cache, &shortcuts);
 
 			/* -- Cache this position, for tremendous speedups -- */
 
-			cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves);
+			if (!shortcuts)
+				cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves);
 
 			/* -- Label all valid moves that can be used to reach our goals and squares that were occupied -- */
 
@@ -761,6 +787,8 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 				state.moves[from][to] = true;
 				state.squares[from][other] = true;
 				xstate.squares[other][from] = true;
+
+				xstd::minimize(state.distances[to], state.playedMoves);
 			}
 
 			/* -- Undo move -- */

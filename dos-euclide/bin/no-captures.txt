@@ -566,6 +566,24 @@ P0002234
 
 --------------------------------------------------------------
 
+Rustam Ubaïdullaev
+Messigny 2002
+P1004103
+
+tc4c1/p7/fpppRpp1/r1t1p1dp/7f/5P1P/PPPPP1P1/TCFD1FCT
+36
+
+--------------------------------------------------------------
+
+Wiktor J. Peretjatko
+The Problemist 2005
+P1080458
+
+tc6/pppCcpp1/tTF5/T2pp1dp/P3r2P/1P4P1/ffPPPP1F/1C1DR3
+36
+
+--------------------------------------------------------------
+
 Michel Caillaud
 The Problemist Supplement 2001-2002
 P1068379
@@ -598,33 +616,6 @@ Problemesis 2003
 P1007484
 
 1t1f2ct/pp2pp1p/2pp4/5fpd/3c1P2/1P4Pr/P1PPP2P/CTDCFTRF
-37
-
---------------------------------------------------------------
-
-Rustam Ubaïdullaev
-Messigny 2002
-P1004103
-
-tc4c1/p7/fpppRpp1/r1t1p1dp/7f/5P1P/PPPPP1P1/TCFD1FCT
-36
-
---------------------------------------------------------------
-
-Wiktor J. Peretjatko
-The Problemist 2005
-P1080458
-
-tc6/pppCcpp1/tTF5/T2pp1dp/P3r2P/1P4P1/ffPPPP1F/1C1DR3
-36
-
---------------------------------------------------------------
-
-Michel Caillaud
-The Problemist Supplement 2001-2002
-P1063879
-
-tcfd1fct/ppppp1pp/3T1p2/7D/Tr1PPFR1/1F3C2/PPPC1PPP/8
 37
 
 --------------------------------------------------------------

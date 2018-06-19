@@ -82,32 +82,38 @@ class Piece
 
 	protected :
 		void updateDeductions();
-		void updatePossibleMoves();
+		void updateDistances(bool castling);
 
 		array<int, NumSquares> computeDistances(Square square, Square castling) const;
 		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
 
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
-
+		
 	protected :
 		struct State
 		{
-			Piece& piece;                   /**< Piece referenced by this state. */
-			bool teleportation;             /**< Piece can be teleported (castling rook). */
+			Piece& piece;                        /**< Piece referenced by this state. */
+			bool teleportation;                  /**< Piece can be teleported (castling rook). */
 			
-			int availableMoves;             /**< Number of available moves for this piece. */
-			int requiredMoves;              /**< Number of moves required for this piece. */
-			int playedMoves;                /**< Number of moves currently played. */
+			int availableMoves;                  /**< Number of available moves for this piece. */
+			int requiredMoves;                   /**< Number of moves required for this piece. */
+			int playedMoves;                     /**< Number of moves currently played. */
 
-			ArrayOfSquares moves;           /**< All moves that leads to the possible final squares in time. */
-			ArrayOfSquares squares;         /**< Occupied pair of squares. */
-			Square square;                  /**< Current square. */
+			ArrayOfSquares moves;                /**< All moves that leads to the possible final squares in time. */
+			ArrayOfSquares squares;              /**< Occupied pair of squares. */
+			Square square;                       /**< Current square. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), teleportation(piece._initialSquare != piece._castlingSquare), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare) {}
+			array<int, NumSquares> distances;    /**< Moves required to reach each square, assuming goals are reached. */
+
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation(piece._initialSquare != piece._castlingSquare), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare)
+			{
+				distances.fill(Infinity);
+				distances[piece._initialSquare] = 0;
+			}
 		};
 
-		static int play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache);
+		static int play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
 	private :
 		Glyph _glyph;                                 /**< Piece's glyph. */
