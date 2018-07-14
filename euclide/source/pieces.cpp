@@ -226,16 +226,16 @@ void Piece::bypassObstacles(const Piece& blocker)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast)
+int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast)
 {
-	const int requiredMoves = _requiredMoves + piece._requiredMoves;
-	const bool enemies = _color != piece._color;
+	const int requiredMoves = pieceA._requiredMoves + pieceB._requiredMoves;
+	const bool enemies = pieceA._color != pieceB._color;
 
 	/* -- Don't bother if these two pieces can not interact with each other -- */
 
 	const Squares routes[2] = { 
-		_route | ((enemies && piece._royal) ? _threats : Squares()),
-		piece._route | ((enemies && _royal) ? piece._threats : Squares())
+		pieceA._route | ((enemies && pieceB._royal) ? pieceA._threats : Squares()),
+		pieceB._route | ((enemies && pieceA._royal) ? pieceB._threats : Squares())
 	};
 
 	if (!(routes[0] & routes[1]))
@@ -244,17 +244,17 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	/* -- Use fast method if the search space is too large -- */
 
 	const int threshold = 5000;
-	if (moves() * piece.moves() > threshold)
+	if (pieceA.moves() * pieceB.moves() > threshold)
 		fast = true;
 
 	/* -- Play all possible moves with these two pieces -- */
 
 	array<State, 2> states = {
-		State(*this, _requiredMoves + freeMoves[_color]),
-		State(piece, piece._requiredMoves + freeMoves[piece._color])
+		State(pieceA, pieceA._requiredMoves + freeMoves[pieceA._color]),
+		State(pieceB, pieceB._requiredMoves + freeMoves[pieceB._color])
 	};
 
-	const int availableMoves = requiredMoves + freeMoves[_color] + (enemies ? freeMoves[!_color] : 0);
+	const int availableMoves = requiredMoves + freeMoves[pieceA._color] + (enemies ? freeMoves[pieceB._color] : 0);
 
 	TwoPieceCache cache;
 	const int newRequiredMoves = fast ? fastplay(states, availableMoves, cache) : fullplay(states, availableMoves, availableMoves, cache);

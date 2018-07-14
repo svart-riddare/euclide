@@ -29,7 +29,7 @@ class Piece
 		void setPossibleCaptures(const Squares& captures);
 
 		void bypassObstacles(const Piece& blocker);
-		int mutualInteractions(Piece& piece, const array<int, NumColors>& freeMoves, bool fast);
+		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
 	
 		bool update();
 

@@ -235,7 +235,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (unsigned pieceA = 0; pieceA < pieces.size(); pieceA++)
 			for (unsigned pieceB = pieceA + 1; pieceB < pieces.size(); pieceB++)
-				pieces[pieceA]->mutualInteractions(*pieces[pieceB], _freeMoves, false);
+				Piece::mutualInteractions(*pieces[pieceA], *pieces[pieceB], _freeMoves, false);
 
 		/* -- Update pieces -- */
 
