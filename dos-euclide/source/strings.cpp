@@ -12,6 +12,7 @@ static const wchar_t *frenchTexts[] =
 static const wchar_t *frenchErrors[] =
 {
 	L"Veuillez pr\xE9" L"ciser un nom de fichier sur la ligne de commande",
+	L"Ligne de commande incorrecte",
 	L"Le probl\xE8me donn\xE9 en ligne de commande est invalide",
 	L"Le fichier \xE0 analyser n'existe pas ou ne contient aucun probl\xE8me",
 	L"Analyse interrompue par l'utilisateur"
@@ -63,6 +64,7 @@ static const wchar_t *englishTexts[] =
 static const wchar_t *englishErrors[] =
 {
 	L"Please specify an input file name on the command line",
+	L"Invalid command line",
 	L"Invalid problem given on command line",
 	L"Input file not found or empty",
 	L"Solving interrupted"

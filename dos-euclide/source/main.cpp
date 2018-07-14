@@ -134,16 +134,19 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	/* -- Solve problems -- */
 
-	if (problems && moves)
+	if (error == Strings::NumErrors)
 	{
-		if (!solve(strings, console, problems, atoi(moves), wait))
-			error = Strings::InvalidArguments;
-	}
-	else
-	if (problems)
-	{
-		if (!solve(strings, console, problems, wait))
-			error = Strings::InvalidInputFile;
+		if (problems && moves)
+		{
+			if (!solve(strings, console, problems, atoi(moves), wait))
+				error = Strings::InvalidProblem;
+		}
+		else
+		if (problems)
+		{
+			if (!solve(strings, console, problems, wait))
+				error = Strings::InvalidInputFile;
+		}
 	}
 
 	/* -- Show error -- */

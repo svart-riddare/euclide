@@ -9,7 +9,7 @@ class Strings
 {
 	public:
 		typedef enum { PressAnyKey, NumTexts } Text;
-		typedef enum { NoArguments, InvalidArguments, InvalidInputFile, UserInterruption, NumErrors } Error;
+		typedef enum { NoArguments, InvalidArguments, InvalidProblem, InvalidInputFile, UserInterruption, NumErrors } Error;
 		typedef enum { ForsytheSymbols, GlyphSymbols, Moves, Dot, Input, Output, Score, NumStrings } String;		
 
 	public:
