@@ -113,7 +113,8 @@ class Piece
 			}
 		};
 
-		static int play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
+		static int fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& cache);
+		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
 	private :
 		Glyph _glyph;                                 /**< Piece's glyph. */

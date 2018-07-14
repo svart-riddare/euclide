@@ -1049,7 +1049,7 @@ Problème analysé :
 	11,5 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 54.38
+	Échelle de difficulté = 38.38
 
 
 -----------------------------------------
@@ -1080,7 +1080,7 @@ Problème analysé :
 	11,5 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 89.13
+	Échelle de difficulté = 66.85
 
 
 -----------------------------------------
@@ -1142,7 +1142,7 @@ Problème analysé :
 	12,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 45.22
+	Échelle de difficulté = 34.69
 
 
 -----------------------------------------
@@ -1669,7 +1669,7 @@ Problème analysé :
 	17,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 74.23
+	Échelle de difficulté = 69.16
 
 
 -----------------------------------------
@@ -1762,7 +1762,7 @@ Problème analysé :
 	17,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 49.56
+	Échelle de difficulté = 47.37
 
 
 -----------------------------------------
@@ -2723,7 +2723,7 @@ Problème analysé :
 	24,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 78.81
+	Échelle de difficulté = 32.62
 
 
 -----------------------------------------
@@ -2940,7 +2940,7 @@ Problème analysé :
 	28,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 145.34
+	Échelle de difficulté = 141.15
 
 
 -----------------------------------------
@@ -3033,7 +3033,7 @@ Problème analysé :
 	38,5 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 111.01
+	Échelle de difficulté = 110.19
 
 
 -----------------------------------------
@@ -3095,6 +3095,6 @@ Problème analysé :
 	43,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 149.08
+	Échelle de difficulté = 144.77
 
 

@@ -241,11 +241,11 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	if (!(routes[0] & routes[1]))
 		return requiredMoves;
 
-	/* -- Don't bother if both pieces have huge degrees of liberty -- */
+	/* -- Use fast method if the search space is too large -- */
 
 	const int threshold = 5000;
 	if (moves() * piece.moves() > threshold)
-		return requiredMoves;
+		fast = true;
 
 	/* -- Play all possible moves with these two pieces -- */
 
@@ -257,21 +257,21 @@ int Piece::mutualInteractions(Piece& piece, const array<int, NumColors>& freeMov
 	const int availableMoves = requiredMoves + freeMoves[_color] + (enemies ? freeMoves[!_color] : 0);
 
 	TwoPieceCache cache;
-	const int newRequiredMoves = play(states, availableMoves, fast ? requiredMoves : -1, availableMoves, cache);
+	const int newRequiredMoves = fast ? fastplay(states, availableMoves, cache) : fullplay(states, availableMoves, availableMoves, cache);
 
 	if (newRequiredMoves >= Infinity)
 		throw NoSolution;
-
-	/* -- Early exit if we have not performed all computations -- */
-
-	if (fast)
-		return newRequiredMoves;
 
 	/* -- Store required moves for each piece, if greater than the previously computed values -- */
 
 	for (const State& state : states)
 		if (state.requiredMoves > state.piece._requiredMoves)
 			state.piece._requiredMoves = state.requiredMoves, state.piece._update = true;
+
+	/* -- Early exit if we have not performed all computations -- */
+
+	if (fast)
+		return newRequiredMoves;
 
 	/* -- Remove never played moves and keep track of occupied squares -- */
 
@@ -649,7 +649,151 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate)
+int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& cache)
+{
+	typedef TwoPieceCache::Position Position;
+	Queue<Position, 8 * NumSquares * NumSquares> queue;
+
+	int requiredMoves = Infinity;
+
+	const bool friends = (states[0].piece._color == states[1].piece._color);
+	const bool partners = friends && (states[0].piece._royal || states[1].piece._royal) && (states[0].teleportation || states[1].teleportation);
+
+	/* -- Initial position -- */
+
+	Position initial(states[0].piece._initialSquare, 0, states[1].piece._initialSquare, 0);
+	queue.push(initial);
+	cache.add(initial);
+
+	/* -- Loop -- */
+
+	for ( ; !queue.empty(); queue.pop())
+	{
+		const Position& position = queue.front();
+
+		/* -- Check if we have reached our goal -- */
+
+		if (states[0].piece._possibleSquares[position.squares[0]] && states[1].piece._possibleSquares[position.squares[1]])
+		{
+			/* -- Get required moves -- */
+
+			xstd::minimize(states[0].requiredMoves, position.moves[0]);
+			xstd::minimize(states[1].requiredMoves, position.moves[1]);
+			xstd::minimize(requiredMoves, position.moves[0] + position.moves[1]);
+		}
+
+		/* -- Play all moves -- */
+
+		for (int s = 0; s < 2; s++)
+		{
+			const int k = s ^ (position.moves[0] > position.moves[1]);
+
+			State& state = states[k];
+			State& xstate = states[k ^ 1];
+			Piece& piece = state.piece;
+			Piece& xpiece = xstate.piece;
+			const Square from = position.squares[k];
+			const Square other = position.squares[k ^ 1];
+
+			/* -- Handle teleportation for rooks -- */
+
+			if (state.teleportation && !position.moves[k] && (position.squares[k] == piece._initialSquare))
+			{
+				Square to = piece._castlingSquare;
+
+				/* -- Teleportation could be blocked by other piece -- */
+
+				const bool blocked = (*piece._constraints)[from][to][other];
+				if (!blocked)
+				{
+					Position next(k ? other : to, position.moves[0], k ? to : other, position.moves[1]);
+					if (!cache.hit(next))
+					{
+						/* -- Insert resulting position in front of queue -- */
+
+						queue.pass(next, 1);
+						cache.add(next);
+					}
+				}
+			}
+
+			/* -- Check if there are any moves left for this piece -- */
+
+			if (state.availableMoves <= position.moves[k])
+				continue;
+
+			if ((state.requiredMoves <= position.moves[k]) && (xstate.requiredMoves <= position.moves[k ^ 1]))
+				continue;
+
+			/* -- Check that the enemy is not in check -- */
+
+			if (xpiece._royal && !friends && (*piece._checks)[from][other])
+				continue;
+
+			/* -- Loop over all moves -- */
+
+			for (Square to : ValidSquares(piece._moves[from]))
+			{
+				Position next(k ? other : to, position.moves[0] + (k ^ 1), k ? to : other, position.moves[1] + (k ^ 0));
+
+				/* -- Take castling into account -- */
+
+				if (piece._royal && !position.moves[k] && partners)
+					for (CastlingSide side : AllCastlingSides())
+						if ((to == Castlings[piece._color][side].to) && (other == Castlings[piece._color][side].rook) && !position.moves[k ^ 1])
+							next.squares[k ^ 1] = Castlings[piece._color][side].free;
+
+				/* -- Continue if position was already reached before -- */
+
+				if (cache.hit(next))
+					continue;
+
+				/* -- Move could be blocked by other pieces -- */
+
+				bool blocked = (*piece._constraints)[from][to][other];
+				for (Square square : ValidSquares(xpiece._occupied[other].squares))
+					if ((*piece._constraints)[from][to][square])
+						blocked = true;
+
+				if (blocked)
+					continue;
+
+				/* -- Reject move if it brings us to far away -- */
+
+				if (piece._rdistances[to] > std::min(availableMoves, state.availableMoves - next.moves[k]))
+					continue;
+
+				/* -- Reject move if we move into check -- */
+
+				if (piece._royal && !friends && (*xpiece._checks)[other][to])
+					continue;
+
+				/* -- Safeguard if maximum queue size is insufficient -- */
+
+				assert(!queue.full());
+				if (queue.full())
+				{
+					states[0].requiredMoves = states[0].piece._requiredMoves;
+					states[1].requiredMoves = states[1].piece._requiredMoves;
+					return states[0].requiredMoves + states[1].requiredMoves;
+				}
+
+				/* -- Play move and add it to cache -- */
+
+				queue.push(next);
+				cache.add(next);
+			}
+		}
+	}
+
+	/* -- Done -- */
+
+	return requiredMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate)
 {
 	int requiredMoves = Infinity;
 
@@ -667,11 +811,6 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 		states[0].squares[states[0].square][states[1].square] = true;
 		states[1].squares[states[1].square][states[0].square] = true;
-
-		/* -- Early exit for fast version -- */
-
-		if (requiredMoves <= assignedMoves)
-			return requiredMoves;
 	}
 
 	/* -- Break recursion if there are no more moves available -- */
@@ -688,8 +827,10 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 
 	for (int k = 0; k < 2; k++)
 	{
-		State& state = states[k];
-		State& xstate = states[k ^ 1];
+		const int s = k ^ (states[0].playedMoves > states[1].playedMoves);
+
+		State& state = states[s];
+		State& xstate = states[s ^ 1];
 		Piece& piece = state.piece;
 		Piece& xpiece = xstate.piece;
 		const Square from = state.square;
@@ -708,7 +849,7 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 				state.square = piece._castlingSquare;
 				state.teleportation = false;
 
-				const int myRequiredMoves = play(states, availableMoves, assignedMoves, maximumMoves, cache);
+				const int myRequiredMoves = fullplay(states, availableMoves, maximumMoves, cache);
 				if (myRequiredMoves <= maximumMoves)
 				{
 					state.squares[from][other] = true;
@@ -773,7 +914,7 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 			/* -- Recursion -- */
 
 			bool shortcuts = false;
-			const int myRequiredMoves = play(states, availableMoves - 1, assignedMoves, maximumMoves, cache, &shortcuts);
+			const int myRequiredMoves = fullplay(states, availableMoves - 1, maximumMoves, cache, &shortcuts);
 
 			/* -- Cache this position, for tremendous speedups -- */
 
@@ -797,10 +938,9 @@ int Piece::play(array<State, 2>& states, int availableMoves, int assignedMoves, 
 			state.playedMoves -= 1;
 			state.square = from;
 
-			/* -- Update required moves and early exit for fast version -- */
+			/* -- Update required moves -- */
 
-			if (xstd::minimize(requiredMoves, myRequiredMoves) <= assignedMoves)
-				return requiredMoves;
+			xstd::minimize(requiredMoves, myRequiredMoves);
 		}
 	}
 

@@ -57,4 +57,52 @@ bool TwoPieceCache::hit(Square squareA, int movesA, Square squareB, int movesB, 
 
 /* -------------------------------------------------------------------------- */
 
+void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB)
+{
+	add(squareA, movesA, squareB, movesB, 0);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool TwoPieceCache::hit(Square squareA, int movesA, Square squareB, int movesB) const
+{
+	const Line& line = m_cache[squareA][squareB];
+
+	for (const Entry& cache : line)
+		if ((movesA >= cache.movesA) && (movesB >= cache.movesB))
+			return true;
+
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void TwoPieceCache::add(const Position& position, int requiredMoves)
+{
+	add(position.squares[0], position.moves[0], position.squares[1], position.moves[1], requiredMoves);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool TwoPieceCache::hit(const Position& position, int *requiredMoves) const
+{
+	return hit(position.squares[0], position.moves[0], position.squares[1], position.moves[1], requiredMoves);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void TwoPieceCache::add(const Position& position)
+{
+	add(position.squares[0], position.moves[0], position.squares[1], position.moves[1], 0);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool TwoPieceCache::hit(const Position& position) const
+{
+	return hit(position.squares[0], position.moves[0], position.squares[1], position.moves[1]);
+}
+
+/* -------------------------------------------------------------------------- */
+
 }

@@ -7,6 +7,16 @@
     <DisplayString Condition="value==true_value">true</DisplayString>
   </Type>
 
+  <Type Name="Euclide::Queue&lt;*,*&gt;">
+    <DisplayString>{{ queued = {_in - _out}, capacity = {$T2 - _out} }}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>_in - _out</Size>
+        <ValuePointer>_queue._Elems + _out</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
   <Type Name="std::array&lt;int,64&gt;">
     <DisplayString>{{ NumSquares }}</DisplayString>
     <Expand>
