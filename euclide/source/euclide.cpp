@@ -36,6 +36,9 @@ class Euclide
 		array<int, NumColors> _freeMoves;          /**< Unassigned moves. */
 		array<int, NumColors> _freeCaptures;       /**< Unassigned captures. */
 
+		struct Tandem { const Piece& pieceA; const Piece& pieceB; int requiredMoves; Tandem(const Piece& pieceA, const Piece& pieceB, int requiredMoves) : pieceA(pieceA), pieceB(pieceB), requiredMoves(requiredMoves) {}};
+		std::vector<Tandem> _tandems;              /**< Required moves for pair of pieces. */
+
 	private :
 		mutable EUCLIDE_Deductions _deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
 };
@@ -172,12 +175,38 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 					if (!maybe(pieces[man].captured()))
 						pieces[man].setPossibleSquares(partition.squares());
 
+			int freeMoves = _freeMoves[color] - partitions.unassignedRequiredMoves();
+			array<int, MaxPieces> unassignedRequiredMoves;
+			for (Man man = 0; man < pieces.size(); man++)
+				unassignedRequiredMoves[man] = partitions.unassignedRequiredMoves(man);
+
+			int freeCaptures = _freeCaptures[color] - partitions.unassignedRequiredCaptures();
+			array<int, MaxPieces> unassignedRequiredCaptures;
+			for (Man man = 0; man < pieces.size(); man++)
+				unassignedRequiredCaptures[man] = partitions.unassignedRequiredCaptures(man);
+
+			for (const Tandem& tandem : _tandems)
+			{
+				if ((tandem.pieceA.color() == color) && (tandem.pieceB.color() == color))
+				{
+					const Man manA = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceA));
+					const Man manB = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceB));
+					const int moves = tandem.requiredMoves - tandem.pieceA.requiredMoves() - tandem.pieceB.requiredMoves();
+
+					if (!unassignedRequiredMoves[manA] && !unassignedRequiredMoves[manB])
+						freeMoves -= moves;
+
+					xstd::maximize(unassignedRequiredMoves[manA], moves);
+					xstd::maximize(unassignedRequiredMoves[manB], moves);
+				}
+			}
+
 			for (Piece& piece : pieces)
 			{
 				const Man man = std::distance(pieces.data(), &piece);
 
-				piece.setAvailableMoves(piece.requiredMoves() + _freeMoves[color] - partitions.unassignedRequiredMoves() + partitions.unassignedRequiredMoves(man));
-				piece.setAvailableCaptures(piece.requiredCaptures() + _freeCaptures[color] - partitions.unassignedRequiredCaptures() + partitions.unassignedRequiredCaptures(man));
+				piece.setAvailableMoves(piece.requiredMoves() + unassignedRequiredMoves[man] + freeMoves);
+				piece.setAvailableCaptures(piece.requiredCaptures() + unassignedRequiredCaptures[man] + freeCaptures);
 			}
 		}
 
@@ -233,9 +262,16 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		/* -- Mutual obstructions between two pieces -- */
 
+		_tandems.clear();
 		for (unsigned pieceA = 0; pieceA < pieces.size(); pieceA++)
+		{
 			for (unsigned pieceB = pieceA + 1; pieceB < pieces.size(); pieceB++)
-				Piece::mutualInteractions(*pieces[pieceA], *pieces[pieceB], _freeMoves, false);
+			{
+				const int requiredMoves = Piece::mutualInteractions(*pieces[pieceA], *pieces[pieceB], _freeMoves, false);
+				if (requiredMoves > pieces[pieceA]->requiredMoves() + pieces[pieceB]->requiredMoves())
+					_tandems.emplace_back(*pieces[pieceA], *pieces[pieceB], requiredMoves);
+			}
+		}
 
 		/* -- Update pieces -- */
 

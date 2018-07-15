@@ -132,6 +132,10 @@ template <typename Collection, typename Predicate> inline
 bool none_of(const Collection& collection, const Predicate& predicate)
 	{ return std::none_of(std::begin(collection), std::end(collection), predicate); }
 
+template <typename Collection, typename Predicate> inline
+typename Collection::iterator remove_if(Collection& collection, const Predicate& predicate)
+	{ return std::remove_if(std::begin(collection), std::end(collection), predicate); }
+
 template <typename Collection> inline
 void sort(Collection& collection)
 	{ return std::sort(std::begin(collection), std::end(collection)); }
