@@ -20,6 +20,7 @@ set(SOURCES
 set(TABLES
 	../../source/tables/constraint-tables.cpp
 	../../source/tables/movement-tables.cpp
+	../../source/tables/check-tables.cpp
 	../../source/tables/tables.h
 )
 
@@ -43,7 +44,8 @@ set_target_properties(euclide PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../bin/)
 
 # Compilation flags
 
-add_definitions(-std=c++11 -DNDEBUG -O3 -Wall -Wextra -mavx)
+add_definitions(-std=c++11 -DNDEBUG -O3 -mavx)
+add_definitions(-Wall -Wextra -Wno-parentheses)
 
 foreach(FILE ${TABLES})
 	set_source_files_properties(${FILE} PROPERTIES COMPILE_FLAGS -O0)
