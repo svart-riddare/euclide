@@ -768,6 +768,14 @@ int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& 
 				if (piece._royal && !friends && (*xpiece._checks)[other][to])
 					continue;
 
+				/* -- Castling constraints -- */
+
+				if (piece._royal && !friends && (from == piece._initialSquare))
+					for (CastlingSide side : AllCastlingSides())
+						if ((Castlings[piece._color][side].from == from) && (Castlings[piece._color][side].to == to))
+							if (position.moves[k] || (*xpiece._checks)[other][from] || (*xpiece._checks)[other][Castlings[piece._color][side].free])
+								continue;
+
 				/* -- Safeguard if maximum queue size is insufficient -- */
 
 				assert(!queue.full());
@@ -844,7 +852,7 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 			const Square king = (xpiece._royal && friends) ? other : Nowhere;
 			const Square pivot = std::find_if(Castlings[piece._color], Castlings[piece._color] + NumCastlingSides, [=](const Castling& castling) { return castling.rook == from; })->to;
 		
-			if ((king != Nowhere) ? (king == pivot) : !(*piece._constraints)[piece._initialSquare][piece._castlingSquare][other])
+			if ((king != Nowhere) ? (king == pivot) && (xstate.playedMoves == 1) : !(*piece._constraints)[piece._initialSquare][piece._castlingSquare][other])
 			{
 				state.square = piece._castlingSquare;
 				state.teleportation = false;
@@ -904,6 +912,14 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 
 			if (piece._royal && !friends && (*xpiece._checks)[other][to])
 				continue;
+
+			/* -- Castling constraints -- */
+
+			if (piece._royal && !friends && (from == piece._initialSquare))
+				for (CastlingSide side : AllCastlingSides())
+					if ((Castlings[piece._color][side].from == from) && (Castlings[piece._color][side].to == to))
+						if (state.playedMoves || (*xpiece._checks)[other][from] || (*xpiece._checks)[other][Castlings[piece._color][side].free])
+							continue;
 
 			/* -- Play move -- */
 

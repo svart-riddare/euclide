@@ -770,7 +770,7 @@ Problème analysé :
 	10,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 56.81
+	Échelle de difficulté = 54.22
 
 
 -----------------------------------------
@@ -1080,7 +1080,7 @@ Problème analysé :
 	11,5 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 64.33
+	Échelle de difficulté = 64.21
 
 
 -----------------------------------------
@@ -1328,7 +1328,7 @@ Problème analysé :
 	13,0 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 78.81
+	Échelle de difficulté = 78.34
 
 
 -----------------------------------------
@@ -2010,7 +2010,7 @@ Problème analysé :
 	18,5 coups                (16+16)
 
 Verdict : 
-	Échelle de difficulté = 17.57
+	Échelle de difficulté = 14.25
 
 
 -----------------------------------------
