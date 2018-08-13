@@ -66,8 +66,15 @@ class Piece
 		inline int requiredCaptures(Square square) const
 			{ return _captures[square]; }
 
-		inline int moves() const
+		inline int nmoves() const
 			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
+
+		inline Squares moves(Square from) const
+			{ return _moves[from]; }
+		inline Squares captures(Square from) const
+			{ return _xmoves ? (*_xmoves)[from] : Squares(); }
+		inline Squares constraints(Square from, Square to, bool capture) const
+			{ return (capture && _xconstraints) ? (*_xconstraints)[from][to] : (*_constraints)[from][to]; }
 
 		inline const Squares& stops() const
 			{ return _stops; }

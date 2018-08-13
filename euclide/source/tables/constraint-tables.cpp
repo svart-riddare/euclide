@@ -9,7 +9,7 @@ namespace Tables
 
 static constexpr uint64_t leaper(Square from, Square to, bool capture)
 {
-	return (uint64_t(1) << from) | (uint64_t(!capture) << to);
+	return (uint64_t(!capture) << to);
 }
 
 static constexpr int gcd(int m, int n)
@@ -24,7 +24,7 @@ static constexpr int delta(int z, int n)
 
 static constexpr uint64_t runner(Square from, Square to, int dx, int dy, bool capture)
 {
-	return (uint64_t(!capture) << to) | ((from != to) ? runner(from, Euclide::square(col(to) - dx, row(to) - dy), dx, dy, false) : 0);
+	return (from != to) ? (uint64_t(!capture) << to) | runner(from, Euclide::square(col(to) - dx, row(to) - dy), dx, dy, false) : 0;
 }
 
 static constexpr uint64_t runner(Square from, Square to, bool capture)

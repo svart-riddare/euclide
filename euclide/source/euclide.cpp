@@ -2,6 +2,7 @@
 #include "problem.h"
 #include "targets.h"
 #include "pieces.h"
+#include "game.h"
 
 namespace Euclide
 {
@@ -242,7 +243,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		/* -- Sort pieces by number of moves -- */
 
-		xstd::sort(pieces, [](const Piece *pieceA, const Piece *pieceB) { return pieceA->moves() < pieceB->moves(); });
+		xstd::sort(pieces, [](const Piece *pieceA, const Piece *pieceB) { return pieceA->nmoves() < pieceB->nmoves(); });
 
 		/* -- Apply basic obstructions -- */
 
@@ -281,6 +282,21 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		/* -- Done -- */
 
 		loop = false;
+	}
+
+	/* -- Display playing message -- */
+
+	if (_callbacks.displayMessage)
+		(*_callbacks.displayMessage)(_callbacks.handle, EUCLIDE_MESSAGE_SEARCHING);
+
+	/* -- Play all possible games -- */
+
+	const EUCLIDE_Deductions deductions = this->deductions();
+
+	if ((_problem.moves() <= 20) && (deductions.complexity < 10.0))
+	{
+		Game game(_problem, _pieces);
+		game.play(_callbacks);
 	}
 }
 
@@ -340,7 +356,7 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 
 			deduction.requiredMoves = piece.requiredMoves();
 			deduction.numSquares = piece.squares().count();
-			deduction.numMoves = piece.moves();
+			deduction.numMoves = piece.nmoves();
 
 			deduction.captured = false;
 

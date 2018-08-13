@@ -22,6 +22,8 @@ class Output
 		void displayProblem(const EUCLIDE_Problem& problem) const;
 		void displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const;
 		void displayDeductions(const EUCLIDE_Deductions& deductions) const;
+		void displayThinking(const EUCLIDE_Thinking& thinking) const;
+		void displaySolution(const EUCLIDE_Solution& solution) const;
 
 	public :
 		inline operator const EUCLIDE_Callbacks *() const
@@ -40,6 +42,10 @@ class Output
 			{ return reinterpret_cast<Output *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
 		static void displayDeductionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions)
 			{ return reinterpret_cast<Output *>(handle)->displayDeductions(*deductions); }
+		static void displayThinkingCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking)
+			{ return reinterpret_cast<Output *>(handle)->displayThinking(*thinking); }
+		static void displaySolutionCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution)
+			{ return reinterpret_cast<Output *>(handle)->displaySolution(*solution); }
 
 	private :
 		const Strings& _strings;         /**< Text strings. */
@@ -49,6 +55,8 @@ class Output
 
 		Timer _timer;                    /**< Timer used to output total solving time. */
 		mutable double _complexity;      /**< Solving complexity, only the last value is written to file. */
+		mutable int64_t _positions;      /**< Number of positions examined. */
+		mutable int _solutions;          /**< Number of solutions found. */
 };
 
 /* -------------------------------------------------------------------------- */

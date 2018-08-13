@@ -15,6 +15,10 @@ class Problem
 		Problem(const EUCLIDE_Problem& problem);
 
 	public :
+		inline const array<Glyph, NumSquares>& initialPosition() const
+			{ return _initialPosition; }
+		inline const array<Glyph, NumSquares>& diagramPosition() const
+			{ return _diagramPosition; }
 		inline Glyph initialPosition(Square square) const
 			{ return _initialPosition[square]; }
 		inline Glyph diagramPosition(Square square) const
@@ -24,8 +28,12 @@ class Problem
 		inline Variant variant() const
 			{ return _variant; }
 
+		inline int moves() const
+			{ return _moves[White] + _moves[Black]; }
 		inline int moves(Color color) const
 			{ return _moves[color]; }
+		inline Color turn() const
+			{ return _turn; }
 
 		inline bool castling(Color color, CastlingSide side) const
 			{ return _castlings[color][side]; }

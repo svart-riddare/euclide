@@ -25,8 +25,18 @@ static const wchar_t *frenchStrings[] =
 	L"coups",
 	L",",
 	L"Probl\xE8me analys\xE9 :",
-	L"Verdict : ",
-	L"\xC9" L"chelle de difficult\xE9 ="
+	L"Verdict :",
+	L"\xC9" L"chelle de difficult\xE9 =",
+	L"Positions examin\xE9" L"es :",
+	L"Solution n° ",
+	L" :",
+	L"Aucune solution",
+	L"Solution unique",
+	L"Une solution",
+	L"Deux solutions",
+	L"Trois solutions",
+	L"Quatre solutions",
+	L"Probl\xE8me d\xE9moli"
 };
 
 static const wchar_t *frenchStatuses[] = 
@@ -43,7 +53,8 @@ static const wchar_t *frenchStatuses[] =
 
 static const wchar_t *frenchMessages[] =
 {
-	L"Analyse pr\xE9liminaire..."
+	L"Analyse pr\xE9liminaire...",
+	L"Recherche de solutions..."
 };
 
 static_assert(countof(frenchTexts) == Strings::NumTexts);
@@ -78,7 +89,17 @@ static const wchar_t *englishStrings[] =
 	L".",
 	L"Input:",
 	L"Result:",
-	L"Score of"
+	L"Complexity:",
+	L"Positions:",
+	L"Solution #",
+	L":",
+	L"No solution",
+	L"Unique proofgame",
+	L"One solution",
+	L"Two solutions",
+	L"Three solutions",
+	L"Four solutions",
+	L"Multiple solutions"
 };
 
 static const wchar_t *englishStatuses[] =
@@ -95,7 +116,8 @@ static const wchar_t *englishStatuses[] =
 
 static const wchar_t *englishMessages[] =
 {
-	L"Static analysis..."
+	L"Static analysis...",
+	L"Searching solutions..."
 };
 
 static_assert(countof(englishTexts) == Strings::NumTexts);

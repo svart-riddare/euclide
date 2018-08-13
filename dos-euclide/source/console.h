@@ -29,6 +29,8 @@ class Console
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const;
 		virtual void displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
+		virtual void displayThinking(const EUCLIDE_Thinking& thinking) const;
+		virtual void displaySolution(const EUCLIDE_Solution& solution) const;
 
 	public :
 		inline operator const EUCLIDE_Callbacks *() const
@@ -50,6 +52,10 @@ class Console
 			{ reinterpret_cast<Console *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
 		static void displayDeductionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions)
 			{ reinterpret_cast<Console *>(handle)->displayDeductions(*deductions); }
+		static void displayThinkingCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking)
+			{ reinterpret_cast<Console *>(handle)->displayThinking(*thinking); }
+		static void displaySolutionCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution)
+			{ reinterpret_cast<Console *>(handle)->displaySolution(*solution); }
 
 		virtual void write(const wchar_t *string, int x, int y, Color color) const;
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
@@ -58,6 +64,8 @@ class Console
 		EUCLIDE_Callbacks _callbacks;    /**< Euclide engine callbacks. */
 		Output _output;                  /**< Output file for solving results. */
 		Timer _timer;                    /**< Timer use to output solving time. */
+		
+		mutable int _solutions;          /**< Number of distinct solutions found. */
 
 	protected :
 		const Strings& _strings;         /**< Constant strings. */

@@ -101,6 +101,8 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		throw InvalidProblem;
 	if (problem.numHalfMoves == 0)
 		throw UnimplementedFeature;
+	if (problem.numHalfMoves > MaxMoves)
+		throw InvalidProblem;
 
 	_moves[White] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 1 : 2));
 	_moves[Black] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 2 : 1));

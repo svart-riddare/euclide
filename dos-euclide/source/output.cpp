@@ -13,6 +13,8 @@ Output::Output(const Strings& strings, const char *inputFileName)
 	_callbacks.displayMessage = displayMessageCallback;
 	_callbacks.displayProgress = displayProgressCallback;
 	_callbacks.displayDeductions = displayDeductionsCallback;
+	_callbacks.displayThinking = displayThinkingCallback;
+	_callbacks.displaySolution = displaySolutionCallback;
 	_callbacks.handle = this;
 
 	open(inputFileName);
@@ -63,6 +65,8 @@ void Output::reset()
 {
 	_timer = Timer();
 	_complexity = 0.0;
+	_positions = 0;
+	_solutions = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -72,11 +76,20 @@ void Output::done(EUCLIDE_Status status)
 	if (_file)
 	{
 		fprintf(_file, "%ls\n", _strings[Strings::Output]);
-		if (status != EUCLIDE_STATUS_OK)
-			fprintf(_file, "\t%ls\n", _strings[status]);
-		else
+		if (status == EUCLIDE_STATUS_OK) {
 			fprintf(_file, "\t%ls %.2f\n", _strings[Strings::Score], _complexity);
+			if (_positions)
+				fprintf(_file, "\t%ls %" PRId64 "\n", _strings[Strings::Positions], _positions);
+					
+			const Strings::String verdicts[] = { Strings::NoSolution, Strings::UniqueSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::Cooked };
+			if (_positions)
+				fprintf(_file, "\t%ls\n", _strings[verdicts[std::min<int>(_solutions, countof(verdicts) - 1)]]);
+		}
+		else {
+			fprintf(_file, "\t%ls\n", _strings[status]);
+		}
 		fprintf(_file, "\n\n");
+		fflush(_file);
 	}
 }
 
@@ -156,6 +169,7 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 		while (int(wcslen(buffer)) < 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0)) wcscat(buffer, L" ");
 		swprintf(buffer + wcslen(buffer), 8, L"(%d+%d)", white, black);
 		fprintf(_file, "%ls\n\n", buffer);
+		fflush(_file);
 	}
 }
 
@@ -170,6 +184,62 @@ void Output::displayProgress(int /*whiteFreeMoves*/, int /*blackFreeMoves*/, dou
 
 void Output::displayDeductions(const EUCLIDE_Deductions& /*deductions*/) const
 {
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Output::displayThinking(const EUCLIDE_Thinking& thinking) const
+{
+	_positions = thinking.positions;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Output::displaySolution(const EUCLIDE_Solution& solution) const
+{
+	if (_file)
+	{
+		fprintf(_file, "%ls%d%ls\n", _strings[Strings::Solution], solution.solution, _strings[Strings::Colon]);
+		fprintf(_file, "---------------------------------------------------------------------------\n");
+
+		const int black = (solution.moves[0].glyph & 1) ^ 1;
+		if (black)
+			fprintf(_file, " 1.           ");
+
+		for (int m = 0; m < solution.numHalfMoves; m++)
+		{
+			const EUCLIDE_Move& move = solution.moves[m];
+
+			if ((m & 1) == black)
+				fprintf(_file, "%2d. ", move.move);
+
+			if (move.kingSideCastling)
+				fprintf(_file, "0-0%c       ", move.check ? '+' : ' ');
+			else
+			if (move.queenSideCastling)
+				fprintf(_file, "0-0-0%c     ", move.check ? '+' : ' ');
+			else
+			if (move.promotion != move.glyph)
+				fprintf(_file, "%c%c%c%c%c%c=%c%c ", toupper(_strings[Strings::GlyphSymbols][move.glyph]), 'a' + move.from / 8, '1' + move.from % 8, move.capture ? 'x' : '-', 'a' + move.to / 8, '1' + move.to % 8, toupper(_strings[Strings::GlyphSymbols][move.promotion]), move.check ? '+' : ' ');
+			else
+			if (move.enpassant)
+				fprintf(_file, "%c%c%c%c%c%cep%c ", toupper(_strings[Strings::GlyphSymbols][move.glyph]), 'a' + move.from / 8, '1' + move.from % 8, move.capture ? 'x' : '-', 'a' + move.to / 8, '1' + move.to % 8, move.check ? '+' : ' ');
+			else
+				fprintf(_file, "%c%c%c%c%c%c%c   ", toupper(_strings[Strings::GlyphSymbols][move.glyph]), 'a' + move.from / 8, '1' + move.from % 8, move.capture ? 'x' : '-', 'a' + move.to / 8, '1' + move.to % 8, move.check ? '+' : ' ');
+
+			if ((m & 1) != black)
+				fprintf(_file, " ");
+
+			if ((m % 6) == (5 - black))
+				if (m != (solution.numHalfMoves - 1))
+					fprintf(_file, "\n");
+		}
+
+		fprintf(_file, "\n\n");
+		fflush(_file);
+	}
+
+	_solutions += 1;
 }
 
 /* -------------------------------------------------------------------------- */

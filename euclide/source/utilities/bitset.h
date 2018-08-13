@@ -92,12 +92,23 @@ class BitSet
 			{ return BitSet(*this) &= bitset; }
 		inline BitSet operator|(const BitSet& bitset) const
 			{ return BitSet(*this) |= bitset; }
-		inline BitSet operator^=(const BitSet& bitset) const
+		inline BitSet operator^(const BitSet& bitset) const
 			{ return BitSet(*this) ^= bitset; }
 		inline BitSet operator+(const BitSet& bitset) const
 			{ return BitSet(*this) += bitset; }
 		inline BitSet operator-(const BitSet& bitset) const
 			{ return BitSet(*this) -= bitset; }
+
+		inline BitSet operator&(Type position) const
+			{ return BitSet(*this) &= BitSet(position); }
+		inline BitSet operator|(Type position) const
+			{ return BitSet(*this) |= BitSet(position); }
+		inline BitSet operator^(Type position) const
+			{ return BitSet(*this) ^= BitSet(position); }
+		inline BitSet operator+(Type position) const
+			{ return BitSet(*this) += BitSet(position); }
+		inline BitSet operator-(Type position) const
+			{ return BitSet(*this) -= BitSet(position); }
 
 		inline bool operator==(const BitSet& bitset) const
 			{ return _bits == bitset._bits; }

@@ -123,7 +123,7 @@ typedef struct
 	EUCLIDE_Glyph initial[64];                   /**< Initial position. Standard initial position if board is empty. Squares are ordered as follow: A1, A2, ..., H7, H8. */
 	bool blackToMove;                            /**< If set, black should move first. */
 
-	EUCLIDE_Glyph diagram[64];                   /**< Target diagram position. Squares are ordered as follow: A1, A2, ..., H7, H8. No more than sixteen pieces of each color, including exactly one king. */
+	EUCLIDE_Glyph diagram[64];                   /**< Target diagram position. Squares are ordered as follow: A1, A2, ..., H7, H8. No more than thirty-two pieces of each color, including exactly one king. */
 	int numHalfMoves;                            /**< Number of half moves to reach diagram position from initial one. Zero is interpreted as unspecified. */
 
 	bool forbidWhiteKingSideCastling;            /**< White king side castling should be forbidden. */
@@ -141,6 +141,7 @@ typedef struct
 typedef enum
 {
 	EUCLIDE_MESSAGE_ANALYZING,                   /**< Analyzing problem. */
+	EUCLIDE_MESSAGE_SEARCHING,                   /**< Searching for solutions. */
 
 	EUCLIDE_NUM_MESSAGES                         /**< Number of different enumerated values. */
 
@@ -166,8 +167,8 @@ typedef struct
 
 typedef struct
 {
-	EUCLIDE_Deduction whitePieces[16];    /**< White piece deductions. */
-	EUCLIDE_Deduction blackPieces[16];    /**< Black piece deductions. */
+	EUCLIDE_Deduction whitePieces[32];    /**< White piece deductions. */
+	EUCLIDE_Deduction blackPieces[32];    /**< Black piece deductions. */
 
 	int numWhitePieces;                   /**< Number of white pieces in above array. */
 	int numBlackPieces;                   /**< Number of black pieces in above array. */
@@ -181,6 +182,47 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
+typedef struct
+{
+	EUCLIDE_Glyph glyph;                  /**< Glyph performing the move. */
+	EUCLIDE_Glyph promotion;              /**< Promotion glyph, otherwise equal to initial glyph. */
+	EUCLIDE_Glyph captured;               /**< Captured glyph. */
+
+	int move;                             /**< Move index, starting from 1, same index for black and white moves. */
+	int from;                             /**< Move departure square, from 0 (A1) to 63 (H8). */
+	int to;                               /**< Move arrival square, from 0 (A1) to 63 (H8). */
+
+	bool capture;                         /**< Set if an opponent piece was captured. */
+	bool enpassant;                       /**< Set if capture is "en passant". */
+	bool check;                           /**< Set if move is a check. */
+	bool mate;                            /**< Set if move gives mate. */
+	bool kingSideCastling;                /**< Set if move is castling, king side. */
+	bool queenSideCastling;               /**< Set if move is castling, queen side. */
+
+} EUCLIDE_Move;
+
+/* -------------------------------------------------------------------------- */
+
+typedef struct
+{
+	EUCLIDE_Move moves[8];               /**< Moves being explored (first eight move of game). */
+	int64_t positions;                   /**< Number of positions examined. */
+	 
+} EUCLIDE_Thinking;
+
+/* -------------------------------------------------------------------------- */
+
+typedef struct
+{
+	EUCLIDE_Move moves[128];              /**< Moves played. */
+	int numHalfMoves;                     /**< Number of moves in above array. */
+
+	int solution;                         /**< Number of solutions found so far, counting from 1. */
+
+} EUCLIDE_Solution;
+
+/* -------------------------------------------------------------------------- */
+
 typedef void *EUCLIDE_UserHandle;
 
 typedef void (*EUCLIDE_DisplayCopyrightFunction)(EUCLIDE_UserHandle handle, const wchar_t *copyright);
@@ -188,6 +230,8 @@ typedef void (*EUCLIDE_DisplayProblemFunction)(EUCLIDE_UserHandle handle, const 
 typedef void (*EUCLIDE_DisplayMessageFunction)(EUCLIDE_UserHandle handle, EUCLIDE_Message message);
 typedef void (*EUCLIDE_DisplayProgressFunction)(EUCLIDE_UserHandle handle, int whiteFreeMoves, int blackFreeMoves, double complexity);
 typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions);
+typedef void (*EUCLIDE_DisplayThinkingFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking);
+typedef void (*EUCLIDE_DisplaySolutionFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution);
 
 typedef struct
 {
@@ -196,6 +240,8 @@ typedef struct
 	EUCLIDE_DisplayMessageFunction displayMessage;
 	EUCLIDE_DisplayProgressFunction displayProgress;
 	EUCLIDE_DisplayDeductionsFunction displayDeductions;
+	EUCLIDE_DisplayThinkingFunction displayThinking;
+	EUCLIDE_DisplaySolutionFunction displaySolution;
 
 	EUCLIDE_UserHandle handle;
 

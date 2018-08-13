@@ -14,6 +14,8 @@ Console::Console(const Strings& strings)
 	_callbacks.displayMessage = displayMessageCallback;
 	_callbacks.displayProgress = displayProgressCallback;
 	_callbacks.displayDeductions = displayDeductionsCallback;
+	_callbacks.displayThinking = displayThinkingCallback;
+	_callbacks.displaySolution = displaySolutionCallback;
 	_callbacks.handle = this;
 }
 
@@ -28,7 +30,10 @@ Console::~Console()
 void Console::reset()
 {
 	_output.reset();
+
 	_timer = Timer();
+	_solutions = 0;
+
 	clear();
 }
 
@@ -43,6 +48,15 @@ void Console::clear()
 void Console::done(EUCLIDE_Status status)
 {
 	_output.done(status);
+
+	displayMessage(L"");
+	
+	if (_solutions <= 1)
+	{
+		wchar_t string[32];
+		swprintf(string, countof(string), L"%24ls", _strings[_solutions ? Strings::UniqueSolution : Strings::NoSolution]);
+		write(string, _width - 25, 5, Colors::Verdict);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -164,6 +178,71 @@ void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 	_output.displayDeductions(deductions);
 
 	displayProgress(deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
+	displayTimer();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
+{
+	_output.displayThinking(thinking);
+
+	wchar_t string[6 * countof(thinking.moves) + 1];
+
+	if (thinking.moves[0].glyph)
+	{
+		const unsigned black = (thinking.moves[0].glyph & 1) ^ 1;
+		wcscpy(string, black ? L"1. ...  " : L"");
+
+		wchar_t *s = string + wcslen(string);
+		for (unsigned m = 0; m < countof(thinking.moves) - black; m++)
+		{
+			const EUCLIDE_Move& move = thinking.moves[m];
+
+			if ((m & 1) == black)
+			{
+				*s++ = move.move + '0';
+				*s++ = '.';
+			}
+		
+			*s++ = toupper(_strings[Strings::GlyphSymbols][move.glyph]);
+			if (move.capture)
+				*s++ = 'x';
+			*s++ = move.to / 8 + 'a';
+			*s++ = move.to % 8 + '1';
+			if (!move.capture)
+				*s++ = ' ';
+			*s++ = ' ';
+		}
+		*s++ = '\0';
+
+		write(string, _width - (s - string) - 1, 3, Colors::Thinking);
+	}
+	else
+	{
+		write(L"", countof(string), true, _width - countof(string), 3, Colors::Thinking);
+	}
+
+	swprintf(string, countof(string), L"%" PRId64, thinking.positions);
+	write(string, 16, true, 43, 2, Colors::Complexity);
+
+	displayTimer();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::displaySolution(const EUCLIDE_Solution& solution) const
+{
+	_solutions = solution.solution;
+
+	_output.displaySolution(solution);
+
+	wchar_t string[32];
+
+	const Strings::String verdicts[] = { Strings::OneSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::Cooked };
+	swprintf(string, countof(string), L"%24ls", _strings[verdicts[std::min<int>(countof(verdicts), solution.solution) - 1]]);
+	write(string, _width - 25, 5, Colors::Verdict);
+
 	displayTimer();
 }
 

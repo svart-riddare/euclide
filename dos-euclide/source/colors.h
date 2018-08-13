@@ -19,6 +19,8 @@ typedef enum
 	Copyright = FOREGROUND_RED | FOREGROUND_BLUE,
 	FreeMoves = FOREGROUND_GREEN,
 	Complexity = FOREGROUND_GREEN,
+	Verdict = FOREGROUND_BLUE,
+	Thinking = FOREGROUND_RED | FOREGROUND_GREEN  | FOREGROUND_BLUE,
 
 	WhitePieces = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
 	BlackPieces = 0,
@@ -44,6 +46,8 @@ typedef enum
 	Copyright = COLOR_PAIR(COLOR_CYAN),
 	FreeMoves = COLOR_PAIR(COLOR_GREEN),
 	Complexity = COLOR_PAIR(COLOR_GREEN),
+	Verdict = COLOR_PAIR(COLOR_BLUE),
+	Thinking = COLOR_PAIR(COLOR_WHITE),
 
 	WhitePiecesOnLightSquares = COLOR_PAIR(12) | A_BOLD,
 	WhitePiecesOnDarkSquares = COLOR_PAIR(13) | A_BOLD,

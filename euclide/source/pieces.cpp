@@ -204,7 +204,7 @@ void Piece::bypassObstacles(const Piece& blocker)
 	if ((obstacles & _route).any())
 		for (Square from : ValidSquares(_stops))
 			for (Square to : ValidSquares(_moves[from]))
-				if (obstacles <= (*_constraints)[from][to])
+				if (obstacles <= ((*_constraints)[from][to] | from))
 					_moves[from][to] = false, _update = true;
 
 	/* -- Castling -- */
@@ -244,7 +244,7 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 	/* -- Use fast method if the search space is too large -- */
 
 	const int threshold = 5000;
-	if (pieceA.moves() * pieceB.moves() > threshold)
+	if (pieceA.nmoves() * pieceB.nmoves() > threshold)
 		fast = true;
 
 	/* -- Play all possible moves with these two pieces -- */
@@ -750,7 +750,7 @@ int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& 
 
 				/* -- Move could be blocked by other pieces -- */
 
-				bool blocked = (*piece._constraints)[from][to][other];
+				bool blocked = (*piece._constraints)[from][to][other] || xpiece._occupied[other].squares[from];
 				for (Square square : ValidSquares(xpiece._occupied[other].squares))
 					if ((*piece._constraints)[from][to][square])
 						blocked = true;
@@ -889,7 +889,7 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 		{
 			/* -- Move could be blocked by other pieces -- */
 
-			bool blocked = (*piece._constraints)[from][to][other];
+			bool blocked = (*piece._constraints)[from][to][other] || xpiece._occupied[other].squares[from];
 			for (Square square : ValidSquares(xpiece._occupied[other].squares))
 				if ((*piece._constraints)[from][to][square])
 					blocked = true;
