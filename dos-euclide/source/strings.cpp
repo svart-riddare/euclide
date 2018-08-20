@@ -28,7 +28,7 @@ static const wchar_t *frenchStrings[] =
 	L"Verdict :",
 	L"\xC9" L"chelle de difficult\xE9 =",
 	L"Positions examin\xE9" L"es :",
-	L"Solution n° ",
+	L"Solution n\xB0 ",
 	L" :",
 	L"Aucune solution",
 	L"Solution unique",

@@ -7,7 +7,7 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
-static constexpr uint64_t leaper(Square from, Square to, bool capture)
+static constexpr uint64_t leaper(Square /*from*/, Square to, bool capture)
 {
 	return (uint64_t(!capture) << to);
 }

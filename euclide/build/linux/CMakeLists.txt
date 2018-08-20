@@ -8,6 +8,8 @@ set(SOURCES
 	../../source/copyright.cpp
 	../../source/definitions.h
 	../../source/euclide.cpp
+	../../source/game.h
+	../../source/game.cpp
 	../../source/includes.h
 	../../source/pieces.cpp
 	../../source/pieces.h
