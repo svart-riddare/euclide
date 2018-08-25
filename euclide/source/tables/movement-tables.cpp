@@ -190,7 +190,6 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 	if (variant == Grid)
 		for (Square square : AllSquares())
 			(*moves)[square] &= ~GridSquares[square];
-
 }
 
 /* -------------------------------------------------------------------------- */
@@ -201,6 +200,31 @@ const ArrayOfSquares *getCaptureMoves(Species species, Color color, Variant vari
 		return &PawnCaptures[variant == Cylinder][color];
 
 	return nullptr;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void initializeLineOfSights(const array<Species, NumGlyphs>& species, Variant variant, array<MatrixOfSquares, NumColors> *lines)
+{
+	for (Glyph glyph : AllGlyphs())
+	{
+		Color color = Euclide::color(glyph);
+
+		ArrayOfSquares captures;
+		initializeLegalMoves(&captures, species[glyph], color, variant, true);
+		const MatrixOfSquares *constraints = getMoveConstraints(species[glyph], variant, true);
+
+		for (Square from : AllSquares())
+		{
+			for (Square to : ValidSquares(captures[from]))
+			{
+				Squares shields = constraints ? (*constraints)[from][to] | Squares(to) : Squares(to);
+
+				for (Square shield : ValidSquares(shields))
+					(*lines)[!color][to][shield][from] = true;
+			}
+		}
+	}
 }
 
 /* -------------------------------------------------------------------------- */

@@ -295,8 +295,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	if ((_problem.moves() <= 20) && (deductions.complexity < 10.0))
 	{
-		Game game(_problem, _pieces);
-		game.play(_callbacks);
+		std::unique_ptr<Game> game(new Game(_configuration, _callbacks, _problem, _pieces));
+		game->play();
 	}
 }
 

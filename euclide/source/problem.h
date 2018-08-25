@@ -23,6 +23,8 @@ class Problem
 			{ return _initialPosition[square]; }
 		inline Glyph diagramPosition(Square square) const
 			{ return _diagramPosition[square]; }
+		inline const array<Species, NumGlyphs> pieces() const
+			{ return _pieces; }
 		inline Species piece(Glyph glyph) const
 			{ return _pieces[glyph]; }
 		inline Variant variant() const
@@ -35,6 +37,8 @@ class Problem
 		inline Color turn() const
 			{ return _turn; }
 
+		inline const matrix<bool, NumColors, NumCastlingSides>& castlings() const
+			{ return _castlings; }
 		inline bool castling(Color color, CastlingSide side) const
 			{ return _castlings[color][side]; }
 

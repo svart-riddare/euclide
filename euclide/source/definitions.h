@@ -100,7 +100,7 @@ constexpr Square square(int col, int row)
 /* -- Castling                                                             -- */
 /* -------------------------------------------------------------------------- */
 
-typedef enum { KingSideCastling, QueenSideCastling, NumCastlingSides } CastlingSide;
+typedef enum { NoCastling = -1, KingSideCastling, QueenSideCastling, NumCastlingSides } CastlingSide;
 
 typedef EnumRange<CastlingSide, NumCastlingSides> AllCastlingSides;
 
