@@ -41,6 +41,9 @@ class Piece
 		inline Species species() const
 			{ return _species; }
 
+		inline bool royal() const
+			{ return _royal; }
+
 		inline tribool castling(CastlingSide side) const
 			{ return _castling[side]; }
 		inline tribool captured() const
@@ -69,7 +72,7 @@ class Piece
 		inline int nmoves() const
 			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
 
-		inline Squares moves(Square from) const
+		inline const Squares& moves(Square from) const
 			{ return _moves[from]; }
 		inline Squares captures(Square from) const
 			{ return _xmoves ? (*_xmoves)[from] : Squares(); }
@@ -113,7 +116,7 @@ class Piece
 
 			array<int, NumSquares> distances;    /**< Moves required to reach each square, assuming goals are reached. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), teleportation(piece._initialSquare != piece._castlingSquare), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare)
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece._initialSquare != piece._castlingSquare) && !piece._distances[piece._castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare)
 			{
 				distances.fill(Infinity);
 				distances[piece._initialSquare] = 0;

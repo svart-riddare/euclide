@@ -332,6 +332,11 @@ void Piece::updateDeductions()
 			for (CastlingSide side : AllCastlingSides())
 				setCastling(side, true);
 
+	if (_castlingSquare != _initialSquare)
+		if (_distances[_castlingSquare])
+			for (CastlingSide side : AllCastlingSides())
+				setCastling(side, false);
+
 	/* -- Compute distances -- */	
 
 	const bool castling = xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(_castling[side]); });
@@ -854,22 +859,26 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 		
 			if ((king != Nowhere) ? (king == pivot) && (xstate.playedMoves == 1) : !(*piece._constraints)[piece._initialSquare][piece._castlingSquare][other])
 			{
-				state.square = piece._castlingSquare;
-				state.teleportation = false;
-
-				const int myRequiredMoves = fullplay(states, availableMoves, maximumMoves, cache);
-				if (myRequiredMoves <= maximumMoves)
+				assert(!piece._distances[piece._castlingSquare]);
+				if (!piece._distances[piece._castlingSquare])
 				{
-					state.squares[from][other] = true;
-					xstate.squares[other][from] = true;
+					state.square = piece._castlingSquare;
+					state.teleportation = false;
 
-					state.distances[piece._castlingSquare] = 0;
+					const int myRequiredMoves = fullplay(states, availableMoves, maximumMoves, cache);
+					if (myRequiredMoves <= maximumMoves)
+					{
+						state.squares[from][other] = true;
+						xstate.squares[other][from] = true;
+
+						state.distances[piece._castlingSquare] = 0;
+					}
+
+					xstd::minimize(requiredMoves, myRequiredMoves);
+
+					state.teleportation = true;
+					state.square = piece._initialSquare;
 				}
-
-				xstd::minimize(requiredMoves, myRequiredMoves);
-
-				state.teleportation = true;
-				state.square = piece._initialSquare;
 			}
 		}
 
@@ -934,8 +943,7 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 
 			/* -- Cache this position, for tremendous speedups -- */
 
-			if (!shortcuts)
-				cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves);
+			cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves, shortcuts);
 
 			/* -- Label all valid moves that can be used to reach our goals and squares that were occupied -- */
 

@@ -24,7 +24,7 @@ class TwoPieceCache
 	public :
 		TwoPieceCache();
 
-		void add(Square squareA, int movesA, Square squareB, int movesB, int requiredMoves);
+		void add(Square squareA, int movesA, Square squareB, int movesB, int requiredMoves, bool exact = false);
 		bool hit(Square squareA, int movesA, Square squareB, int movesB, int *requiredMoves) const;
 
 		void add(Square squareA, int movesA, Square squareB, int movesB);

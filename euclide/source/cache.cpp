@@ -14,7 +14,7 @@ TwoPieceCache::TwoPieceCache()
 
 /* -------------------------------------------------------------------------- */
 
-void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB, int requiredMoves)
+void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB, int requiredMoves, bool exact)
 {
 	Line& line = m_cache[squareA][squareB];
 
@@ -22,24 +22,35 @@ void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB, 
 
 	const Entry entry = { short(movesA), short(movesB), requiredMoves };
 
-	/* -- First cache entry is for overall minimum -- */
+	/* -- First three cache entries are for general case, last will be used for eact matches -- */
 
-	if (movesA + movesB < line[0].movesA + line[0].movesB)
-		line[0] = entry;
+	if (!exact)
+	{
+		/* -- First cache entry is for overall minimum -- */
 
-	/* -- Then one entry for each of the cases movesA <=> movesB -- */
+		if (movesA + movesB < line[0].movesA + line[0].movesB)
+			line[0] = entry;
 
-	if (movesA < movesB)
-		if ((movesA < line[1].movesA) || ((movesA == line[1].movesA) && (movesB < line[1].movesB)))
-			line[1] = entry;
+		/* -- Second and third entries are for minimum moves for one of the two pieces -- */
 
-	if (movesA == movesB)
-		if (movesA < line[2].movesA)
-			line[2] = entry;
+		if (movesA <= movesB)
+		{
+			if ((movesA < line[1].movesA) || ((movesA == line[1].movesA) && (movesB < line[1].movesB)))
+				line[1] = entry;
+		}
+		else
+		{ 
+			if ((movesB < line[2].movesB) || ((movesB == line[2].movesB) && (movesA < line[2].movesA)))
+				line[2] = entry;
+		}
+	}
+	else
+	{
+		/* -- Update entries if both moves are equal or lower -- */
 
-	if (movesA > movesB)
-		if ((movesB < line[3].movesB) || ((movesB == line[3].movesB) && (movesA < line[3].movesA)))
+		if ((movesA <= line[3].movesA) && (movesB <= line[3].movesB))
 			line[3] = entry;
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,9 +59,22 @@ bool TwoPieceCache::hit(Square squareA, int movesA, Square squareB, int movesB, 
 {
 	const Line& line = m_cache[squareA][squareB];
 
-	for (const Entry& cache : line)
+	/* -- Check in first tree entries if we have already reached this configuration in less or equal moves -- */
+
+	for (int entry = 0; entry < 3; entry++)
+	{
+		const Entry& cache = line[entry];
 		if ((movesA >= cache.movesA) && (movesB >= cache.movesB))
 			return xstd::minimize(*requiredMoves, cache.requiredMoves + (movesA - cache.movesA) + (movesB - cache.movesB)), true;
+	}
+
+	/* -- Last cache entry is for exact match in the number of moves -- */
+
+	const Entry& cache = line[3];
+	if ((movesA == cache.movesA) && (movesB == cache.movesB))
+		return xstd::minimize(*requiredMoves, cache.requiredMoves);
+
+	/* -- Cache miss -- */
 
 	return false;
 }
