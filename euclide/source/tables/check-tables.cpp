@@ -10,7 +10,7 @@ namespace Tables
 static const Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
 static const Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
 
-static const Squares GridSquares[NumSquares] = 
+static const Squares GridSquares[NumSquares] =
 {
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
@@ -47,26 +47,26 @@ static constexpr uint64_t move(Square square, int x, int y, Variant variant)
 static constexpr uint64_t leaper(Square square, int x, int y, Variant variant)
 {
 	return (x || y) ? (
-		move(square, +x, +y, variant) | 
+		move(square, +x, +y, variant) |
 		move(square, -x, +y, variant) |
 		move(square, +x, -y, variant) |
 		move(square, -x, -y, variant) |
 		move(square, +y, +x, variant) |
 		move(square, -y, +x, variant) |
-		move(square, +y, -x, variant) | 
+		move(square, +y, -x, variant) |
 		move(square, -y, -x, variant)) : 0;
 }
 
 static constexpr uint64_t vicinity(Square square, int x, int y, Variant variant)
 {
 	return leaper(square, x, y, variant) |
-		move(square, -1, -1, variant) | 
+		move(square, -1, -1, variant) |
 		move(square, -1,  0, variant) |
 		move(square, -1,  1, variant) |
 		move(square,  0, -1, variant) |
 		move(square,  0,  1, variant) |
 		move(square,  1, -1, variant) |
-		move(square,  1,  0, variant) | 
+		move(square,  1,  0, variant) |
 		move(square,  1,  1, variant);
 }
 
@@ -145,7 +145,7 @@ const ArrayOfSquares *getUnstoppableChecks(Species species, Color color, Variant
 			return &AmazonChecks[variant];
 		case Empress :
 			return &EmpressChecks[variant];
-		case Princess : 
+		case Princess :
 			return &PrincessChecks[variant];
 		case Alfil :
 			return &AlfilChecks[variant];

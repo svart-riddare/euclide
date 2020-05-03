@@ -1,11 +1,11 @@
 #include "includes.h"
 
 namespace Euclide
-{ 
+{
 
 /* -------------------------------------------------------------------------- */
 
-const wchar_t *Copyright = L"Euclide, \xA9" L"2000-2017, \xC9" L"tienne Dupuis";
+const wchar_t *Copyright = L"Euclide, \xA9" L"2000-2020, \xC9" L"tienne Dupuis";
 
 /* -------------------------------------------------------------------------- */
 

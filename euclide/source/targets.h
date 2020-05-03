@@ -19,42 +19,42 @@ class Target
 		Target(Glyph glyph, Square square);
 
 		int updateRequiredMoves(int requiredMoves)
-			{ return xstd::maximize(_requiredMoves, requiredMoves); }
+			{ return xstd::maximize(m_requiredMoves, requiredMoves); }
 		int updateRequiredCaptures(int requiredCaptures)
-			{ return xstd::maximize(_requiredCaptures, requiredCaptures); }
+			{ return xstd::maximize(m_requiredCaptures, requiredCaptures); }
 
-		const Men& updatePossibleMen(const Men& men);		
-		
+		const Men& updatePossibleMen(const Men& men);
+
 		bool applyPigeonHolePrinciple(Targets& targets) const;
 
 	public :
 		inline Glyph glyph() const
-			{ return _glyph; }
+			{ return m_glyph; }
 		inline Color color() const
-			{ return _color; }
+			{ return m_color; }
 		inline Square square() const
-			{ return _square; }
+			{ return m_square; }
 
 		inline int requiredMoves() const
-			{ return _requiredMoves; }
+			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
-			{ return _requiredCaptures; }
+			{ return m_requiredCaptures; }
 
 		inline const Men& men() const
-			{ return _men; }
+			{ return m_men; }
 		inline Man man() const
-			{ return _man; }
+			{ return m_man; }
 
 	private :
-		Glyph _glyph;             /**< Target glyph. */
-		Color _color;             /**< Glyph color. */
-		Square _square;           /**< Target square. */
+		Glyph m_glyph;             /**< Target glyph. */
+		Color m_color;             /**< Glyph color. */
+		Square m_square;           /**< Target square. */
 
-		int _requiredMoves;       /**< Minimum number of moves required to reach this target. */
-		int _requiredCaptures;    /**< Minimum number of captures required to reach this target. */
+		int m_requiredMoves;       /**< Minimum number of moves required to reach this target. */
+		int m_requiredCaptures;    /**< Minimum number of captures required to reach this target. */
 
-		Men _men;                 /**< Possible pieces that may reach this target. */
-		Man _man;                 /**< Piece that reaches this target, if known, -1 otherwise. */
+		Men m_men;                 /**< Possible pieces that may reach this target. */
+		Man m_man;                 /**< Piece that reaches this target, if known, -1 otherwise. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -81,29 +81,29 @@ class TargetPartition
 
 	public :
 		inline const Squares& squares() const
-			{ return _squares; }
+			{ return m_squares; }
 		inline const Men& men() const
-			{ return _men; }
+			{ return m_men; }
 
 		inline int requiredMoves() const
-			{ return _requiredMoves; }
+			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
-			{ return _requiredCaptures; }
+			{ return m_requiredCaptures; }
 
 		inline int unassignedRequiredMoves() const
-			{ return _unassignedRequiredMoves; }
+			{ return m_unassignedRequiredMoves; }
 		inline int unassignedRequiredCaptures() const
-			{ return _unassignedRequiredCaptures; }
+			{ return m_unassignedRequiredCaptures; }
 
 	private :
-		Squares _squares;                   /**< Target squares for these targets. */
-		Men _men;                           /**< Possible men for these targets. */
+		Squares m_squares;                   /**< Target squares for these targets. */
+		Men m_men;                           /**< Possible men for these targets. */
 
-		int _requiredMoves;                 /**< Required moves. */
-		int _requiredCaptures;              /**< Required captures. */
+		int m_requiredMoves;                 /**< Required moves. */
+		int m_requiredCaptures;              /**< Required captures. */
 
-		int _unassignedRequiredMoves;       /**< Required moves unassigned to a specific piece. */
-		int _unassignedRequiredCaptures;    /**< Required captures unassigned to a specific piece. */
+		int m_unassignedRequiredMoves;       /**< Required moves unassigned to a specific piece. */
+		int m_unassignedRequiredCaptures;    /**< Required captures unassigned to a specific piece. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -117,34 +117,34 @@ class TargetPartitions : public std::vector<TargetPartition>
 
 	public :
 		inline int requiredMoves() const
-			{ return _requiredMoves; }
+			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
-			{ return _requiredCaptures; }
+			{ return m_requiredCaptures; }
 
 		inline int unassignedRequiredMoves() const
-			{ return _unassignedRequiredMoves; }
+			{ return m_unassignedRequiredMoves; }
 		inline int unassignedRequiredCaptures() const
-			{ return _unassignedRequiredCaptures; }
+			{ return m_unassignedRequiredCaptures; }
 
 		inline int requiredMoves(Man man) const
-			{ return _map[man]->requiredMoves(); }
+			{ return m_map[man]->requiredMoves(); }
 		inline int requiredCaptures(Man man) const
-			{ return _map[man]->requiredCaptures(); }
+			{ return m_map[man]->requiredCaptures(); }
 
 		inline int unassignedRequiredMoves(Man man) const
-			{ return _map[man]->unassignedRequiredMoves(); }
+			{ return m_map[man]->unassignedRequiredMoves(); }
 		inline int unassignedRequiredCaptures(Man man) const
-			{ return _map[man]->unassignedRequiredCaptures(); }
+			{ return m_map[man]->unassignedRequiredCaptures(); }
 
 	private :
-		int _requiredMoves;                                /**< Required moves. */
-		int _requiredCaptures;                             /**< Required capture. */
+		int m_requiredMoves;                                /**< Required moves. */
+		int m_requiredCaptures;                             /**< Required capture. */
 
-		int _unassignedRequiredMoves;                      /**< Required moves unassigned to a specific piece. */
-		int _unassignedRequiredCaptures;                   /**< Required captures unassigned to a specific piece. */
+		int m_unassignedRequiredMoves;                      /**< Required moves unassigned to a specific piece. */
+		int m_unassignedRequiredCaptures;                   /**< Required captures unassigned to a specific piece. */
 
-		array<const TargetPartition *, MaxPieces> _map;    /**< Quick map between men and partitions. */
-		TargetPartition _null;                             /**< Null partition, used in above map. */
+		array<const TargetPartition *, MaxPieces> m_map;    /**< Quick map between men and partitions. */
+		TargetPartition m_null;                             /**< Null partition, used in above map. */
 };
 
 /* -------------------------------------------------------------------------- */

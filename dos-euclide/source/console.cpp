@@ -3,20 +3,20 @@
 /* -------------------------------------------------------------------------- */
 
 Console::Console(const Strings& strings)
-	: _output(strings), _strings(strings), _width(0), _height(0), _valid(false), _abort(false)
+	: m_output(strings), m_strings(strings), m_width(0), m_height(0), m_valid(false), m_abort(false)
 {
 	/* -- Initialize callbacks -- */
 
-	memset(&_callbacks, 0, sizeof(_callbacks));
+	memset(&m_callbacks, 0, sizeof(m_callbacks));
 
-	_callbacks.displayCopyright = displayCopyrightCallback;
-	_callbacks.displayProblem = displayProblemCallback;
-	_callbacks.displayMessage = displayMessageCallback;
-	_callbacks.displayProgress = displayProgressCallback;
-	_callbacks.displayDeductions = displayDeductionsCallback;
-	_callbacks.displayThinking = displayThinkingCallback;
-	_callbacks.displaySolution = displaySolutionCallback;
-	_callbacks.handle = this;
+	m_callbacks.displayCopyright = displayCopyrightCallback;
+	m_callbacks.displayProblem = displayProblemCallback;
+	m_callbacks.displayMessage = displayMessageCallback;
+	m_callbacks.displayProgress = displayProgressCallback;
+	m_callbacks.displayDeductions = displayDeductionsCallback;
+	m_callbacks.displayThinking = displayThinkingCallback;
+	m_callbacks.displaySolution = displaySolutionCallback;
+	m_callbacks.handle = this;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -29,10 +29,10 @@ Console::~Console()
 
 void Console::reset()
 {
-	_output.reset();
+	m_output.reset();
 
-	_timer = Timer();
-	_solutions = 0;
+	m_timer = Timer();
+	m_solutions = 0;
 
 	clear();
 }
@@ -47,15 +47,15 @@ void Console::clear()
 
 void Console::done(EUCLIDE_Status status)
 {
-	_output.done(status);
+	m_output.done(status);
 
 	displayMessage(L"");
-	
-	if (_solutions <= 1)
+
+	if (m_solutions <= 1)
 	{
 		wchar_t string[32];
-		swprintf(string, countof(string), L"%24ls", _strings[_solutions ? Strings::UniqueSolution : Strings::NoSolution]);
-		write(string, _width - 25, 5, Colors::Verdict);
+		swprintf(string, countof(string), L"%24ls", m_strings[m_solutions ? Strings::UniqueSolution : Strings::NoSolution]);
+		write(string, m_width - 25, 5, Colors::Verdict);
 	}
 }
 
@@ -63,8 +63,8 @@ void Console::done(EUCLIDE_Status status)
 
 bool Console::wait()
 {
-	write(_strings[Strings::PressAnyKey], _width - 1, true, 0, _height - 1, Colors::Question);
-	return !_abort;
+	write(m_strings[Strings::PressAnyKey], m_width - 1, true, 0, m_height - 1, Colors::Question);
+	return !m_abort;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -72,32 +72,32 @@ bool Console::wait()
 void Console::displayTimer() const
 {
 	wchar_t string[32];
-	swprintf(string, countof(string), L"%16ls", _timer.elapsed());
-	write(string, _width - 17, 7, Colors::Timer);
+	swprintf(string, countof(string), L"%16ls", m_timer.elapsed());
+	write(string, m_width - 17, 7, Colors::Timer);
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Console::displayError(const wchar_t *string) const
 {
-	write(string, _width - 10, true, 9, 4, Colors::Error);
+	write(string, m_width - 10, true, 9, 4, Colors::Error);
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Console::displayMessage(const wchar_t *string) const
 {
-	write(string, _width - 10, true, 9, 1, Colors::Standard);
+	write(string, m_width - 10, true, 9, 1, Colors::Standard);
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Console::displayCopyright(const wchar_t *copyright) const
 {
-	_output.displayCopyright(copyright);
+	m_output.displayCopyright(copyright);
 
 	const int length = wcslen(copyright);
-	const int x = _width - length - 1;
+	const int x = m_width - length - 1;
 	if (x < 0)
 		return;
 
@@ -109,9 +109,9 @@ void Console::displayCopyright(const wchar_t *copyright) const
 
 void Console::displayMessage(EUCLIDE_Message message) const
 {
-	_output.displayMessage(message);
+	m_output.displayMessage(message);
 
-	displayMessage(_strings[message]);
+	displayMessage(m_strings[message]);
 	displayTimer();
 }
 
@@ -119,7 +119,7 @@ void Console::displayMessage(EUCLIDE_Message message) const
 
 void Console::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	_output.displayProblem(problem);
+	m_output.displayProblem(problem);
 
 	/* -- Count number of pieces, by color -- */
 
@@ -143,14 +143,14 @@ void Console::displayProblem(const EUCLIDE_Problem& problem) const
 
 	wchar_t string[32];
 
-	swprintf(string, countof(string), L"%d%ls%d %ls", problem.numHalfMoves / 2, _strings[Strings::Dot], 5 * (problem.numHalfMoves % 2), _strings[Strings::Moves]);
+	swprintf(string, countof(string), L"%d%ls%d %ls", problem.numHalfMoves / 2, m_strings[Strings::Dot], 5 * (problem.numHalfMoves % 2), m_strings[Strings::Moves]);
 	write(string, 32, true, 9, 7, Colors::Standard);
-	
+
 	swprintf(string, countof(string), L"(%d+%d)", numWhitePieces, numBlackPieces);
 	write(string, 16, true, 9, 6, Colors::Standard);
 
 	/* -- Show timer -- */
-	
+
 	displayTimer();
 }
 
@@ -158,10 +158,10 @@ void Console::displayProblem(const EUCLIDE_Problem& problem) const
 
 void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const
 {
-	_output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
+	m_output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
 
 	wchar_t string[32];
-	
+
 	swprintf(string, countof(string), L"%d - %d", whiteFreeMoves, blackFreeMoves);
 	write(string, 16, true, 11, 2, Colors::FreeMoves);
 
@@ -175,7 +175,7 @@ void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double com
 
 void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	_output.displayDeductions(deductions);
+	m_output.displayDeductions(deductions);
 
 	displayProgress(deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
 	displayTimer();
@@ -185,7 +185,7 @@ void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 {
-	_output.displayThinking(thinking);
+	m_output.displayThinking(thinking);
 
 	wchar_t string[6 * countof(thinking.moves) + 1];
 
@@ -204,8 +204,8 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 				*s++ = move.move + '0';
 				*s++ = '.';
 			}
-		
-			*s++ = toupper(_strings[Strings::GlyphSymbols][move.glyph]);
+
+			*s++ = toupper(m_strings[Strings::GlyphSymbols][move.glyph]);
 			if (move.capture)
 				*s++ = 'x';
 			*s++ = move.to / 8 + 'a';
@@ -216,11 +216,11 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 		}
 		*s++ = '\0';
 
-		write(string, _width - (s - string) - 1, 3, Colors::Thinking);
+		write(string, m_width - (s - string) - 1, 3, Colors::Thinking);
 	}
 	else
 	{
-		write(L"", countof(string), true, _width - countof(string), 3, Colors::Thinking);
+		write(L"", countof(string), true, m_width - countof(string), 3, Colors::Thinking);
 	}
 
 	swprintf(string, countof(string), L"%" PRId64, thinking.positions);
@@ -233,15 +233,15 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 
 void Console::displaySolution(const EUCLIDE_Solution& solution) const
 {
-	_solutions = solution.solution;
+	m_solutions = solution.solution;
 
-	_output.displaySolution(solution);
+	m_output.displaySolution(solution);
 
 	wchar_t string[32];
 
 	const Strings::String verdicts[] = { Strings::OneSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::Cooked };
-	swprintf(string, countof(string), L"%24ls", _strings[verdicts[std::min<int>(countof(verdicts), solution.solution) - 1]]);
-	write(string, _width - 25, 5, Colors::Verdict);
+	swprintf(string, countof(string), L"%24ls", m_strings[verdicts[std::min<int>(countof(verdicts), solution.solution) - 1]]);
+	write(string, m_width - 25, 5, Colors::Verdict);
 
 	displayTimer();
 }
@@ -250,7 +250,7 @@ void Console::displaySolution(const EUCLIDE_Solution& solution) const
 
 void Console::open(const char *inputFileName)
 {
-	_output.open(inputFileName);
+	m_output.open(inputFileName);
 }
 
 /* -------------------------------------------------------------------------- */

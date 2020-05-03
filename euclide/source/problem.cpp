@@ -25,34 +25,34 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	};
 
 	for (Square square : AllSquares())
-		_initialPosition[square] = static_cast<Glyph>(problem.initial[square]);
+		m_initialPosition[square] = static_cast<Glyph>(problem.initial[square]);
 
-	if (!xstd::all_of(_initialPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
+	if (!xstd::all_of(m_initialPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
 		throw InvalidProblem;
 
-	if (xstd::all(_initialPosition, Empty))
+	if (xstd::all(m_initialPosition, Empty))
 		for (unsigned k = 0; k < countof(initialPosition); k++)
-			_initialPosition[initialPosition[k].square] = initialPosition[k].glyph;
+			m_initialPosition[initialPosition[k].square] = initialPosition[k].glyph;
 
-	if (xstd::count(_initialPosition, WhiteKing) != 1)
+	if (xstd::count(m_initialPosition, WhiteKing) != 1)
 		throw InvalidProblem;
-	if (xstd::count(_initialPosition, BlackKing) != 1)
+	if (xstd::count(m_initialPosition, BlackKing) != 1)
 		throw InvalidProblem;
 
 	/* -- Initialize diagram position -- */
 
 	for (Square square : AllSquares())
-		_diagramPosition[square] = static_cast<Glyph>(problem.diagram[square]);
+		m_diagramPosition[square] = static_cast<Glyph>(problem.diagram[square]);
 
-	if (!xstd::all_of(_diagramPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
+	if (!xstd::all_of(m_diagramPosition, [](Glyph glyph) { return (glyph >= 0) && (glyph < NumGlyphs); }))
 		throw InvalidProblem;
 
 	/* -- Initialize fairy pieces -- */
 
 	for (Glyph glyph : AllGlyphs())
-		_pieces[glyph] = static_cast<Species>(problem.pieces[glyph]);
+		m_pieces[glyph] = static_cast<Species>(problem.pieces[glyph]);
 
-	if (!xstd::all_of(_pieces, [](Species species) { return (species >= 0) && (species < NumSpecies); }))
+	if (!xstd::all_of(m_pieces, [](Species species) { return (species >= 0) && (species < NumSpecies); }))
 		throw InvalidProblem;
 
 	static const Species nones[] = { None };
@@ -63,9 +63,9 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	static const Species knights[] = { Knight, Nightrider, Alfil, Camel, Zebra, Mao };
 	static const Species pawns[] = { Pawn };
 
-	static const struct { const Species *species; int numSpecies; } species[] = { 
-		{ nones, countof(nones) }, 
-		{ kings, countof(kings) }, { kings, countof(kings) }, 
+	static const struct { const Species *species; int numSpecies; } species[] = {
+		{ nones, countof(nones) },
+		{ kings, countof(kings) }, { kings, countof(kings) },
 		{ queens, countof(queens) }, { queens, countof(queens) },
 		{ rooks, countof(rooks) }, { rooks, countof(rooks) },
 		{ bishops, countof(bishops) }, { bishops, countof(bishops) },
@@ -73,26 +73,27 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 		{ pawns, countof(pawns) }, { pawns, countof(pawns) }
 	};
 
-	if (xstd::all(_pieces, None))
+	if (xstd::all(m_pieces, None))
 		for (int glyph = 0; glyph < NumGlyphs; glyph++)
-			_pieces[glyph] = species[glyph].species[0];
+			m_pieces[glyph] = species[glyph].species[0];
 
 	for (Glyph glyph : AllGlyphs())
-		if (xstd::none(species[glyph].species, species[glyph].species + species[glyph].numSpecies, _pieces[glyph]))
+		if (xstd::none(species[glyph].species, species[glyph].species + species[glyph].numSpecies, m_pieces[glyph]))
 			throw InvalidProblem;
 
-	static const Species unimplemented[] = { Grasshopper, Leo, Pao, Vao };
+	static const Species unimplementedSpecies[] = { Grasshopper, Leo, Pao, Vao };
 	for (Glyph glyph : AllGlyphs())
-		if (xstd::any(unimplemented, unimplemented + countof(unimplemented), _pieces[glyph]))
+		if (xstd::any(unimplementedSpecies, unimplementedSpecies + countof(unimplementedSpecies), m_pieces[glyph]))
 			throw UnimplementedFeature;
 
 	/* -- Initialize chess variants -- */
 
-	_variant = static_cast<Variant>(problem.variant);
-	if ((_variant < 0) || (_variant >= NumVariants))
+	m_variant = static_cast<Variant>(problem.variant);
+	if ((m_variant < 0) || (m_variant >= NumVariants))
 		throw InvalidProblem;
 
-	if (_variant == Cylinder)
+	static const Variant unimplementedVariants[] = { Cylinder, Glasgow };
+	if (xstd::any(unimplementedVariants, unimplementedVariants + countof(unimplementedVariants), m_variant))
 		throw UnimplementedFeature;
 
 	/* -- Set available moves -- */
@@ -104,26 +105,26 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	if (problem.numHalfMoves > MaxMoves)
 		throw InvalidProblem;
 
-	_moves[White] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 1 : 2));
-	_moves[Black] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 2 : 1));
+	m_moves[White] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 1 : 2));
+	m_moves[Black] = (problem.numHalfMoves / 2) + (problem.numHalfMoves % (problem.blackToMove ? 2 : 1));
 
-	_turn = problem.blackToMove ? Black : White;
+	m_turn = problem.blackToMove ? Black : White;
 
 	/* -- Set castling flags -- */
 
-	_castlings[White][KingSideCastling] = !problem.forbidWhiteKingSideCastling;
-	_castlings[White][QueenSideCastling] = !problem.forbidWhiteQueenSideCastling;
-	_castlings[Black][KingSideCastling] = !problem.forbidBlackKingSideCastling;
-	_castlings[Black][QueenSideCastling] = !problem.forbidBlackQueenSideCastling;
+	m_castlings[White][KingSideCastling] = !problem.forbidWhiteKingSideCastling;
+	m_castlings[White][QueenSideCastling] = !problem.forbidWhiteQueenSideCastling;
+	m_castlings[Black][KingSideCastling] = !problem.forbidBlackKingSideCastling;
+	m_castlings[Black][QueenSideCastling] = !problem.forbidBlackQueenSideCastling;
 
 	/* -- Count number of pieces in diagrams -- */
 
 	for (Color color : AllColors())
-		if ((_initialPieces[color] = xstd::count_if(_initialPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > MaxPieces)
+		if ((m_initialPieces[color] = xstd::count_if(m_initialPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > MaxPieces)
 			throw InvalidProblem;
 
 	for (Color color : AllColors())
-		if ((_diagramPieces[color] = xstd::count_if(_diagramPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > _initialPieces[color])
+		if ((m_diagramPieces[color] = xstd::count_if(m_diagramPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > m_initialPieces[color])
 			throw InvalidProblem;
 }
 

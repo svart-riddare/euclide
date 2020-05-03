@@ -26,33 +26,33 @@ class Euclide
 		const EUCLIDE_Deductions& deductions() const;
 
 	private :
-		EUCLIDE_Configuration _configuration;      /**< Global configuration. */
-		EUCLIDE_Callbacks _callbacks;              /**< User defined callbacks. */
+		EUCLIDE_Configuration m_configuration;      /**< Global configuration. */
+		EUCLIDE_Callbacks m_callbacks;              /**< User defined callbacks. */
 
-		Problem _problem;                          /**< Current problem to solve. */
+		Problem m_problem;                          /**< Current problem to solve. */
 
-		array<Pieces, NumColors> _pieces;          /**< Deductions on pieces. */
-		array<Targets, NumColors> _targets;        /**< Targets that must be fullfilled. */
+		array<Pieces, NumColors> m_pieces;          /**< Deductions on pieces. */
+		array<Targets, NumColors> m_targets;        /**< Targets that must be fullfilled. */
 
-		array<int, NumColors> _freeMoves;          /**< Unassigned moves. */
-		array<int, NumColors> _freeCaptures;       /**< Unassigned captures. */
+		array<int, NumColors> m_freeMoves;          /**< Unassigned moves. */
+		array<int, NumColors> m_freeCaptures;       /**< Unassigned captures. */
 
 		struct Tandem { const Piece& pieceA; const Piece& pieceB; int requiredMoves; Tandem(const Piece& pieceA, const Piece& pieceB, int requiredMoves) : pieceA(pieceA), pieceB(pieceB), requiredMoves(requiredMoves) {}};
-		std::vector<Tandem> _tandems;              /**< Required moves for pair of pieces. */
+		std::vector<Tandem> m_tandems;              /**< Required moves for pair of pieces. */
 
 	private :
-		mutable EUCLIDE_Deductions _deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
+		mutable EUCLIDE_Deductions m_deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
 };
 
 /* -------------------------------------------------------------------------- */
 
 Euclide::Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks)
-	: _configuration(configuration), _callbacks(callbacks)
+	: m_configuration(configuration), m_callbacks(callbacks)
 {
 	/* -- Display copyright string -- */
 
-	if (_callbacks.displayCopyright)
-		(*_callbacks.displayCopyright)(_callbacks.handle, Copyright);
+	if (m_callbacks.displayCopyright)
+		(*m_callbacks.displayCopyright)(m_callbacks.handle, Copyright);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -67,39 +67,39 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 {
 	/* -- Display problem -- */
 
-	if (_callbacks.displayProblem)
-		(*_callbacks.displayProblem)(_callbacks.handle, &problem);
+	if (m_callbacks.displayProblem)
+		(*m_callbacks.displayProblem)(m_callbacks.handle, &problem);
 
 	/* -- Reset solving state -- */
 
-	_problem = problem;
+	m_problem = problem;
 	reset();
 
 	/* -- Display analysis message -- */
 
-	if (_callbacks.displayMessage)
-		(*_callbacks.displayMessage)(_callbacks.handle, EUCLIDE_MESSAGE_ANALYZING);
+	if (m_callbacks.displayMessage)
+		(*m_callbacks.displayMessage)(m_callbacks.handle, EUCLIDE_MESSAGE_ANALYZING);
 
 	/* -- Initialize pieces -- */
 
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
-			if (_problem.initialPosition(square) == glyph)
-				_pieces[color(glyph)].emplace_back(_problem, square);
+			if (m_problem.initialPosition(square) == glyph)
+				m_pieces[color(glyph)].emplace_back(m_problem, square);
 
 	/* -- Initialize targets -- */
 
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
-			if (_problem.diagramPosition(square) == glyph)
-				_targets[color(glyph)].emplace_back(glyph, square);
+			if (m_problem.diagramPosition(square) == glyph)
+				m_targets[color(glyph)].emplace_back(glyph, square);
 
 	/* -- Local array to store pieces -- */
 
 	std::vector<Piece *> pieces;
 	pieces.reserve(2 * MaxPieces);
 	for (Color color : AllColors())
-		for (Piece& piece : _pieces[color])
+		for (Piece& piece : m_pieces[color])
 			pieces.push_back(&piece);
 
 	/* -- Castling pieces -- */
@@ -110,7 +110,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	for (Color color : AllColors())
 		for (CastlingSide side : AllCastlingSides())
-			for (Piece& piece : _pieces[color])			
+			for (Piece& piece : m_pieces[color])
 				if (maybe(piece.castling(side)))
 					if (piece.species() == King)
 						castlingPieces[color][side].king = &piece;
@@ -125,8 +125,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (Color color : AllColors())
 		{
-			const Pieces& pieces = _pieces[color];
-			Targets& targets = _targets[color];
+			const Pieces& pieces = m_pieces[color];
+			Targets& targets = m_targets[color];
 
 			do
 			{
@@ -146,25 +146,26 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (Color color : AllColors())
 		{
-			_freeMoves[color] = _problem.moves(color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredMoves(); });
-			_freeCaptures[color] = _problem.capturedPieces(!color) - xstd::sum(_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
+			m_freeMoves[color] = m_problem.moves(color) - xstd::sum(m_pieces[color], [](const Piece& piece) { return piece.requiredMoves(); });
 
-			if ((_freeMoves[color] < 0) || (_freeCaptures[color] < 0))
+			m_freeCaptures[color] = m_problem.capturedPieces(!color) - xstd::sum(m_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
+
+			if ((m_freeMoves[color] < 0) || (m_freeCaptures[color] < 0))
 				throw NoSolution;
 		}
 
 		/* -- Display current deductions -- */
 
-		if (_callbacks.displayDeductions)
-			(*_callbacks.displayDeductions)(_callbacks.handle, &deductions());
+		if (m_callbacks.displayDeductions)
+			(*m_callbacks.displayDeductions)(m_callbacks.handle, &deductions());
 
 		/* -- Assign free moves, free captures and possible squares -- */
 
 		for (Color color : AllColors())
 		{
-			Pieces& pieces = _pieces[color];
+			Pieces& pieces = m_pieces[color];
 
-			TargetPartitions partitions(pieces, _targets[color]);
+			TargetPartitions partitions(pieces, m_targets[color]);
 
 			for (const TargetPartition& partition : partitions)
 				if (partition.men().count() <= partition.squares().count())
@@ -176,17 +177,17 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 					if (!maybe(pieces[man].captured()))
 						pieces[man].setPossibleSquares(partition.squares());
 
-			int freeMoves = _freeMoves[color] - partitions.unassignedRequiredMoves();
+			int freeMoves = m_freeMoves[color] - partitions.unassignedRequiredMoves();
 			array<int, MaxPieces> unassignedRequiredMoves;
 			for (Man man = 0; man < pieces.size(); man++)
 				unassignedRequiredMoves[man] = partitions.unassignedRequiredMoves(man);
 
-			int freeCaptures = _freeCaptures[color] - partitions.unassignedRequiredCaptures();
+			int freeCaptures = m_freeCaptures[color] - partitions.unassignedRequiredCaptures();
 			array<int, MaxPieces> unassignedRequiredCaptures;
 			for (Man man = 0; man < pieces.size(); man++)
 				unassignedRequiredCaptures[man] = partitions.unassignedRequiredCaptures(man);
 
-			for (const Tandem& tandem : _tandems)
+			for (const Tandem& tandem : m_tandems)
 			{
 				if ((tandem.pieceA.color() == color) && (tandem.pieceB.color() == color))
 				{
@@ -263,14 +264,14 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		/* -- Mutual obstructions between two pieces -- */
 
-		_tandems.clear();
+		m_tandems.clear();
 		for (unsigned pieceA = 0; pieceA < pieces.size(); pieceA++)
 		{
 			for (unsigned pieceB = pieceA + 1; pieceB < pieces.size(); pieceB++)
 			{
-				const int requiredMoves = Piece::mutualInteractions(*pieces[pieceA], *pieces[pieceB], _freeMoves, false);
+				const int requiredMoves = Piece::mutualInteractions(*pieces[pieceA], *pieces[pieceB], m_freeMoves, false);
 				if (requiredMoves > pieces[pieceA]->requiredMoves() + pieces[pieceB]->requiredMoves())
-					_tandems.emplace_back(*pieces[pieceA], *pieces[pieceB], requiredMoves);
+					m_tandems.emplace_back(*pieces[pieceA], *pieces[pieceB], requiredMoves);
 			}
 		}
 
@@ -286,16 +287,16 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	/* -- Display playing message -- */
 
-	if (_callbacks.displayMessage)
-		(*_callbacks.displayMessage)(_callbacks.handle, EUCLIDE_MESSAGE_SEARCHING);
+	if (m_callbacks.displayMessage)
+		(*m_callbacks.displayMessage)(m_callbacks.handle, EUCLIDE_MESSAGE_SEARCHING);
 
 	/* -- Play all possible games -- */
 
 	const EUCLIDE_Deductions deductions = this->deductions();
 
-	if ((_problem.moves() <= 20) && (deductions.complexity < 10.0))
+	if ((m_problem.moves() <= 20) && (deductions.complexity < 10.0))
 	{
-		std::unique_ptr<Game> game(new Game(_configuration, _callbacks, _problem, _pieces));
+		std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces));
 		game->play();
 	}
 }
@@ -317,41 +318,41 @@ int Euclide::update(std::vector<Piece *>& pieces)
 
 void Euclide::reset()
 {
-	_pieces[White].clear();
-	_pieces[Black].clear();
+	m_pieces[White].clear();
+	m_pieces[Black].clear();
 }
 
 /* -------------------------------------------------------------------------- */
 
 const EUCLIDE_Deductions& Euclide::deductions() const
 {
-	memset(&_deductions, 0, sizeof(_deductions));
+	memset(&m_deductions, 0, sizeof(m_deductions));
 
 	const int pieces[NumColors] = {
-		_deductions.numWhitePieces = std::min<int>(_pieces[White].size(), countof(_deductions.whitePieces)),
-		_deductions.numBlackPieces = std::min<int>(_pieces[Black].size(), countof(_deductions.blackPieces))
+		m_deductions.numWhitePieces = std::min<int>(m_pieces[White].size(), countof(m_deductions.whitePieces)),
+		m_deductions.numBlackPieces = std::min<int>(m_pieces[Black].size(), countof(m_deductions.blackPieces))
 	};
 
-	_deductions.freeWhiteMoves = _freeMoves[White];
-	_deductions.freeBlackMoves = _freeMoves[Black];
+	m_deductions.freeWhiteMoves = m_freeMoves[White];
+	m_deductions.freeBlackMoves = m_freeMoves[Black];
 
-	if ((_deductions.freeWhiteMoves < 0) || (_deductions.freeBlackMoves < 0))
+	if ((m_deductions.freeWhiteMoves < 0) || (m_deductions.freeBlackMoves < 0))
 		throw NoSolution;
 
-	_deductions.complexity += std::log(1.0 + _deductions.freeWhiteMoves);
-	_deductions.complexity += std::log(1.0 + _deductions.freeBlackMoves);
+	m_deductions.complexity += std::log(1.0 + m_deductions.freeWhiteMoves);
+	m_deductions.complexity += std::log(1.0 + m_deductions.freeBlackMoves);
 
 	for (Color color : AllColors())
 	{
 		for (int k = 0; k < pieces[color]; k++)
 		{
-			EUCLIDE_Deduction& deduction = color ? _deductions.blackPieces[k] : _deductions.whitePieces[k];
-			const Piece& piece = _pieces[color][k];
+			EUCLIDE_Deduction& deduction = color ? m_deductions.blackPieces[k] : m_deductions.whitePieces[k];
+			const Piece& piece = m_pieces[color][k];
 
-			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph(true));
+			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.initialGlyph());
 			deduction.diagramGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
 
-			deduction.initialSquare = static_cast<int>(piece.square(true));
+			deduction.initialSquare = static_cast<int>(piece.initialSquare());
 			deduction.finalSquare = static_cast<int>(piece.square());
 
 			deduction.requiredMoves = piece.requiredMoves();
@@ -360,13 +361,13 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 
 			deduction.captured = false;
 
-			_deductions.complexity += std::log(0.0 + deduction.numSquares);
-			_deductions.complexity += std::log(1.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
+			m_deductions.complexity += std::log(0.0 + deduction.numSquares);
+			m_deductions.complexity += std::log(1.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
 		}
 	}
 
-	_deductions.complexity *= (1.0 / std::log(2.0));
-	return _deductions;
+	m_deductions.complexity *= (1.0 / std::log(2.0));
+	return m_deductions;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -392,7 +393,7 @@ EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configu
 
 	/* -- Create Euclide instance --  */
 
-	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(configuration ? *configuration : nullconfiguration, callbacks ? *callbacks : nullcallbacks)); } 
+	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(configuration ? *configuration : nullconfiguration, callbacks ? *callbacks : nullcallbacks)); }
 	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
 	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
 	catch (EUCLIDE_Status status) { return status; }
@@ -413,7 +414,7 @@ EUCLIDE_Status EUCLIDE_problem(EUCLIDE_Handle euclide, const EUCLIDE_Problem *pr
 	try { reinterpret_cast<Euclide::Euclide *>(euclide)->solve(*problem); }
 	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
 	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
-	catch (EUCLIDE_Status status) { return status; }	
+	catch (EUCLIDE_Status status) { return status; }
 
 	return EUCLIDE_STATUS_OK;
 }

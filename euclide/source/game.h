@@ -21,7 +21,7 @@ class Game
 		~Game();
 
 		void play();
-		
+
 	protected :
 		class State;
 		void play(const State& state);
@@ -44,59 +44,59 @@ class Game
 				State(const State& state, Square from, Square to, const Piece *captured, CastlingSide castling, const array<bool, NumCastlingSides>& castlings);
 
 				inline void check(bool check)
-					{ _check = check; }
+					{ m_check = check; }
 
 			public :
 				inline bool castling(CastlingSide side) const
-					{ return _castlings[_color][side]; }
+					{ return m_castlings[m_color][side]; }
 				inline bool enpassant(Square square) const
-					{ return _enpassant == square; }
+					{ return m_enpassant == square; }
 				inline Color color() const
-					{ return _color; }
+					{ return m_color; }
 				inline bool check() const
-					{ return _check; }
+					{ return m_check; }
 
 				inline CastlingSide castling() const
-					{ return _castling; } 
+					{ return m_castling; }
 				inline const Piece *captured() const
-					{ return _captured; }
+					{ return m_captured; }
 				inline Square from() const
-					{ return _from; }
+					{ return m_from; }
 				inline Square to() const
-					{ return _to; }
+					{ return m_to; }
 
 			private :
-				matrix<bool, NumColors, NumCastlingSides> _castlings;    /**< Castling rights. */
-				Square _enpassant;                                       /**< Possible en passant capture. */
-				Color _color;                                            /**< Whose turn it is. */
-				bool _check;                                             /**< Set if side to move is in check. */
+				matrix<bool, NumColors, NumCastlingSides> m_castlings;    /**< Castling rights. */
+				Square m_enpassant;                                       /**< Possible en passant capture. */
+				Color m_color;                                            /**< Whose turn it is. */
+				bool m_check;                                             /**< Set if side to move is in check. */
 
-				CastlingSide _castling;                                  /**< Set if last move was a castling move. */
-				const Piece *_captured;                                  /**< Piece captured last move. */
-				Square _from;                                            /**< Last move departure square. */
-				Square _to;                                              /**< Last move arrival square. */			
+				CastlingSide m_castling;                                  /**< Set if last move was a castling move. */
+				const Piece *m_captured;                                  /**< Piece captured last move. */
+				Square m_from;                                            /**< Last move departure square. */
+				Square m_to;                                              /**< Last move arrival square. */
 		};
 
 	private :
-		const EUCLIDE_Configuration _configuration;        /**< Euclide configuration. */
-		const EUCLIDE_Callbacks _callbacks;                /**< Euclide callbacks. */
+		const EUCLIDE_Configuration m_configuration;        /**< Euclide configuration. */
+		const EUCLIDE_Callbacks m_callbacks;                /**< Euclide callbacks. */
 
-		const Problem& _problem;                           /**< Problem to solve. */
-		const array<Pieces, NumColors>& _pieces;           /**< Problem pieces. */
+		const Problem& m_problem;                           /**< Problem to solve. */
+		const array<Pieces, NumColors>& m_pieces;           /**< Problem pieces. */
 
-		array<ArrayOfSquares, NumGlyphs> _captures;        /**< Legal captures, for checks. */
-		array<MatrixOfSquares, NumGlyphs> _constraints;    /**< Move constraints, for checks. */
-		array<MatrixOfSquares, NumColors> _lines;          /**< Line of sights, for checks and discovered checks. */
+		array<ArrayOfSquares, NumGlyphs> m_captures;        /**< Legal captures, for checks. */
+		array<MatrixOfSquares, NumGlyphs> m_constraints;    /**< Move constraints, for checks. */
+		array<MatrixOfSquares, NumColors> m_lines;          /**< Line of sights, for checks and discovered checks. */
 
-		array<const Piece *, NumSquares> _board;           /**< Current board position. */
-		array<Squares, NumColors> _position;               /**< Current occupied squares. */
-		array<Square, NumColors> _kings;                   /**< Current king positions. */
-		Squares _diagram;                                  /**< Occupied squares to reach. */
+		array<const Piece *, NumSquares> m_board;           /**< Current board position. */
+		array<Squares, NumColors> m_position;               /**< Current occupied squares. */
+		array<Square, NumColors> m_kings;                   /**< Current king positions. */
+		Squares m_diagram;                                  /**< Occupied squares to reach. */
 
-		std::vector<const State *> _states;                /**< Game states, excluding initial state. */
+		std::vector<const State *> m_states;                /**< Game states, excluding initial state. */
 
-		int64_t _positions;                                /**< Number of positions examined. */
-		int _solutions;                                    /**< Number of solutions found. */
+		int64_t m_positions;                                /**< Number of positions examined. */
+		int m_solutions;                                    /**< Number of solutions found. */
 };
 
 /* -------------------------------------------------------------------------- */

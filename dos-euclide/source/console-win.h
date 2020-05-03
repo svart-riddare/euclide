@@ -23,15 +23,15 @@ class WinConsole : public Console
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
 
 	private :
-		HANDLE _output;                              /**< Console output handle. */
-		HANDLE _input;                               /**< Console input handle. */
+		HANDLE m_output;                              /**< Console output handle. */
+		HANDLE m_input;                               /**< Console input handle. */
 
-		CONSOLE_SCREEN_BUFFER_INFO _initialState;    /**< Initial console characteristics, restored at exit. */
-		DWORD _initialOutputMode;                    /**< Initial console output mode, restored at exit. */
-		DWORD _initialInputMode;                     /**< Initial console input mode, restored at exit. */
-		BOOL _initialCursorVisibility;               /**< Initial console cursor visibility, restored at exit. */
+		CONSOLE_SCREEN_BUFFER_INFO m_initialState;    /**< Initial console characteristics, restored at exit. */
+		DWORD m_initialOutputMode;                    /**< Initial console output mode, restored at exit. */
+		DWORD m_initialInputMode;                     /**< Initial console input mode, restored at exit. */
+		BOOL m_initialCursorVisibility;               /**< Initial console cursor visibility, restored at exit. */
 
-		mutable CHAR_INFO *_characters;              /**< Temporary buffer used for console display. */
+		mutable CHAR_INFO *m_characters;              /**< Temporary buffer used for console display. */
 };
 
 /* -------------------------------------------------------------------------- */

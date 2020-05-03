@@ -4,7 +4,7 @@
 /* -- French strings                                                       -- */
 /* -------------------------------------------------------------------------- */
 
-static const wchar_t *frenchTexts[] = 
+static const wchar_t *frenchTexts[] =
 {
 	L"Appuyez sur une touche pour continuer...",
 };
@@ -39,7 +39,7 @@ static const wchar_t *frenchStrings[] =
 	L"Probl\xE8me d\xE9moli"
 };
 
-static const wchar_t *frenchStatuses[] = 
+static const wchar_t *frenchStatuses[] =
 {
 	L"Probl\xE8me r\xE9solu",
 	L"Probl\xE8me insoluble",
@@ -142,19 +142,19 @@ Strings::Strings()
 
 	if (french)
 	{
-		_texts = frenchTexts;
-		_errors = frenchErrors;
-		_strings = frenchStrings;
-		_statuses = frenchStatuses;
-		_messages = frenchMessages;
+		m_texts = frenchTexts;
+		m_errors = frenchErrors;
+		m_strings = frenchStrings;
+		m_statuses = frenchStatuses;
+		m_messages = frenchMessages;
 	}
 	else
 	{
-		_texts = englishTexts;
-		_errors = englishErrors;
-		_strings = englishStrings;
-		_statuses = englishStatuses;
-		_messages = englishMessages;
+		m_texts = englishTexts;
+		m_errors = englishErrors;
+		m_strings = englishStrings;
+		m_statuses = englishStatuses;
+		m_messages = englishMessages;
 	}
 }
 

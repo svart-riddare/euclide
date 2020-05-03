@@ -21,22 +21,22 @@ struct EnumRange
 			typedef Enum& reference;
 
 		public :
-			EnumIterator(int value) : _value(value) {}
+			EnumIterator(int value) : m_value(value) {}
 
 		public :
 			inline bool operator==(const EnumIterator& iterator) const
-				{ return _value == iterator._value; }
+				{ return m_value == iterator.m_value; }
 			inline bool operator!=(const EnumIterator& iterator) const
-				{ return _value != iterator._value; }
+				{ return m_value != iterator.m_value; }
 
 			inline void operator++()
-				{ _value += 1; }
+				{ m_value += 1; }
 
 			inline Enum operator*() const
-				{ return static_cast<Enum>(_value); }
+				{ return static_cast<Enum>(m_value); }
 
 		private :
-			int _value;
+			int m_value;    /**< Enum value, as integer. */
 	};
 
 	inline EnumIterator begin() const

@@ -16,8 +16,8 @@ class Timer
 		static steady_clock::time_point now();
 
 	private :
-		steady_clock::time_point _start;    /**< Starting time. */
-		mutable wchar_t _elapsed[64];       /**< Temporary buffer used to store elasped time as string. */
+		steady_clock::time_point m_start;    /**< Starting time. */
+		mutable wchar_t m_elapsed[64];       /**< Temporary buffer used to store elasped time as string. */
 };
 
 /* -------------------------------------------------------------------------- */

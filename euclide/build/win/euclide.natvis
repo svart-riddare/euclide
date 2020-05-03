@@ -8,11 +8,11 @@
   </Type>
 
   <Type Name="Euclide::Queue&lt;*,*&gt;">
-    <DisplayString>{{ queued = {_in - _out}, capacity = {$T2 - _out} }}</DisplayString>
+    <DisplayString>{{ queued = {m_in - m_out}, capacity = {$T2 - m_out} }}</DisplayString>
     <Expand>
       <ArrayItems>
-        <Size>_in - _out</Size>
-        <ValuePointer>_queue._Elems + _out</ValuePointer>
+        <Size>m_in - m_out</Size>
+        <ValuePointer>m_queue._Elems + m_out</ValuePointer>
       </ArrayItems>
     </Expand>
   </Type>
@@ -234,14 +234,14 @@
   </Type>
 
   <Type Name="Euclide::BitSet&lt;enum Euclide::Square,64&gt;">
-    <DisplayString Condition="_bits==0xFFFFFFFFFFFFFFFF">Anywhere</DisplayString>
-    <DisplayString Condition="_bits==0x0000000000000000">Nowhere</DisplayString>
+    <DisplayString Condition="m_bits==0xFFFFFFFFFFFFFFFF">Anywhere</DisplayString>
+    <DisplayString Condition="m_bits==0x0000000000000000">Nowhere</DisplayString>
     <DisplayString>{_bits,x}</DisplayString>
     <Expand>
       <CustomListItems>
         <Variable Name="bit" InitialValue="0"/>
         <Loop>
-          <If Condition="_bits >> bit &amp; 1">
+          <If Condition="m_bits >> bit &amp; 1">
             <Item>(Square)(bit)</Item>
           </If>
           <Exec>bit++</Exec>
@@ -252,14 +252,14 @@
   </Type>
 
   <Type Name="Euclide::BitSet&lt;enum Euclide::Glyph,13&gt;">
-    <DisplayString Condition="_bits==0x00001FFF">Any</DisplayString>
-    <DisplayString Condition="_bits==0x00000000">None</DisplayString>
-    <DisplayString>{_bits,x}</DisplayString>
+    <DisplayString Condition="m_bits==0x00001FFF">Any</DisplayString>
+    <DisplayString Condition="m_bits==0x00000000">None</DisplayString>
+    <DisplayString>{m_bits,x}</DisplayString>
     <Expand>
       <CustomListItems>
         <Variable Name="bit" InitialValue="0"/>
         <Loop>
-          <If Condition="_bits >> bit &amp; 1">
+          <If Condition="m_bits >> bit &amp; 1">
             <Item>(Glyph)(bit)</Item>
           </If>
           <Exec>bit++</Exec>
@@ -270,14 +270,14 @@
   </Type>
 
   <Type Name="Euclide::BitSet&lt;int,32&gt;" >
-    <DisplayString Condition="_bits==0xFFFF">Any</DisplayString>
-    <DisplayString Condition="_bits==0">None</DisplayString>
-    <DisplayString>{_bits,x}</DisplayString>
+    <DisplayString Condition="m_bits==0xFFFF">Any</DisplayString>
+    <DisplayString Condition="m_bits==0">None</DisplayString>
+    <DisplayString>{m_bits,x}</DisplayString>
     <Expand>
       <CustomListItems>
         <Variable Name="bit" InitialValue="0"/>
         <Loop>
-          <If Condition="_bits >> bit &amp; 1">
+          <If Condition="m_bits >> bit &amp; 1">
             <Item Condition="bit==0">"King (0)",sb</Item>
             <Item Condition="bit==1">"Queen (1)",sb</Item>
             <Item Condition="bit==2">"K-Rook (2)",sb</Item>
@@ -304,14 +304,14 @@
   </Type>
 
   <Type Name="Euclide::BitSet&lt;*,*&gt;" >
-    <DisplayString Condition="_bits==($T1)(-1)">Any</DisplayString>
-    <DisplayString Condition="_bits==($T1)(0)">None</DisplayString>
-    <DisplayString>{_bits,x}</DisplayString>
+    <DisplayString Condition="m_bits==($T1)(-1)">Any</DisplayString>
+    <DisplayString Condition="m_bits==($T1)(0)">None</DisplayString>
+    <DisplayString>{m_bits,x}</DisplayString>
     <Expand>
       <CustomListItems>
         <Variable Name="bit" InitialValue="0"/>
         <Loop>
-          <If Condition="_bits >> bit &amp; 1">
+          <If Condition="m_bits >> bit &amp; 1">
             <Item>($T1)(bit)</Item>
           </If>
           <Exec>bit++</Exec>

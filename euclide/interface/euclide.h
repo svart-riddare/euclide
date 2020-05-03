@@ -88,7 +88,7 @@ typedef enum
 	EUCLIDE_PIECE_MAO,            /**< Chinese knight (horse). */
 
 	/* -- Number of different pieces -- */
-	
+
 	EUCLIDE_NUM_PIECES            /**< Number of different enumerated values. */
 
 } EUCLIDE_Piece;
@@ -101,7 +101,7 @@ typedef enum
 
 	/* -- Move restriction variants -- */
 
-	EUCLIDE_VARIANT_MONOCHROMATIC,     /**< All moves that between dark and light squares are forbidden. Implies that knignts can not move. */
+	EUCLIDE_VARIANT_MONOCHROMATIC,     /**< All moves between dark and light squares are forbidden. Implies that knignts can not move. */
 	EUCLIDE_VARIANT_BICHROMATIC,       /**< All moves should be performed between dark and light squares. Implies that bishop can not move. */
 
 	EUCLIDE_VARIANT_GRID_CHESS,        /**< Grid chess. Board is divided in 2x2 zones, every move should go from one zone to another. */
@@ -109,6 +109,10 @@ typedef enum
 	/* -- Board shape variants -- */
 
 	EUCLIDE_VARIANT_CYLINDER_CHESS,    /**< Vertical cylindric board. Null moves are allowed, as well as extra castling moves. */
+
+	/* -- Promotion variants -- */
+
+	EUCLIDE_VARIANT_GLASGOW_CHESS,    /**< Promotions occur on the 7th (2nd) rank. /
 
 	/* -- Number of variants -- */
 
@@ -156,7 +160,7 @@ typedef struct
 
 	int initialSquare;                    /**< Initial square, as given by user. A1 = 0, A2 = 1, ... */
 	int finalSquare;                      /**< Final square, if known, -1 otherwise. */
-	
+
 	int requiredMoves;                    /**< Minimum number of moves required to reach final square, if known. */
 	int numSquares;                       /**< Number of different possible final squares for this piece. One if final square is known. */
 	int numMoves;                         /**< Number of different legal moves this piece may have performed on the board. At most number of required moves if the full path is known. */
@@ -205,9 +209,9 @@ typedef struct
 
 typedef struct
 {
-	EUCLIDE_Move moves[8];               /**< Moves being explored (first eight move of game). */
-	int64_t positions;                   /**< Number of positions examined. */
-	 
+	EUCLIDE_Move moves[8];                /**< Moves being explored (first eight move of game). */
+	int64_t positions;                    /**< Number of positions examined. */
+
 } EUCLIDE_Thinking;
 
 /* -------------------------------------------------------------------------- */

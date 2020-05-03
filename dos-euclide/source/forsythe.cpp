@@ -7,21 +7,21 @@
 
 ForsytheSymbols::ForsytheSymbols(const wchar_t *symbols)
 {
-	std::fill_n(_glyphs, countof(_glyphs), EUCLIDE_GLYPH_NONE);
+	std::fill_n(m_glyphs, countof(m_glyphs), EUCLIDE_GLYPH_NONE);
 
 	assert(wcslen(symbols) >= 6);
-	_glyphs[toupper(symbols[0])] = EUCLIDE_GLYPH_WHITE_KING;
-	_glyphs[tolower(symbols[0])] = EUCLIDE_GLYPH_BLACK_KING;
-	_glyphs[toupper(symbols[1])] = EUCLIDE_GLYPH_WHITE_QUEEN;
-	_glyphs[tolower(symbols[1])] = EUCLIDE_GLYPH_BLACK_QUEEN;
-	_glyphs[toupper(symbols[2])] = EUCLIDE_GLYPH_WHITE_ROOK;
-	_glyphs[tolower(symbols[2])] = EUCLIDE_GLYPH_BLACK_ROOK;
-	_glyphs[toupper(symbols[3])] = EUCLIDE_GLYPH_WHITE_BISHOP;
-	_glyphs[tolower(symbols[3])] = EUCLIDE_GLYPH_BLACK_BISHOP;
-	_glyphs[toupper(symbols[4])] = EUCLIDE_GLYPH_WHITE_KNIGHT;
-	_glyphs[tolower(symbols[4])] = EUCLIDE_GLYPH_BLACK_KNIGHT;
-	_glyphs[toupper(symbols[5])] = EUCLIDE_GLYPH_WHITE_PAWN;
-	_glyphs[tolower(symbols[5])] = EUCLIDE_GLYPH_BLACK_PAWN;
+	m_glyphs[toupper(symbols[0])] = EUCLIDE_GLYPH_WHITE_KING;
+	m_glyphs[tolower(symbols[0])] = EUCLIDE_GLYPH_BLACK_KING;
+	m_glyphs[toupper(symbols[1])] = EUCLIDE_GLYPH_WHITE_QUEEN;
+	m_glyphs[tolower(symbols[1])] = EUCLIDE_GLYPH_BLACK_QUEEN;
+	m_glyphs[toupper(symbols[2])] = EUCLIDE_GLYPH_WHITE_ROOK;
+	m_glyphs[tolower(symbols[2])] = EUCLIDE_GLYPH_BLACK_ROOK;
+	m_glyphs[toupper(symbols[3])] = EUCLIDE_GLYPH_WHITE_BISHOP;
+	m_glyphs[tolower(symbols[3])] = EUCLIDE_GLYPH_BLACK_BISHOP;
+	m_glyphs[toupper(symbols[4])] = EUCLIDE_GLYPH_WHITE_KNIGHT;
+	m_glyphs[tolower(symbols[4])] = EUCLIDE_GLYPH_BLACK_KNIGHT;
+	m_glyphs[toupper(symbols[5])] = EUCLIDE_GLYPH_WHITE_PAWN;
+	m_glyphs[tolower(symbols[5])] = EUCLIDE_GLYPH_BLACK_PAWN;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -32,8 +32,8 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 {
 	/* -- Reset problem -- */
 
-	memset(&_problem, 0, sizeof(_problem));
-	_valid = false;
+	memset(&m_problem, 0, sizeof(m_problem));
+	m_valid = false;
 
 	/* -- Basic coherency checks -- */
 
@@ -42,7 +42,7 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 
 	/* -- Check multiple languages for diagram description -- */
 
-	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !_valid; symbols += 7)
+	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !m_valid; symbols += 7)
 	{
 		const ForsytheSymbols forsythe(symbols);
 
@@ -97,18 +97,18 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 				if (column > 7)
 					return;
 
-				_problem.diagram[8 * column + row] = glyph;
+				m_problem.diagram[8 * column + row] = glyph;
 				column++;
 			}
 		}
 
 		if (valid && (numWhiteKings == 1) && (numBlackKings == 1))
-			_valid = true;
+			m_valid = true;
 	}
 
 	/* -- Set number of moves -- */
 
-	_problem.numHalfMoves = numHalfMoves;
+	m_problem.numHalfMoves = numHalfMoves;
 }
 
 /* -------------------------------------------------------------------------- */

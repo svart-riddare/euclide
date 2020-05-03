@@ -11,31 +11,31 @@ namespace Euclide
 /* -------------------------------------------------------------------------- */
 
 Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces)
-	: _configuration(configuration), _callbacks(callbacks), _problem(problem), _pieces(pieces)
+	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces)
 {
 	for (Glyph glyph : AllGlyphs())
-		Tables::initializeLegalMoves(&_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true);
+		Tables::initializeLegalMoves(&m_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true);
 
 	for (Glyph glyph : AllGlyphs())
-		_constraints[glyph] = *Tables::getMoveConstraints(problem.piece(glyph), problem.variant(), true, false);
-	
-	Tables::initializeLineOfSights(problem.pieces(), problem.variant(), &_lines);
+		m_constraints[glyph] = *Tables::getMoveConstraints(problem.piece(glyph), problem.variant(), true, false);
 
-	_board.fill(nullptr);
+	Tables::initializeLineOfSights(problem.pieces(), problem.variant(), &m_lines);
+
+	m_board.fill(nullptr);
 	for (Color color : AllColors())
 		for (const Piece& piece : pieces[color])
-			_board[piece.square(true)] = &piece;
+			m_board[piece.initialSquare()] = &piece;
 
 	for (Color color : AllColors())
-		_position[color].set([&](Square square) { return Euclide::color(problem.initialPosition(square)) == color; });
+		m_position[color].set([&](Square square) { return Euclide::color(problem.initialPosition(square)) == color; });
 
 	for (Color color : AllColors())
-		_kings[color] = pieces[color][0].square(true);
+		m_kings[color] = pieces[color][0].initialSquare();
 
-	_diagram.set([&](Square square) { return problem.diagramPosition(square) != Empty; });
+	m_diagram.set([&](Square square) { return problem.diagramPosition(square) != Empty; });
 
-	_positions = 0;
-	_solutions = 0;
+	m_positions = 0;
+	m_solutions = 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -50,52 +50,52 @@ void Game::play()
 {
 	/* -- Recursively play all moves from initial state -- */
 
-	const State state(_problem);
+	const State state(m_problem);
 	play(state);
 
 	/* -- Done -- */
 
 	EUCLIDE_Thinking thinking;
 	memset(&thinking, 0, sizeof(thinking));
-	thinking.positions = _positions;
+	thinking.positions = m_positions;
 
-	if (_callbacks.displayThinking)
-		(*_callbacks.displayThinking)(_callbacks.handle, &thinking);
+	if (m_callbacks.displayThinking)
+		(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
 }
 
 /* -------------------------------------------------------------------------- */
 
 void Game::play(const State& _state)
 {
-	_positions += 1;
+	m_positions += 1;
 
 	/* -- Thinking callback -- */
 
-	if (_states.size() == std::extent<decltype(EUCLIDE_Thinking::moves)>::value)
+	if (m_states.size() == std::extent<decltype(EUCLIDE_Thinking::moves)>::value)
 	{
 		EUCLIDE_Thinking thinking;
-		thinking.positions = _positions;
-		cmoves(thinking.moves, _states.size());
+		thinking.positions = m_positions;
+		cmoves(thinking.moves, m_states.size());
 
-		if (_callbacks.displayThinking)
-			(*_callbacks.displayThinking)(_callbacks.handle, &thinking);
+		if (m_callbacks.displayThinking)
+			(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
 	}
 
 	/* -- End recursion -- */
 
-	if (_states.size() >= _problem.moves())
+	if (m_states.size() >= m_problem.moves())
 	{
 		/* -- Check for solution -- */
 
 		if (solved())
 		{
 			EUCLIDE_Solution solution;
-			solution.numHalfMoves = _states.size();
-			cmoves(solution.moves, _states.size());
-			solution.solution = ++_solutions;
+			solution.numHalfMoves = m_states.size();
+			cmoves(solution.moves, m_states.size());
+			solution.solution = ++m_solutions;
 
-			if (_callbacks.displaySolution)
-				(*_callbacks.displaySolution)(_callbacks.handle, &solution);
+			if (m_callbacks.displaySolution)
+				(*m_callbacks.displaySolution)(m_callbacks.handle, &solution);
 		}
 
 		/* -- End recursion -- */
@@ -105,19 +105,19 @@ void Game::play(const State& _state)
 
 	/* -- Get legal moves -- */
 
-	const Squares position = _position[White] | _position[Black];
+	const Squares position = m_position[White] | m_position[Black];
 	const Color color = _state.color();
 
-	for (Square from : ValidSquares(_position[color]))
+	for (Square from : ValidSquares(m_position[color]))
 	{
-		const Piece& piece = *_board[from];
+		const Piece& piece = *m_board[from];
 
 		for (Square to : ValidSquares(piece.moves(from)))
 		{
 			/* -- Check if capture is ok -- */
 
-			const bool capture = _position[!color][to];
-			if (capture && !is(_board[to]->captured()))
+			const bool capture = m_position[!color][to];
+			if (capture && !is(m_board[to]->captured()))
 				continue;
 
 			/* -- Check if move is possible given other pieces on the board -- */
@@ -145,28 +145,28 @@ void Game::play(const State& _state)
 			/* -- Perform move and compute new game state -- */
 
 			State state = move(_state, from, to, castling);
-			_states.push_back(&state);
+			m_states.push_back(&state);
 
 			/* -- Move is valid only if the king is not in check -- */
 
 			bool valid = true;
 			if (piece.royal() || _state.check())
-				valid &= !checked(_kings[color], color);
+				valid &= !checked(m_kings[color], color);
 			else
-				valid &= !checked(_kings[color], from, color);
+				valid &= !checked(m_kings[color], from, color);
 
 			if (valid)
 			{
 				/* -- Set check state -- */
 
-				if (checks(piece.glyph(true), to, _kings[!color]))
+				if (checks(piece.initialGlyph(), to, m_kings[!color]))
 					state.check(true);
 
-				if (checked(_kings[!color], from, !color))
+				if (checked(m_kings[!color], from, !color))
 					state.check(true);
 
 				if (castling != NoCastling)
-					if (checks(_board[Castlings[color][castling].free]->glyph(true), Castlings[color][castling].free, _kings[!color]))
+					if (checks(m_board[Castlings[color][castling].free]->initialGlyph(), Castlings[color][castling].free, m_kings[!color]))
 						state.check(true);
 
 				/* -- Recursive call -- */
@@ -176,7 +176,7 @@ void Game::play(const State& _state)
 
 			/* -- Undo move -- */
 
-			_states.pop_back();
+			m_states.pop_back();
 			undo(state);
 		}
 	}
@@ -192,20 +192,20 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	/* -- Update board position -- */
 
-	const Piece *captured = _board[to];
+	const Piece *captured = m_board[to];
 
-	_board[to] = _board[from];
-	_board[from] = nullptr;
+	m_board[to] = m_board[from];
+	m_board[from] = nullptr;
 
-	assert(_position[color][from]);
-	assert(!_position[color][to]);
+	assert(m_position[color][from]);
+	assert(!m_position[color][to]);
 
-	_position[color][to] = true;
-	_position[!color][to] = false;
-	_position[color][from] = false;
+	m_position[color][to] = true;
+	m_position[!color][to] = false;
+	m_position[color][from] = false;
 
-	if (_kings[color] == from)
-		_kings[color] = to;
+	if (m_kings[color] == from)
+		m_kings[color] = to;
 
 	/* -- Handle castling -- */
 
@@ -214,14 +214,14 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 		const Square rook = Castlings[color][castling].rook;
 		const Square free = Castlings[color][castling].free;
 
-		_board[free] = _board[rook];
-		_board[rook] = nullptr;
+		m_board[free] = m_board[rook];
+		m_board[rook] = nullptr;
 
-		assert(_position[color][rook]);
-		assert(!_position[color][free]);
+		assert(m_position[color][rook]);
+		assert(!m_position[color][free]);
 
-		_position[color][free] = true;
-		_position[color][rook] = false;
+		m_position[color][free] = true;
+		m_position[color][rook] = false;
 
 		assert(!captured);
 	}
@@ -230,7 +230,7 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	array<bool, NumCastlingSides> castlings;
 	for (CastlingSide side : AllCastlingSides())
-		castlings[side] = (_kings[color] != to) && (_board[to]->square(true) != Castlings[color][side].rook);
+		castlings[side] = (m_kings[color] != to) && (m_board[to]->initialSquare() != Castlings[color][side].rook);
 
 	/* -- Return new state -- */
 
@@ -247,16 +247,16 @@ void Game::undo(const State& state)
 
 	/* -- Update board position -- */
 
-	_board[from] = _board[to];
-	_board[to] = state.captured();
+	m_board[from] = m_board[to];
+	m_board[to] = state.captured();
 
-	_position[color][to] = false;
-	_position[color][from] = true;
+	m_position[color][to] = false;
+	m_position[color][from] = true;
 	if (state.captured())
-		_position[!color][to] = true;
+		m_position[!color][to] = true;
 
-	if (_kings[color] == to)
-		_kings[color] = from;
+	if (m_kings[color] == to)
+		m_kings[color] = from;
 
 	/* -- Handle castling -- */
 
@@ -265,11 +265,11 @@ void Game::undo(const State& state)
 		const Square rook = Castlings[color][state.castling()].rook;
 		const Square free = Castlings[color][state.castling()].free;
 
-		_board[rook] = _board[free];
-		_board[free] = nullptr;
+		m_board[rook] = m_board[free];
+		m_board[free] = nullptr;
 
-		_position[color][rook] = true;
-		_position[color][free] = false;
+		m_position[color][rook] = true;
+		m_position[color][free] = false;
 	}
 }
 
@@ -277,10 +277,10 @@ void Game::undo(const State& state)
 
 bool Game::checks(Glyph glyph, Square from, Square king) const
 {
-	const Squares blockers = _position[White] | _position[Black];
+	const Squares blockers = m_position[White] | m_position[Black];
 
-	if (_captures[glyph][from][king])
-		if (!(_constraints[glyph][from][king] & blockers))
+	if (m_captures[glyph][from][king])
+		if (!(m_constraints[glyph][from][king] & blockers))
 			return true;
 
 	return false;
@@ -297,10 +297,10 @@ bool Game::checked(Square king, Color color) const
 
 bool Game::checked(Square king, Square free, Color color) const
 {
-	const Squares enemies = _lines[color][king][free] & _position[!color];
+	const Squares enemies = m_lines[color][king][free] & m_position[!color];
 
 	for (Square from : ValidSquares(enemies))
-		if (checks(_board[from]->glyph(true), from, king))
+		if (checks(m_board[from]->initialGlyph(), from, king))
 			return true;
 
 	return false;
@@ -312,17 +312,17 @@ bool Game::solved() const
 {
 	/* -- Check number of moves -- */
 
-	assert(_states.size() == _problem.moves());
+	assert(m_states.size() == m_problem.moves());
 
 	/* -- Quick check for diagram layout -- */
 
-	if ((_position[White] | _position[Black]) != _diagram)
+	if ((m_position[White] | m_position[Black]) != m_diagram)
 		return false;
 
 	/* -- Check all pieces -- */
 
-	for (Square square : ValidSquares(_diagram))
-		if (_board[square]->glyph() != _problem.diagramPosition(square))
+	for (Square square : ValidSquares(m_diagram))
+		if (m_board[square]->glyph() != m_problem.diagramPosition(square))
 			return false;
 
 	/* -- Solution found -- */
@@ -334,11 +334,11 @@ bool Game::solved() const
 
 void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 {
-	array<Glyph, NumSquares> diagram = _problem.initialPosition();
+	array<Glyph, NumSquares> diagram = m_problem.initialPosition();
 
 	for (int m = 0; m < nmoves; m++)
 	{
-		const State& state = *_states[m];
+		const State& state = *m_states[m];
 		EUCLIDE_Move *move = moves + m;
 
 		move->glyph = static_cast<EUCLIDE_Glyph>(diagram[state.from()]);
@@ -367,33 +367,33 @@ void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 
 Game::State::State(const Problem& problem)
 {
-	_castlings = problem.castlings();
-	_enpassant = Nowhere;
-	_color = problem.turn();
-	_check = false;  // TODO
+	m_castlings = problem.castlings();
+	m_enpassant = Nowhere;
+	m_color = problem.turn();
+	m_check = false;  // TODO
 
-	_castling = NoCastling;
-	_captured = nullptr;
-	_from = Nowhere;
-	_to = Nowhere;
+	m_castling = NoCastling;
+	m_captured = nullptr;
+	m_from = Nowhere;
+	m_to = Nowhere;
 }
 
 /* -------------------------------------------------------------------------- */
 
 Game::State::State(const State& state, Square from, Square to, const Piece *captured, CastlingSide castling, const array<bool, NumCastlingSides>& castlings)
 {
-	_castlings = state._castlings;
+	m_castlings = state.m_castlings;
 	for (CastlingSide side : AllCastlingSides())
-		_castlings[state._color][side] = _castlings[state._color][side] && castlings[side];
+		m_castlings[state.m_color][side] = m_castlings[state.m_color][side] && castlings[side];
 
-	_enpassant = Nowhere;
-	_color = !state._color;
-	_check = false;
+	m_enpassant = Nowhere;
+	m_color = !state.m_color;
+	m_check = false;
 
-	_castling = castling;
-	_captured = captured;
-	_from = from;
-	_to = to;
+	m_castling = castling;
+	m_captured = captured;
+	m_from = from;
+	m_to = to;
 }
 
 /* -------------------------------------------------------------------------- */

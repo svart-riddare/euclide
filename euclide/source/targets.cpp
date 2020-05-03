@@ -10,31 +10,31 @@ namespace Euclide
 
 Target::Target(Glyph glyph, Square square)
 {
-	_glyph = glyph;
-	_color = Euclide::color(glyph);
+	m_glyph = glyph;
+	m_color = Euclide::color(glyph);
 
-	_square = square;
+	m_square = square;
 
-	_requiredMoves = 0;
-	_requiredCaptures = 0;
+	m_requiredMoves = 0;
+	m_requiredCaptures = 0;
 
-	_men.set();
-	_man = -1;
+	m_men.set();
+	m_man = -1;
 }
 
 /* -------------------------------------------------------------------------- */
 
 const Men& Target::updatePossibleMen(const Men& men)
 {
-	_men &= men;
+	m_men &= men;
 
 	if (men.count() == 1)
-		_man = men.first();
+		m_man = men.first();
 
 	if (!men)
 		throw NoSolution;
 
-	return _men;
+	return m_men;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -45,14 +45,14 @@ bool Target::applyPigeonHolePrinciple(Targets& targets) const
 
 	Squares squares;
 	for (const Target& target : targets)
-		if (target.men() == _men)
+		if (target.men() == m_men)
 			squares.set(target.square());
 
-	if (squares.count() >= _men.count())
+	if (squares.count() >= m_men.count())
 		for (Target& target : targets)
-			if (target.men() != _men)
-				if (target.men() & _men)
-					updated = (target.updatePossibleMen(~_men), true);
+			if (target.men() != m_men)
+				if (target.men() & m_men)
+					updated = (target.updatePossibleMen(~m_men), true);
 
 	return updated;
 }
@@ -80,25 +80,25 @@ bool Targets::update()
 
 TargetPartition::TargetPartition()
 {
-	_requiredMoves = 0;
-	_requiredCaptures = 0;
+	m_requiredMoves = 0;
+	m_requiredCaptures = 0;
 
-	_unassignedRequiredMoves = 0;
-	_unassignedRequiredCaptures = 0;
+	m_unassignedRequiredMoves = 0;
+	m_unassignedRequiredCaptures = 0;
 }
 
 /* -------------------------------------------------------------------------- */
 
 bool TargetPartition::merge(const Target& target)
 {
-	if (_men && !(_men & target.men()))
+	if (m_men && !(m_men & target.men()))
 		return false;
 
-	_squares.set(target.square());
-	_men |= target.men();
+	m_squares.set(target.square());
+	m_men |= target.men();
 
-	_requiredMoves += target.requiredMoves();
-	_requiredCaptures += target.requiredCaptures();
+	m_requiredMoves += target.requiredMoves();
+	m_requiredCaptures += target.requiredCaptures();
 
 	return true;
 }
@@ -110,11 +110,11 @@ void TargetPartition::assign(const Pieces& pieces)
 	/* -- List men and target squares -- */
 
 	Square squares[MaxPieces]; int s = 0;
-	for (Square square : ValidSquares(_squares))
+	for (Square square : ValidSquares(m_squares))
 		squares[s++] = square;
 
 	const Piece *men[MaxPieces]; int m = 0;
-	for (Man man : ValidMen(_men))
+	for (Man man : ValidMen(m_men))
 		men[m++] = &pieces[man];
 
 	if (m < s)
@@ -128,7 +128,7 @@ void TargetPartition::assign(const Pieces& pieces)
 	do
 	{
 		int requiredMoves = 0, requiredCaptures = 0;
-		
+
 		for (int k = 0; k < s; k++)
 		{
 			requiredMoves += men[k]->requiredMoves(squares[k]);
@@ -138,15 +138,15 @@ void TargetPartition::assign(const Pieces& pieces)
 		xstd::minimize(minRequiredMoves, requiredMoves);
 		xstd::minimize(minRequiredCaptures, requiredCaptures);
 
-		if ((minRequiredMoves <= _requiredMoves) && (minRequiredCaptures <= _requiredCaptures))
-			break;		
+		if ((minRequiredMoves <= m_requiredMoves) && (minRequiredCaptures <= m_requiredCaptures))
+			break;
 
 	} while (std::next_permutation(squares, squares + s));
 
 	/* -- Update required moves and captures -- */
 
-	assert(minRequiredMoves >= _requiredMoves);
-	assert(minRequiredCaptures >= _requiredCaptures);
+	assert(minRequiredMoves >= m_requiredMoves);
+	assert(minRequiredCaptures >= m_requiredCaptures);
 
 	int assignedMoves = 0, assignedCaptures = 0;
 	for (int k = 0; k < m; k++)
@@ -155,11 +155,11 @@ void TargetPartition::assign(const Pieces& pieces)
 		assignedCaptures += men[k]->requiredCaptures();
 	}
 
-	_unassignedRequiredMoves = minRequiredMoves - assignedMoves;
-	_unassignedRequiredCaptures = minRequiredCaptures - assignedCaptures;
+	m_unassignedRequiredMoves = minRequiredMoves - assignedMoves;
+	m_unassignedRequiredCaptures = minRequiredCaptures - assignedCaptures;
 
-	_requiredMoves = std::max(_requiredMoves, minRequiredMoves);
-	_requiredCaptures = std::max(_requiredCaptures, minRequiredCaptures);
+	m_requiredMoves = std::max(m_requiredMoves, minRequiredMoves);
+	m_requiredCaptures = std::max(m_requiredCaptures, minRequiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -194,27 +194,27 @@ TargetPartitions::TargetPartitions(const Pieces& pieces, const Targets& targets)
 
 	/* -- Assign required moves and captures -- */
 
-	_requiredMoves = 0;
-	_requiredCaptures = 0;
-	_unassignedRequiredMoves = 0;
-	_unassignedRequiredCaptures = 0;
+	m_requiredMoves = 0;
+	m_requiredCaptures = 0;
+	m_unassignedRequiredMoves = 0;
+	m_unassignedRequiredCaptures = 0;
 
 	for (TargetPartition& partition : *this)
 	{
 		partition.assign(pieces);
 
-		_requiredMoves += partition.requiredMoves();
-		_requiredCaptures += partition.requiredCaptures();
-		_unassignedRequiredMoves += partition.unassignedRequiredMoves();
-		_unassignedRequiredCaptures += partition.unassignedRequiredCaptures();
+		m_requiredMoves += partition.requiredMoves();
+		m_requiredCaptures += partition.requiredCaptures();
+		m_unassignedRequiredMoves += partition.unassignedRequiredMoves();
+		m_unassignedRequiredCaptures += partition.unassignedRequiredCaptures();
 	}
 
 	/* -- Fill quick access map -- */
 
-	_map.fill(&_null);
+	m_map.fill(&m_null);
 	for (const TargetPartition& partition : *this)
 		for (Man man : ValidMen(partition.men()))
-			_map[man] = &partition;
+			m_map[man] = &partition;
 }
 
 /* -------------------------------------------------------------------------- */

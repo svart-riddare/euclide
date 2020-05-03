@@ -9,7 +9,7 @@ namespace Euclide
 /* -------------------------------------------------------------------------- */
 /* -- Constants                                                            -- */
 /* -------------------------------------------------------------------------- */
-	
+
 static const int MaxPieces = 32;
 static const int MaxMoves = 128;
 
@@ -62,7 +62,7 @@ typedef EnumRange<Species, NumSpecies> AllSpecies;
 /* -- Variant                                                              -- */
 /* -------------------------------------------------------------------------- */
 
-typedef enum { Orthodox, Monochromatic, Bichromatic, Grid, Cylinder, NumVariants } Variant;
+typedef enum { Orthodox, Monochromatic, Bichromatic, Grid, Cylinder, Glasgow, NumVariants } Variant;
 static_assert(NumVariants == int(EUCLIDE_NUM_VARIANTS));
 
 typedef EnumRange<Variant, NumVariants> AllVariants;

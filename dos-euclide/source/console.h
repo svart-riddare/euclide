@@ -34,9 +34,9 @@ class Console
 
 	public :
 		inline operator const EUCLIDE_Callbacks *() const
-			{ return &_callbacks; }
+			{ return &m_callbacks; }
 		inline bool operator!() const
-			{ return !_valid || _abort; }
+			{ return !m_valid || m_abort; }
 
 	public :
 		void open(const char *inputFileName);
@@ -61,20 +61,20 @@ class Console
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
 
 	private :
-		EUCLIDE_Callbacks _callbacks;    /**< Euclide engine callbacks. */
-		Output _output;                  /**< Output file for solving results. */
-		Timer _timer;                    /**< Timer use to output solving time. */
-		
-		mutable int _solutions;          /**< Number of distinct solutions found. */
+		EUCLIDE_Callbacks m_callbacks;    /**< Euclide engine callbacks. */
+		Output m_output;                  /**< Output file for solving results. */
+		Timer m_timer;                    /**< Timer use to output solving time. */
+
+		mutable int m_solutions;          /**< Number of distinct solutions found. */
 
 	protected :
-		const Strings& _strings;         /**< Constant strings. */
+		const Strings& m_strings;         /**< Constant strings. */
 
-		int _width;                      /**< Console width, in characters. */
-		int _height;                     /**< Console height, in characters. */
+		int m_width;                      /**< Console width, in characters. */
+		int m_height;                     /**< Console height, in characters. */
 
-		bool _valid;                     /**< Set unless console failed to initialize. */
-		bool _abort;                     /**< Set when the user hit ESC to abort solving. */
+		bool m_valid;                     /**< Set unless console failed to initialize. */
+		bool m_abort;                     /**< Set when the user hit ESC to abort solving. */
 };
 
 /* -------------------------------------------------------------------------- */

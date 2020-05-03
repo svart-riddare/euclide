@@ -7,43 +7,43 @@ WinConsole::WinConsole(const Strings& strings)
 {
 	/* -- Initialize console handles -- */
 
-	_output = GetStdHandle(STD_OUTPUT_HANDLE);
-	_input = GetStdHandle(STD_INPUT_HANDLE);
+	m_output = GetStdHandle(STD_OUTPUT_HANDLE);
+	m_input = GetStdHandle(STD_INPUT_HANDLE);
 
-	if ((_output == INVALID_HANDLE_VALUE) || (_input == INVALID_HANDLE_VALUE))
+	if ((m_output == INVALID_HANDLE_VALUE) || (m_input == INVALID_HANDLE_VALUE))
 		return;
 
-	GetConsoleScreenBufferInfo(_output, &_initialState);
-	_width = 2 * (std::min<int>(_initialState.dwSize.X, 120) / 2);
-	_height = std::min<int>(_initialState.dwSize.Y, 25);
+	GetConsoleScreenBufferInfo(m_output, &m_initialState);
+	m_width = 2 * (std::min<int>(m_initialState.dwSize.X, 120) / 2);
+	m_height = std::min<int>(m_initialState.dwSize.Y, 25);
 
-	if ((_width < 64) || (_height < 25))
+	if ((m_width < 64) || (m_height < 25))
 		return;
 
-	GetConsoleMode(_output, &_initialOutputMode);
-	GetConsoleMode(_input, &_initialInputMode);
-	SetConsoleMode(_input, ENABLE_PROCESSED_INPUT);
-		
+	GetConsoleMode(m_output, &m_initialOutputMode);
+	GetConsoleMode(m_input, &m_initialInputMode);
+	SetConsoleMode(m_input, ENABLE_PROCESSED_INPUT);
+
 	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(_output, &cursorInfo);
-	_initialCursorVisibility = cursorInfo.bVisible;
+	GetConsoleCursorInfo(m_output, &cursorInfo);
+	m_initialCursorVisibility = cursorInfo.bVisible;
 	cursorInfo.bVisible = FALSE;
-	SetConsoleCursorInfo(_output, &cursorInfo);
+	SetConsoleCursorInfo(m_output, &cursorInfo);
 
-	const SMALL_RECT window = { 0, 0, _width - 1, _height - 1};
-	if ((_initialState.srWindow.Bottom < window.Bottom) || (_initialState.srWindow.Right < window.Right) || (_initialState.srWindow.Left > window.Left) || (_initialState.srWindow.Top > window.Top))
-		SetConsoleWindowInfo(_output, TRUE, &window);
+	const SMALL_RECT window = { 0, 0, m_width - 1, m_height - 1};
+	if ((m_initialState.srWindow.Bottom < window.Bottom) || (m_initialState.srWindow.Right < window.Right) || (m_initialState.srWindow.Left > window.Left) || (m_initialState.srWindow.Top > window.Top))
+		SetConsoleWindowInfo(m_output, TRUE, &window);
 
 	/* -- Allocate output buffer -- */
 
-	_characters = new CHAR_INFO[16 * _width];
+	m_characters = new CHAR_INFO[16 * m_width];
 
 	/* -- Clear input & output -- */
 
-	_valid = true;
+	m_valid = true;
 	clear();
 
-	FlushConsoleInputBuffer(_input);
+	FlushConsoleInputBuffer(m_input);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -53,32 +53,32 @@ WinConsole::~WinConsole()
 	/* -- Restore console output -- */
 
 	COORD cursor = { 0, 8 };
-	SetConsoleCursorPosition(_output, cursor);
+	SetConsoleCursorPosition(m_output, cursor);
 
-	const int width = _initialState.dwSize.X;
-	const int height = _initialState.dwSize.Y;
+	const int width = m_initialState.dwSize.X;
+	const int height = m_initialState.dwSize.Y;
 
 	DWORD written;
-	FillConsoleOutputAttribute(_output, _initialState.wAttributes, width * (height - 8), cursor, &written);
-	FillConsoleOutputCharacter(_output, ' ', width * (height - 8), cursor, &written);
+	FillConsoleOutputAttribute(m_output, m_initialState.wAttributes, width * (height - 8), cursor, &written);
+	FillConsoleOutputCharacter(m_output, ' ', width * (height - 8), cursor, &written);
 
 	cursor.Y++;
 
-	SetConsoleWindowInfo(_output, TRUE, &_initialState.srWindow);
-	SetConsoleTextAttribute(_output, _initialState.wAttributes);
-	SetConsoleCursorPosition(_output, cursor);
+	SetConsoleWindowInfo(m_output, TRUE, &m_initialState.srWindow);
+	SetConsoleTextAttribute(m_output, m_initialState.wAttributes);
+	SetConsoleCursorPosition(m_output, cursor);
 
 	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(_output, &cursorInfo);
-	cursorInfo.bVisible = _initialCursorVisibility;
-	SetConsoleCursorInfo(_output, &cursorInfo);
+	GetConsoleCursorInfo(m_output, &cursorInfo);
+	cursorInfo.bVisible = m_initialCursorVisibility;
+	SetConsoleCursorInfo(m_output, &cursorInfo);
 
-	SetConsoleMode(_output, _initialOutputMode);
-	SetConsoleMode(_input, _initialInputMode);
+	SetConsoleMode(m_output, m_initialOutputMode);
+	SetConsoleMode(m_input, m_initialInputMode);
 
 	/* -- Delete allocated resources -- */
 
-	delete[] _characters;
+	delete[] m_characters;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -86,17 +86,17 @@ WinConsole::~WinConsole()
 void WinConsole::clear()
 {
 	COORD cursor = { 0, 0 };
-	SetConsoleCursorPosition(_output, cursor);
+	SetConsoleCursorPosition(m_output, cursor);
 
-	const int width = _initialState.dwSize.X;
-	const int height = _initialState.dwSize.Y;
+	const int width = m_initialState.dwSize.X;
+	const int height = m_initialState.dwSize.Y;
 
 	DWORD written;
-	FillConsoleOutputCharacter(_output, ' ', width * height, cursor, &written);
-	FillConsoleOutputAttribute(_output, Colors::Standard, width * height, cursor, &written);
+	FillConsoleOutputCharacter(m_output, ' ', width * height, cursor, &written);
+	FillConsoleOutputAttribute(m_output, Colors::Standard, width * height, cursor, &written);
 
-	SetConsoleTextAttribute(_output, _initialState.wAttributes);
-	SetConsoleCursorPosition(_output, cursor);
+	SetConsoleTextAttribute(m_output, m_initialState.wAttributes);
+	SetConsoleCursorPosition(m_output, cursor);
 
 	Console::clear();
 }
@@ -107,7 +107,7 @@ bool WinConsole::wait()
 {
 	Console::wait();
 
-	FlushConsoleInputBuffer(_input);
+	FlushConsoleInputBuffer(m_input);
 
 	DWORD records = 0;
 	INPUT_RECORD record;
@@ -115,21 +115,21 @@ bool WinConsole::wait()
 
 	record.EventType = 0;
 	while ((record.EventType != KEY_EVENT) || !record.Event.KeyEvent.bKeyDown)
-		if (!ReadConsoleInput(_input, &record, 1, &records))
-			return _abort = true, false;
+		if (!ReadConsoleInput(m_input, &record, 1, &records))
+			return m_abort = true, false;
 
 	if (record.Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
-		_abort = true;
+		m_abort = true;
 
-	write(L"", _width - 1, true, 0, _height - 1, Colors::Standard);
-	return !_abort;
+	write(L"", m_width - 1, true, 0, m_height - 1, Colors::Standard);
+	return !m_abort;
 }
 
 /* -------------------------------------------------------------------------- */
 
 void WinConsole::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	const wchar_t *glyphs = _strings[Strings::GlyphSymbols];
+	const wchar_t *glyphs = m_strings[Strings::GlyphSymbols];
 	CHAR_INFO chessboard[64];
 
 	for (int square = 0; square < 64; square++)
@@ -141,7 +141,7 @@ void WinConsole::displayProblem(const EUCLIDE_Problem& problem) const
 		const int column = square / 8;
 		const int row = square % 8;
 		const int index = 8 * (7 - row) + column;
-		
+
 		chessboard[index].Char.UnicodeChar = toupper(glyphs[glyph]);
 		chessboard[index].Attributes = (((column & 1) ^ (row & 1)) ? Colors::LightSquares : Colors::DarkSquares);
 		chessboard[index].Attributes |= (isWhiteGlyph ? Colors::WhitePieces : Colors::BlackPieces);
@@ -150,7 +150,7 @@ void WinConsole::displayProblem(const EUCLIDE_Problem& problem) const
 	const COORD size = { 8, 8 };
 	const COORD corner = { 0, 0 };
 	SMALL_RECT window = { 0, 0, 7, 7 };
-	WriteConsoleOutput(_output, chessboard, size, corner, &window);
+	WriteConsoleOutput(m_output, chessboard, size, corner, &window);
 
 	Console::displayProblem(problem);
 }
@@ -159,9 +159,9 @@ void WinConsole::displayProblem(const EUCLIDE_Problem& problem) const
 
 void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	const wchar_t *symbols = _strings[Strings::GlyphSymbols];
-	CHAR_INFO *characters = this->_characters;
-	
+	const wchar_t *symbols = m_strings[Strings::GlyphSymbols];
+	CHAR_INFO *characters = this->m_characters;
+
 	for (int piece = 0; piece < 16; piece++)
 	{
 		for (int color = 0; color <= 1; color++)
@@ -170,7 +170,7 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			/* -- Set default attributes and clear area -- */
 
-			for (int k = 0; k < _width / 2; k++)
+			for (int k = 0; k < m_width / 2; k++)
 			{
 				characters[k].Attributes = color ? (deduction.captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction.captured ? Colors::WhiteCaptures : Colors::WhiteMoves);
 				characters[k].Char.UnicodeChar = ' ';
@@ -185,7 +185,7 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 				if (deduction.requiredMoves > 9)
 					characters[1].Char.UnicodeChar = '0' + (deduction.requiredMoves / 10 % 10);
-				
+
 				characters[2].Char.UnicodeChar = '0' + deduction.requiredMoves % 10;
 			}
 
@@ -257,16 +257,16 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			/* -- Move on -- */
 
-			characters += _width / 2;
+			characters += m_width / 2;
 		}
 	}
 
 	/* -- Output to screen -- */
 
-	const COORD size = { _width, 16 };
+	const COORD size = { m_width, 16 };
 	const COORD zero = { 0, 0 };
-	SMALL_RECT window = { 0, 8, _width - 1, _height - 1 };
-	WriteConsoleOutput(_output, _characters, size, zero, &window);
+	SMALL_RECT window = { 0, 8, m_width - 1, m_height - 1 };
+	WriteConsoleOutput(m_output, m_characters, size, zero, &window);
 
 	Console::displayDeductions(deductions);
 }
@@ -278,9 +278,9 @@ void WinConsole::write(const wchar_t *string, int x, int y, Color color) const
 	DWORD written = 0;
 	const COORD position = { x, y };
 
-	SetConsoleTextAttribute(_output, color);
-	SetConsoleCursorPosition(_output, position);
-	WriteConsole(_output, string, wcslen(string), &written, NULL);
+	SetConsoleTextAttribute(m_output, color);
+	SetConsoleCursorPosition(m_output, position);
+	WriteConsole(m_output, string, wcslen(string), &written, NULL);
 
 	Console::write(string, x, y, color);
 }

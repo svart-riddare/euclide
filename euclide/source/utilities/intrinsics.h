@@ -24,7 +24,7 @@ static inline bool bt(uint64_t bits, int bit)
 #ifdef EUCLIDE_WIN_IMPLEMENTATION
 	return _bittest64(reinterpret_cast<const int64_t *>(&bits), bit) ? true : false;
 #else
-	return ((bits >> bit) & 1) ? true : false; 
+	return ((bits >> bit) & 1) ? true : false;
 #endif
 }
 
@@ -140,11 +140,11 @@ static inline int popcnt(uint32_t bits)
 #ifdef EUCLIDE_LINUX_IMPLEMENTATION
 	return __builtin_popcount(bits);
 #else
-	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 }; 
+	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 	int count = 0;
-	for ( ; bits; bits >>= 4) 
-		count += popcnt[bits & 15]; 
+	for ( ; bits; bits >>= 4)
+		count += popcnt[bits & 15];
 
 	return count;
 #endif
@@ -159,11 +159,11 @@ static inline int popcnt(uint64_t bits)
 #ifdef EUCLIDE_LINUX_IMPLEMENTATION
 	return __builtin_popcountl(bits);
 #else
-	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 }; 
+	static const int8_t popcnt[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 	int count = 0;
-	for ( ; bits; bits >>= 4) 
-		count += popcnt[bits & 15]; 
+	for ( ; bits; bits >>= 4)
+		count += popcnt[bits & 15];
 
 	return count;
 #endif

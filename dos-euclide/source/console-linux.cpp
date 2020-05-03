@@ -32,15 +32,15 @@ LinuxConsole::LinuxConsole(const Strings& strings)
 
 	/* -- Get console width & height -- */
 
-	_width = getmaxx(stdscr);
-	_height = getmaxy(stdscr);
+	m_width = getmaxx(stdscr);
+	m_height = getmaxy(stdscr);
 
-	if ((_width < 64) || (_height < 25))
+	if ((m_width < 64) || (m_height < 25))
 		return;
 
 	/* -- Clear input & output -- */
 
-	_valid = true;
+	m_valid = true;
 	clear();
 }
 
@@ -57,9 +57,9 @@ LinuxConsole::~LinuxConsole()
 
 void LinuxConsole::clear()
 {
-	const std::wstring blank(_width, ' ');
+	const std::wstring blank(m_width, ' ');
 
-	for (int y = 0; y < _height; y++)
+	for (int y = 0; y < m_height; y++)
 		write(blank.c_str(), 0, y, Colors::Standard);
 
 	Console::clear();
@@ -72,17 +72,17 @@ bool LinuxConsole::wait()
 	Console::wait();
 
 	if (getch() == 0x1B)
-		_abort = true;
+		m_abort = true;
 
-	write(L"", _width - 1, true, 0, _height - 1, Colors::Standard);
-	return !_abort;
+	write(L"", m_width - 1, true, 0, m_height - 1, Colors::Standard);
+	return !m_abort;
 }
 
 /* -------------------------------------------------------------------------- */
 
 void LinuxConsole::displayProblem(const EUCLIDE_Problem& problem) const
 {
-	const wchar_t *glyphs = _strings[Strings::GlyphSymbols];
+	const wchar_t *glyphs = m_strings[Strings::GlyphSymbols];
 
 	for (int square = 0; square < 64; square++)
 	{
@@ -102,20 +102,20 @@ void LinuxConsole::displayProblem(const EUCLIDE_Problem& problem) const
 
 void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	const wchar_t *symbols = _strings[Strings::GlyphSymbols];
+	const wchar_t *symbols = m_strings[Strings::GlyphSymbols];
 
 	for (int piece = 0; piece < 16; piece++)
 	{
 		for (int color = 0; color <= 1; color++)
 		{
 			const EUCLIDE_Deduction& deduction = color ? deductions.blackPieces[piece] : deductions.whitePieces[piece];
-			const int x = color * _width / 2;
+			const int x = color * m_width / 2;
 			const int y = 8 + piece;
 
 			/* - Clear area -- */
 
 			move(y, x);
-			for (int k = 0; k < _width / 2; k++)
+			for (int k = 0; k < m_width / 2; k++)
 				addch(' ' | Colors::Standard);
 
 			/* -- Print required moves -- */

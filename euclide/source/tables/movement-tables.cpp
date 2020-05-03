@@ -19,14 +19,14 @@ static constexpr uint64_t move(Square square, int x, int y, bool cylindrical)
 
 static constexpr uint64_t leaper(Square square, int x, int y, bool cylindrical)
 {
-	return 
-		move(square, +x, +y, cylindrical) | 
+	return
+		move(square, +x, +y, cylindrical) |
 		move(square, -x, +y, cylindrical) |
 		move(square, +x, -y, cylindrical) |
 		move(square, -x, -y, cylindrical) |
 		move(square, +y, +x, cylindrical) |
 		move(square, -y, +x, cylindrical) |
-		move(square, +y, -x, cylindrical) | 
+		move(square, +y, -x, cylindrical) |
 		move(square, -y, -x, cylindrical);
 }
 
@@ -80,7 +80,7 @@ static const ArrayOfSquares PawnCaptures[2][NumColors] = { { MOVES(pawn, White, 
 static const Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
 static const Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
 
-static const Squares GridSquares[NumSquares] = 
+static const Squares GridSquares[NumSquares] =
 {
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
@@ -146,7 +146,7 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 			for (Square square : AllSquares())
 				(*moves)[square] = RookMoves[cylindrical][square] | KnightMoves[cylindrical][square];
 			break;
-		case Princess : 
+		case Princess :
 			for (Square square : AllSquares())
 				(*moves)[square] = BishopMoves[cylindrical][square] | KnightMoves[cylindrical][square];
 			break;

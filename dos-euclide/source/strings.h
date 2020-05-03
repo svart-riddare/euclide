@@ -14,25 +14,25 @@ class Strings
 
 	public:
 		Strings();
-		
+
 		inline const wchar_t *operator[](Text text) const
-			{ return _texts[text]; }
+			{ return m_texts[text]; }
 		inline const wchar_t *operator[](Error error) const
-			{ return _errors[error]; }
+			{ return m_errors[error]; }
 		inline const wchar_t *operator[](String string) const
-			{ return _strings[string]; } 
+			{ return m_strings[string]; }
 
 		inline const wchar_t *operator[](EUCLIDE_Status status) const
-			{ return _statuses[status]; }
+			{ return m_statuses[status]; }
 		inline const wchar_t *operator[](EUCLIDE_Message message) const
-			{ return _messages[message]; }
+			{ return m_messages[message]; }
 
 	private:
-		const wchar_t **_texts;           /**< Strings for each text defined above. */
-		const wchar_t **_errors;          /**< Strings for each error defined above. */
-		const wchar_t **_strings;         /**< Strings for each string defined above. */
-		const wchar_t **_statuses;        /**< Strings for Euclide statuses. */
-		const wchar_t **_messages;        /**< Strings for Euclide messages. */
+		const wchar_t **m_texts;           /**< Strings for each text defined above. */
+		const wchar_t **m_errors;          /**< Strings for each error defined above. */
+		const wchar_t **m_strings;         /**< Strings for each string defined above. */
+		const wchar_t **m_statuses;        /**< Strings for Euclide statuses. */
+		const wchar_t **m_messages;        /**< Strings for Euclide messages. */
 };
 
 /* -------------------------------------------------------------------------- */

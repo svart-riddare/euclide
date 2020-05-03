@@ -30,59 +30,63 @@ class Piece
 
 		void bypassObstacles(const Piece& blocker);
 		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
-	
+
 		bool update();
 
 	public :
-		inline Glyph glyph(bool initial = false) const
-			{ return _glyph; }
+		inline Glyph initialGlyph() const
+			{ return m_glyph; }
+		inline Glyph glyph() const
+			{ return m_glyph; }
 		inline Color color() const
-			{ return _color; }
+			{ return m_color; }
 		inline Species species() const
-			{ return _species; }
+			{ return m_species; }
 
 		inline bool royal() const
-			{ return _royal; }
+			{ return m_royal; }
 
 		inline tribool castling(CastlingSide side) const
-			{ return _castling[side]; }
+			{ return m_castling[side]; }
 		inline tribool captured() const
-			{ return _captured; }
+			{ return m_captured; }
 		inline tribool promoted() const
-			{ return _promoted; }
+			{ return m_promoted; }
 
 		inline const Glyphs& glyphs() const
-			{ return _glyphs; }
+			{ return m_glyphs; }
 
-		inline Square square(bool initial = false) const
-			{ return initial ? _initialSquare : _finalSquare; }
+		inline Square initialSquare() const
+			{ return m_initialSquare; }
+		inline Square square() const
+			{ return m_finalSquare; }
 		inline const Squares& squares() const
-			{ return _possibleSquares; }
+			{ return m_possibleSquares; }
 
 		inline int requiredMoves() const
-			{ return _requiredMoves; }
+			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
-			{ return _requiredCaptures; }
+			{ return m_requiredCaptures; }
 
 		inline int requiredMoves(Square square) const
-			{ return _distances[square]; }
+			{ return m_distances[square]; }
 		inline int requiredCaptures(Square square) const
-			{ return _captures[square]; }
+			{ return m_captures[square]; }
 
 		inline int nmoves() const
-			{ return xstd::sum(_moves, 0, [](Squares squares) { return squares.count(); }); }
+			{ return xstd::sum(m_moves, 0, [](Squares squares) { return squares.count(); }); }
 
 		inline const Squares& moves(Square from) const
-			{ return _moves[from]; }
+			{ return m_moves[from]; }
 		inline Squares captures(Square from) const
-			{ return _xmoves ? (*_xmoves)[from] : Squares(); }
+			{ return m_xmoves ? (*m_xmoves)[from] : Squares(); }
 		inline Squares constraints(Square from, Square to, bool capture) const
-			{ return (capture && _xconstraints) ? (*_xconstraints)[from][to] : (*_constraints)[from][to]; }
+			{ return (capture && m_xconstraints) ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]; }
 
 		inline const Squares& stops() const
-			{ return _stops; }
+			{ return m_stops; }
 		inline const Squares& route() const
-			{ return _route; }
+			{ return m_route; }
 
 	public :
 		inline bool operator==(const Piece& piece) const
@@ -99,13 +103,13 @@ class Piece
 
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
-		
+
 	protected :
 		struct State
 		{
 			Piece& piece;                        /**< Piece referenced by this state. */
 			bool teleportation;                  /**< Piece can be teleported (castling rook). */
-			
+
 			int availableMoves;                  /**< Number of available moves for this piece. */
 			int requiredMoves;                   /**< Number of moves required for this piece. */
 			int playedMoves;                     /**< Number of moves currently played. */
@@ -116,10 +120,10 @@ class Piece
 
 			array<int, NumSquares> distances;    /**< Moves required to reach each square, assuming goals are reached. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece._initialSquare != piece._castlingSquare) && !piece._distances[piece._castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece._initialSquare)
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece.m_initialSquare != piece.m_castlingSquare) && !piece.m_distances[piece.m_castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece.m_initialSquare)
 			{
 				distances.fill(Infinity);
-				distances[piece._initialSquare] = 0;
+				distances[piece.m_initialSquare] = 0;
 			}
 		};
 
@@ -127,48 +131,48 @@ class Piece
 		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
 	private :
-		Glyph _glyph;                                 /**< Piece's glyph. */
-		Color _color;                                 /**< Piece's color, implicit from glyph. */
-		Species _species;                             /**< Piece type. */
+		Glyph m_glyph;                                 /**< Piece's glyph. */
+		Color m_color;                                 /**< Piece's color, implicit from glyph. */
+		Species m_species;                             /**< Piece type. */
 
-		bool _royal;                                  /**< A royal piece (the king) can not be captured and may not be left in check. */
+		bool m_royal;                                  /**< A royal piece (the king) can not be captured and may not be left in check. */
 
-		Square _initialSquare;                        /**< Piece's initial square. */
-		Square _castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
-		Square _finalSquare;                          /**< Piece's final square, if known. */
+		Square m_initialSquare;                        /**< Piece's initial square. */
+		Square m_castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
+		Square m_finalSquare;                          /**< Piece's final square, if known. */
 
-		tribool _castling[NumCastlingSides];          /**< Set if the piece has performed castling. */
-		tribool _captured;                            /**< Set if the piece has been captured. */
-		tribool _promoted;                            /**< Set if the piece has been promoted. */
+		tribool m_castling[NumCastlingSides];          /**< Set if the piece has performed castling. */
+		tribool m_captured;                            /**< Set if the piece has been captured. */
+		tribool m_promoted;                            /**< Set if the piece has been promoted. */
 
-		Glyphs _glyphs;                               /**< Piece's possible glyphs after promotion. */
+		Glyphs m_glyphs;                               /**< Piece's possible glyphs after promotion. */
 
-		Squares _possibleSquares;                     /**< Possible final squares of this piece. */
-		Squares _possibleCaptures;                    /**< Possible captures made by this piece. */
-		int _availableMoves;                          /**< Number of moves available for this piece. */
-		int _availableCaptures;                       /**< Number of captures available for this piece. */
-		int _requiredMoves;                           /**< Minimum number of moves required by this piece. */
-		int _requiredCaptures;                        /**< Minimum number of captures performed by this piece. */
+		Squares m_possibleSquares;                     /**< Possible final squares of this piece. */
+		Squares m_possibleCaptures;                    /**< Possible captures made by this piece. */
+		int m_availableMoves;                          /**< Number of moves available for this piece. */
+		int m_availableCaptures;                       /**< Number of captures available for this piece. */
+		int m_requiredMoves;                           /**< Minimum number of moves required by this piece. */
+		int m_requiredCaptures;                        /**< Minimum number of captures performed by this piece. */
 
-		array<int, NumSquares> _distances;            /**< Number of moves required to reach each square. */
-		array<int, NumSquares> _rdistances;           /**< Number of moves required to reach one of the final squares. */
-		array<int, NumSquares> _captures;             /**< Number of captures required to reach each square. */
-		array<int, NumSquares> _rcaptures;            /**< Number of moves required to reach one of the final squares. */
-	
-		ArrayOfSquares _moves;                        /**< Set of legal moves. */
-		const ArrayOfSquares *_xmoves;                /**< Set of moves that must be captures, or null if there are no restrictions. */
-		const MatrixOfSquares *_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */
-		const MatrixOfSquares *_xconstraints;         /**< Capture move constraints, i.e. squares that must be empty for each possible capture. */
-		const ArrayOfSquares *_checks;                /**< For each square, set of squares on which the enemy king is in check. */
-		
+		array<int, NumSquares> m_distances;            /**< Number of moves required to reach each square. */
+		array<int, NumSquares> m_rdistances;           /**< Number of moves required to reach one of the final squares. */
+		array<int, NumSquares> m_captures;             /**< Number of captures required to reach each square. */
+		array<int, NumSquares> m_rcaptures;            /**< Number of moves required to reach one of the final squares. */
+
+		ArrayOfSquares m_moves;                        /**< Set of legal moves. */
+		const ArrayOfSquares *m_xmoves;                /**< Set of moves that must be captures, or null if there are no restrictions. */
+		const MatrixOfSquares *m_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */
+		const MatrixOfSquares *m_xconstraints;         /**< Capture move constraints, i.e. squares that must be empty for each possible capture. */
+		const ArrayOfSquares *m_checks;                /**< For each square, set of squares on which the enemy king is in check. */
+
 		struct Occupied { Squares squares; array<Piece *, NumSquares> pieces; };
-		array<Occupied, NumSquares> _occupied;        /**< Occupied squares, for each square the piece may lie. */
+		array<Occupied, NumSquares> m_occupied;        /**< Occupied squares, for each square the piece may lie. */
 
-		Squares _stops;                               /**< Set of all squares on which the piece may have stopped. */
-		Squares _route;                               /**< Set of all squares the piece may have crossed or stopped. */
-		Squares _threats;                             /**< Set of all squares on which the enemy king is threatened. */
+		Squares m_stops;                               /**< Set of all squares on which the piece may have stopped. */
+		Squares m_route;                               /**< Set of all squares the piece may have crossed or stopped. */
+		Squares m_threats;                             /**< Set of all squares on which the enemy king is threatened. */
 
-		bool _update;                                 /**< Set when deductions must be updated and update() shall return true. */
+		bool m_update;                                 /**< Set when deductions must be updated and update() shall return true. */
 };
 
 /* -------------------------------------------------------------------------- */

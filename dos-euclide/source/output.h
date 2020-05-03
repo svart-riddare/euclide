@@ -27,9 +27,9 @@ class Output
 
 	public :
 		inline operator const EUCLIDE_Callbacks *() const
-			{ return &_callbacks; }
+			{ return &m_callbacks; }
 		inline bool operator!() const
-			{ return !_file; }
+			{ return !m_file; }
 
 	protected :
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
@@ -48,15 +48,15 @@ class Output
 			{ return reinterpret_cast<Output *>(handle)->displaySolution(*solution); }
 
 	private :
-		const Strings& _strings;         /**< Text strings. */
+		const Strings& m_strings;         /**< Text strings. */
 
-		EUCLIDE_Callbacks _callbacks;    /**< Euclide callbacks. */
-		FILE *_file;                     /**< Output file. */
+		EUCLIDE_Callbacks m_callbacks;    /**< Euclide callbacks. */
+		FILE *m_file;                     /**< Output file. */
 
-		Timer _timer;                    /**< Timer used to output total solving time. */
-		mutable double _complexity;      /**< Solving complexity, only the last value is written to file. */
-		mutable int64_t _positions;      /**< Number of positions examined. */
-		mutable int _solutions;          /**< Number of solutions found. */
+		Timer m_timer;                    /**< Timer used to output total solving time. */
+		mutable double m_complexity;      /**< Solving complexity, only the last value is written to file. */
+		mutable int64_t m_positions;      /**< Number of positions examined. */
+		mutable int m_solutions;          /**< Number of solutions found. */
 };
 
 /* -------------------------------------------------------------------------- */

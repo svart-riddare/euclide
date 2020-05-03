@@ -7,14 +7,14 @@
 
 class ForsytheSymbols
 {
-	public : 
+	public :
 		ForsytheSymbols(const wchar_t *symbols);
 
 		inline EUCLIDE_Glyph operator[](char symbol) const
-			{ return _glyphs[std::max<int>('\0', symbol)]; }
+			{ return m_glyphs[std::max<int>('\0', symbol)]; }
 
 	private :
-		EUCLIDE_Glyph _glyphs[CHAR_MAX + 1];    /**< Glyphs associated to characters. */
+		EUCLIDE_Glyph m_glyphs[CHAR_MAX + 1];    /**< Glyphs associated to characters. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -26,13 +26,13 @@ class ForsytheString
 
 	public :
 		inline operator const EUCLIDE_Problem *() const
-			{ return &_problem; }
+			{ return &m_problem; }
 		inline bool operator!() const
-			{ return !_valid; }
+			{ return !m_valid; }
 
 	private :
-		EUCLIDE_Problem _problem;    /**< Problem description. */
-		bool _valid;                 /**< Set if the problem is valid. */
+		EUCLIDE_Problem m_problem;    /**< Problem description. */
+		bool m_valid;                 /**< Set if the problem is valid. */
 };
 
 /* -------------------------------------------------------------------------- */

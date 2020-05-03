@@ -12,7 +12,7 @@
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, bool wait) 
+bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, bool wait)
 {
 	/* -- Parse forsythe string -- */
 
@@ -101,7 +101,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	Strings strings;
 
 	/* -- Initialize console output -- */
-	
+
 	DosConsole console(strings);
 	if (!console)
 		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;

@@ -39,7 +39,7 @@ void TwoPieceCache::add(Square squareA, int movesA, Square squareB, int movesB, 
 				line[1] = entry;
 		}
 		else
-		{ 
+		{
 			if ((movesB < line[2].movesB) || ((movesB == line[2].movesB) && (movesA < line[2].movesA)))
 				line[2] = entry;
 		}
