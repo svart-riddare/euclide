@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\source\euclide.cpp">
     </ClCompile>
     <ClCompile Include="..\..\source\game.cpp" />
+    <ClCompile Include="..\..\source\hashtables.cpp" />
     <ClCompile Include="..\..\source\pieces.cpp" />
     <ClCompile Include="..\..\source\problem.cpp" />
     <ClCompile Include="..\..\source\tables\check-tables.cpp">
@@ -198,6 +199,7 @@
     <ClInclude Include="..\..\source\cache.h" />
     <ClInclude Include="..\..\source\definitions.h" />
     <ClInclude Include="..\..\source\game.h" />
+    <ClInclude Include="..\..\source\hashtables.h" />
     <ClInclude Include="..\..\source\includes.h" />
     <ClInclude Include="..\..\source\pieces.h" />
     <ClInclude Include="..\..\source\problem.h" />

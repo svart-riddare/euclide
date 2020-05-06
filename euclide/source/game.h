@@ -2,6 +2,7 @@
 #define __EUCLIDE_GAME_H
 
 #include "includes.h"
+#include "hashtables.h"
 
 namespace Euclide
 {
@@ -24,7 +25,7 @@ class Game
 
 	protected :
 		class State;
-		void play(const State& state);
+		bool play(const State& state);
 
 		State move(const State& state, Square from, Square to, CastlingSide castling);
 		void undo(const State& state);
@@ -91,9 +92,12 @@ class Game
 		array<const Piece *, NumSquares> m_board;           /**< Current board position. */
 		array<Squares, NumColors> m_position;               /**< Current occupied squares. */
 		array<Square, NumColors> m_kings;                   /**< Current king positions. */
+		HashPosition m_hash;                                /**< Position encoded for hash tables. */
 		Squares m_diagram;                                  /**< Occupied squares to reach. */
 
 		std::vector<const State *> m_states;                /**< Game states, excluding initial state. */
+
+		HashTable m_cache;                                  /**< Cache of already explored positions. */
 
 		int64_t m_positions;                                /**< Number of positions examined. */
 		int m_solutions;                                    /**< Number of solutions found. */

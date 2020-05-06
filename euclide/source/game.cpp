@@ -11,7 +11,7 @@ namespace Euclide
 /* -------------------------------------------------------------------------- */
 
 Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces)
-	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces)
+	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
 {
 	for (Glyph glyph : AllGlyphs())
 		Tables::initializeLegalMoves(&m_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true);
@@ -65,9 +65,17 @@ void Game::play()
 
 /* -------------------------------------------------------------------------- */
 
-void Game::play(const State& _state)
+bool Game::play(const State& _state)
 {
 	m_positions += 1;
+
+	/* -- Early exit if position is in cache -- */
+
+	auto cachable = [&](int moves) { return (moves >= 4) && (moves <= m_problem.moves() - 4); };
+
+	if (cachable(m_states.size()))
+		if (m_cache.contains(m_hash, m_states.size()))
+			return false;
 
 	/* -- Thinking callback -- */
 
@@ -87,7 +95,8 @@ void Game::play(const State& _state)
 	{
 		/* -- Check for solution -- */
 
-		if (solved())
+		const bool solved = this->solved();
+		if (solved)
 		{
 			EUCLIDE_Solution solution;
 			solution.numHalfMoves = m_states.size();
@@ -100,13 +109,15 @@ void Game::play(const State& _state)
 
 		/* -- End recursion -- */
 
-		return;
+		return solved;
 	}
 
 	/* -- Get legal moves -- */
 
 	const Squares position = m_position[White] | m_position[Black];
 	const Color color = _state.color();
+
+	bool solved = false;
 
 	for (Square from : ValidSquares(m_position[color]))
 	{
@@ -171,7 +182,17 @@ void Game::play(const State& _state)
 
 				/* -- Recursive call -- */
 
-				play(state);
+				if (!play(state))
+				{
+					/* -- Add position to cache if it does not lead to a solution -- */
+
+					if (cachable(m_states.size()))
+						m_cache.insert(m_hash, m_states.size());
+				}
+				else
+				{
+					solved = true;
+				}
 			}
 
 			/* -- Undo move -- */
@@ -182,6 +203,8 @@ void Game::play(const State& _state)
 	}
 
 	/* -- Done -- */
+
+	return solved;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -193,6 +216,9 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 	/* -- Update board position -- */
 
 	const Piece *captured = m_board[to];
+
+	m_hash[to] = m_board[from]->glyph();
+	m_hash[from] = Empty;
 
 	m_board[to] = m_board[from];
 	m_board[from] = nullptr;
@@ -213,6 +239,9 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 	{
 		const Square rook = Castlings[color][castling].rook;
 		const Square free = Castlings[color][castling].free;
+
+		m_hash[free] = m_board[rook]->glyph();
+		m_hash[rook] = Empty;
 
 		m_board[free] = m_board[rook];
 		m_board[rook] = nullptr;
@@ -247,6 +276,9 @@ void Game::undo(const State& state)
 
 	/* -- Update board position -- */
 
+	m_hash[from] = m_board[to]->glyph();
+	m_hash[to] = state.captured() ? state.captured()->glyph() : Empty;
+
 	m_board[from] = m_board[to];
 	m_board[to] = state.captured();
 
@@ -264,6 +296,9 @@ void Game::undo(const State& state)
 	{
 		const Square rook = Castlings[color][state.castling()].rook;
 		const Square free = Castlings[color][state.castling()].free;
+
+		m_hash[rook] = m_board[free]->glyph();
+		m_hash[free] = Empty;
 
 		m_board[rook] = m_board[free];
 		m_board[free] = nullptr;
