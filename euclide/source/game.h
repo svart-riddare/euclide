@@ -48,6 +48,8 @@ class Game
 					{ m_check = check; }
 
 			public :
+				inline const array<bool, NumCastlingSides>& castlings(Color color) const
+					{ return m_castlings[color]; }
 				inline bool castling(CastlingSide side) const
 					{ return m_castlings[m_color][side]; }
 				inline bool enpassant(Square square) const

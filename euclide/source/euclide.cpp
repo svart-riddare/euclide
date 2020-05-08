@@ -294,11 +294,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	const EUCLIDE_Deductions deductions = this->deductions();
 
-	if ((m_problem.moves() <= 40) && (deductions.complexity < 20.0))
-	{
 	std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces));
 	game->play();
-	}
 }
 
 /* -------------------------------------------------------------------------- */

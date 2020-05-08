@@ -16,12 +16,31 @@ HashPosition::HashPosition(const Problem& problem)
 
 void HashPosition::set(Square square, Glyph glyph)
 {
-	static_assert(NumGlyphs < 16);
+	static_assert(NumGlyphs <= 16);
+	assert(glyph <= 15);
 
 	if (square & 1)
 		m_glyphs[square >> 1] = (glyph << 4) | (m_glyphs[square >> 1] & 0x0F);
 	else
 		m_glyphs[square >> 1] = (glyph << 0) | (m_glyphs[square >> 1] & 0xF0);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void HashPosition::set(Square square, const array<bool, NumCastlingSides>& castlings)
+{
+	static_assert(NumGlyphs <= 13);
+	static_assert(NumCastlingSides == 2);
+
+	const int value = (castlings[KingSideCastling] ? -1 : 0) + (castlings[QueenSideCastling] ? -2 : 0);
+
+	if (square == Castlings[White][KingSideCastling].from)
+		set(square, value ? Glyph(value & 0x0F) : WhiteKing);
+	else
+	if (square == Castlings[Black][KingSideCastling].from)
+		set(square, value ? Glyph(value & 0x0F) : BlackKing);
+	else
+		assert(xstd::all(castlings, false));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -58,7 +77,7 @@ uint32_t HashPosition::hash() const
 
 HashTable::HashTable(int size)
 {
-	assert(intel::btc(size) == 1);
+	assert(intel::popcnt(uint32_t(size)) == 1);
 	m_mask = size - 1;
 
 	m_chaining = 16;

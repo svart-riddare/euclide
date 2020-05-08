@@ -22,6 +22,8 @@ class HashPosition
 				Assignment(HashPosition& position, Square square) : m_position(position), m_square(square) {}
 				void operator=(Glyph glyph)
 					{ m_position.set(m_square, glyph); }
+				void operator=(const array<bool, NumCastlingSides>& castlings)
+					{ m_position.set(m_square, castlings); }
 
 			private :
 				HashPosition& m_position;
@@ -41,6 +43,7 @@ class HashPosition
 
 	protected :
 		void set(Square square, Glyph glyph);
+		void set(Square square, const array<bool, NumCastlingSides>& castlings);
 
 	private :
 		array<uint8_t, NumSquares / 2> m_glyphs;    /**< Glyphs, four bits each. Castling rights are encoded with the rooks. */

@@ -79,11 +79,11 @@ bool Game::play(const State& _state)
 
 	/* -- Thinking callback -- */
 
-	if (m_states.size() == std::extent<decltype(EUCLIDE_Thinking::moves)>::value)
+	if ((m_states.size() == countof(EUCLIDE_Thinking::moves)) || (m_positions % (1024 * 1024) == 0))
 	{
 		EUCLIDE_Thinking thinking;
 		thinking.positions = m_positions;
-		cmoves(thinking.moves, m_states.size());
+		cmoves(thinking.moves, std::min<int>(countof(EUCLIDE_Thinking::moves), m_states.size()));
 
 		if (m_callbacks.displayThinking)
 			(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
@@ -259,7 +259,9 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	array<bool, NumCastlingSides> castlings;
 	for (CastlingSide side : AllCastlingSides())
-		castlings[side] = (m_kings[color] != to) && (m_board[to]->initialSquare() != Castlings[color][side].rook);
+		castlings[side] = state.castling(side) && (m_kings[color] != to) && (m_board[to]->initialSquare() != Castlings[color][side].rook);
+
+	m_hash[m_kings[color]] = castlings;
 
 	/* -- Return new state -- */
 
@@ -306,6 +308,8 @@ void Game::undo(const State& state)
 		m_position[color][rook] = true;
 		m_position[color][free] = false;
 	}
+
+	m_hash[m_kings[color]] = state.castlings(color);
 }
 
 /* -------------------------------------------------------------------------- */
