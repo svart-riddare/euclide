@@ -9,7 +9,10 @@ namespace Euclide
 HashPosition::HashPosition(const Problem& problem)
 {
 	for (Square square : AllSquares())
-		(*this)[square] = problem.initialPosition()[square];
+		set(square, problem.initialPosition()[square]);
+
+	for (Color color : AllColors())
+		set(Castlings[color][KingSideCastling].from, problem.castlings()[color]);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -75,18 +78,21 @@ uint32_t HashPosition::hash() const
 
 /* -------------------------------------------------------------------------- */
 
-HashTable::HashTable(int size)
+HashTable::HashTable(int capacity)
 {
-	assert(intel::popcnt(uint32_t(size)) == 1);
-	m_mask = size - 1;
+	assert(intel::popcnt(uint32_t(capacity)) == 1);
+	m_size = std::min(1024, m_capacity = capacity);
 
+	m_mask = m_size - 1;
 	m_chaining = 16;
+
+	m_grow = 0;
 
 	/* -- Create empty hash table -- */
 
-	m_entries.resize(size + m_chaining - 1);
-	for (HashEntry& entry : m_entries)
-		entry.hash = std::numeric_limits<uint32_t>::max();
+	m_entries.reset(new HashEntry[m_capacity + m_chaining]);
+	for (int k = 0; k < m_size + m_chaining; k++)
+		m_entries[k].hash = std::numeric_limits<uint32_t>::max();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -101,6 +107,12 @@ void HashTable::insert(const HashPosition& position, int moves)
 			break;
 
 	m_entries[index] = { position, moves, hash };
+
+	/* -- Grow hash table if it seems pertinent -- */
+
+	if (m_size < m_capacity)
+		if (++m_grow >= m_size)
+			grow();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -110,7 +122,7 @@ bool HashTable::contains(const HashPosition& position, int moves)
 	uint32_t hash = position.hash() ^ moves;
 	uint32_t index = hash & m_mask;
 
-	for (int k = 0; k < m_chaining; k++, index++)
+	for (int k = 0; k <= m_chaining; k++, index++)
 		if (m_entries[index].hash == hash)
 			if (m_entries[index].moves == moves)
 				if (m_entries[index].position == position)
@@ -120,5 +132,19 @@ bool HashTable::contains(const HashPosition& position, int moves)
 }
 
 /* -------------------------------------------------------------------------- */
+
+void HashTable::grow()
+{
+	assert(m_size < m_capacity);
+
+	std::copy_n(m_entries.get(), m_size, m_entries.get() + m_size);
+	m_mask = (m_size *= 2) - 1;
+
+	for (int k = m_size; k < m_size + m_chaining; k++)
+		m_entries[k].hash = std::numeric_limits<uint32_t>::max();
+}
+
+/* -------------------------------------------------------------------------- */
+
 
 }

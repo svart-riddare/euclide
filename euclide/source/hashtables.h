@@ -54,17 +54,24 @@ class HashPosition
 class HashTable
 {
 	public :
-		HashTable(int size);
+		HashTable(int capacity);
 
 		void insert(const HashPosition& position, int moves);
 		bool contains(const HashPosition& position, int moves);
 
+	protected :
+		void grow();
+
 	private :
 		struct HashEntry { HashPosition position; int32_t moves; uint32_t hash; };
-		std::vector<HashEntry> m_entries;      /**< Hash table of positions and associated data. */
+		std::unique_ptr<HashEntry[]> m_entries;    /**< Hash table of positions and associated data. */
 
-		uint32_t m_mask;                       /**< Mask for hash function. */
-		int m_chaining;                        /**< Maximum number of entries to check for a given hash index. */
+		int m_capacity;                            /**< Maximum capacity of the hash table. */
+		int m_size;                                /**< Current size of the hash table. */
+		int m_grow;                                /**< State variable used to grow hash table. */
+
+		uint32_t m_mask;                           /**< Mask for hash function. */
+		int m_chaining;                            /**< Maximum number of entries to check for a given hash index. */
 };
 
 /* -------------------------------------------------------------------------- */
