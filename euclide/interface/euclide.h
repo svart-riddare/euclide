@@ -18,6 +18,7 @@ typedef enum
 	EUCLIDE_STATUS_NULL,             /**< Null pointer error. */
 	EUCLIDE_STATUS_ERROR,            /**< Unlikely system error. */
 	EUCLIDE_STATUS_MEMORY,           /**< Out of memory error. */
+	EUCLIDE_STATUS_ABORTED,          /**< Solving aborted. */
 	EUCLIDE_STATUS_INVALID,          /**< Invalid problem. */
 	EUCLIDE_STATUS_UNIMPLEMENTED,    /**< Unimplemented fairy piece or chess variant. */
 
@@ -237,6 +238,8 @@ typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_UserHandle handle, con
 typedef void (*EUCLIDE_DisplayThinkingFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking);
 typedef void (*EUCLIDE_DisplaySolutionFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution);
 
+typedef bool (*EUCLIDE_AbortFunction)(EUCLIDE_UserHandle handle);
+
 typedef struct
 {
 	EUCLIDE_DisplayCopyrightFunction displayCopyright;
@@ -246,6 +249,8 @@ typedef struct
 	EUCLIDE_DisplayDeductionsFunction displayDeductions;
 	EUCLIDE_DisplayThinkingFunction displayThinking;
 	EUCLIDE_DisplaySolutionFunction displaySolution;
+
+	EUCLIDE_AbortFunction abort;
 
 	EUCLIDE_UserHandle handle;
 

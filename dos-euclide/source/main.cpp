@@ -12,7 +12,7 @@
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, bool wait)
+bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, int timeout, bool wait)
 {
 	/* -- Parse forsythe string -- */
 
@@ -22,7 +22,7 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 
 	/* -- Reset display -- */
 
-	console.reset();
+	console.reset(std::chrono::seconds(timeout));
 
 	/* -- Solve problem -- */
 
@@ -33,7 +33,7 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 	/* -- Done -- */
 
 	console.done(status);
-	if (wait || (status != EUCLIDE_STATUS_OK))
+	if (wait || ((status != EUCLIDE_STATUS_OK) && (status != EUCLIDE_STATUS_ABORTED)))
 		console.wait();
 
 	return true;
@@ -42,7 +42,7 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *file, bool wait)
+bool solve(const Strings& strings, Console& console, const char *file, int timeout, bool wait)
 {
 	/* -- Open input file -- */
 
@@ -70,7 +70,7 @@ bool solve(const Strings& strings, Console& console, const char *file, bool wait
 
 			int numHalfMoves;
 			if (sscanf(bufferB, "%d", &numHalfMoves) == 1)
-				if (solve(strings, console, bufferA, numHalfMoves, wait))
+				if (solve(strings, console, bufferA, numHalfMoves, timeout, wait))
 					problems++;
 
 			/* -- Loop -- */
@@ -112,6 +112,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	const char *problems = nullptr, *moves = nullptr;
 	bool wait = false;
+	int timeout = 0;
 
 	for (int argument = 1; argument < numArguments; argument++)
 	{
@@ -122,6 +123,14 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 			else
 			if (!moves)
 				moves = arguments[argument];
+			else
+				error = Strings::InvalidArguments;
+		}
+		else
+		if (strcmp(arguments[argument], "--timeout") == 0)
+		{
+			if (++argument < numArguments)
+				timeout = atoi(arguments[argument]);
 			else
 				error = Strings::InvalidArguments;
 		}
@@ -138,13 +147,13 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	{
 		if (problems && moves)
 		{
-			if (!solve(strings, console, problems, atoi(moves), wait))
+			if (!solve(strings, console, problems, atoi(moves), timeout, wait))
 				error = Strings::InvalidProblem;
 		}
 		else
 		if (problems)
 		{
-			if (!solve(strings, console, problems, wait))
+			if (!solve(strings, console, problems, timeout, wait))
 				error = Strings::InvalidInputFile;
 		}
 	}

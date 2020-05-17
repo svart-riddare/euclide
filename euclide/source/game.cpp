@@ -106,6 +106,10 @@ bool Game::play(const State& _state)
 
 		if (m_callbacks.displayThinking)
 			(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
+
+		if (m_callbacks.abort)
+			if ((*m_callbacks.abort)(m_callbacks.handle))
+				throw UserAborted;
 	}
 
 	/* -- End recursion -- */

@@ -12,15 +12,15 @@ class LinuxConsole : public Console
 		LinuxConsole(const Strings& strings);
 		virtual ~LinuxConsole();
 
-		virtual void clear();
-		virtual bool wait();
+		virtual void clear() override;
+		virtual bool wait() override;
 
-		virtual void displayProblem(const EUCLIDE_Problem& problem) const;
-		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
+		virtual void displayProblem(const EUCLIDE_Problem& problem) const override;
+		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const override;
 
 	protected:
-		virtual void write(const wchar_t *string, int x, int y, Color color) const;
-		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
+		virtual void write(const wchar_t *string, int x, int y, Color color) const override;
+		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const override;
 };
 
 /* -------------------------------------------------------------------------- */

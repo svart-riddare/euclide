@@ -47,6 +47,7 @@ static const wchar_t *frenchStatuses[] =
 	L"Pointeur nul, contacter l'auteur",
 	L"Erreur syst\xE8me inattendue",
 	L"M\xE9moire insuffisante",
+	L"Recherche interrompue",
 	L"Probl\xE8me invalide",
 	L"Variante f\xE9\xE9rique non disponible"
 };
@@ -110,6 +111,7 @@ static const wchar_t *englishStatuses[] =
 	L"Null pointer",
 	L"System error",
 	L"Memory error",
+	L"Solving aborted",
 	L"Invalid problem",
 	L"Unimplemented feature"
 };

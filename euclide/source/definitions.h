@@ -17,7 +17,7 @@ static const int MaxMoves = 128;
 /* -- Status                                                               -- */
 /* -------------------------------------------------------------------------- */
 
-typedef enum { Ok, NoSolution, AssertionFailed, NullPointer, SystemError, OutOfMemory, InvalidProblem, UnimplementedFeature, NumStatuses } Status;
+typedef enum { Ok, NoSolution, AssertionFailed, NullPointer, SystemError, OutOfMemory, UserAborted, InvalidProblem, UnimplementedFeature, NumStatuses } Status;
 static_assert(NumStatuses == int(EUCLIDE_NUM_STATUSES));
 
 /* -------------------------------------------------------------------------- */

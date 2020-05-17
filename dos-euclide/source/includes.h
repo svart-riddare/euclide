@@ -18,8 +18,6 @@
 #include <memory>
 #include <type_traits>
 
-using namespace std::chrono;
-
 /* -------------------------------------------------------------------------- */
 
 #ifdef _MSC_VER

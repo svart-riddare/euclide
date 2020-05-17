@@ -16,6 +16,7 @@ Console::Console(const Strings& strings)
 	m_callbacks.displayDeductions = displayDeductionsCallback;
 	m_callbacks.displayThinking = displayThinkingCallback;
 	m_callbacks.displaySolution = displaySolutionCallback;
+	m_callbacks.abort = abortCallback;
 	m_callbacks.handle = this;
 }
 
@@ -27,12 +28,14 @@ Console::~Console()
 
 /* -------------------------------------------------------------------------- */
 
-void Console::reset()
+void Console::reset(std::chrono::seconds timeout)
 {
 	m_output.reset();
 
 	m_timer = Timer();
+
 	m_solutions = 0;
+	m_timeout = timeout;
 
 	clear();
 }
@@ -244,6 +247,13 @@ void Console::displaySolution(const EUCLIDE_Solution& solution) const
 	write(string, m_width - 25, 5, Colors::Verdict);
 
 	displayTimer();
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Console::abort() const
+{
+	return (m_timeout > std::chrono::seconds::zero()) && (m_timer.seconds() >= m_timeout);
 }
 
 /* -------------------------------------------------------------------------- */

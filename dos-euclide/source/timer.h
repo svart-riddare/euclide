@@ -10,14 +10,15 @@ class Timer
 	public:
 		Timer();
 
+		std::chrono::seconds seconds() const;
 		const wchar_t *elapsed() const;
 
 	protected:
-		static steady_clock::time_point now();
+		static std::chrono::steady_clock::time_point now();
 
 	private:
-		steady_clock::time_point m_start;    /**< Starting time. */
-		mutable wchar_t m_elapsed[64];       /**< Temporary buffer used to store elasped time as string. */
+		std::chrono::steady_clock::time_point m_start;    /**< Starting time. */
+		mutable wchar_t m_elapsed[64];                    /**< Temporary buffer used to store elapsed time as string. */
 };
 
 /* -------------------------------------------------------------------------- */

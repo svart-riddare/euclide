@@ -15,7 +15,7 @@ class Console
 		Console(const Strings& strings);
 		virtual ~Console();
 
-		virtual void reset();
+		virtual void reset(std::chrono::seconds timeout);
 		virtual void clear();
 		virtual void done(EUCLIDE_Status status);
 		virtual bool wait();
@@ -31,6 +31,8 @@ class Console
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
 		virtual void displayThinking(const EUCLIDE_Thinking& thinking) const;
 		virtual void displaySolution(const EUCLIDE_Solution& solution) const;
+
+		virtual bool abort() const;
 
 	public:
 		inline operator const EUCLIDE_Callbacks *() const
@@ -56,25 +58,28 @@ class Console
 			{ reinterpret_cast<Console *>(handle)->displayThinking(*thinking); }
 		static void displaySolutionCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution)
 			{ reinterpret_cast<Console *>(handle)->displaySolution(*solution); }
+		static bool abortCallback(EUCLIDE_UserHandle handle)
+			{ return reinterpret_cast<Console *>(handle)->abort(); }
 
 		virtual void write(const wchar_t *string, int x, int y, Color color) const;
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
 
 	private:
-		EUCLIDE_Callbacks m_callbacks;    /**< Euclide engine callbacks. */
-		Output m_output;                  /**< Output file for solving results. */
-		Timer m_timer;                    /**< Timer use to output solving time. */
+		EUCLIDE_Callbacks m_callbacks;     /**< Euclide engine callbacks. */
+		Output m_output;                   /**< Output file for solving results. */
+		Timer m_timer;                     /**< Timer use to output solving time. */
 
-		mutable int m_solutions;          /**< Number of distinct solutions found. */
+		mutable int m_solutions;           /**< Number of distinct solutions found. */
+		std::chrono::seconds m_timeout;    /**< Timeout, in seconds. Zero if none. */
 
 	protected:
-		const Strings& m_strings;         /**< Constant strings. */
+		const Strings& m_strings;          /**< Constant strings. */
 
-		int m_width;                      /**< Console width, in characters. */
-		int m_height;                     /**< Console height, in characters. */
+		int m_width;                       /**< Console width, in characters. */
+		int m_height;                      /**< Console height, in characters. */
 
-		bool m_valid;                     /**< Set unless console failed to initialize. */
-		bool m_abort;                     /**< Set when the user hit ESC to abort solving. */
+		bool m_valid;                      /**< Set unless console failed to initialize. */
+		bool m_abort;                      /**< Set when the user hit ESC to abort solving. */
 };
 
 /* -------------------------------------------------------------------------- */
