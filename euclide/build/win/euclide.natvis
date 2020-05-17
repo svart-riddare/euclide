@@ -236,7 +236,7 @@
   <Type Name="Euclide::BitSet&lt;enum Euclide::Square,64&gt;">
     <DisplayString Condition="m_bits==0xFFFFFFFFFFFFFFFF">Anywhere</DisplayString>
     <DisplayString Condition="m_bits==0x0000000000000000">Nowhere</DisplayString>
-    <DisplayString>{_bits,x}</DisplayString>
+    <DisplayString>{m_bits,x}</DisplayString>
     <Expand>
       <CustomListItems>
         <Variable Name="bit" InitialValue="0"/>

@@ -26,6 +26,7 @@
 #include <bitset>
 #include <functional>
 #include <iterator>
+#include <list>
 #include <map>
 #include <new>
 #include <numeric>

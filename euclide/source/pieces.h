@@ -6,8 +6,11 @@
 namespace Euclide
 {
 
+class Pieces;
 class Problem;
+class Conditions;
 class TwoPieceCache;
+class PieceConditions;
 
 /* -------------------------------------------------------------------------- */
 /* -- Piece                                                                -- */
@@ -18,6 +21,8 @@ class Piece
 	public :
 		Piece(const Problem& problem, Square square);
 		~Piece();
+
+		void initializeConditions();
 
 		void setCastling(CastlingSide side, bool castling);
 		void setCaptured(bool captured);
@@ -30,6 +35,8 @@ class Piece
 
 		void bypassObstacles(const Piece& blocker);
 		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
+
+		void basicConditions(const std::array<Pieces, NumColors>& pieces);
 
 		bool update();
 
@@ -88,6 +95,10 @@ class Piece
 		inline const Squares& route() const
 			{ return m_route; }
 
+		inline const PieceConditions& conditions() const
+			{ return *m_conditions; }
+		const Conditions& conditions(Square from, Square to) const;
+
 	public :
 		inline bool operator==(const Piece& piece) const
 			{ return this == &piece; }
@@ -99,7 +110,7 @@ class Piece
 		void updateDistances(bool castling);
 
 		array<int, NumSquares> computeDistances(Square square, Square castling) const;
-		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
+		array<int, NumSquares> computeDistancesTo(Squares destinations, Square obstruction = Nowhere) const;
 
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
@@ -172,7 +183,17 @@ class Piece
 		Squares m_route;                               /**< Set of all squares the piece may have crossed or stopped. */
 		Squares m_threats;                             /**< Set of all squares on which the enemy king is threatened. */
 
+		PieceConditions *m_conditions;                 /**< Conditions associated with possible piece moves. */
+
 		bool m_update;                                 /**< Set when deductions must be updated and update() shall return true. */
+
+	public :
+		mutable struct {
+			Glyph glyph;                               /**< Piece current glyph, different than initial if promoted. */
+			Square square;                             /**< Piece current square, NoWhere if captured. */
+			int moves;                                 /**< Number of moves played. */
+
+		} state;                                       /**< State, used when playing possible games, stored here for performance reasons. */
 };
 
 /* -------------------------------------------------------------------------- */

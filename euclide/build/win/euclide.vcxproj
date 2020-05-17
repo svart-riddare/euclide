@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\cache.cpp" />
+    <ClCompile Include="..\..\source\conditions.cpp" />
     <ClCompile Include="..\..\source\copyright.cpp" />
     <ClCompile Include="..\..\source\euclide.cpp">
     </ClCompile>
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\interface\euclide.h" />
     <ClInclude Include="..\..\source\cache.h" />
+    <ClInclude Include="..\..\source\conditions.h" />
     <ClInclude Include="..\..\source\definitions.h" />
     <ClInclude Include="..\..\source\game.h" />
     <ClInclude Include="..\..\source\hashtables.h" />

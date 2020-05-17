@@ -119,6 +119,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	/* -- Repeat the following deductions until there is no improvements -- */
 
+	bool conditions = false;
+
 	for (bool loop = true; loop; )
 	{
 		/* -- Assign moves and captures to targets -- */
@@ -279,6 +281,22 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		if (update(pieces))
 			continue;
+
+		/* -- Create list of moves and related conditions -- */
+
+		if (!conditions)
+		{
+			for (Color color : AllColors())
+				for (Piece& piece : m_pieces[color])
+					piece.initializeConditions();
+
+			for (Color color : AllColors())
+				for (Piece& piece : m_pieces[color])
+					piece.basicConditions(m_pieces);
+
+			conditions = true;
+			//continue;
+		}
 
 		/* -- Done -- */
 

@@ -1,6 +1,7 @@
 #include "game.h"
 #include "pieces.h"
 #include "problem.h"
+#include "conditions.h"
 #include "tables/tables.h"
 
 namespace Euclide
@@ -13,6 +14,8 @@ namespace Euclide
 Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces)
 	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
 {
+	/* -- Initialize constant tables -- */
+
 	for (Glyph glyph : AllGlyphs())
 		Tables::initializeLegalMoves(&m_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true);
 
@@ -20,6 +23,8 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 		m_constraints[glyph] = *Tables::getMoveConstraints(problem.piece(glyph), problem.variant(), true, false);
 
 	Tables::initializeLineOfSights(problem.pieces(), problem.variant(), &m_lines);
+
+	/* -- Initialize position and relevant information -- */
 
 	m_board.fill(nullptr);
 	for (Color color : AllColors())
@@ -33,6 +38,20 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 		m_kings[color] = pieces[color][0].initialSquare();
 
 	m_diagram.set([&](Square square) { return problem.diagramPosition(square) != Empty; });
+
+	/* -- Initialize piece states -- */
+
+	for (Color color : AllColors())
+	{
+		for (const Piece& piece : m_pieces[color])
+		{
+			piece.state.glyph = piece.initialGlyph();
+			piece.state.square = piece.initialSquare();
+			piece.state.moves = 0;
+		}
+	}
+
+	/* -- Initialize solution/position counters -- */
 
 	m_positions = 0;
 	m_solutions = 0;
@@ -136,6 +155,11 @@ bool Game::play(const State& _state)
 			if (position & piece.constraints(from, to, capture))
 				continue;
 
+			/* -- Check if all conditions have been satisfied -- */
+
+			if (!piece.conditions(from, to).satisfied())
+				continue;
+
 			/* -- Check if the king is not in check -- */
 
 			if (false)
@@ -211,16 +235,17 @@ bool Game::play(const State& _state)
 
 Game::State Game::move(const State& state, Square from, Square to, CastlingSide castling)
 {
+	const Piece *piece = m_board[from];
 	const Color color = state.color();
 
 	/* -- Update board position -- */
 
 	const Piece *captured = m_board[to];
 
-	m_hash[to] = m_board[from]->glyph();
+	m_hash[to] = piece->glyph();
 	m_hash[from] = Empty;
 
-	m_board[to] = m_board[from];
+	m_board[to] = piece;
 	m_board[from] = nullptr;
 
 	assert(m_position[color][from]);
@@ -232,6 +257,14 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	if (m_kings[color] == from)
 		m_kings[color] = to;
+
+	/* -- Update piece state -- */
+
+	piece->state.square = to;
+	piece->state.moves += 1;
+
+	if (captured)
+		captured->state.square = Nowhere;
 
 	/* -- Handle castling -- */
 
@@ -253,6 +286,8 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 		m_position[color][rook] = false;
 
 		assert(!captured);
+
+		m_board[free]->state.square = free;
 	}
 
 	/* -- Update castlings states -- */
@@ -275,13 +310,14 @@ void Game::undo(const State& state)
 	const Color color = !state.color();
 	const Square from = state.from();
 	const Square to = state.to();
+	const Piece *piece = m_board[to];
 
 	/* -- Update board position -- */
 
-	m_hash[from] = m_board[to]->glyph();
+	m_hash[from] = piece->glyph();
 	m_hash[to] = state.captured() ? state.captured()->glyph() : Empty;
 
-	m_board[from] = m_board[to];
+	m_board[from] = piece;
 	m_board[to] = state.captured();
 
 	m_position[color][to] = false;
@@ -291,6 +327,14 @@ void Game::undo(const State& state)
 
 	if (m_kings[color] == to)
 		m_kings[color] = from;
+
+	/* -- Update piece state -- */
+
+	piece->state.square = from;
+	piece->state.moves -= 1;
+
+	if (state.captured())
+		state.captured()->state.square = to;
 
 	/* -- Handle castling -- */
 
@@ -307,6 +351,8 @@ void Game::undo(const State& state)
 
 		m_position[color][rook] = true;
 		m_position[color][free] = false;
+
+		m_board[rook]->state.square = rook;
 	}
 
 	m_hash[m_kings[color]] = state.castlings(color);
