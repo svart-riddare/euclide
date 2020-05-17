@@ -12,20 +12,20 @@ class Problem;
 
 class HashPosition
 {
-	public :
+	public:
 		HashPosition() {}
 		HashPosition(const Problem& problem);
 
 		class Assignment
 		{
-			public :
+			public:
 				Assignment(HashPosition& position, Square square) : m_position(position), m_square(square) {}
 				void operator=(Glyph glyph)
 					{ m_position.set(m_square, glyph); }
 				void operator=(const array<bool, NumCastlingSides>& castlings)
 					{ m_position.set(m_square, castlings); }
 
-			private :
+			private:
 				HashPosition& m_position;
 				Square m_square;
 		};
@@ -33,7 +33,7 @@ class HashPosition
 		inline Assignment operator[](Square square)
 			{ return Assignment(*this, square); }
 
-	public :
+	public:
 		inline bool operator==(const HashPosition& position) const
 			{ return m_glyphs == position.m_glyphs; }
 		inline bool operator!=(const HashPosition& position) const
@@ -41,11 +41,11 @@ class HashPosition
 
 		uint32_t hash() const;
 
-	protected :
+	protected:
 		void set(Square square, Glyph glyph);
 		void set(Square square, const array<bool, NumCastlingSides>& castlings);
 
-	private :
+	private:
 		array<uint8_t, NumSquares / 2> m_glyphs;    /**< Glyphs, four bits each. Castling rights are encoded with the rooks. */
 };
 
@@ -53,16 +53,16 @@ class HashPosition
 
 class HashTable
 {
-	public :
+	public:
 		HashTable(int capacity);
 
 		void insert(const HashPosition& position, int moves);
 		bool contains(const HashPosition& position, int moves);
 
-	protected :
+	protected:
 		void grow();
 
-	private :
+	private:
 		struct HashEntry { HashPosition position; int32_t moves; uint32_t hash; };
 		std::unique_ptr<HashEntry[]> m_entries;    /**< Hash table of positions and associated data. */
 

@@ -13,19 +13,19 @@ namespace Euclide
 
 class Euclide
 {
-	public :
+	public:
 		Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks);
 		~Euclide();
 
 		void solve(const EUCLIDE_Problem& problem);
 		int update(std::vector<Piece *>& pieces);
 
-	protected :
+	protected:
 		void reset();
 
 		const EUCLIDE_Deductions& deductions() const;
 
-	private :
+	private:
 		EUCLIDE_Configuration m_configuration;      /**< Global configuration. */
 		EUCLIDE_Callbacks m_callbacks;              /**< User defined callbacks. */
 
@@ -40,7 +40,7 @@ class Euclide
 		struct Tandem { const Piece& pieceA; const Piece& pieceB; int requiredMoves; Tandem(const Piece& pieceA, const Piece& pieceB, int requiredMoves) : pieceA(pieceA), pieceB(pieceB), requiredMoves(requiredMoves) {}};
 		std::vector<Tandem> m_tandems;              /**< Required moves for pair of pieces. */
 
-	private :
+	private:
 		mutable EUCLIDE_Deductions m_deductions;    /**< Temporary variable to hold deductions for corresponding user callback. */
 };
 

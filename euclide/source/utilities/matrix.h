@@ -11,7 +11,7 @@ namespace Euclide
 template<class T, std::size_t M, std::size_t N>
 class matrix : public array<array<T, N>, M>
 {
-	public :
+	public:
 		matrix() {};
 
 		matrix(const T& value)
@@ -20,12 +20,12 @@ class matrix : public array<array<T, N>, M>
 		void fill(const T& value)
 			{ for (std::size_t n = 0; n < N; n++)  (*this)[n].fill(value); }
 
-	public :
+	public:
 		typedef T value_type;
 		typedef T& reference;
 		typedef const T& const_reference;
 
-	public :
+	public:
 		const array<T, N>& operator[](int index) const
 			{ return this->at(index); }
 

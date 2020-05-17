@@ -11,7 +11,7 @@
 
 class Console
 {
-	public :
+	public:
 		Console(const Strings& strings);
 		virtual ~Console();
 
@@ -32,16 +32,16 @@ class Console
 		virtual void displayThinking(const EUCLIDE_Thinking& thinking) const;
 		virtual void displaySolution(const EUCLIDE_Solution& solution) const;
 
-	public :
+	public:
 		inline operator const EUCLIDE_Callbacks *() const
 			{ return &m_callbacks; }
 		inline bool operator!() const
 			{ return !m_valid || m_abort; }
 
-	public :
+	public:
 		void open(const char *inputFileName);
 
-	protected :
+	protected:
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
 			{ reinterpret_cast<Console *>(handle)->displayCopyright(copyright); }
 		static void displayMessageCallback(EUCLIDE_UserHandle handle, EUCLIDE_Message message)
@@ -60,14 +60,14 @@ class Console
 		virtual void write(const wchar_t *string, int x, int y, Color color) const;
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
 
-	private :
+	private:
 		EUCLIDE_Callbacks m_callbacks;    /**< Euclide engine callbacks. */
 		Output m_output;                  /**< Output file for solving results. */
 		Timer m_timer;                    /**< Timer use to output solving time. */
 
 		mutable int m_solutions;          /**< Number of distinct solutions found. */
 
-	protected :
+	protected:
 		const Strings& m_strings;         /**< Constant strings. */
 
 		int m_width;                      /**< Console width, in characters. */

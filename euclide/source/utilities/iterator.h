@@ -13,17 +13,17 @@ struct EnumRange
 {
 	class EnumIterator
 	{
-		public :
+		public:
 			typedef std::forward_iterator_tag iterator_category;
 			typedef Enum value_type;
 			typedef int difference_type;
 			typedef Enum *pointer;
 			typedef Enum& reference;
 
-		public :
+		public:
 			EnumIterator(int value) : m_value(value) {}
 
-		public :
+		public:
 			inline bool operator==(const EnumIterator& iterator) const
 				{ return m_value == iterator.m_value; }
 			inline bool operator!=(const EnumIterator& iterator) const
@@ -35,7 +35,7 @@ struct EnumRange
 			inline Enum operator*() const
 				{ return static_cast<Enum>(m_value); }
 
-		private :
+		private:
 			int m_value;    /**< Enum value, as integer. */
 	};
 

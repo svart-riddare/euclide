@@ -11,7 +11,7 @@ namespace Euclide
 template <typename T, int MaxSize>
 class Queue
 {
-	public :
+	public:
 		Queue() : m_out(0), m_in(0) {}
 
 		inline void push(const T& value)
@@ -33,7 +33,7 @@ class Queue
 		inline int size() const
 			{ return m_in - m_out; }
 
-	private :
+	private:
 		array<T, MaxSize> m_queue;    /**< Queued elements. No more than MaxSize elements can be pushed in queue, ever. */
 		int m_out;                    /**< Index in above array, of oldest element. */
 		int m_in;                     /**< Index, in above array, or newest element. */

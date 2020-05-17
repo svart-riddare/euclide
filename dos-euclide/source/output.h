@@ -8,7 +8,7 @@
 
 class Output
 {
-	public :
+	public:
 		Output(const Strings& strings, const char *inputFileName = nullptr);
 		~Output();
 
@@ -25,13 +25,13 @@ class Output
 		void displayThinking(const EUCLIDE_Thinking& thinking) const;
 		void displaySolution(const EUCLIDE_Solution& solution) const;
 
-	public :
+	public:
 		inline operator const EUCLIDE_Callbacks *() const
 			{ return &m_callbacks; }
 		inline bool operator!() const
 			{ return !m_file; }
 
-	protected :
+	protected:
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
 			{ return reinterpret_cast<Output *>(handle)->displayCopyright(copyright); }
 		static void displayMessageCallback(EUCLIDE_UserHandle handle, EUCLIDE_Message message)
@@ -47,7 +47,7 @@ class Output
 		static void displaySolutionCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution)
 			{ return reinterpret_cast<Output *>(handle)->displaySolution(*solution); }
 
-	private :
+	private:
 		const Strings& m_strings;         /**< Text strings. */
 
 		EUCLIDE_Callbacks m_callbacks;    /**< Euclide callbacks. */

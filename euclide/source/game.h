@@ -17,13 +17,13 @@ class Piece;
 
 class Game
 {
-	public :
+	public:
 		Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces);
 		~Game();
 
 		void play();
 
-	protected :
+	protected:
 		class State;
 		bool play(const State& state);
 
@@ -37,17 +37,17 @@ class Game
 		bool solved() const;
 		void cmoves(EUCLIDE_Move *moves, int nmoves) const;
 
-	protected :
+	protected:
 		class State
 		{
-			public :
+			public:
 				State(const Problem& problem);
 				State(const State& state, Square from, Square to, const Piece *captured, CastlingSide castling, const array<bool, NumCastlingSides>& castlings);
 
 				inline void check(bool check)
 					{ m_check = check; }
 
-			public :
+			public:
 				inline const array<bool, NumCastlingSides>& castlings(Color color) const
 					{ return m_castlings[color]; }
 				inline bool castling(CastlingSide side) const
@@ -68,7 +68,7 @@ class Game
 				inline Square to() const
 					{ return m_to; }
 
-			private :
+			private:
 				matrix<bool, NumColors, NumCastlingSides> m_castlings;    /**< Castling rights. */
 				Square m_enpassant;                                       /**< Possible en passant capture. */
 				Color m_color;                                            /**< Whose turn it is. */
@@ -80,7 +80,7 @@ class Game
 				Square m_to;                                              /**< Last move arrival square. */
 		};
 
-	private :
+	private:
 		const EUCLIDE_Configuration m_configuration;        /**< Euclide configuration. */
 		const EUCLIDE_Callbacks m_callbacks;                /**< Euclide callbacks. */
 

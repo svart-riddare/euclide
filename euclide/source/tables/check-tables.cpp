@@ -122,43 +122,43 @@ const ArrayOfSquares *getUnstoppableChecks(Species species, Color color, Variant
 {
 	switch (species)
 	{
-		case None :
+		case None:
 			assert(false);
 			break;
-		case King :
+		case King:
 			return &KingChecks[variant];
-		case Queen :
+		case Queen:
 			return &KingChecks[variant];
-		case Rook :
+		case Rook:
 			return &RookChecks[variant];
-		case Bishop :
+		case Bishop:
 			return &BishopChecks[variant];
-		case Knight :
+		case Knight:
 			return &KnightChecks[variant];
-		case Pawn :
+		case Pawn:
 			return &PawnChecks[color][variant];
-		case Grasshopper :
+		case Grasshopper:
 			return &NoChecks;
-		case Nightrider :
+		case Nightrider:
 			return &KnightChecks[variant];
-		case Amazon :
+		case Amazon:
 			return &AmazonChecks[variant];
-		case Empress :
+		case Empress:
 			return &EmpressChecks[variant];
-		case Princess :
+		case Princess:
 			return &PrincessChecks[variant];
-		case Alfil :
+		case Alfil:
 			return &AlfilChecks[variant];
-		case Camel :
+		case Camel:
 			return &CamelChecks[variant];
-		case Zebra :
+		case Zebra:
 			return &ZebraChecks[variant];
-		case Leo :
-		case Pao :
-		case Vao :
-		case Mao :
+		case Leo:
+		case Pao:
+		case Vao:
+		case Mao:
 			return &NoChecks;
-		case NumSpecies :
+		case NumSpecies:
 			assert(false);
 			break;
 	}

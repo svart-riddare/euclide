@@ -10,11 +10,11 @@ namespace Euclide
 
 class Problem
 {
-	public :
+	public:
 		Problem();
 		Problem(const EUCLIDE_Problem& problem);
 
-	public :
+	public:
 		inline const array<Glyph, NumSquares>& initialPosition() const
 			{ return m_initialPosition; }
 		inline const array<Glyph, NumSquares>& diagramPosition() const
@@ -49,7 +49,7 @@ class Problem
 		inline int capturedPieces(Color color) const
 			{ return m_initialPieces[color] - m_diagramPieces[color]; }
 
-	private :
+	private:
 		array<Glyph, NumSquares> m_initialPosition;               /**< Initial position. */
 		array<Glyph, NumSquares> m_diagramPosition;               /**< Diagram position to be reached from the initial position. */
 		array<Species, NumGlyphs> m_pieces;                       /**< Fairy pieces. */

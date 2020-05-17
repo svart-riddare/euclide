@@ -16,7 +16,7 @@ class Problem;
 
 class Condition
 {
-	public :
+	public:
 		Condition() {}
 		virtual ~Condition() {}
 
@@ -27,7 +27,7 @@ class Condition
 
 class PositionalCondition : public Condition
 {
-	public :
+	public:
 		PositionalCondition(const Piece& piece, const Squares& squares);
 
 		virtual bool satisfied() const override;
@@ -43,7 +43,7 @@ class PositionalCondition : public Condition
 
 class Conditions : public Condition
 {
-	public :
+	public:
 		Conditions(const Piece& piece, Square from, Square to);
 		virtual ~Conditions();
 
@@ -51,7 +51,7 @@ class Conditions : public Condition
 
 		void add(Condition *condition);
 
-	public :
+	public:
 		inline const Piece& piece() const
 			{ return m_piece; }
 
@@ -60,7 +60,7 @@ class Conditions : public Condition
 		inline Square to() const
 			{ return m_to; }
 
-	private :
+	private:
 		const Piece& m_piece;                   /**< Piece to which these conditions apply. */
 		Square m_from;                          /**< Move departure square. */
 		Square m_to;                            /**< Move arrival square. */
@@ -74,7 +74,7 @@ class Conditions : public Condition
 
 class PieceConditions
 {
-	public :
+	public:
 		PieceConditions(const Piece& piece);
 
 		inline std::vector<Conditions>::iterator begin()
@@ -86,13 +86,13 @@ class PieceConditions
 		inline std::vector<Conditions>::const_iterator end() const
 			{ return m_conditions.end(); }
 
-	public :
+	public:
 		inline const Conditions& get(Square from, Square to) const
 			{ return *m_pointers[from][to]; }
 		inline Conditions& get(Square from, Square to)
 			{ return *m_pointers[from][to]; }
 
-	private :
+	private:
 		const Piece& m_piece;                                       /**< Piece to which these conditions apply. */
 
 		std::vector<Conditions> m_conditions;                       /**< Conditions, one for each piece move. */

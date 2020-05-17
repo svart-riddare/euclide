@@ -7,15 +7,15 @@
 
 class Timer
 {
-	public :
+	public:
 		Timer();
 
 		const wchar_t *elapsed() const;
 
-	protected :
+	protected:
 		static steady_clock::time_point now();
 
-	private :
+	private:
 		steady_clock::time_point m_start;    /**< Starting time. */
 		mutable wchar_t m_elapsed[64];       /**< Temporary buffer used to store elasped time as string. */
 };

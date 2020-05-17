@@ -18,7 +18,7 @@ class PieceConditions;
 
 class Piece
 {
-	public :
+	public:
 		Piece(const Problem& problem, Square square);
 		~Piece();
 
@@ -40,7 +40,7 @@ class Piece
 
 		bool update();
 
-	public :
+	public:
 		inline Glyph initialGlyph() const
 			{ return m_glyph; }
 		inline Glyph glyph() const
@@ -99,13 +99,13 @@ class Piece
 			{ return *m_conditions; }
 		const Conditions& conditions(Square from, Square to) const;
 
-	public :
+	public:
 		inline bool operator==(const Piece& piece) const
 			{ return this == &piece; }
 		inline bool operator!=(const Piece& piece) const
 			{ return this != &piece; }
 
-	protected :
+	protected:
 		void updateDeductions();
 		void updateDistances(bool castling);
 
@@ -115,7 +115,7 @@ class Piece
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
 
-	protected :
+	protected:
 		struct State
 		{
 			Piece& piece;                        /**< Piece referenced by this state. */
@@ -141,7 +141,7 @@ class Piece
 		static int fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& cache);
 		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
-	private :
+	private:
 		Glyph m_glyph;                                 /**< Piece's glyph. */
 		Color m_color;                                 /**< Piece's color, implicit from glyph. */
 		Species m_species;                             /**< Piece type. */
@@ -187,7 +187,7 @@ class Piece
 
 		bool m_update;                                 /**< Set when deductions must be updated and update() shall return true. */
 
-	public :
+	public:
 		mutable struct {
 			Glyph glyph;                               /**< Piece current glyph, different than initial if promoted. */
 			Square square;                             /**< Piece current square, NoWhere if captured. */

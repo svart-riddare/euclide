@@ -8,7 +8,7 @@
 
 class WinConsole : public Console
 {
-	public :
+	public:
 		WinConsole(const Strings& strings);
 		virtual ~WinConsole();
 
@@ -18,11 +18,11 @@ class WinConsole : public Console
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
 
-	protected :
+	protected:
 		virtual void write(const wchar_t *string, int x, int y, Color color) const;
 		virtual void write(const wchar_t *string, int maxLength, bool fillWithBlanks, int x, int y, Color color) const;
 
-	private :
+	private:
 		HANDLE m_output;                              /**< Console output handle. */
 		HANDLE m_input;                               /**< Console input handle. */
 

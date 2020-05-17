@@ -15,7 +15,7 @@ class Pieces;
 
 class Target
 {
-	public :
+	public:
 		Target(Glyph glyph, Square square);
 
 		int updateRequiredMoves(int requiredMoves)
@@ -27,7 +27,7 @@ class Target
 
 		bool applyPigeonHolePrinciple(Targets& targets) const;
 
-	public :
+	public:
 		inline Glyph glyph() const
 			{ return m_glyph; }
 		inline Color color() const
@@ -45,7 +45,7 @@ class Target
 		inline Man man() const
 			{ return m_man; }
 
-	private :
+	private:
 		Glyph m_glyph;             /**< Target glyph. */
 		Color m_color;             /**< Glyph color. */
 		Square m_square;           /**< Target square. */
@@ -63,7 +63,7 @@ class Target
 
 class Targets : public std::vector<Target>
 {
-	public :
+	public:
 		bool update();
 };
 
@@ -73,13 +73,13 @@ class Targets : public std::vector<Target>
 
 class TargetPartition
 {
-	public :
+	public:
 		TargetPartition();
 
 		bool merge(const Target& target);
 		void assign(const Pieces& pieces);
 
-	public :
+	public:
 		inline const Squares& squares() const
 			{ return m_squares; }
 		inline const Men& men() const
@@ -95,7 +95,7 @@ class TargetPartition
 		inline int unassignedRequiredCaptures() const
 			{ return m_unassignedRequiredCaptures; }
 
-	private :
+	private:
 		Squares m_squares;                   /**< Target squares for these targets. */
 		Men m_men;                           /**< Possible men for these targets. */
 
@@ -112,10 +112,10 @@ class TargetPartition
 
 class TargetPartitions : public std::vector<TargetPartition>
 {
-	public :
+	public:
 		TargetPartitions(const Pieces& pieces, const Targets& targets);
 
-	public :
+	public:
 		inline int requiredMoves() const
 			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
@@ -136,7 +136,7 @@ class TargetPartitions : public std::vector<TargetPartition>
 		inline int unassignedRequiredCaptures(Man man) const
 			{ return m_map[man]->unassignedRequiredCaptures(); }
 
-	private :
+	private:
 		int m_requiredMoves;                                /**< Required moves. */
 		int m_requiredCaptures;                             /**< Required capture. */
 

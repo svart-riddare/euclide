@@ -102,26 +102,26 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 
 	switch (species)
 	{
-		case None :
+		case None:
 			break;
-		case King :
+		case King:
 			for (Square square : AllSquares())
 				(*moves)[square] = WazirMoves[cylindrical][square] | FerzMoves[cylindrical][square];
 			break;
-		case Queen :
+		case Queen:
 			for (Square square : AllSquares())
 				(*moves)[square] = RookMoves[cylindrical][square] | BishopMoves[cylindrical][square];
 			break;
-		case Rook :
+		case Rook:
 			xstd::copy(RookMoves[cylindrical], moves->begin());
 			break;
-		case Bishop :
+		case Bishop:
 			xstd::copy(BishopMoves[cylindrical], moves->begin());
 			break;
-		case Knight :
+		case Knight:
 			xstd::copy(KnightMoves[cylindrical], moves->begin());
 			break;
-		case Pawn :
+		case Pawn:
 			if (!capture)
 				xstd::copy(PawnMoves[cylindrical][color], moves->begin());
 			else
@@ -131,48 +131,48 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 				for (Square square : AllSquares())
 					(*moves)[square] = PawnMoves[cylindrical][color][square] | PawnCaptures[cylindrical][color][square];
 			break;
-		case Grasshopper :
+		case Grasshopper:
 			for (Square square : AllSquares())
 				(*moves)[square] = (RookMoves[cylindrical][square] | BishopMoves[cylindrical][square]) & ~(WazirMoves[cylindrical][square] | FerzMoves[cylindrical][square]);
 			break;
-		case Nightrider :
+		case Nightrider:
 			xstd::copy(NightriderMoves[cylindrical], moves->begin());
 			break;
-		case Amazon :
+		case Amazon:
 			for (Square square : AllSquares())
 				(*moves)[square] = RookMoves[cylindrical][square] | BishopMoves[cylindrical][square] | KnightMoves[cylindrical][square];
 			break;
-		case Empress :
+		case Empress:
 			for (Square square : AllSquares())
 				(*moves)[square] = RookMoves[cylindrical][square] | KnightMoves[cylindrical][square];
 			break;
-		case Princess :
+		case Princess:
 			for (Square square : AllSquares())
 				(*moves)[square] = BishopMoves[cylindrical][square] | KnightMoves[cylindrical][square];
 			break;
-		case Alfil :
+		case Alfil:
 			xstd::copy(AlfilMoves[cylindrical], moves->begin());
 			break;
-		case Camel :
+		case Camel:
 			xstd::copy(CamelMoves[cylindrical], moves->begin());
 			break;
-		case Zebra :
+		case Zebra:
 			xstd::copy(ZebraMoves[cylindrical], moves->begin());
 			break;
-		case Leo :
+		case Leo:
 			for (Square square : AllSquares())
 				(*moves)[square] = RookMoves[cylindrical][square] | BishopMoves[cylindrical][square];
 			break;
-		case Pao :
+		case Pao:
 			xstd::copy(RookMoves[cylindrical], moves->begin());
 			break;
-		case Vao :
+		case Vao:
 			xstd::copy(BishopMoves[cylindrical], moves->begin());
 			break;
-		case Mao :
+		case Mao:
 			xstd::copy(KnightMoves[cylindrical], moves->begin());
 			break;
-		case NumSpecies :
+		case NumSpecies:
 			assert(false);
 			break;
 	}

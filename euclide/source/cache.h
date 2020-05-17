@@ -10,7 +10,7 @@ namespace Euclide
 
 class TwoPieceCache
 {
-	public :
+	public:
 		struct Position
 		{
 			array<Square, 2> squares;    /**< Squares on which the two pieces lie. */
@@ -21,7 +21,7 @@ class TwoPieceCache
 				{ squares = { squareA, squareB }; moves = { movesA, movesB }; }
 		};
 
-	public :
+	public:
 		TwoPieceCache();
 
 		void add(Square squareA, int movesA, Square squareB, int movesB, int requiredMoves, bool exact = false);
@@ -36,7 +36,7 @@ class TwoPieceCache
 		void add(const Position& position);
 		bool hit(const Position& position) const;
 
-	private :
+	private:
 		typedef struct { short movesA, movesB; int requiredMoves; } Entry;
 		typedef array<Entry, 4> Line;                    /**< A cache line is made of up to four elements. */
 		matrix<Line, NumSquares, NumSquares> m_cache;    /**< Cache, one line for each pair of squares. */
