@@ -430,23 +430,35 @@ void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 		const State& state = *m_states[m];
 		EUCLIDE_Move *move = moves + m;
 
-		move->glyph = static_cast<EUCLIDE_Glyph>(diagram[state.from()]);
-		move->promotion = static_cast<EUCLIDE_Glyph>(diagram[state.from()]);
-		move->captured = static_cast<EUCLIDE_Glyph>(diagram[state.to()]);
+		const Color color = state.color();
+		const Square from = state.from();
+		const Square to = state.to();
 
-		move->move = (m + ((state.color() == Black) ? 3 : 2)) / 2;
-		move->from = state.from();
-		move->to = state.to();
+		const CastlingSide castling = state.castling();
+
+		move->glyph = static_cast<EUCLIDE_Glyph>(diagram[from]);
+		move->promotion = static_cast<EUCLIDE_Glyph>(diagram[from]);
+		move->captured = static_cast<EUCLIDE_Glyph>(diagram[to]);
+
+		move->move = (m + ((color == Black) ? 3 : 2)) / 2;
+		move->from = from;
+		move->to = to;
 
 		move->capture = state.captured() != nullptr;
-		move->enpassant = state.captured() && !diagram[state.to()];
+		move->enpassant = state.captured() && !diagram[to];
 		move->check = state.check();
 		move->mate = state.check() && false;
-		move->kingSideCastling = state.castling() == KingSideCastling;
-		move->queenSideCastling = state.castling() == QueenSideCastling;
+		move->kingSideCastling = castling == KingSideCastling;
+		move->queenSideCastling = castling == QueenSideCastling;
 
 		diagram[move->to] = diagram[move->from];
 		diagram[move->from] = Empty;
+
+		if (castling != NoCastling)
+		{
+			diagram[Castlings[!color][castling].free] = (color == White) ? BlackRook : WhiteRook;
+			diagram[Castlings[!color][castling].rook] = Empty;
+		}
 	}
 }
 

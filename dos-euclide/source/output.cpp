@@ -2,6 +2,10 @@
 
 /* -------------------------------------------------------------------------- */
 
+const wchar_t *Output::Hyphens = L"---------------------------------------------------------------------------";
+
+/* -------------------------------------------------------------------------- */
+
 Output::Output(const Strings& strings, const char *inputFileName)
 	: m_strings(strings), m_file(nullptr)
 {
@@ -76,7 +80,7 @@ void Output::done(EUCLIDE_Status status)
 	if (m_file)
 	{
 		fprintf(m_file, "%ls\n", m_strings[Strings::Output]);
-		if (status == EUCLIDE_STATUS_OK) {
+		if ((status == EUCLIDE_STATUS_OK) || (status == EUCLIDE_STATUS_ABORTED)) {
 			fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
 			if (m_positions)
 				fprintf(m_file, "\t%ls %" PRId64 "\n", m_strings[Strings::Positions], m_positions);
@@ -97,13 +101,11 @@ void Output::done(EUCLIDE_Status status)
 
 void Output::displayCopyright(const wchar_t *copyright) const
 {
-	std::wstring hyphens(wcslen(copyright) + 6, '-');
-
 	if (m_file)
 	{
-		fprintf(m_file, "%ls\n", hyphens.c_str());
-		fprintf(m_file, "-- %ls --\n", copyright);
-		fprintf(m_file, "%ls\n", hyphens.c_str());
+		fprintf(m_file, "%ls\n", Hyphens);
+		fprintf(m_file, "-- %-*ls --\n", int(wcslen(Hyphens)) - 6, copyright);
+		fprintf(m_file, "%ls\n", Hyphens);
 		fprintf(m_file, "\n");
 		fflush(m_file);
 	}
@@ -200,7 +202,7 @@ void Output::displaySolution(const EUCLIDE_Solution& solution) const
 	if (m_file)
 	{
 		fprintf(m_file, "%ls%d%ls\n", m_strings[Strings::Solution], solution.solution, m_strings[Strings::Colon]);
-		fprintf(m_file, "---------------------------------------------------------------------------\n");
+		fprintf(m_file, "%ls\n", Hyphens);
 
 		const int black = (solution.moves[0].glyph & 1) ^ 1;
 		if (black)
@@ -214,10 +216,10 @@ void Output::displaySolution(const EUCLIDE_Solution& solution) const
 				fprintf(m_file, "%2d. ", move.move);
 
 			if (move.kingSideCastling)
-				fprintf(m_file, "0-0%c       ", move.check ? '+' : ' ');
+				fprintf(m_file, "0-0%c      ", move.check ? '+' : ' ');
 			else
 			if (move.queenSideCastling)
-				fprintf(m_file, "0-0-0%c     ", move.check ? '+' : ' ');
+				fprintf(m_file, "0-0-0%c    ", move.check ? '+' : ' ');
 			else
 			if (move.promotion != move.glyph)
 				fprintf(m_file, "%c%c%c%c%c%c=%c%c ", toupper(m_strings[Strings::GlyphSymbols][move.glyph]), 'a' + move.from / 8, '1' + move.from % 8, move.capture ? 'x' : '-', 'a' + move.to / 8, '1' + move.to % 8, toupper(m_strings[Strings::GlyphSymbols][move.promotion]), move.check ? '+' : ' ');

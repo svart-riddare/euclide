@@ -57,6 +57,9 @@ class Output
 		mutable double m_complexity;      /**< Solving complexity, only the last value is written to file. */
 		mutable int64_t m_positions;      /**< Number of positions examined. */
 		mutable int m_solutions;          /**< Number of solutions found. */
+
+	private :
+		static const wchar_t *Hyphens;
 };
 
 /* -------------------------------------------------------------------------- */
