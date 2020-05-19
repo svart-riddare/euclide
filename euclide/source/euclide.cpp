@@ -137,8 +137,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 					Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
 					men = target.updatePossibleMen(men);
 
-					target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredMoves(target.square()); }));
-					target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredCaptures(target.square()); }));
+					target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredMovesTo(target.square()); }));
+					target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return piece.requiredCapturesTo(target.square()); }));
 				}
 
 			} while (targets.update());
@@ -312,7 +312,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	const EUCLIDE_Deductions deductions = this->deductions();
 
-	std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces));
+	std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces, m_freeMoves));
 	game->play();
 }
 

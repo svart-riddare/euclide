@@ -11,7 +11,7 @@ namespace Euclide
 /* -- Game                                                                 -- */
 /* -------------------------------------------------------------------------- */
 
-Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces)
+Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves)
 	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
 {
 	/* -- Initialize constant tables -- */
@@ -50,6 +50,10 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 			piece.state.moves = 0;
 		}
 	}
+
+	/* -- Initialize free moves -- */
+
+	m_moves = freeMoves;
 
 	/* -- Initialize solution/position counters -- */
 
@@ -164,6 +168,13 @@ bool Game::play(const State& _state)
 			if (!piece.conditions(from, to).satisfied())
 				continue;
 
+			/* -- Check if there are any free moves left -- */
+
+			const int hiddenMoves = std::max(0, piece.requiredMoves() - (piece.requiredMovesTo(from) + piece.requiredMovesFrom(from)));
+			const int extraMoves = std::max(0, 1 + piece.requiredMovesFrom(to) - piece.requiredMovesFrom(from) - hiddenMoves);
+			if (extraMoves > m_moves[color])
+				continue;
+
 			/* -- Check if the king is not in check -- */
 
 			if (false)
@@ -185,6 +196,8 @@ bool Game::play(const State& _state)
 
 			State state = move(_state, from, to, castling);
 			m_states.push_back(&state);
+
+			m_moves[color] -= extraMoves;
 
 			/* -- Move is valid only if the king is not in check -- */
 
@@ -224,6 +237,8 @@ bool Game::play(const State& _state)
 			}
 
 			/* -- Undo move -- */
+
+			m_moves[color] += extraMoves;
 
 			m_states.pop_back();
 			undo(state);

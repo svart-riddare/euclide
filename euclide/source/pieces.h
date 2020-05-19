@@ -75,10 +75,14 @@ class Piece
 		inline int requiredCaptures() const
 			{ return m_requiredCaptures; }
 
-		inline int requiredMoves(Square square) const
+		inline int requiredMovesTo(Square square) const
 			{ return m_distances[square]; }
-		inline int requiredCaptures(Square square) const
+		inline int requiredMovesFrom(Square square) const
+			{ return m_rdistances[square]; }
+		inline int requiredCapturesTo(Square square) const
 			{ return m_captures[square]; }
+		inline int requiresCapturesFrom(Square square) const
+			{ return m_rcaptures[square]; }
 
 		inline int nmoves() const
 			{ return xstd::sum(m_moves, 0, [](Squares squares) { return squares.count(); }); }

@@ -18,7 +18,7 @@ class Piece;
 class Game
 {
 	public:
-		Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces);
+		Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves);
 		~Game();
 
 		void play();
@@ -94,6 +94,7 @@ class Game
 		array<const Piece *, NumSquares> m_board;           /**< Current board position. */
 		array<Squares, NumColors> m_position;               /**< Current occupied squares. */
 		array<Square, NumColors> m_kings;                   /**< Current king positions. */
+		array<int, NumColors> m_moves;                      /**< Current number of free moves available. */
 		HashPosition m_hash;                                /**< Position encoded for hash tables. */
 		Squares m_diagram;                                  /**< Occupied squares to reach. */
 
