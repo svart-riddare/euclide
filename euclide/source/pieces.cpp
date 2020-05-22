@@ -343,12 +343,12 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 			{
 				for (const Piece& piece : pieces[color])
 				{
-					if ((m_route & piece.m_route) && (&piece != this))
+					if (((m_route & piece.m_route) || m_royal || piece.m_royal) && (&piece != this))
 					{
 						if (castling && (piece.m_castlingSquare != piece.m_initialSquare) && (piece.m_castlingSquare == castling->free))
 							continue;
 
-						const array<int, NumSquares> rdistances = piece.computeDistancesTo(piece.m_possibleSquares, m_finalSquare);
+						const array<int, NumSquares> rdistances = piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
 						Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
 
 						if (squares != piece.m_stops)
@@ -566,21 +566,89 @@ array<int, NumSquares> Piece::computeDistances(Square square, Square castling) c
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, Square obstruction) const
+array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 {
 	/* -- Initialize distances and square queue -- */
 
 	array<int, NumSquares> distances;
 	Queue<Square, NumSquares> squares;
 
-	distances.fill(Infinity);
+	for (Square square : AllSquares())
+		if ((distances[square] = (destinations[square] ? 0 : Infinity)) == 0)
+			squares.push(square);
+
+	if (!distances[m_castlingSquare] && distances[m_initialSquare])
+		if ((distances[m_initialSquare] = 0) == 0)
+			squares.push(m_initialSquare);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square to = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square from : AllSquares())
+		{
+			/* -- Skip illegal moves -- */
+
+			if (!m_moves[from][to])
+				continue;
+
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[from] < Infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[from] = distances[to] + 1;
+
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(from);
+
+			/* -- Handle castling -- */
+
+			if (from == m_castlingSquare)
+			{
+				if (distances[m_initialSquare] < Infinity)
+					continue;
+
+				distances[m_initialSquare] = distances[m_castlingSquare];
+				squares.push(m_initialSquare);
+			}
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Piece& blocker, Square obstruction) const
+{
+	const bool enemies = (m_color != blocker.m_color);
+
+	/* -- Early exit if the blocker is ourself -- */
+
+	if (&blocker == this)
+		return computeDistancesTo(destinations);
+
+	/* -- Initialize distances and square queue -- */
+
+	array<int, NumSquares> distances;
+	Queue<Square, NumSquares> squares;
 
 	for (Square square : AllSquares())
 		if ((distances[square] = (destinations[square] && (square != obstruction)) ? 0 : Infinity) == 0)
 			squares.push(square);
 
 	if (!distances[m_castlingSquare] && distances[m_initialSquare])
-		if ((obstruction == Nowhere) || !(*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])
+		if (!(*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])  // WARNING KING SHOULD NOT BLOCK IT'S OWN CASTLING
 			if ((distances[m_initialSquare] = 0) == 0)
 				squares.push(m_initialSquare);
 
@@ -599,8 +667,17 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, Square ob
 			if (!m_moves[from][to])
 				continue;
 
-			if (obstruction != Nowhere)
-				if ((*m_constraints)[from][to][obstruction])
+			/* -- Skip obstructed moves -- */
+
+			if ((*m_constraints)[from][to][obstruction])
+				continue;
+
+			if (m_royal && enemies)
+				if ((*blocker.m_checks)[obstruction][to])
+					continue;
+
+			if (blocker.m_royal && enemies)
+				if ((*m_checks)[from][obstruction])
 					continue;
 
 			/* -- This square may have been attained by a quicker path -- */
@@ -623,9 +700,8 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, Square ob
 				if (distances[m_initialSquare] < Infinity)
 					continue;
 
-				if (obstruction != Nowhere)
-					if ((*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])
-						continue;
+				if ((*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])
+					continue;
 
 				distances[m_initialSquare] = distances[m_castlingSquare];
 				squares.push(m_initialSquare);

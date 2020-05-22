@@ -114,7 +114,8 @@ class Piece
 		void updateDistances(bool castling);
 
 		array<int, NumSquares> computeDistances(Square square, Square castling) const;
-		array<int, NumSquares> computeDistancesTo(Squares destinations, Square obstruction = Nowhere) const;
+		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
+		array<int, NumSquares> computeDistancesTo(Squares destinations, const Piece& blocker, Square obstruction) const;
 
 		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
 		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
