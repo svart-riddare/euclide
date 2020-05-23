@@ -6,6 +6,22 @@ namespace Euclide
 {
 
 /* -------------------------------------------------------------------------- */
+/* -- DiagramCondition                                                     -- */
+/* -------------------------------------------------------------------------- */
+
+DiagramCondition::DiagramCondition(Square square, Glyph glyph)
+	: m_square(square), m_glyph(glyph)
+{
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool DiagramCondition::satisfied(const std::array<const Piece *, NumSquares>& board) const
+{
+	return board[m_square] && (board[m_square]->state.glyph == m_glyph);
+}
+
+/* -------------------------------------------------------------------------- */
 /* -- PositionalCondition                                                  -- */
 /* -------------------------------------------------------------------------- */
 
@@ -16,7 +32,7 @@ PositionalCondition::PositionalCondition(const Piece& piece, const Squares& squa
 
 /* -------------------------------------------------------------------------- */
 
-bool PositionalCondition::satisfied() const
+bool PositionalCondition::satisfied(const std::array<const Piece *, NumSquares>&) const
 {
 	return m_squares[m_piece.state.square];
 }
@@ -40,10 +56,10 @@ Conditions::~Conditions()
 
 /* -------------------------------------------------------------------------- */
 
-bool Conditions::satisfied() const
+bool Conditions::satisfied(const std::array<const Piece *, NumSquares>& board) const
 {
 	for (const Condition *condition : m_conditions)
-		if (!condition->satisfied())
+		if (!condition->satisfied(board))
 			return false;
 
 	return true;

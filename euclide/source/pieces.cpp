@@ -339,11 +339,13 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 					if ((from == c.from) && (m_finalSquare == c.to))
 						castling = &c;
 
+			ArrayOfSquares possibleSquares;
+
 			for (Color color : AllColors())
 			{
 				for (const Piece& piece : pieces[color])
 				{
-					if (((m_route & piece.m_route) || m_royal || piece.m_royal) && (&piece != this))
+					if (((m_route & piece.m_route) && (&piece != this)) || ((m_royal || piece.m_royal) && (m_color != piece.m_color)) || (piece.m_finalSquare == Nowhere))
 					{
 						if (castling && (piece.m_castlingSquare != piece.m_initialSquare) && (piece.m_castlingSquare == castling->free))
 							continue;
@@ -353,6 +355,33 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 
 						if (squares != piece.m_stops)
 							m_conditions->get(from, m_finalSquare).add(new PositionalCondition(piece, squares));
+
+						if (!is(piece.m_captured) && (piece.m_finalSquare == Nowhere))
+						{
+							for (Square square : ValidSquares(piece.m_possibleSquares))
+							{
+								const array<int, NumSquares> rdistances = piece.computeDistancesTo(square, *this, m_finalSquare);
+								Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
+								possibleSquares[square] |= squares;
+							}
+						}
+					}
+				}
+			}
+
+			for (Color color : AllColors())
+			{
+				for (const Piece& piece : pieces[color])
+				{
+					if (!is(piece.m_captured))
+					{
+						for (Square square : ValidSquares(piece.m_possibleSquares))
+						{
+							if (possibleSquares[square].count() == 1)
+								m_conditions->get(from, m_finalSquare).add(new DiagramCondition(square, piece.glyph()));
+
+							possibleSquares[square].reset();
+						}
 					}
 				}
 			}
@@ -668,6 +697,9 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Pie
 				continue;
 
 			/* -- Skip obstructed moves -- */
+
+			if (obstruction == from)
+				continue;
 
 			if ((*m_constraints)[from][to][obstruction])
 				continue;

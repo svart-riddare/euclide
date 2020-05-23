@@ -165,7 +165,7 @@ bool Game::play(const State& _state)
 
 			/* -- Check if all conditions have been satisfied -- */
 
-			if (!piece.conditions(from, to).satisfied())
+			if (!piece.conditions(from, to).satisfied(m_board))
 				continue;
 
 			/* -- Check if there are any free moves left -- */

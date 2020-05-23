@@ -20,7 +20,21 @@ class Condition
 		Condition() {}
 		virtual ~Condition() {}
 
-		virtual bool satisfied() const = 0;
+		virtual bool satisfied(const std::array<const Piece *, NumSquares>& board) const = 0;
+};
+
+/* -------------------------------------------------------------------------- */
+
+class DiagramCondition : public Condition
+{
+	public:
+		DiagramCondition(Square square, Glyph glyph);
+
+		virtual bool satisfied(const std::array<const Piece *, NumSquares>& board) const override;
+
+	private:
+		Square m_square;    /**< Square concerned by condition. */
+		Glyph m_glyph;      /**< Glyph that should be found on given square. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -30,7 +44,7 @@ class PositionalCondition : public Condition
 	public:
 		PositionalCondition(const Piece& piece, const Squares& squares);
 
-		virtual bool satisfied() const override;
+		virtual bool satisfied(const std::array<const Piece *, NumSquares>& board) const override;
 
 	private:
 		const Piece& m_piece;    /**< Piece concerned by condition. */
@@ -47,7 +61,7 @@ class Conditions : public Condition
 		Conditions(const Piece& piece, Square from, Square to);
 		virtual ~Conditions();
 
-		virtual bool satisfied() const override;
+		virtual bool satisfied(const std::array<const Piece *, NumSquares>& board) const override;
 
 		void add(Condition *condition);
 

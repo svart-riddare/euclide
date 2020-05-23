@@ -855,7 +855,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.12
-	Positions examinées : 76432299
+	Positions examinées : 76605067
 	Aucune solution
 
 
@@ -1008,7 +1008,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 60.65
-	Positions examinées : 158277677
+	Positions examinées : 155598610
 	Aucune solution
 
 
@@ -1361,7 +1361,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 64.21
-	Positions examinées : 150994944
+	Positions examinées : 151876356
 	Aucune solution
 
 
@@ -1677,7 +1677,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 63.91
-	Positions examinées : 112423643
+	Positions examinées : 112755702
 	Aucune solution
 
 
@@ -1999,7 +1999,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 83.66
-	Positions examinées : 181968444
+	Positions examinées : 179306496
 	Aucune solution
 
 
@@ -2107,7 +2107,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 69.16
-	Positions examinées : 213909504
+	Positions examinées : 209715200
 	Aucune solution
 
 
@@ -2350,7 +2350,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 44.91
-	Positions examinées : 216006656
+	Positions examinées : 207956440
 	Aucune solution
 
 
@@ -2435,7 +2435,7 @@ Solution n° 1 :
 
 Verdict :
 	Échelle de difficulté = 40.35
-	Positions examinées : 2053203
+	Positions examinées : 58799
 	Solution unique
 
 
@@ -2607,7 +2607,7 @@ Solution n° 1 :
 
 Verdict :
 	Échelle de difficulté = 14.08
-	Positions examinées : 281415
+	Positions examinées : 2344
 	Solution unique
 
 
@@ -2941,7 +2941,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 67.96
-	Positions examinées : 246415360
+	Positions examinées : 242221056
 	Aucune solution
 
 
@@ -2974,7 +2974,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.99
-	Positions examinées : 264241152
+	Positions examinées : 262144000
 	Aucune solution
 
 
@@ -3095,7 +3095,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.52
-	Positions examinées : 182452224
+	Positions examinées : 174063616
 	Aucune solution
 
 
@@ -3128,7 +3128,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.58
-	Positions examinées : 238026752
+	Positions examinées : 236978176
 	Aucune solution
 
 
@@ -3238,7 +3238,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.60
-	Positions examinées : 209715200
+	Positions examinées : 201326592
 	Aucune solution
 
 
@@ -3304,7 +3304,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.99
-	Positions examinées : 204472320
+	Positions examinées : 199229440
 	Aucune solution
 
 
@@ -3381,7 +3381,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 76.60
-	Positions examinées : 99614720
+	Positions examinées : 96468992
 	Aucune solution
 
 
@@ -3458,7 +3458,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 32.62
-	Positions examinées : 225443840
+	Positions examinées : 227540992
 	Aucune solution
 
 
@@ -3836,7 +3836,7 @@ Solution n° 25 :
 
 Verdict :
 	Échelle de difficulté = 27.17
-	Positions examinées : 10951657
+	Positions examinées : 841231
 	Problème démoli
 
 
@@ -3867,10 +3867,22 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	25,0 coups                (16+16)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pd2-d3    Cg8-f6      2. Fc1-e3    Cf6-d5      3. Re1-d2    Cd5-b6     
+ 4. Rd2-c3    Pa7-a6      5. Rc3-b4    Ta8-a7      6. Cb1-c3    Cb6-a8     
+ 7. Fe3-b6    Th8-g8      8. Pe2-e3    Tg8-h8      9. Dd1-g4    Th8-g8     
+10. Dg4-c4    Tg8-h8     11. Pg2-g4    Th8-g8     12. Ff1-g2    Tg8-h8     
+13. Fg2-d5    Th8-g8     14. Cg1-f3    Tg8-h8     15. Ta1-g1    Th8-g8     
+16. Tg1-g3    Tg8-h8     17. Tg3-h3    Th8-g8     18. Th3-h5    Tg8-h8     
+19. Ph2-h4    Th8-g8     20. Th1-h3    Tg8-h8     21. Cf3-h2    Th8-g8     
+22. Th3-f3    Tg8-h8     23. Tf3-f4    Th8-g8     24. Tf4-d4    Tg8-h8     
+25. Pf2-f4    Th8-g8     
+
 Verdict :
 	Échelle de difficulté = 24.43
-	Positions examinées : 287309824
-	Aucune solution
+	Positions examinées : 725722
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -3947,7 +3959,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 127.95
-	Positions examinées : 121634816
+	Positions examinées : 116391936
 	Aucune solution
 
 
@@ -4025,7 +4037,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 141.15
-	Positions examinées : 138412032
+	Positions examinées : 136314880
 	Aucune solution
 
 
@@ -4058,7 +4070,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 77.56
-	Positions examinées : 162529280
+	Positions examinées : 157286400
 	Aucune solution
 
 
@@ -4203,7 +4215,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 144.63
-	Positions examinées : 450887680
+	Positions examinées : 435159040
 	Aucune solution
 
 
