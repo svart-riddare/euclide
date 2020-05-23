@@ -26,7 +26,11 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 
 	/* -- Solve problem -- */
 
-	const EUCLIDE_Status status = EUCLIDE_solve(nullptr, problem, console);
+   EUCLIDE_Configuration configuration;
+   memset(&configuration, 0, sizeof(configuration));
+   configuration.maxSolutions = 8;
+
+	const EUCLIDE_Status status = EUCLIDE_solve(&configuration, problem, console);
 	if (status != EUCLIDE_STATUS_OK)
 		console.displayError(strings[status]);
 

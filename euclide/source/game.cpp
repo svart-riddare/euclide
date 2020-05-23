@@ -132,6 +132,11 @@ bool Game::play(const State& _state)
 
 			if (m_callbacks.displaySolution)
 				(*m_callbacks.displaySolution)(m_callbacks.handle, &solution);
+
+         /* -- Stop searching if we have found many solutions -- */
+
+         if ((m_configuration.maxSolutions > 0) && (m_solutions >= m_configuration.maxSolutions))
+            throw Ok;
 		}
 
 		/* -- End recursion -- */

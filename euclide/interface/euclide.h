@@ -260,7 +260,7 @@ typedef struct
 
 typedef struct
 {
-	int reserved;
+	int maxSolutions;                     /**< Solving stops (returns OK) when reaching this number of solutions. Zero means unlimited searching. */
 
 } EUCLIDE_Configuration;
 

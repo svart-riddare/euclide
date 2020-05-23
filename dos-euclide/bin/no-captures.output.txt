@@ -855,7 +855,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.12
-	Positions examinées : 76605067
+	Positions examinées : 71501577
 	Aucune solution
 
 
@@ -975,7 +975,7 @@ Solution n° 1 :
 
 Verdict :
 	Échelle de difficulté = 53.62
-	Positions examinées : 13777554
+	Positions examinées : 13548439
 	Solution unique
 
 
@@ -1008,7 +1008,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 60.65
-	Positions examinées : 155598610
+	Positions examinées : 146020966
 	Aucune solution
 
 
@@ -1361,7 +1361,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 64.21
-	Positions examinées : 151876356
+	Positions examinées : 146948255
 	Aucune solution
 
 
@@ -1530,6 +1530,95 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	Fcfd1fct/pt1ppppp/r1pP4/1p6/4P3/8/PPP1CPPP/TCF2RDT
+	24
+
+	+---+---+---+---+---+---+---+---+
+	| F | c | f | d |   | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | t |   | p | p | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	| r |   | p | P |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | p |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | P |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P |   | C | P | P | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F |   |   | R | D | T |
+	+---+---+---+---+---+---+---+---+
+	12,0 coups                (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Ca6-b8      6. De2-f1    Pc7-c6     
+ 7. Cg1-e2    Dd8-a5      8. Df1-g1    Re8-d8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 2 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Pc7-c6      6. De2-f1    Ca6-b8     
+ 7. Cg1-e2    Dd8-a5      8. Df1-g1    Re8-d8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 3 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Pc7-c6      6. De2-f1    Dd8-a5     
+ 7. Cg1-e2    Ca6-b8      8. Df1-g1    Re8-d8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 4 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Pc7-c6      6. De2-f1    Dd8-a5     
+ 7. Cg1-e2    Re8-d8      8. Df1-g1    Ca6-b8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 5 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Pc7-c6      6. De2-f1    Dd8-a5     
+ 7. Cg1-e2    Re8-d8      8. Df1-g1    Rd8-c7      9. Re1-f1    Ca6-b8     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 6 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Tb8-b7      5. Dd1-e2    Pc7-c6      6. De2-f1    Dd8-a5     
+ 7. Cg1-e2    Re8-d8      8. Df1-g1    Rd8-c7      9. Re1-f1    Rc7-b6     
+10. Pd2-d4    Ca6-b8     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 7 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Pc7-c6      5. Dd1-e2    Tb8-b7      6. De2-f1    Ca6-b8     
+ 7. Cg1-e2    Dd8-a5      8. Df1-g1    Re8-d8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Solution n° 8 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pb7-b5      2. Ff1-c4    Cb8-a6      3. Fc4-d5    Ta8-b8     
+ 4. Fd5-a8    Pc7-c6      5. Dd1-e2    Tb8-b7      6. De2-f1    Dd8-a5     
+ 7. Cg1-e2    Ca6-b8      8. Df1-g1    Re8-d8      9. Re1-f1    Rd8-c7     
+10. Pd2-d4    Rc7-b6     11. Pd4-d5    Rb6-a6     12. Pd5-d6    Da5-d8     
+
+Verdict :
+	Échelle de difficulté = 10.15
+	Positions examinées : 10470
+	Problème démoli
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	t1f2fct/pp1ppppp/1rp5/8/4PF2/D2P1C2/PPPcFPPP/T3RCdT
 	25
 
@@ -1677,7 +1766,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 63.91
-	Positions examinées : 112755702
+	Positions examinées : 112897913
 	Aucune solution
 
 
@@ -1933,6 +2022,39 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	F2c1fct/pt1ppppp/fTp2F2/rp2d3/P5D1/3PP3/1PP1CPPP/4R1CT
+	32
+
+	+---+---+---+---+---+---+---+---+
+	| F |   |   | c |   | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | t |   | p | p | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	| f | T | p |   |   | F |   |   |
+	+---+---+---+---+---+---+---+---+
+	| r | p |   |   | d |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   |   |   |   | D |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | P | P |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P | P |   | C | P | P | P |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | R |   | C | T |
+	+---+---+---+---+---+---+---+---+
+	16,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 58.76
+	Positions examinées : 182240216
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	5ttr/pp2cp1p/2c1pd2/2p5/1f1p2f1/2P3pP/PP1PPPPD/TCF1RFCT
 	32
 
@@ -1999,7 +2121,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 83.66
-	Positions examinées : 179306496
+	Positions examinées : 177209344
 	Aucune solution
 
 
@@ -2074,7 +2196,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 82.01
-	Positions examinées : 262144000
+	Positions examinées : 248512512
 	Aucune solution
 
 
@@ -2107,7 +2229,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 69.16
-	Positions examinées : 209715200
+	Positions examinées : 199229440
 	Aucune solution
 
 
@@ -2350,7 +2472,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 44.91
-	Positions examinées : 207956440
+	Positions examinées : 193986560
 	Aucune solution
 
 
@@ -2941,7 +3063,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 67.96
-	Positions examinées : 242221056
+	Positions examinées : 223346688
 	Aucune solution
 
 
@@ -2974,7 +3096,40 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.99
-	Positions examinées : 262144000
+	Positions examinées : 235929600
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	ttrccd2/p1pppp1p/R4Tp1/Tp4D1/P3PF1P/1F1Pff2/1PP2PP1/1C4C1
+	42
+
+	+---+---+---+---+---+---+---+---+
+	| t | t | r | c | c | d |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   | p | p | p | p |   | p |
+	+---+---+---+---+---+---+---+---+
+	| R |   |   |   |   | T | p |   |
+	+---+---+---+---+---+---+---+---+
+	| T | p |   |   |   |   | D |   |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   |   | P | F |   | P |
+	+---+---+---+---+---+---+---+---+
+	|   | F |   | P | f | f |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P | P |   |   | P | P |   |
+	+---+---+---+---+---+---+---+---+
+	|   | C |   |   |   |   | C |   |
+	+---+---+---+---+---+---+---+---+
+	21,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 97.87
+	Positions examinées : 154140672
 	Aucune solution
 
 
@@ -3071,6 +3226,160 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	t4Fr1/p1ppc1pp/F3pp2/1p2C1fP/PD2c2d/1C1PPfP1/1PP2Pt1/T3R2T
+	43
+
+	+---+---+---+---+---+---+---+---+
+	| t |   |   |   |   | F | r |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   | p | p | c |   | p | p |
+	+---+---+---+---+---+---+---+---+
+	| F |   |   |   | p | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | p |   |   | C |   | f | P |
+	+---+---+---+---+---+---+---+---+
+	| P | D |   |   | c |   |   | d |
+	+---+---+---+---+---+---+---+---+
+	|   | C |   | P | P | f | P |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P | P |   |   | P | t |   |
+	+---+---+---+---+---+---+---+---+
+	| T |   |   |   | R |   |   | T |
+	+---+---+---+---+---+---+---+---+
+	21,5 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 118.81
+	Positions examinées : 116391936
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	DFTfr1ct/3p1ppp/dpp5/p1PFp3/P1C5/1P4P1/3PPP1P/cCtfR2T
+	43
+
+	+---+---+---+---+---+---+---+---+
+	| D | F | T | f | r |   | c | t |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p |   | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	| d | p | p |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   | P | F | p |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P |   | C |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P |   |   |   |   | P |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | P | P | P |   | P |
+	+---+---+---+---+---+---+---+---+
+	| c | C | t | f | R |   |   | T |
+	+---+---+---+---+---+---+---+---+
+	21,5 coups                (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Ta6-a8    Ff8-e7     17. Pg2-g3    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Tc3-c1     21. Fg2-d5    Pc7-c6     
+22. Fd6-b8    
+
+Solution n° 2 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Ta6-a8    Ff8-e7     17. Pg2-g3    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Pc7-c6     21. Fd6-b8    Tc3-c1     
+22. Fg2-d5    
+
+Solution n° 3 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Ta6-a8    Ff8-e7     17. Pg2-g3    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Pc7-c6     21. Fg2-d5    Tc3-c1     
+22. Fd6-b8    
+
+Solution n° 4 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Pg2-g3    Ff8-e7     17. Ta6-a8    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Tc3-c1     21. Fg2-d5    Pc7-c6     
+22. Fd6-b8    
+
+Solution n° 5 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Pg2-g3    Ff8-e7     17. Ta6-a8    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Pc7-c6     21. Fd6-b8    Tc3-c1     
+22. Fg2-d5    
+
+Solution n° 6 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Pg2-g3    Ff8-e7     17. Ta6-a8    Fe7-d8     18. Ff1-g2    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Pc7-c6     21. Fg2-d5    Tc3-c1     
+22. Fd6-b8    
+
+Solution n° 7 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Pg2-g3    Ff8-e7     17. Ff1-g2    Fe7-d8     18. Ta6-a8    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Tc3-c1     21. Fg2-d5    Pc7-c6     
+22. Fd6-b8    
+
+Solution n° 8 :
+---------------------------------------------------------------------------
+ 1. Pa2-a4    Pa7-a5      2. Ta1-a3    Ta8-a6      3. Ta3-b3    Ta6-d6     
+ 4. Tb3-b6    Cb8-a6      5. Pc2-c4    Ca6-c5      6. Tb6-a6    Pb7-b6     
+ 7. Cg1-f3    Cc5-b3      8. Cf3-e5    Cb3-a1      9. Dd1-b3    Fc8-b7     
+10. Db3-f3    Fb7-e4     11. Pb2-b3    Td6-d3     12. Fc1-a3    Td3-c3     
+13. Fa3-d6    Dd8-c8     14. Pc4-c5    Fe4-c2     15. Ce5-c4    Pe7-e5     
+16. Pg2-g3    Ff8-e7     17. Ff1-g2    Fe7-d8     18. Ta6-a8    Dc8-a6     
+19. Ta8-c8    Fc2-d1     20. Df3-a8    Pc7-c6     21. Fd6-b8    Tc3-c1     
+22. Fg2-d5    
+
+Verdict :
+	Échelle de difficulté = 20.18
+	Positions examinées : 9876
+	Problème démoli
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	R3D3/3c2tt/pppppppp/d2Cr3/1ff3c1/1PP5/P2PPPPP/F2T1FCT
 	43
 
@@ -3095,7 +3404,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.52
-	Positions examinées : 174063616
+	Positions examinées : 173015040
 	Aucune solution
 
 
@@ -3128,7 +3437,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.58
-	Positions examinées : 236978176
+	Positions examinées : 219152384
 	Aucune solution
 
 
@@ -3205,7 +3514,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 73.41
-	Positions examinées : 204472320
+	Positions examinées : 176160768
 	Aucune solution
 
 
@@ -3238,7 +3547,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.60
-	Positions examinées : 201326592
+	Positions examinées : 199229440
 	Aucune solution
 
 
@@ -3271,7 +3580,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 139.29
-	Positions examinées : 131072000
+	Positions examinées : 124780544
 	Aucune solution
 
 
@@ -3304,7 +3613,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.99
-	Positions examinées : 199229440
+	Positions examinées : 195035136
 	Aucune solution
 
 
@@ -3458,7 +3767,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 32.62
-	Positions examinées : 227540992
+	Positions examinées : 220200960
 	Aucune solution
 
 
@@ -3505,6 +3814,39 @@ Verdict :
 	Échelle de difficulté = 19.70
 	Positions examinées : 2082000
 	Solution unique
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	3d1fF1/p1pppp1T/2c2rpc/1p2t2p/P2T2P1/CPD2C2/t1PPPP1P/1fF1R3
+	50
+
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | d |   | f | F |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   | p | p | p | p |   | T |
+	+---+---+---+---+---+---+---+---+
+	|   |   | c |   |   | r | p | c |
+	+---+---+---+---+---+---+---+---+
+	|   | p |   |   | t |   |   | p |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   | T |   |   | P |   |
+	+---+---+---+---+---+---+---+---+
+	| C | P | D |   |   | C |   |   |
+	+---+---+---+---+---+---+---+---+
+	| t |   | P | P | P | P |   | P |
+	+---+---+---+---+---+---+---+---+
+	|   | f | F |   | R |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	25,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 120.52
+	Positions examinées : 155189248
+	Aucune solution
 
 
 ---------------------------------------------------------------------------
@@ -3630,213 +3972,9 @@ Solution n° 8 :
 22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
 25. Cd1-b2    Cd8-b7     
 
-Solution n° 9 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Fc1-d2    Dd8-d6     
- 7. Fd2-a5    Dd6-a6      8. Dd1-d2    Fc8-d7      9. Dd2-b4    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Db4-c3    Tb6-b5     21. Tb3-b4    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 10 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Fc1-d2    Dd8-d6     
- 7. Fd2-a5    Dd6-a6      8. Dd1-d3    Fc8-d7      9. Dd3-a3    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 11 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Fc1-d2    Fd7-a4      8. Fd2-a5    Dd8-d6      9. Dd3-a3    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 12 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Fc1-d2    Fd7-a4      8. Fd2-a5    Dd8-d7      9. Dd3-a3    Dd7-b5     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Db5-c6     21. Da3-c3    Tb6-b5     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 13 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Fc1-d2    Fd7-a4      8. Dd3-a3    Dd8-d6      9. Fd2-a5    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 14 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Fc1-d2    Fd7-a4      8. Dd3-a3    Dd8-d7      9. Fd2-a5    Dd7-b5     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Db5-c6     21. Da3-c3    Tb6-b5     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 15 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Dd3-a3    Fd7-a4      8. Fc1-d2    Dd8-d6      9. Fd2-a5    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 16 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Fc8-d7     
- 7. Dd3-a3    Fd7-a4      8. Fc1-d2    Dd8-d7      9. Fd2-a5    Dd7-b5     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Db5-c6     21. Da3-c3    Tb6-b5     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 17 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Fc8-d7      8. Fd2-a5    Dd6-a6      9. Dd3-a3    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 18 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Fc8-d7      8. Fd2-a5    Fd7-a4      9. Dd3-a3    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 19 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Fc8-d7      8. Dd3-a3    Dd6-a6      9. Fd2-a5    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 20 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Fc8-d7      8. Dd3-a3    Fd7-a4      9. Fd2-a5    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 21 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Dd6-a6      8. Fd2-a5    Fc8-d7      9. Dd3-a3    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 22 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Fc1-d2    Dd6-a6      8. Dd3-a3    Fc8-d7      9. Fd2-a5    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 23 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Dd3-a3    Fc8-d7      8. Fc1-d2    Dd6-a6      9. Fd2-a5    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 24 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Dd3-a3    Fc8-d7      8. Fc1-d2    Fd7-a4      9. Fd2-a5    Dd6-a6     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
-Solution n° 25 :
----------------------------------------------------------------------------
- 1. Pg2-g4    Pg7-g5      2. Ff1-g2    Ff8-g7      3. Fg2-d5    Fg7-d4     
- 4. Fd5-c4    Fd4-c5      5. Pd2-d4    Pd7-d5      6. Dd1-d3    Dd8-d6     
- 7. Dd3-a3    Dd6-a6      8. Fc1-d2    Fc8-d7      9. Fd2-a5    Fd7-a4     
-10. Cb1-c3    Cb8-c6     11. 0-0-0     0-0-0      12. Td1-d3    Td8-d6     
-13. Td3-f3    Td6-f6     14. Tf3-f4    Tf6-f5     15. Cg1-f3    Cg8-f6     
-16. Th1-d1    Th8-d8     17. Td1-d3    Td8-d6     18. Cc3-d1    Cc6-d8     
-19. Td3-b3    Td6-b6     20. Tb3-b4    Tb6-b5     21. Da3-c3    Da6-c6     
-22. Pb2-b3    Pb7-b6     23. Rc1-b2    Rc8-b7     24. Rb2-a3    Rb7-a6     
-25. Cd1-b2    Cd8-b7     
-
 Verdict :
 	Échelle de difficulté = 27.17
-	Positions examinées : 841231
+	Positions examinées : 215040
 	Problème démoli
 
 
@@ -3935,6 +4073,39 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	r1fTc3/ppp3pc/3ppp2/1Df4p/2F1t1tP/dT1PP3/PPPF1PPC/2R1C3
+	52
+
+	+---+---+---+---+---+---+---+---+
+	| r |   | f | T | c |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p |   |   |   | p | c |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p | p | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   | D | f |   |   |   |   | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   | F |   | t |   | t | P |
+	+---+---+---+---+---+---+---+---+
+	| d | T |   | P | P |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P | F |   | P | P | C |
+	+---+---+---+---+---+---+---+---+
+	|   |   | R |   | C |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	26,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 125.43
+	Positions examinées : 130023424
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	2r1c3/pppf1pp1/D1Tppc2/TF5p/1d2t2P/f1FPPP2/PPP3PC/1R1tC3
 	52
 
@@ -3959,7 +4130,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 127.95
-	Positions examinées : 116391936
+	Positions examinées : 103809024
 	Aucune solution
 
 
@@ -4037,7 +4208,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 141.15
-	Positions examinées : 136314880
+	Positions examinées : 128974848
 	Aucune solution
 
 
@@ -4070,7 +4241,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 77.56
-	Positions examinées : 157286400
+	Positions examinées : 142606336
 	Aucune solution
 
 
@@ -4125,6 +4296,39 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	4F3/p2CDfpr/1p1ppptp/2p1C1t1/2P1c1T1/1P1PPPTP/P2cdFPR/4f3
+	68
+
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | F |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   |   | C | D | f | p | r |
+	+---+---+---+---+---+---+---+---+
+	|   | p |   | p | p | p | t | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   | p |   | C |   | t |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   | P |   | c |   | T |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P |   | P | P | P | T | P |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   | c | d | F | P | R |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | f |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	34,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 147.34
+	Positions examinées : 114294784
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	T1r2RCT/1cpp1Dpp/p3pp2/1p3d1f/1P4PF/t1f2c1C/P1PPPP1P/t4F2
 	77
 
@@ -4150,6 +4354,39 @@ Problème analysé :
 Verdict :
 	Échelle de difficulté = 110.11
 	Positions examinées : 139460608
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	3d3T/2pp3R/2P1pppp/1p3Tfr/pP1c3F/2Ct1CPf/P2PPPFP/2c3Dt
+	77
+
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | d |   |   |   | T |
+	+---+---+---+---+---+---+---+---+
+	|   |   | p | p |   |   |   | R |
+	+---+---+---+---+---+---+---+---+
+	|   |   | P |   | p | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   | p |   |   |   | T | f | r |
+	+---+---+---+---+---+---+---+---+
+	| p | P |   | c |   |   |   | F |
+	+---+---+---+---+---+---+---+---+
+	|   |   | C | t |   | C | P | f |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   | P | P | P | F | P |
+	+---+---+---+---+---+---+---+---+
+	|   |   | c |   |   |   | D | t |
+	+---+---+---+---+---+---+---+---+
+	38,5 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 154.63
+	Positions examinées : 126877696
 	Aucune solution
 
 
@@ -4191,6 +4428,39 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	3C2DR/p1p2c1p/3p1pp1/Pp5r/tPPP3F/T3p1Pf/4PPFP/cdf2CTt
+	84
+
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | C |   |   | D | R |
+	+---+---+---+---+---+---+---+---+
+	| p |   | p |   |   | c |   | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p |   | p | p |   |
+	+---+---+---+---+---+---+---+---+
+	| P | p |   |   |   |   |   | r |
+	+---+---+---+---+---+---+---+---+
+	| t | P | P | P |   |   |   | F |
+	+---+---+---+---+---+---+---+---+
+	| T |   |   |   | p |   | P | f |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | P | P | F | P |
+	+---+---+---+---+---+---+---+---+
+	| c | d | f |   |   | C | T | t |
+	+---+---+---+---+---+---+---+---+
+	42,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 161.15
+	Positions examinées : 119537664
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	cF2d2C/RppCpp2/FD4p1/p1Tp3p/PfP4P/tP1f1TP1/r2PPP2/c5t1
 	86
 
@@ -4215,7 +4485,40 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 144.63
-	Positions examinées : 435159040
+	Positions examinées : 416284672
+	Aucune solution
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	cF2d2C/RppCpp2/FD3Tp1/p1Tp3p/PfP4P/tP1f2P1/r2PPP2/c5t1
+	87
+
+	+---+---+---+---+---+---+---+---+
+	| c | F |   |   | d |   |   | C |
+	+---+---+---+---+---+---+---+---+
+	| R | p | p | C | p | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	| F | D |   |   |   | T | p |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   | T | p |   |   |   | p |
+	+---+---+---+---+---+---+---+---+
+	| P | f | P |   |   |   |   | P |
+	+---+---+---+---+---+---+---+---+
+	| t | P |   | f |   |   | P |   |
+	+---+---+---+---+---+---+---+---+
+	| r |   |   | P | P | P |   |   |
+	+---+---+---+---+---+---+---+---+
+	| c |   |   |   |   |   | t |   |
+	+---+---+---+---+---+---+---+---+
+	43,5 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 132.07
+	Positions examinées : 193986560
 	Aucune solution
 
 

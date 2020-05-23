@@ -373,7 +373,7 @@ Retros Mailing List 1995
 P0006319
 
 Fcfd1fct/pt1ppppp/r1pP4/1p6/4P3/8/PPP1CPPP/TCF2RDT
-!24 - Cooked
+24 - Cooked
 
 --------------------------------------------------------------
 
@@ -472,7 +472,7 @@ Diagrammes 1989
 P0001762
 
 F2c1fct/pt1ppppp/fTp2F2/rp2d3/P5D1/3PP3/1PP1CPPP/4R1CT
-!32 - Cooked
+32 - Cooked
 
 --------------------------------------------------------------
 
@@ -714,8 +714,8 @@ Hitoshi Yanami
 Problem Paradise 1998
 P0008917
 
-ttrccd2/p1pppp1p/R4Tp1/Tp4d9/P3PF1P/1F1Pff2/1PP2PP1/1C4C1
-!42 - Cooked
+ttrccd2/p1pppp1p/R4Tp1/Tp4D9/P3PF1P/1F1Pff2/1PP2PP1/1C4C1
+42 - Cooked
 
 --------------------------------------------------------------
 
@@ -742,7 +742,7 @@ Messigny 2000
 P1068094
 
 t4Fr1/p1ppc1pp/F3pp2/1p2C1fP/PD2c2d/1C1PPfP1/1PP2Pt1/T3R2T
-!43 - Cooked
+43 - Cooked
 
 --------------------------------------------------------------
 
@@ -751,7 +751,7 @@ StrateGems 2003
 P1009422
 
 DFTfr1ct/3p1ppp/dpp5/p1PFp3/P1C5/1P4P1/3PPP1P/cCtfR2T
-!43 - Cooked
+43 - Cooked
 
 --------------------------------------------------------------
 
@@ -850,7 +850,7 @@ Scachmatnaja Komposizija 2003
 P1009465
 
 tcr2F1t/p1p1TpTD/3ppcp1/PF3d2/1p2P1P1/2fP3p/1PPCCPfP/4R3/5d2/PPPP1PPP/TC3FCT
-!48 - Cooked
+48 - Cooked
 
 --------------------------------------------------------------
 
@@ -876,7 +876,7 @@ Alexander Kisljak
 Die Schwalbe 1992
 P0000280
 3d1fF1/p1pppp1T/2c2rpc/1p2t2p/P2T2P1/CPD2C2/t1PPPP1P/1fF1R3
-!50 - Cooked
+50 - Cooked
 
 --------------------------------------------------------------
 
@@ -912,7 +912,7 @@ Fairy Chess Review 1939
 P0003038
 
 r1fTc3/ppp3pc/3ppp2/1Df4p/2F1t1tP/dT1PP3/PPPF1PPC/2R1C3
-!52 - Cooked
+52 - Cooked
 
 --------------------------------------------------------------
 
@@ -966,7 +966,7 @@ Die Schwalbe 1995
 P0005310
 
 4F3/p2CDfpr/1p1ppptp/2p1C1t1/2P1c1T1/1P1PPPTP/P2cdFPR/4f3
-!68 - Cooked
+68 - Cooked
 
 --------------------------------------------------------------
 
@@ -983,8 +983,8 @@ Paul Raican
 Phénix 1991
 P0002759
 
-3D3t/2pp3R/2P1ppp/1p3Tfr/pP1c3F/2Ct1CPf/P2PPPFP/2c3Dt
-!77 - Cooked
+3d3T/2pp3R/2P1pppp/1p3Tfr/pP1c3F/2Ct1CPf/P2PPPFP/2c3Dt
+77 - Cooked
 
 --------------------------------------------------------------
 
@@ -1001,8 +1001,8 @@ Paul Raican
 Diagrammes 1989
 P0004070
 
-3C2DR/p1p2c1p/3p1pp1/Pp5r/tPPP3F/T3p1Pf/$PPFP/cdf2CTt
-!84 - Cooked
+3C2DR/p1p2c1p/3p1pp1/Pp5r/tPPP3F/T3p1Pf/4PPFP/cdf2CTt
+84 - Cooked
 
 --------------------------------------------------------------
 
@@ -1019,8 +1019,8 @@ Unto Heinonen
 Die Schwalbe 1989
 P0000146
 
-cF2d2C/RppCpp2/FD3Tp1/p1Tp3p/PfP4P/tP1F2P1/r2PPP2/c5t1
-!87 - Cooked
+cF2d2C/RppCpp2/FD3Tp1/p1Tp3p/PfP4P/tP1f2P1/r2PPP2/c5t1
+87 - Cooked
 
 --------------------------------------------------------------
 
