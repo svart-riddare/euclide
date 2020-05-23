@@ -135,6 +135,11 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 				error = Strings::InvalidArguments;
 		}
 		else
+		if (strncmp(arguments[argument], "--timeout=", strlen("--timeout=")) == 0)
+		{
+			timeout = atoi(arguments[argument] + strlen("--timeout="));
+		}
+		else
 		if (strcmp(arguments[argument], "--wait") == 0)
 			wait = true;
 		else
