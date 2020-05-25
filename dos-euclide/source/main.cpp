@@ -12,11 +12,11 @@
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, int timeout, bool wait)
+bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, const char *options, int timeout, bool wait)
 {
 	/* -- Parse forsythe string -- */
 
-	ForsytheString problem(strings, forsytheString, numHalfMoves);
+	ForsytheString problem(strings, forsytheString, numHalfMoves, options);
 	if (!problem)
 		return false;
 
@@ -72,9 +72,9 @@ bool solve(const Strings& strings, Console& console, const char *file, int timeo
 		{
 			/* -- Solve any problem found (forsythe string on first line, number of moves on second line) -- */
 
-			int numHalfMoves;
-			if (sscanf(bufferB, "%d", &numHalfMoves) == 1)
-				if (solve(strings, console, bufferA, numHalfMoves, timeout, wait))
+			int numHalfMoves, characters;
+			if (sscanf(bufferB, "%d%n", &numHalfMoves, &characters) >= 1)
+				if (solve(strings, console, bufferA, numHalfMoves, bufferB + characters, timeout, wait))
 					problems++;
 
 			/* -- Loop -- */
@@ -156,7 +156,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	{
 		if (problems && moves)
 		{
-			if (!solve(strings, console, problems, atoi(moves), timeout, wait))
+			if (!solve(strings, console, problems, atoi(moves), "", timeout, wait))
 				error = Strings::InvalidProblem;
 		}
 		else

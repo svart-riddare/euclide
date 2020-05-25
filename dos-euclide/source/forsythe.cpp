@@ -28,7 +28,7 @@ ForsytheSymbols::ForsytheSymbols(const wchar_t *symbols)
 /* -- ForsytheString                                                       -- */
 /* -------------------------------------------------------------------------- */
 
-ForsytheString::ForsytheString(const Strings& strings, const char *string, int numHalfMoves)
+ForsytheString::ForsytheString(const Strings& strings, const char *string, int numHalfMoves, const char *options)
 {
 	/* -- Reset problem -- */
 
@@ -109,6 +109,50 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 	/* -- Set number of moves -- */
 
 	m_problem.numHalfMoves = numHalfMoves;
+
+	/* -- Handle options -- */
+
+	if (strstr(options, strings[Strings::Grasshoppers]))
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_QUEEN] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_QUEEN] = EUCLIDE_PIECE_GRASSHOPPER;
+	if (strstr(options, strings[Strings::Nightriders]))
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_KNIGHT] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_KNIGHT] = EUCLIDE_PIECE_NIGHTRIDER;
+
+	if (strstr(options, strings[Strings::Knighted]))
+	{
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_QUEEN] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_QUEEN] = EUCLIDE_PIECE_AMAZON;
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_ROOK] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_ROOK] = EUCLIDE_PIECE_EMPRESS;
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_BISHOP] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_BISHOP] = EUCLIDE_PIECE_PRINCESS;
+	}
+
+	if (strstr(options, strings[Strings::Alfils]))
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_BISHOP] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_BISHOP] = EUCLIDE_PIECE_ALFIL;
+	if (strstr(options, strings[Strings::Camels]))
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_KNIGHT] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_KNIGHT] = EUCLIDE_PIECE_CAMEL;
+	if (strstr(options, strings[Strings::Zebras]))
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_KNIGHT] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_KNIGHT] = EUCLIDE_PIECE_ZEBRA;
+
+	if (strstr(options, strings[Strings::Chinese]))
+	{
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_QUEEN] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_QUEEN] = EUCLIDE_PIECE_LEO;
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_ROOK] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_ROOK] = EUCLIDE_PIECE_PAO;
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_BISHOP] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_BISHOP] = EUCLIDE_PIECE_VAO;
+		m_problem.pieces[EUCLIDE_GLYPH_WHITE_KNIGHT] = m_problem.pieces[EUCLIDE_GLYPH_BLACK_KNIGHT] = EUCLIDE_PIECE_MAO;
+	}
+
+	if (strstr(options, strings[Strings::Monochromatic]))
+		m_problem.variant = EUCLIDE_VARIANT_MONOCHROMATIC;
+	else
+	if (strstr(options, strings[Strings::Bichromatic]))
+		m_problem.variant = EUCLIDE_VARIANT_BICHROMATIC;
+	else
+	if (strstr(options, strings[Strings::Grid]))
+		m_problem.variant = EUCLIDE_VARIANT_GRID_CHESS;
+	else
+	if (strstr(options, strings[Strings::Cylinder]))
+		m_problem.variant = EUCLIDE_VARIANT_CYLINDER_CHESS;
+	else
+	if (strstr(options, strings[Strings::Glasgow]))
+		m_problem.variant = EUCLIDE_VARIANT_GLASGOW_CHESS;
 }
 
 /* -------------------------------------------------------------------------- */

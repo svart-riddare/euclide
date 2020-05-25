@@ -1,6 +1,24 @@
 #include "strings.h"
 
 /* -------------------------------------------------------------------------- */
+/* -- Options                                                              -- */
+/* -------------------------------------------------------------------------- */
+
+static const char *options[] =
+{
+	"Grasshoppers", "Nightriders",
+	"Knighted",
+	"Alfils", "Camels", "Zebras",
+	"Chinese",
+	"Monochromatic", "Bichromatic",
+	"Grid",
+	"Cylinder",
+	"Glasgow"
+};
+
+static_assert(countof(options) == Strings::NumOptions);
+
+/* -------------------------------------------------------------------------- */
 /* -- French strings                                                       -- */
 /* -------------------------------------------------------------------------- */
 
@@ -158,6 +176,8 @@ Strings::Strings()
 		m_statuses = englishStatuses;
 		m_messages = englishMessages;
 	}
+
+	m_options = options;
 }
 
 /* -------------------------------------------------------------------------- */

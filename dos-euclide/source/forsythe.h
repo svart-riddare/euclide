@@ -22,7 +22,7 @@ class ForsytheSymbols
 class ForsytheString
 {
 	public:
-		ForsytheString(const Strings& strings, const char *string, int numHalfMoves);
+		ForsytheString(const Strings& strings, const char *string, int numHalfMoves, const char *options);
 
 	public:
 		inline operator const EUCLIDE_Problem *() const
