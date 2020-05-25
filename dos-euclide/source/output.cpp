@@ -80,7 +80,8 @@ void Output::done(EUCLIDE_Status status)
 	if (m_file)
 	{
 		fprintf(m_file, "%ls\n", m_strings[Strings::Output]);
-		if ((status == EUCLIDE_STATUS_OK) || (status == EUCLIDE_STATUS_ABORTED)) {
+		if (status == EUCLIDE_STATUS_OK)
+      {
 			fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
 			if (m_positions)
 				fprintf(m_file, "\t%ls %" PRId64 "\n", m_strings[Strings::Positions], m_positions);
@@ -89,7 +90,14 @@ void Output::done(EUCLIDE_Status status)
 			if (m_positions)
 				fprintf(m_file, "\t%ls\n", m_strings[verdicts[std::min<int>(m_solutions, countof(verdicts) - 1)]]);
 		}
-		else {
+      else
+      if (status == EUCLIDE_STATUS_ABORTED)
+      {
+         fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
+         fprintf(m_file, "\t%ls\n", m_strings[status]);
+      }
+		else
+      {
 			fprintf(m_file, "\t%ls\n", m_strings[status]);
 		}
 		fprintf(m_file, "\n\n");

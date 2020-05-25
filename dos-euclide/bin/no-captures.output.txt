@@ -40,6 +40,80 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	tcf1rfct/pppp1ppp/8/4p3/3d4/4RP2/PPPPP1PP/TCFD1FCT
+	6
+
+	+---+---+---+---+---+---+---+---+
+	| t | c | f |   | r | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p | p |   | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | p |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | d |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   | R | P |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P | P | P |   | P | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F | D |   | F | C | T |
+	+---+---+---+---+---+---+---+---+
+	3,0 coups                 (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pf2-f3    Pe7-e5      2. Re1-f2    Dd8-h4+     3. Rf2-e3    Dh4-d4+    
+
+Verdict :
+	Échelle de difficulté = 0.00
+	Positions examinées : 7
+	Solution unique
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	tcfdrfct/ppp1p1pp/8/3p1p2/7D/2P5/PP1PPPPP/TCF1RFCT
+	6
+
+	+---+---+---+---+---+---+---+---+
+	| t | c | f | d | r | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p |   | p |   | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p |   | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   | D |
+	+---+---+---+---+---+---+---+---+
+	|   |   | P |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P |   | P | P | P | P | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F |   | R | F | C | T |
+	+---+---+---+---+---+---+---+---+
+	3,0 coups                 (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pc2-c3    Pf7-f6      2. Dd1-a4    Pf6-f5      3. Da4-h4    Pd7-d5     
+
+Verdict :
+	Échelle de difficulté = 4.17
+	Positions examinées : 13
+	Solution unique
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	tcf1rfct/pppp1ppp/8/3Dp3/3dP3/8/PPPP1PPP/TCF1RFCT
 	7
 
@@ -276,6 +350,44 @@ Verdict :
 	Échelle de difficulté = 7.49
 	Positions examinées : 76
 	Deux solutions
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	t1fdrfct/pppppppp/8/5F2/6P1/6c1/PPPPPP1P/TCFDR1CT
+	8
+
+	+---+---+---+---+---+---+---+---+
+	| t |   | f | d | r | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p | p | p | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   | F |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   | P |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   | c |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P | P | P | P |   | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F | D | R |   | C | T |
+	+---+---+---+---+---+---+---+---+
+	4,0 coups                 (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pg2-g3    Cb8-a6      2. Ff1-h3    Ca6-c5      3. Fh3-f5    Cc5-e4     
+ 4. Pg3-g4    Ce4-g3     
+
+Verdict :
+	Échelle de difficulté = 6.91
+	Positions examinées : 34
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -855,8 +967,47 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.12
-	Positions examinées : 71501577
-	Aucune solution
+	Recherche interrompue
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	1c1d1fct/1pp1pppp/F1rp4/3t1f2/p2CD3/3RPP2/PPPP2PP/TCF3T1
+	19
+
+	+---+---+---+---+---+---+---+---+
+	|   | c |   | d |   | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	|   | p | p |   | p | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	| F |   | r | p |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | t |   | f |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p |   |   | C | D |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | R | P | P |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P | P |   |   | P | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F |   |   |   | T |   |
+	+---+---+---+---+---+---+---+---+
+	9,5 coups                 (16+16)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pe2-e3    Pa7-a5      2. Dd1-g4    Pa5-a4      3. Pf2-f3    Ta8-a5     
+ 4. Ff1-a6    Pd7-d6      5. Re1-e2    Fc8-e6      6. Re2-d3    Re8-d7     
+ 7. Cg1-e2    Rd7-c6      8. Th1-g1    Fe6-f5+     9. Dg4-e4+   Ta5-d5+    
+10. Ce2-d4+   
+
+Verdict :
+	Échelle de difficulté = 13.17
+	Positions examinées : 29340
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -975,7 +1126,7 @@ Solution n° 1 :
 
 Verdict :
 	Échelle de difficulté = 53.62
-	Positions examinées : 13548439
+	Positions examinées : 13777554
 	Solution unique
 
 
@@ -1008,8 +1159,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 60.65
-	Positions examinées : 146020966
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -1361,8 +1511,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 64.21
-	Positions examinées : 146948255
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -1766,8 +1915,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 63.91
-	Positions examinées : 112897913
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -1980,6 +2128,38 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	tc4t1/ppp2ppp/5FT1/3ppr2/PP2cCP1/f6f/F1PPPP1P/dC1DR2T
+	29
+
+	+---+---+---+---+---+---+---+---+
+	| t | c |   |   |   |   | t |   |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p |   |   | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   | F | T |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p | p | r |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P | P |   |   | c | C | P |   |
+	+---+---+---+---+---+---+---+---+
+	| f |   |   |   |   |   |   | f |
+	+---+---+---+---+---+---+---+---+
+	| F |   | P | P | P | P |   | P |
+	+---+---+---+---+---+---+---+---+
+	| d | C |   | D | R |   |   | T |
+	+---+---+---+---+---+---+---+---+
+	14,5 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 63.66
+	Recherche interrompue
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	tcfd1CFT/pppp1rp1/4p1c1/5p1p/7P/5PP1/PPPPPt1f/TCFDR3
 	31
 
@@ -2046,8 +2226,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 58.76
-	Positions examinées : 182240216
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -2121,8 +2300,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 83.66
-	Positions examinées : 177209344
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -2196,8 +2374,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 82.01
-	Positions examinées : 248512512
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -2229,8 +2406,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 69.16
-	Positions examinées : 199229440
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -2472,8 +2648,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 44.91
-	Positions examinées : 193986560
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3063,8 +3238,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 67.96
-	Positions examinées : 223346688
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3096,8 +3270,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.99
-	Positions examinées : 235929600
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3129,8 +3302,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 97.87
-	Positions examinées : 154140672
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3250,8 +3422,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 118.81
-	Positions examinées : 116391936
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3404,8 +3575,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.52
-	Positions examinées : 173015040
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3437,8 +3607,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 55.58
-	Positions examinées : 219152384
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3514,8 +3683,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 73.41
-	Positions examinées : 176160768
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3547,8 +3715,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.60
-	Positions examinées : 199229440
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3580,8 +3747,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 139.29
-	Positions examinées : 124780544
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3613,8 +3779,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 68.99
-	Positions examinées : 195035136
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3690,8 +3855,39 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 76.60
-	Positions examinées : 96468992
-	Aucune solution
+	Recherche interrompue
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	rcF1c3/pt1p2pp/5p2/dpp1pf2/3fP3/7t/PPPP1PPP/TCFDR1CT
+	47
+
+	+---+---+---+---+---+---+---+---+
+	| r | c | F |   | c |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	| p | t |   | p |   |   | p | p |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	| d | p | p |   | p | f |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | f | P |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   |   | t |
+	+---+---+---+---+---+---+---+---+
+	| P | P | P | P |   | P | P | P |
+	+---+---+---+---+---+---+---+---+
+	| T | C | F | D | R |   | C | T |
+	+---+---+---+---+---+---+---+---+
+	23,5 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 108.71
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3767,8 +3963,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 32.62
-	Positions examinées : 220200960
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -3845,8 +4040,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 120.52
-	Positions examinées : 155189248
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4097,8 +4291,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 125.43
-	Positions examinées : 130023424
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4130,8 +4323,39 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 127.95
-	Positions examinées : 103809024
-	Aucune solution
+	Recherche interrompue
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2020, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
+	1cr5/3pcppp/pp2p1td/1fp3f1/1FP3T1/RPT2CPP/P1CPPPD1/tF6
+	52
+
+	+---+---+---+---+---+---+---+---+
+	|   | c | r |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   | p | c | p | p | p |
+	+---+---+---+---+---+---+---+---+
+	| p | p |   |   | p |   | t | d |
+	+---+---+---+---+---+---+---+---+
+	|   | f | p |   |   |   | f |   |
+	+---+---+---+---+---+---+---+---+
+	|   | F | P |   |   |   | T |   |
+	+---+---+---+---+---+---+---+---+
+	| R | P | T |   |   | C | P | P |
+	+---+---+---+---+---+---+---+---+
+	| P |   | C | P | P | P | D |   |
+	+---+---+---+---+---+---+---+---+
+	| t | F |   |   |   |   |   |   |
+	+---+---+---+---+---+---+---+---+
+	26,0 coups                (16+16)
+
+Verdict :
+	Échelle de difficulté = 103.26
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4208,8 +4432,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 141.15
-	Positions examinées : 128974848
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4241,8 +4464,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 77.56
-	Positions examinées : 142606336
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4320,8 +4542,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 147.34
-	Positions examinées : 114294784
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4353,8 +4574,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 110.11
-	Positions examinées : 139460608
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4386,8 +4606,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 154.63
-	Positions examinées : 126877696
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4419,8 +4638,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 146.66
-	Positions examinées : 126877696
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4452,8 +4670,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 161.15
-	Positions examinées : 119537664
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4485,8 +4702,7 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 144.63
-	Positions examinées : 416284672
-	Aucune solution
+	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
@@ -4518,7 +4734,6 @@ Problème analysé :
 
 Verdict :
 	Échelle de difficulté = 132.07
-	Positions examinées : 193986560
-	Aucune solution
+	Recherche interrompue
 
 

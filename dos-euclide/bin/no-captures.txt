@@ -1,3 +1,4 @@
+
 --------------------------------------------------------------
 
 Gianni Donati, Noam D. Elkies, Görun Forslund
@@ -6,6 +7,27 @@ P0008141
 
 tcf1rfct/pppp1ppp/8/4p3/3d4/4RP2/PPPPP1PP/TCFD1FCT
 6
+
+--------------------------------------------------------------
+
+François Labelle
+Retros Mailing List 2003
+P1267877
+
+tcf1rfct/pppp1ppp/8/4p3/3d4/4RP2/PPPPP1PP/TCFD1FCT
+6
+
+--------------------------------------------------------------
+
+Pascal Wassong
+Phénix 2016
+P1338822
+
+tcfdrfct/ppp1p1pp/8/3p1p2/7D/2P5/PP1PPPPP/TCF1RFCT
+6
+
+tcfdrfct/ppp1p1pp/8/3p1p2/7D/2P5/PP1PPPPP/TCF1RFCT
+!6 - Cylinder
 
 --------------------------------------------------------------
 
@@ -66,6 +88,15 @@ tcf1rfct/pp1p1ppp/2p1p3/2F5/d2P4/8/PPP1PPPP/TC1DRFCT
 8
 
 (2 solutions)
+
+--------------------------------------------------------------
+
+Andrew Buchanan
+France-Echecs 2010
+P1294311
+
+t1fdrfct/pppppppp/8/5F2/6P1/6c1/PPPPPP1P/TCFDR1CT
+8 - Duplex
 
 --------------------------------------------------------------
 
@@ -211,6 +242,15 @@ Die Schwalbe 2001
 P1003863
 
 tcfdrf1t/pppp1Dpp/4ppc1/2P1C3/8/8/PP1PPPPP/T1F1RFCT
+19
+
+--------------------------------------------------------------
+
+Allan Bell
+Champagne TT 2014
+P1348281
+
+1c1d1fct/1pp1pppp/F1rp4/3t1f2/p2CD3/3RPP2/PPPP2PP/TCF3T1
 19
 
 --------------------------------------------------------------
@@ -379,7 +419,7 @@ Fcfd1fct/pt1ppppp/r1pP4/1p6/4P3/8/PPP1CPPP/TCF2RDT
 
 Olli Heimo
 Retros Mailing List 2007
-P1272252
+P1272254
 
 t1f2fct/pp1ppppp/1rp5/8/4PF2/D2P1C2/PPPcFPPP/T3RCdT
 25
@@ -454,6 +494,15 @@ Phénix 2004
 P1067779
 
 tcf4t/ppppcppp/4p3/8/D4R1f/5PPP/PPPPP1F1/TCFdrTC1
+29
+
+--------------------------------------------------------------
+
+Igor Vereshchagin
+Champagne TT 2015
+P1348199
+
+tc4t1/ppp2ppp/5FT1/3ppr2/PP2cCP1/f6f/F1PPPP1P/dC1DR2T
 29
 
 --------------------------------------------------------------
@@ -620,7 +669,7 @@ P1007484
 
 --------------------------------------------------------------
 
-Itamar Faybish 
+Itamar Faybish
 Orbit 2007
 P1070017
 
@@ -836,6 +885,15 @@ rc3t1c/p4p1p/Fdppp1t1/1p2D3/7P/3PPfp1/PPP1CPP1/TCFRf2T
 
 --------------------------------------------------------------
 
+Rustam Ubaidullajew
+The Problemist 2011-2012
+P1340219
+
+rcF1c3/pt1p2pp/5p2/dpp1pf2/3fP3/7t/PPPP1PPP/TCFDR1CT
+47
+
+--------------------------------------------------------------
+
 Alexandre Leroux
 Problemesis 2002
 P1003967
@@ -921,6 +979,15 @@ Fairy Chess Review 1939 (v)
 P0005338
 
 2r1c3/pppf1pp1/D1Tppc2/TF5p/1d2t2P/f1FPPP2/PPP3PC/1R1tC3
+52
+
+--------------------------------------------------------------
+
+Yoav Ben-Zvi
+StrateGems 2013
+P1349332
+
+1cr5/3pcppp/pp2p1td/1fp3f1/1FP3T1/RPT2CPP/P1CPPPD1/tF6
 52
 
 --------------------------------------------------------------
