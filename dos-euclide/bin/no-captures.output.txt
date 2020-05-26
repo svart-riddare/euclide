@@ -732,7 +732,7 @@ Solution n° 1 :
  7. Rf6-g7    Pf7-f5      8. Rg7-f6    0-0+       
 
 Verdict :
-	Échelle de difficulté = 5.32
+	Échelle de difficulté = 3.00
 	Positions examinées : 52
 	Solution unique
 
@@ -1477,8 +1477,8 @@ Solution n° 1 :
 10. Dg1-e1    Th8-e8     11. Fh3-f1    Dh4-h3     12. Cf3-g1    
 
 Verdict :
-	Échelle de difficulté = 38.38
-	Positions examinées : 35551
+	Échelle de difficulté = 37.77
+	Positions examinées : 34652
 	Solution unique
 
 
@@ -1589,8 +1589,8 @@ Solution n° 1 :
 10. Pg2-g4    Fh3-f1     11. Tg1-g3    Ff1-a6     12. Tg3-h3    Fa6-c8     
 
 Verdict :
-	Échelle de difficulté = 33.75
-	Positions examinées : 1099861
+	Échelle de difficulté = 32.39
+	Positions examinées : 995512
 	Solution unique
 
 
@@ -3301,7 +3301,7 @@ Problème analysé :
 	21,0 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 97.87
+	Échelle de difficulté = 90.83
 	Recherche interrompue
 
 
@@ -3778,7 +3778,7 @@ Problème analysé :
 	23,0 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 68.99
+	Échelle de difficulté = 63.38
 	Recherche interrompue
 
 
@@ -3886,7 +3886,7 @@ Problème analysé :
 	23,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 108.71
+	Échelle de difficulté = 69.50
 	Recherche interrompue
 
 
@@ -4354,7 +4354,7 @@ Problème analysé :
 	26,0 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 103.26
+	Échelle de difficulté = 91.01
 	Recherche interrompue
 
 
@@ -4431,7 +4431,7 @@ Problème analysé :
 	28,0 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 141.15
+	Échelle de difficulté = 135.89
 	Recherche interrompue
 
 
@@ -4573,7 +4573,7 @@ Problème analysé :
 	38,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 110.11
+	Échelle de difficulté = 107.98
 	Recherche interrompue
 
 
@@ -4605,7 +4605,7 @@ Problème analysé :
 	38,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 154.63
+	Échelle de difficulté = 154.22
 	Recherche interrompue
 
 
@@ -4701,7 +4701,7 @@ Problème analysé :
 	43,0 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 144.63
+	Échelle de difficulté = 114.12
 	Recherche interrompue
 
 
@@ -4733,7 +4733,7 @@ Problème analysé :
 	43,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 132.07
+	Échelle de difficulté = 107.20
 	Recherche interrompue
 
 

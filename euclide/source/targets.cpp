@@ -131,8 +131,8 @@ void TargetPartition::assign(const Pieces& pieces)
 
 		for (int k = 0; k < s; k++)
 		{
-			requiredMoves += men[k]->requiredMovesTo(squares[k]);
-			requiredCaptures += men[k]->requiredCapturesTo(squares[k]);
+			requiredMoves += std::max(men[k]->requiredMovesTo(squares[k]), men[k]->requiredMoves());
+			requiredCaptures += std::max(men[k]->requiredCapturesTo(squares[k]), men[k]->requiredCaptures());
 		}
 
 		xstd::minimize(minRequiredMoves, requiredMoves);
