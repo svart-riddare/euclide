@@ -705,15 +705,6 @@ P1305683
 
 --------------------------------------------------------------
 
-Costas Prentos, Andreï Frolkin
-Orbit 2006
-P1078545
-
-t2dr3/1pp2pDp/f3p2F/cTcp2p1/Ff5P/p1PP2Pt/PP1RPP2/C4TC1
-40
-
---------------------------------------------------------------
-
 Satoshi Hashimoto
 Problemesis 2001
 P1013069
