@@ -46,6 +46,9 @@ Piece::Piece(const Problem& problem, Square square)
 	m_requiredMoves = 0;
 	m_requiredCaptures = 0;
 
+	m_freeMoves = m_availableMoves;
+	m_freeCaptures = m_availableCaptures;
+
 	/* -- Initialize possible final squares and capture squares -- */
 
 	for (Square square : AllSquares())
@@ -165,23 +168,25 @@ void Piece::setCaptured(bool captured)
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::setAvailableMoves(int availableMoves)
+void Piece::setAvailableMoves(int availableMoves, int freeMoves)
 {
-	if (availableMoves >= m_availableMoves)
+	if ((availableMoves >= m_availableMoves) && (freeMoves >= m_freeMoves))
 		return;
 
-	m_availableMoves = availableMoves;
+	xstd::minimize(m_availableMoves, availableMoves);
+	xstd::minimize(m_freeMoves, freeMoves);
 	m_update = true;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::setAvailableCaptures(int availableCaptures)
+void Piece::setAvailableCaptures(int availableCaptures, int freeCaptures)
 {
-	if (availableCaptures >= m_availableCaptures)
+	if ((availableCaptures >= m_availableCaptures) && (freeCaptures >= m_freeCaptures))
 		return;
 
-	m_availableCaptures = availableCaptures;
+	xstd::minimize(m_availableCaptures, availableCaptures);
+	xstd::minimize(m_freeCaptures, freeCaptures);
 	m_update = true;
 }
 
@@ -264,11 +269,14 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 	/* -- Play all possible moves with these two pieces -- */
 
 	array<State, 2> states = {
-		State(pieceA, pieceA.m_requiredMoves + freeMoves[pieceA.m_color]),
-		State(pieceB, pieceB.m_requiredMoves + freeMoves[pieceB.m_color])
+		State(pieceA, pieceA.m_availableMoves),
+		State(pieceB, pieceB.m_availableMoves)
 	};
 
-	const int availableMoves = requiredMoves + freeMoves[pieceA.m_color] + (enemies ? freeMoves[pieceB.m_color] : 0);
+	const int availableMoves = std::min(
+		pieceA.m_availableMoves + pieceB.m_availableMoves - (enemies ? 0 : std::min(pieceA.m_freeMoves, pieceB.m_freeMoves)),
+		requiredMoves + freeMoves[pieceA.m_color] + (enemies ? freeMoves[pieceB.m_color] : 0)
+	);
 
 	TwoPieceCache cache;
 	const int newRequiredMoves = fast ? fastplay(states, availableMoves, cache) : fullplay(states, availableMoves, availableMoves, cache);

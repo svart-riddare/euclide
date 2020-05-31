@@ -27,8 +27,8 @@ class Piece
 		void setCastling(CastlingSide side, bool castling);
 		void setCaptured(bool captured);
 
-		void setAvailableMoves(int availableMoves);
-		void setAvailableCaptures(int availableCaptures);
+		void setAvailableMoves(int availableMoves, int freeMoves);
+		void setAvailableCaptures(int availableCaptures, int freeCaptures);
 
 		void setPossibleSquares(const Squares& squares);
 		void setPossibleCaptures(const Squares& captures);
@@ -169,6 +169,8 @@ class Piece
 		int m_availableCaptures;                       /**< Number of captures available for this piece. */
 		int m_requiredMoves;                           /**< Minimum number of moves required by this piece. */
 		int m_requiredCaptures;                        /**< Minimum number of captures performed by this piece. */
+		int m_freeMoves;                               /**< Number of free moves in available moves. */
+		int m_freeCaptures;                            /**< Number of free captures in available captures. */
 
 		array<int, NumSquares> m_distances;            /**< Number of moves required to reach each square. */
 		array<int, NumSquares> m_rdistances;           /**< Number of moves required to reach one of the final squares. */

@@ -149,7 +149,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		for (Color color : AllColors())
 		{
 			m_freeMoves[color] = m_problem.moves(color) - xstd::sum(m_pieces[color], [](const Piece& piece) { return piece.requiredMoves(); });
-
 			m_freeCaptures[color] = m_problem.capturedPieces(!color) - xstd::sum(m_pieces[color], [](const Piece& piece) { return piece.requiredCaptures(); });
 
 			if ((m_freeMoves[color] < 0) || (m_freeCaptures[color] < 0))
@@ -209,8 +208,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			{
 				const Man man = std::distance(pieces.data(), &piece);
 
-				piece.setAvailableMoves(piece.requiredMoves() + unassignedRequiredMoves[man] + freeMoves);
-				piece.setAvailableCaptures(piece.requiredCaptures() + unassignedRequiredCaptures[man] + freeCaptures);
+				piece.setAvailableMoves(piece.requiredMoves() + unassignedRequiredMoves[man] + freeMoves, freeMoves);
+				piece.setAvailableCaptures(piece.requiredCaptures() + unassignedRequiredCaptures[man] + freeCaptures, freeCaptures);
 			}
 		}
 
