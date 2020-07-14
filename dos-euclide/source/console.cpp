@@ -223,7 +223,7 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 	}
 	else
 	{
-		write(L"", countof(string), true, m_width - countof(string), 3, Colors::Thinking);
+		write(L"", countof(string), true, m_width - countof(string) - 1, 3, Colors::Thinking);
 	}
 
 	swprintf(string, countof(string), L"%" PRId64, thinking.positions);
