@@ -260,6 +260,11 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 	if (!(routes[0] & routes[1]))
 		return requiredMoves;
 
+	/* -- Interactions with captures are not yet implemented -- */
+
+	if (maybe(pieceA.m_captured) || maybe(pieceB.m_captured))
+		return requiredMoves;
+
 	/* -- Use fast method if the search space is too large -- */
 
 	const int threshold = 5000;
@@ -358,13 +363,13 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 						if (castling && (piece.m_castlingSquare != piece.m_initialSquare) && (piece.m_castlingSquare == castling->free))
 							continue;
 
-						const array<int, NumSquares> rdistances = piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
+						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares) : piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
 						Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
 
 						if (squares != piece.m_stops)
 							m_conditions->get(from, m_finalSquare).add(new PositionalCondition(piece, squares));
 
-						if (!is(piece.m_captured) && (piece.m_finalSquare == Nowhere))
+						if (!maybe(piece.m_captured) && (piece.m_finalSquare == Nowhere))
 						{
 							for (Square square : ValidSquares(piece.m_possibleSquares))
 							{

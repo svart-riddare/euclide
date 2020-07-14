@@ -92,7 +92,7 @@ class Piece
 		inline Squares captures(Square from) const
 			{ return m_xmoves ? (*m_xmoves)[from] : Squares(); }
 		inline Squares constraints(Square from, Square to, bool capture) const
-			{ return (capture && m_xconstraints) ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]; }
+			{ return capture ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]; }
 
 		inline const Squares& stops() const
 			{ return m_stops; }

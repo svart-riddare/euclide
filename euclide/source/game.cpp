@@ -155,12 +155,16 @@ bool Game::play(const State& _state)
 	{
 		const Piece& piece = *m_board[from];
 
-		for (Square to : ValidSquares(piece.moves(from)))
+		const Squares destinations = piece.moves(from) - m_position[color];
+		for (Square to : ValidSquares(destinations))
 		{
 			/* -- Check if capture is ok -- */
 
 			const bool capture = m_position[!color][to];
-			if (capture && !is(m_board[to]->captured()))
+			if (capture && !maybe(m_board[to]->captured()))
+				continue;
+
+			if (!capture && piece.captures(from)[to])
 				continue;
 
 			/* -- Check if move is possible given other pieces on the board -- */

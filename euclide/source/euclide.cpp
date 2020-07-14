@@ -252,7 +252,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		const int stopThreshold = 8;
 
 		for (Piece *blocker : pieces)
-			if (!is(blocker->captured()))
+			if (!maybe(blocker->captured()))
 				if (blocker->stops().count() < stopThreshold)
 					for (Piece *piece : pieces)
 						if (piece != blocker)

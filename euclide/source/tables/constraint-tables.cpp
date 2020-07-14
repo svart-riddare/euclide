@@ -7,6 +7,11 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
+static constexpr uint64_t none(Square /*from*/, Square /*to*/, bool /*capture*/)
+{
+	return 0;
+}
+
 static constexpr uint64_t leaper(Square /*from*/, Square to, bool capture)
 {
 	return (uint64_t(!capture) << to);
@@ -35,17 +40,16 @@ static constexpr uint64_t runner(Square from, Square to, bool capture)
 static constexpr uint64_t king(Square from, Square to, bool capture)
 {
 	return leaper(from, to, capture)
-		| (((from == E1) && (to == C1) && !capture) ? runner(E1, B1, capture) : 0)
-		| (((from == E1) && (to == G1) && !capture) ? runner(E1, G1, capture) : 0)
-		| (((from == E8) && (to == C8) && !capture) ? runner(E8, B8, capture) : 0)
-		| (((from == E8) && (to == G8) && !capture) ? runner(E8, G8, capture) : 0)
+		| (((from == E1) && (to == C1)) ? runner(E1, B1, false) : 0)
+		| (((from == E1) && (to == G1)) ? runner(E1, G1, false) : 0)
+		| (((from == E8) && (to == C8)) ? runner(E8, B8, false) : 0)
+		| (((from == E8) && (to == G8)) ? runner(E8, G8, false) : 0)
 	;
 }
 
-static constexpr uint64_t pawn(Square from, Square to, bool capture)
+static constexpr uint64_t pawn(Square from, Square to, bool /*capture*/)
 {
-	return leaper(from, to, capture) |
-		((col(to) == col(from)) ? (uint64_t(1) << Euclide::square(col(to), row(to) - (row(to) - row(from)) / 2)) : 0);
+	return runner(from, to, col(from) != col(to));
 }
 
 static constexpr uint64_t neighbors(Square square)
@@ -85,6 +89,17 @@ static constexpr uint64_t mao(Square from, Square to, bool capture)
 	function(square, G1, capture), function(square, G2, capture), function(square, G3, capture), function(square, G4, capture), function(square, G5, capture), function(square, G6, capture), function(square, G7, capture), function(square, G8, capture), \
 	function(square, H1, capture), function(square, H2, capture), function(square, H3, capture), function(square, H4, capture), function(square, H5, capture), function(square, H6, capture), function(square, H7, capture), function(square, H8, capture)  \
 }
+
+static const MatrixOfSquares NoConstraints = { {
+	CONSTRAINTS(none, A1, false), CONSTRAINTS(none, A2, false), CONSTRAINTS(none, A3, false), CONSTRAINTS(none, A4, false), CONSTRAINTS(none, A5, false), CONSTRAINTS(none, A6, false), CONSTRAINTS(none, A7, false), CONSTRAINTS(none, A8, false),
+	CONSTRAINTS(none, B1, false), CONSTRAINTS(none, B2, false), CONSTRAINTS(none, B3, false), CONSTRAINTS(none, B4, false), CONSTRAINTS(none, B5, false), CONSTRAINTS(none, B6, false), CONSTRAINTS(none, B7, false), CONSTRAINTS(none, B8, false),
+	CONSTRAINTS(none, C1, false), CONSTRAINTS(none, C2, false), CONSTRAINTS(none, C3, false), CONSTRAINTS(none, C4, false), CONSTRAINTS(none, C5, false), CONSTRAINTS(none, C6, false), CONSTRAINTS(none, C7, false), CONSTRAINTS(none, C8, false),
+	CONSTRAINTS(none, D1, false), CONSTRAINTS(none, D2, false), CONSTRAINTS(none, D3, false), CONSTRAINTS(none, D4, false), CONSTRAINTS(none, D5, false), CONSTRAINTS(none, D6, false), CONSTRAINTS(none, D7, false), CONSTRAINTS(none, D8, false),
+	CONSTRAINTS(none, E1, false), CONSTRAINTS(none, E2, false), CONSTRAINTS(none, E3, false), CONSTRAINTS(none, E4, false), CONSTRAINTS(none, E5, false), CONSTRAINTS(none, E6, false), CONSTRAINTS(none, E7, false), CONSTRAINTS(none, E8, false),
+	CONSTRAINTS(none, F1, false), CONSTRAINTS(none, F2, false), CONSTRAINTS(none, F3, false), CONSTRAINTS(none, F4, false), CONSTRAINTS(none, F5, false), CONSTRAINTS(none, F6, false), CONSTRAINTS(none, F7, false), CONSTRAINTS(none, F8, false),
+	CONSTRAINTS(none, G1, false), CONSTRAINTS(none, G2, false), CONSTRAINTS(none, G3, false), CONSTRAINTS(none, G4, false), CONSTRAINTS(none, G5, false), CONSTRAINTS(none, G6, false), CONSTRAINTS(none, G7, false), CONSTRAINTS(none, G8, false),
+	CONSTRAINTS(none, H1, false), CONSTRAINTS(none, H2, false), CONSTRAINTS(none, H3, false), CONSTRAINTS(none, H4, false), CONSTRAINTS(none, H5, false), CONSTRAINTS(none, H6, false), CONSTRAINTS(none, H7, false), CONSTRAINTS(none, H8, false)
+}};
 
 static const MatrixOfSquares KingMoveConstraints = {{
 	CONSTRAINTS(king, A1, false), CONSTRAINTS(king, A2, false), CONSTRAINTS(king, A3, false), CONSTRAINTS(king, A4, false), CONSTRAINTS(king, A5, false), CONSTRAINTS(king, A6, false), CONSTRAINTS(king, A7, false), CONSTRAINTS(king, A8, false),
@@ -130,7 +145,7 @@ static const MatrixOfSquares RunnerCaptureConstraints = {{
 	CONSTRAINTS(runner, H1, true), CONSTRAINTS(runner, H2, true), CONSTRAINTS(runner, H3, true), CONSTRAINTS(runner, H4, true), CONSTRAINTS(runner, H5, true), CONSTRAINTS(runner, H6, true), CONSTRAINTS(runner, H7, true), CONSTRAINTS(runner, H8, true)
 }};
 
-static const MatrixOfSquares PawnMoveConstraints = {{
+static const MatrixOfSquares PawnMoveAndCaptureConstraints = {{
 	CONSTRAINTS(pawn, A1, false), CONSTRAINTS(pawn, A2, false), CONSTRAINTS(pawn, A3, false), CONSTRAINTS(pawn, A4, false), CONSTRAINTS(pawn, A5, false), CONSTRAINTS(pawn, A6, false), CONSTRAINTS(pawn, A7, false), CONSTRAINTS(pawn, A8, false),
 	CONSTRAINTS(pawn, B1, false), CONSTRAINTS(pawn, B2, false), CONSTRAINTS(pawn, B3, false), CONSTRAINTS(pawn, B4, false), CONSTRAINTS(pawn, B5, false), CONSTRAINTS(pawn, B6, false), CONSTRAINTS(pawn, B7, false), CONSTRAINTS(pawn, B8, false),
 	CONSTRAINTS(pawn, C1, false), CONSTRAINTS(pawn, C2, false), CONSTRAINTS(pawn, C3, false), CONSTRAINTS(pawn, C4, false), CONSTRAINTS(pawn, C5, false), CONSTRAINTS(pawn, C6, false), CONSTRAINTS(pawn, C7, false), CONSTRAINTS(pawn, C8, false),
@@ -185,17 +200,6 @@ static const MatrixOfSquares MaoCaptureConstraints = {{
 	CONSTRAINTS(mao, H1, true), CONSTRAINTS(mao, H2, true), CONSTRAINTS(mao, H3, true), CONSTRAINTS(mao, H4, true), CONSTRAINTS(mao, H5, true), CONSTRAINTS(mao, H6, true), CONSTRAINTS(mao, H7, true), CONSTRAINTS(mao, H8, true)
 }};
 
-static const MatrixOfSquares NoConstraints = {{
-	CONSTRAINTS(leaper, A1, true), CONSTRAINTS(leaper, A2, true), CONSTRAINTS(leaper, A3, true), CONSTRAINTS(leaper, A4, true), CONSTRAINTS(leaper, A5, true), CONSTRAINTS(leaper, A6, true), CONSTRAINTS(leaper, A7, true), CONSTRAINTS(leaper, A8, true),
-	CONSTRAINTS(leaper, B1, true), CONSTRAINTS(leaper, B2, true), CONSTRAINTS(leaper, B3, true), CONSTRAINTS(leaper, B4, true), CONSTRAINTS(leaper, B5, true), CONSTRAINTS(leaper, B6, true), CONSTRAINTS(leaper, B7, true), CONSTRAINTS(leaper, B8, true),
-	CONSTRAINTS(leaper, C1, true), CONSTRAINTS(leaper, C2, true), CONSTRAINTS(leaper, C3, true), CONSTRAINTS(leaper, C4, true), CONSTRAINTS(leaper, C5, true), CONSTRAINTS(leaper, C6, true), CONSTRAINTS(leaper, C7, true), CONSTRAINTS(leaper, C8, true),
-	CONSTRAINTS(leaper, D1, true), CONSTRAINTS(leaper, D2, true), CONSTRAINTS(leaper, D3, true), CONSTRAINTS(leaper, D4, true), CONSTRAINTS(leaper, D5, true), CONSTRAINTS(leaper, D6, true), CONSTRAINTS(leaper, D7, true), CONSTRAINTS(leaper, D8, true),
-	CONSTRAINTS(leaper, E1, true), CONSTRAINTS(leaper, E2, true), CONSTRAINTS(leaper, E3, true), CONSTRAINTS(leaper, E4, true), CONSTRAINTS(leaper, E5, true), CONSTRAINTS(leaper, E6, true), CONSTRAINTS(leaper, E7, true), CONSTRAINTS(leaper, E8, true),
-	CONSTRAINTS(leaper, F1, true), CONSTRAINTS(leaper, F2, true), CONSTRAINTS(leaper, F3, true), CONSTRAINTS(leaper, F4, true), CONSTRAINTS(leaper, F5, true), CONSTRAINTS(leaper, F6, true), CONSTRAINTS(leaper, F7, true), CONSTRAINTS(leaper, F8, true),
-	CONSTRAINTS(leaper, G1, true), CONSTRAINTS(leaper, G2, true), CONSTRAINTS(leaper, G3, true), CONSTRAINTS(leaper, G4, true), CONSTRAINTS(leaper, G5, true), CONSTRAINTS(leaper, G6, true), CONSTRAINTS(leaper, G7, true), CONSTRAINTS(leaper, G8, true),
-	CONSTRAINTS(leaper, H1, true), CONSTRAINTS(leaper, H2, true), CONSTRAINTS(leaper, H3, true), CONSTRAINTS(leaper, H4, true), CONSTRAINTS(leaper, H5, true), CONSTRAINTS(leaper, H6, true), CONSTRAINTS(leaper, H7, true), CONSTRAINTS(leaper, H8, true)
-}};
-
 /* -------------------------------------------------------------------------- */
 
 const MatrixOfSquares *getMoveConstraints(Species species, Variant variant, bool capture, bool null)
@@ -205,25 +209,25 @@ const MatrixOfSquares *getMoveConstraints(Species species, Variant variant, bool
 		return nullptr;  // TODO
 
 	static const MatrixOfSquares *constraints[][2] = {
-		{ nullptr, nullptr },                                             // None
-		{ &KingMoveConstraints, nullptr },                                // King
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Queen
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Rook
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Bishop
-		{ &LeaperMoveConstraints, nullptr },                              // Knight
-		{ &PawnMoveConstraints, nullptr },                                // Pawn
-		{ &GrasshopperMoveConstraints, &GrasshopperCaptureConstraints },  // Grasshopper
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Nightrider
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Amazon
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Empress
-		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },            // Princess
-		{ &LeaperMoveConstraints, nullptr },                              // Alfil
-		{ &LeaperMoveConstraints, nullptr },                              // Camel
-		{ &LeaperMoveConstraints, nullptr },                              // Zebra
-		{ &RunnerMoveConstraints, nullptr },                              // Leo
-		{ &RunnerMoveConstraints, nullptr },                              // Pao
-		{ &RunnerMoveConstraints, nullptr },                              // Vao
-		{ &MaoMoveConstraints, &MaoCaptureConstraints }                   // Mao
+		{ nullptr, nullptr },                                                // None
+		{ &KingMoveConstraints, &NoConstraints },                            // King
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Queen
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Rook
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Bishop
+		{ &LeaperMoveConstraints, &NoConstraints},                           // Knight
+		{ &PawnMoveAndCaptureConstraints, &PawnMoveAndCaptureConstraints },  // Pawn
+		{ &GrasshopperMoveConstraints, &GrasshopperCaptureConstraints },     // Grasshopper
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Nightrider
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Amazon
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Empress
+		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Princess
+		{ &LeaperMoveConstraints, &NoConstraints },                          // Alfil
+		{ &LeaperMoveConstraints, &NoConstraints },                          // Camel
+		{ &LeaperMoveConstraints, &NoConstraints },                          // Zebra
+		{ &RunnerMoveConstraints, &NoConstraints },                          // Leo
+		{ &RunnerMoveConstraints, &NoConstraints },                          // Pao
+		{ &RunnerMoveConstraints, &NoConstraints },                          // Vao
+		{ &MaoMoveConstraints, &MaoCaptureConstraints }                      // Mao
 	};
 
 	static_assert(countof(constraints) == NumSpecies);
