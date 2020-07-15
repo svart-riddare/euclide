@@ -46,7 +46,7 @@ class HashPosition
 		void set(Square square, const array<bool, NumCastlingSides>& castlings);
 
 	private:
-		array<uint8_t, NumSquares / 2> m_glyphs;    /**< Glyphs, four bits each. Castling rights are encoded with the rooks. */
+		array<uint8_t, NumSquares / 2> m_glyphs;    /**< Glyphs, four bits each. Castling rights are encoded with the kings. */
 };
 
 /* -------------------------------------------------------------------------- */
