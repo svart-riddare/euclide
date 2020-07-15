@@ -5,11 +5,15 @@ cmake_minimum_required(VERSION 2.8)
 set(SOURCES
 	../../source/cache.cpp
 	../../source/cache.h
+	../../source/conditions.cpp
+	../../source/conditions.h
 	../../source/copyright.cpp
 	../../source/definitions.h
 	../../source/euclide.cpp
-	../../source/game.h
 	../../source/game.cpp
+	../../source/game.h
+	../../source/hashtables.cpp
+	../../source/hashtables.h
 	../../source/includes.h
 	../../source/pieces.cpp
 	../../source/pieces.h

@@ -14,6 +14,7 @@
 /* -------------------------------------------------------------------------- */
 
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -28,6 +29,7 @@
 #include <iterator>
 #include <list>
 #include <map>
+#include <memory>
 #include <new>
 #include <numeric>
 #include <queue>

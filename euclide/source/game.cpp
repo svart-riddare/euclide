@@ -118,7 +118,7 @@ bool Game::play(const State& _state)
 
 	/* -- End recursion -- */
 
-	if (m_states.size() >= m_problem.moves())
+	if (int(m_states.size()) >= m_problem.moves())
 	{
 		/* -- Check for solution -- */
 

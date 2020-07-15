@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cinttypes>
 #include <climits>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <cwchar>

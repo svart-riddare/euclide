@@ -41,5 +41,8 @@ include_directories(../../../euclide/interface)
 
 # Dependent on ncurses library
 
-target_link_libraries(dos-euclide ncursesw)
+set(CURSES_NEED_WIDE TRUE)
+set(CURSES_NEED_NCURSES TRUE)
+find_package(Curses REQUIRED)
 
+target_link_libraries(dos-euclide ${CURSES_LIBRARIES})

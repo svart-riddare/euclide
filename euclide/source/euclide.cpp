@@ -180,12 +180,12 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 			int freeMoves = m_freeMoves[color] - partitions.unassignedRequiredMoves();
 			array<int, MaxPieces> unassignedRequiredMoves;
-			for (Man man = 0; man < pieces.size(); man++)
+			for (Man man = 0; man < int(pieces.size()); man++)
 				unassignedRequiredMoves[man] = partitions.unassignedRequiredMoves(man);
 
 			int freeCaptures = m_freeCaptures[color] - partitions.unassignedRequiredCaptures();
 			array<int, MaxPieces> unassignedRequiredCaptures;
-			for (Man man = 0; man < pieces.size(); man++)
+			for (Man man = 0; man < int(pieces.size()); man++)
 				unassignedRequiredCaptures[man] = partitions.unassignedRequiredCaptures(man);
 
 			for (const Tandem& tandem : m_tandems)
@@ -302,14 +302,17 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		loop = false;
 	}
 
+	/* -- Display final deductions -- */
+
+	if (m_callbacks.displayDeductions)
+		(*m_callbacks.displayDeductions)(m_callbacks.handle, &deductions());
+
 	/* -- Display playing message -- */
 
 	if (m_callbacks.displayMessage)
 		(*m_callbacks.displayMessage)(m_callbacks.handle, EUCLIDE_MESSAGE_SEARCHING);
 
 	/* -- Play all possible games -- */
-
-	const EUCLIDE_Deductions deductions = this->deductions();
 
 	std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces, m_freeMoves));
 	game->play();

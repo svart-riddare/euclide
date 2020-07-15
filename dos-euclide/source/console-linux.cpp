@@ -150,15 +150,15 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			if (deduction.numSquares > 1)
 				for (int k = 0; k < 4; k++)
-					if (deduction.numSquares >= pow(10, k))
-						mvaddch(y, x + 24 - k, ('0' + (deduction.numSquares / (int)pow(10, k)) % 10) | (color ? Colors::NumBlackSquares : Colors::NumWhiteSquares));
+					if (deduction.numSquares >= std::pow(10, k))
+						mvaddch(y, x + 24 - k, ('0' + (deduction.numSquares / (int)std::pow(10, k)) % 10) | (color ? Colors::NumBlackSquares : Colors::NumWhiteSquares));
 
 			/* -- Print number of possible moves -- */
 
 			const int numExtraMoves = deduction.numMoves - deduction.requiredMoves;
 			for (int k = 0; k < 4; k++)
-				if (numExtraMoves >= pow(10, k))
-					mvaddch(y, x + 31 - k, ('0' + (numExtraMoves / (int)pow(10, k)) % 10) | (color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves));
+				if (numExtraMoves >= std::pow(10, k))
+					mvaddch(y, x + 31 - k, ('0' + (numExtraMoves / (int)std::pow(10, k)) % 10) | (color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves));
 		}
 	}
 

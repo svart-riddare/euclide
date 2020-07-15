@@ -113,7 +113,7 @@ typedef enum
 
 	/* -- Promotion variants -- */
 
-	EUCLIDE_VARIANT_GLASGOW_CHESS,    /**< Promotions occur on the 7th (2nd) rank. /
+	EUCLIDE_VARIANT_GLASGOW_CHESS,     /**< Promotions occur on the 7th (2nd) rank. */
 
 	/* -- Number of variants -- */
 
