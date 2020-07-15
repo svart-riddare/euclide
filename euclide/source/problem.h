@@ -27,6 +27,8 @@ class Problem
 			{ return m_pieces; }
 		inline Species piece(Glyph glyph) const
 			{ return m_pieces[glyph]; }
+		inline bool enpassant(Glyph glyph) const
+			{ return m_pieces[glyph] == Pawn; }
 		inline Variant variant() const
 			{ return m_variant; }
 

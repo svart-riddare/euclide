@@ -42,7 +42,7 @@ class Game
 		{
 			public:
 				State(const Problem& problem);
-				State(const State& state, Square from, Square to, const Piece *captured, CastlingSide castling, const array<bool, NumCastlingSides>& castlings);
+				State(const State& state, Square from, Square to, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant);
 
 				inline void check(bool check)
 					{ m_check = check; }
@@ -54,6 +54,8 @@ class Game
 					{ return m_castlings[m_color][side]; }
 				inline bool enpassant(Square square) const
 					{ return m_enpassant == square; }
+				inline bool enpassant() const
+					{ return m_enpassant != Nowhere; }
 				inline Color color() const
 					{ return m_color; }
 				inline bool check() const
@@ -63,6 +65,8 @@ class Game
 					{ return m_castling; }
 				inline const Piece *captured() const
 					{ return m_captured; }
+				inline Square capture() const
+					{ return m_capture; }
 				inline Square from() const
 					{ return m_from; }
 				inline Square to() const
@@ -76,6 +80,7 @@ class Game
 
 				CastlingSide m_castling;                                  /**< Set if last move was a castling move. */
 				const Piece *m_captured;                                  /**< Piece captured last move. */
+				Square m_capture;                                         /**< Last move capture square (for enpassant captures). */
 				Square m_from;                                            /**< Last move departure square. */
 				Square m_to;                                              /**< Last move arrival square. */
 		};
