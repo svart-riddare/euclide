@@ -141,7 +141,7 @@ void TargetPartition::assign(const Pieces& pieces)
 		if ((minRequiredMoves <= m_requiredMoves) && (minRequiredCaptures <= m_requiredCaptures))
 			break;
 
-	} while (std::next_permutation(squares, squares + s));
+	} while (std::next_permutation(men, men + m));
 
 	/* -- Update required moves and captures -- */
 
