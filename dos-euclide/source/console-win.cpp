@@ -3,7 +3,7 @@
 /* -------------------------------------------------------------------------- */
 
 WinConsole::WinConsole(const Strings& strings)
-	: Console(strings)
+	: Console(strings), m_characters(nullptr)
 {
 	/* -- Initialize console handles -- */
 
@@ -13,7 +13,9 @@ WinConsole::WinConsole(const Strings& strings)
 	if ((m_output == INVALID_HANDLE_VALUE) || (m_input == INVALID_HANDLE_VALUE))
 		return;
 
-	GetConsoleScreenBufferInfo(m_output, &m_initialState);
+	if (!GetConsoleScreenBufferInfo(m_output, &m_initialState))
+		return;
+
 	m_width = 2 * (std::min<int>(m_initialState.dwSize.X, 120) / 2);
 	m_height = std::min<int>(m_initialState.dwSize.Y, 25);
 
