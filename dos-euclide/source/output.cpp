@@ -175,9 +175,10 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 		}
 
 		wchar_t buffer[48];
-		swprintf(buffer, countof(buffer), L"%d%ls%d %ls", problem.numHalfMoves / 2, m_strings[Strings::Dot], (problem.numHalfMoves % 2) ? 5 : 0, m_strings[Strings::Moves]);
-		while (int(wcslen(buffer)) < 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0)) wcscat(buffer, L" ");
-		swprintf(buffer + wcslen(buffer), 8, L"(%d+%d)", white, black);
+		int length = swprintf(buffer, countof(buffer), L"%d%ls%d %ls", problem.numHalfMoves / 2, m_strings[Strings::Dot], (problem.numHalfMoves % 2) ? 5 : 0, m_strings[Strings::Moves]);
+		length += swprintf(buffer + length, countof(buffer) - length, L"%*c", 26 + ((white < 10) ? 1 : 0) + ((black < 10) ? 1 : 0) - length, ' ');
+		length += swprintf(buffer + length, countof(buffer) - length, L"(%d+%d)", white, black);
+		std::fill_n(buffer + length, countof(buffer) - length, 0);
 		fprintf(m_file, "%ls\n\n", buffer);
 		fflush(m_file);
 	}
