@@ -211,6 +211,8 @@ typedef struct
 typedef struct
 {
 	EUCLIDE_Move moves[8];                /**< Moves being explored (first eight move of game). */
+	int numHalfMoves;                     /**< Number of moves in above array. */
+
 	int64_t positions;                    /**< Number of positions examined. */
 
 } EUCLIDE_Thinking;

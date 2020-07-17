@@ -192,13 +192,13 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 
 	wchar_t string[6 * countof(thinking.moves) + 1];
 
-	if (thinking.moves[0].glyph)
+	if (thinking.numHalfMoves)
 	{
-		const unsigned black = (thinking.moves[0].glyph & 1) ^ 1;
+		const int black = (thinking.moves[0].glyph & 1) ^ 1;
 		wcscpy(string, black ? L"1. ...  " : L"");
 
 		wchar_t *s = string + wcslen(string);
-		for (unsigned m = 0; m < countof(thinking.moves) - black; m++)
+		for (int m = 0; m < thinking.numHalfMoves - black; m++)
 		{
 			const EUCLIDE_Move& move = thinking.moves[m];
 

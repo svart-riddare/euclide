@@ -79,8 +79,8 @@ void Game::play()
 	/* -- Done -- */
 
 	EUCLIDE_Thinking thinking;
-	memset(&thinking, 0, sizeof(thinking));
 	thinking.positions = m_positions;
+	thinking.numHalfMoves = 0;
 
 	if (m_callbacks.displayThinking)
 		(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
@@ -106,7 +106,7 @@ bool Game::play(const State& _state)
 	{
 		EUCLIDE_Thinking thinking;
 		thinking.positions = m_positions;
-		cmoves(thinking.moves, std::min<int>(countof(EUCLIDE_Thinking::moves), m_states.size()));
+		cmoves(thinking.moves, thinking.numHalfMoves = std::min<int>(countof(EUCLIDE_Thinking::moves), m_states.size()));
 
 		if (m_callbacks.displayThinking)
 			(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
