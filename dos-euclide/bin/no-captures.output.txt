@@ -816,8 +816,8 @@ Solution n° 2 :
  7. Fe2-g4+   Re6-f7      8. Fg4-h3    Rf7-e8      9. Dd1-h5+   
 
 Verdict :
-	Échelle de difficulté = 37.70
-	Positions examinées : 239355
+	Échelle de difficulté = 33.62
+	Positions examinées : 147034
 	Deux solutions
 
 
@@ -1085,8 +1085,8 @@ Solution n° 1 :
 10. Rf2-e1    Fg5-h6     
 
 Verdict :
-	Échelle de difficulté = 40.90
-	Positions examinées : 721817
+	Échelle de difficulté = 38.48
+	Positions examinées : 339371
 	Solution unique
 
 
@@ -1158,7 +1158,7 @@ Problème analysé :
 	10,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 60.65
+	Échelle de difficulté = 57.13
 	Recherche interrompue
 
 
@@ -3542,7 +3542,7 @@ Problème analysé :
 	21,5 coups                (16+16)
 
 Verdict :
-	Échelle de difficulté = 55.52
+	Échelle de difficulté = 51.10
 	Recherche interrompue
 
 
@@ -4135,8 +4135,8 @@ Solution n° 8 :
 25. Cd1-b2    Cd8-b7     
 
 Verdict :
-	Échelle de difficulté = 27.17
-	Positions examinées : 215040
+	Échelle de difficulté = 13.40
+	Positions examinées : 18148
 	Problème démoli
 
 
