@@ -123,27 +123,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	for (bool loop = true; loop; )
 	{
-		/* -- Assign moves and captures to targets -- */
-
-		for (Color color : AllColors())
-		{
-			const Pieces& pieces = m_pieces[color];
-			Targets& targets = m_targets[color];
-
-			do
-			{
-				for (Target& target : targets)
-				{
-					Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
-					men = target.updatePossibleMen(men);
-
-					target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square()), piece.requiredMoves()); }));
-					target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(target.square()), piece.requiredCaptures()); }));
-				}
-
-			} while (targets.update());
-		}
-
 		/* -- Compute free moves and captures -- */
 
 		for (Color color : AllColors())
@@ -164,52 +143,87 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 		for (Color color : AllColors())
 		{
-			Pieces& pieces = m_pieces[color];
-
-			TargetPartitions partitions(pieces, m_targets[color]);
-
-			for (const TargetPartition& partition : partitions)
-				if (partition.men().count() <= partition.squares().count())
-					for (Man man : ValidMen(partition.men()))
-						pieces[man].setCaptured(false);
-
-			for (const TargetPartition& partition : partitions)
-				for (Man man : ValidMen(partition.men()))
-					if (!maybe(pieces[man].captured()))
-						pieces[man].setPossibleSquares(partition.squares());
-
-			int freeMoves = m_freeMoves[color] - partitions.unassignedRequiredMoves();
-			array<int, MaxPieces> unassignedRequiredMoves;
-			for (Man man = 0; man < int(pieces.size()); man++)
-				unassignedRequiredMoves[man] = partitions.unassignedRequiredMoves(man);
-
-			int freeCaptures = m_freeCaptures[color] - partitions.unassignedRequiredCaptures();
-			array<int, MaxPieces> unassignedRequiredCaptures;
-			for (Man man = 0; man < int(pieces.size()); man++)
-				unassignedRequiredCaptures[man] = partitions.unassignedRequiredCaptures(man);
-
-			for (const Tandem& tandem : m_tandems)
+			bool analyse = true;
+			while (analyse)
 			{
-				if ((tandem.pieceA.color() == color) && (tandem.pieceB.color() == color))
+				Targets& targets = m_targets[color];
+				Pieces& pieces = m_pieces[color];
+
+				/* -- Assign moves and captures to targets -- */
+
+				do
 				{
-					const Man manA = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceA));
-					const Man manB = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceB));
-					const int moves = tandem.requiredMoves - tandem.pieceA.requiredMoves() - tandem.pieceB.requiredMoves();
+					for (Target& target : targets)
+					{
+						Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
+						men = target.updatePossibleMen(men);
 
-					if (!unassignedRequiredMoves[manA] && !unassignedRequiredMoves[manB])
-						freeMoves -= moves;
+						target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square()), piece.requiredMoves()); }));
+						target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(target.square()), piece.requiredCaptures()); }));
+					}
 
-					xstd::maximize(unassignedRequiredMoves[manA], moves);
-					xstd::maximize(unassignedRequiredMoves[manB], moves);
+				} while (targets.update());
+
+				/* -- Merge targets into partitions -- */
+
+				TargetPartitions partitions(pieces, m_targets[color]);
+
+				/* -- Update possibles squares -- */
+
+				for (const TargetPartition& partition : partitions)
+					if (partition.men().count() <= partition.squares().count())
+						for (Man man : ValidMen(partition.men()))
+							pieces[man].setCaptured(false);
+
+				for (const TargetPartition& partition : partitions)
+					for (Man man : ValidMen(partition.men()))
+						if (!maybe(pieces[man].captured()))
+							pieces[man].setPossibleSquares(partition.squares());
+
+				/* -- Assign moves and captures -- */
+
+				int freeMoves = m_freeMoves[color] - partitions.unassignedRequiredMoves();
+				array<int, MaxPieces> unassignedRequiredMoves;
+				for (Man man = 0; man < int(pieces.size()); man++)
+					unassignedRequiredMoves[man] = partitions.unassignedRequiredMoves(man);
+
+				int freeCaptures = m_freeCaptures[color] - partitions.unassignedRequiredCaptures();
+				array<int, MaxPieces> unassignedRequiredCaptures;
+				for (Man man = 0; man < int(pieces.size()); man++)
+					unassignedRequiredCaptures[man] = partitions.unassignedRequiredCaptures(man);
+
+				for (const Tandem& tandem : m_tandems)
+				{
+					if ((tandem.pieceA.color() == color) && (tandem.pieceB.color() == color))
+					{
+						const Man manA = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceA));
+						const Man manB = std::distance(pieces.data(), const_cast<Piece *>(&tandem.pieceB));
+						const int moves = tandem.requiredMoves - tandem.pieceA.requiredMoves() - tandem.pieceB.requiredMoves();
+
+						if (!unassignedRequiredMoves[manA] && !unassignedRequiredMoves[manB])
+							freeMoves -= moves;
+
+						xstd::maximize(unassignedRequiredMoves[manA], moves);
+						xstd::maximize(unassignedRequiredMoves[manB], moves);
+					}
 				}
-			}
 
-			for (Piece& piece : pieces)
-			{
-				const Man man = std::distance(pieces.data(), &piece);
+				/* -- Update available moves and captures for all pieces -- */
 
-				piece.setAvailableMoves(piece.requiredMoves() + unassignedRequiredMoves[man] + freeMoves, freeMoves);
-				piece.setAvailableCaptures(piece.requiredCaptures() + unassignedRequiredCaptures[man] + freeCaptures, freeCaptures);
+				for (Piece& piece : pieces)
+				{
+					const Man man = std::distance(pieces.data(), &piece);
+
+					piece.setAvailableMoves(piece.requiredMoves() + unassignedRequiredMoves[man] + freeMoves, freeMoves);
+					piece.setAvailableCaptures(piece.requiredCaptures() + unassignedRequiredCaptures[man] + freeCaptures, freeCaptures);
+				}
+
+				/* -- Split partitions if possible and loop if we did -- */
+
+				analyse = false;
+				for (const TargetPartition& partition : partitions)
+					if (partition.disjoint(pieces, freeMoves, freeCaptures, targets))
+						analyse = true;
 			}
 		}
 

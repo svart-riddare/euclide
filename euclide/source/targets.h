@@ -79,6 +79,8 @@ class TargetPartition
 		bool merge(const Target& target);
 		void assign(const Pieces& pieces);
 
+		bool disjoint(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets) const;
+
 	public:
 		inline const Squares& squares() const
 			{ return m_squares; }
@@ -89,6 +91,11 @@ class TargetPartition
 			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
 			{ return m_requiredCaptures; }
+
+		inline int assignedRequiredMoves() const
+			{ return m_assignedRequiredMoves; }
+		inline int assignedRequiredCaptures() const
+			{ return m_assignedRequiredCaptures; }
 
 		inline int unassignedRequiredMoves() const
 			{ return m_unassignedRequiredMoves; }
@@ -101,6 +108,9 @@ class TargetPartition
 
 		int m_requiredMoves;                 /**< Required moves. */
 		int m_requiredCaptures;              /**< Required captures. */
+
+		int m_assignedRequiredMoves;         /**< Required moves assigned to a specific piece. */
+		int m_assignedRequiredCaptures;      /**< Required captures assigned to a specific piece. */
 
 		int m_unassignedRequiredMoves;       /**< Required moves unassigned to a specific piece. */
 		int m_unassignedRequiredCaptures;    /**< Required captures unassigned to a specific piece. */

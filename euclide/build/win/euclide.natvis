@@ -280,12 +280,12 @@
           <If Condition="m_bits >> bit &amp; 1">
             <Item Condition="bit==0">"King (0)",sb</Item>
             <Item Condition="bit==1">"Queen (1)",sb</Item>
-            <Item Condition="bit==2">"K-Rook (2)",sb</Item>
-            <Item Condition="bit==3">"Q-Rook (3)",sb</Item>
-            <Item Condition="bit==4">"K-Bishop (4)",sb</Item>
-            <Item Condition="bit==5">"Q-Bishop (5)",sb</Item>
-            <Item Condition="bit==6">"K-Knight (6)",sb</Item>
-            <Item Condition="bit==7">"Q-Knight (7)",sb</Item>
+            <Item Condition="bit==2">"Q-Rook (2)",sb</Item>
+            <Item Condition="bit==3">"K-Rook (3)",sb</Item>
+            <Item Condition="bit==4">"Q-Bishop (4)",sb</Item>
+            <Item Condition="bit==5">"K-Bishop (5)",sb</Item>
+            <Item Condition="bit==6">"Q-Knight (6)",sb</Item>
+            <Item Condition="bit==7">"K-Knight (7)",sb</Item>
             <Item Condition="bit==8">"A-Pawn (8)",sb</Item>
             <Item Condition="bit==9">"B-Pawn (9)",sb</Item>
             <Item Condition="bit==10">"C-Pawn (10)",sb</Item>

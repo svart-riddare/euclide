@@ -148,18 +148,84 @@ void TargetPartition::assign(const Pieces& pieces)
 	assert(minRequiredMoves >= m_requiredMoves);
 	assert(minRequiredCaptures >= m_requiredCaptures);
 
-	int assignedMoves = 0, assignedCaptures = 0;
+	m_assignedRequiredMoves = 0;
 	for (int k = 0; k < m; k++)
-	{
-		assignedMoves += men[k]->requiredMoves();
-		assignedCaptures += men[k]->requiredCaptures();
-	}
+		m_assignedRequiredMoves += men[k]->requiredMoves();
 
-	m_unassignedRequiredMoves = minRequiredMoves - assignedMoves;
-	m_unassignedRequiredCaptures = minRequiredCaptures - assignedCaptures;
+	m_assignedRequiredCaptures = 0;
+	for (int k = 0; k < m; k++)
+		m_assignedRequiredCaptures += men[k]->requiredCaptures();
+
+	m_unassignedRequiredMoves = minRequiredMoves - m_assignedRequiredMoves;
+	m_unassignedRequiredCaptures = minRequiredCaptures - m_assignedRequiredCaptures;
+
+	assert(m_unassignedRequiredMoves >= 0);
+	assert(m_unassignedRequiredCaptures >= 0);
 
 	m_requiredMoves = std::max(m_requiredMoves, minRequiredMoves);
 	m_requiredCaptures = std::max(m_requiredCaptures, minRequiredCaptures);
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool TargetPartition::disjoint(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets) const
+{
+	/* -- List men and target squares -- */
+
+	Square squares[MaxPieces]; int s = 0;
+	for (Square square : ValidSquares(m_squares))
+		squares[s++] = square;
+
+	const Piece *men[MaxPieces]; int m = 0;
+	for (Man man : ValidMen(m_men))
+		men[m++] = &pieces[man];
+
+	/* -- Early exit if there are too many permutations -- */
+
+	if (m >= 8)
+		return false;
+
+	/* -- Get available moves and captures -- */
+
+	const int availableMoves = m_assignedRequiredMoves + m_unassignedRequiredMoves + freeMoves;
+	const int availableCaptures = m_assignedRequiredCaptures + m_unassignedRequiredCaptures + freeCaptures;
+
+	/* -- Try every men permutation -- */
+
+	Men destinations[NumSquares];
+
+	do
+	{
+		int requiredMoves = 0, requiredCaptures = 0;
+
+		for (int k = 0; k < s; k++)
+		{
+			requiredMoves += std::max(men[k]->requiredMovesTo(squares[k]), men[k]->requiredMoves());
+			requiredCaptures += std::max(men[k]->requiredCapturesTo(squares[k]), men[k]->requiredCaptures());
+		}
+
+		if ((requiredMoves <= availableMoves) && (requiredCaptures <= availableCaptures))
+			for (int k = 0; k < s; k++)
+				destinations[squares[k]] |= Man(std::distance(&pieces[0], men[k]));
+
+	} while (std::next_permutation(men, men + m));
+
+	/* -- Update targets -- */
+
+	bool updated = false;
+	for (Target& target : targets)
+	{
+		if (m_squares[target.square()])
+		{
+			if (destinations[target.square()] != target.men())
+			{
+				target.updatePossibleMen(destinations[target.square()]);
+				updated = true;
+			}
+		}
+	}
+
+	return updated;
 }
 
 /* -------------------------------------------------------------------------- */
