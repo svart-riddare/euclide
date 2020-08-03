@@ -153,7 +153,7 @@ bool AnalysePhaseE(pseudopartie *Partie)
 
 		if (PionBlanc->TrajetSiPion->NombreDeCaptures || PionNoir->TrajetSiPion->NombreDeCaptures)
 			continue;
-			
+
 		if (PionBlanc->Promue && PionNoir->Capturee && (PionNoir->Assassin == PionBlanc))
 			return false;
 
@@ -429,7 +429,7 @@ bool PropagationDesPenalites(pseudopartie *Partie, bool *Encore)
 					if (NombreMinimumDeCoups <= Coup->NombreDeCoups)
 						continue;
 
-					unsigned int Extra = NombreMinimumDeCoups - Coup->NombreDeCoups;					
+					unsigned int Extra = NombreMinimumDeCoups - Coup->NombreDeCoups;
 
 					if (Coup->De == MaxCases)
 						continue;
@@ -620,7 +620,7 @@ bool InitialisationDesBlocages(const strategie *Strategie)
 				}
 
 				if (Bloquer)
-					BloquerUneLigne(Piece->Depart, Piece->Scenario->CaseFinale, Piece->Scenario->Piece);	
+					BloquerUneLigne(Piece->Depart, Piece->Scenario->CaseFinale, Piece->Scenario->Piece);
 			}
 
 			if (Piece->Scenario->Homme == XROI) {
@@ -1390,7 +1390,7 @@ void PrioritesPourLesPions(pseudopartie *Partie)
 
 				while (!CoupAdverse->Dernier && !CoupAdverse->Victime && !CoupAdverse->Promotion)
 					CoupAdverse++;
-				
+
 				if (CoupAdverse->Dernier && !CoupAdverse->Assassin && !CoupAdverse->Victime)
 					Coups[PremiersCoups[k]].DoitPreceder[Coups[PremiersCoups[k]].NombreDoitPreceder++] = &CoupsAdverses[PremiersCoupsAdverses[k]];
 

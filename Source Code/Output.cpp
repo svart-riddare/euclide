@@ -54,14 +54,14 @@ void ChoixDeLangue(langue Langue)
 		unsigned int Length = strlen(Tampon);
 		while ((Length > 0) && isspace(Tampon[Length - 1]))
 			Tampon[--Length] = '\0';
-			
+
 		Textes[TextesLus] = new char[Length + 1];
 		strcpy(Textes[TextesLus], Tampon);
 
 		if (++TextesLus >= MaxTextes)
 			break;
 	}
-	
+
 	if (TextesLus < MaxTextes)
 		ErreurFichierLangue(FichiersTexte[Langue]);
 
@@ -83,15 +83,15 @@ const char *GetTexte(texte Texte, unsigned int LongueurMaximale, bool TailleExac
 	static char Tampon[1024];
 
 	unsigned int Longueur = strlen(Textes[Texte]);
-	
+
 	if (LongueurMaximale > 1023)
 		LongueurMaximale = 1023;
-	
+
 	if (Longueur > LongueurMaximale)
 		Longueur = LongueurMaximale;
 
 	memcpy(Tampon, Textes[Texte], Longueur);
-	
+
 	if (TailleExacte) {
 		if (LongueurMaximale > Longueur)
 			memset(&Tampon[Longueur], ' ', LongueurMaximale - Longueur);
@@ -240,7 +240,7 @@ void OutputFile(const char *Fichier)
 
 /*************************************************************/
 
-void OutputEntete(const char *PositionEPD, unsigned int DemiCoups) 
+void OutputEntete(const char *PositionEPD, unsigned int DemiCoups)
 {
 	if (!Output)
 		Output = fopen("Output.txt", "w");
@@ -265,13 +265,13 @@ void OutputEntete(const char *PositionEPD, unsigned int DemiCoups)
 
 		if (!isspace(PositionEPD[k]))
 			Tampon[i++] = PositionEPD[k];
-	
+
 		Blancs += ((PositionEPD[k] >= 'A') && (PositionEPD[k] <= 'Z')) ? 1 : 0;
 		Noirs += ((PositionEPD[k] >= 'a') && (PositionEPD[k] <= 'z')) ? 1 : 0;
 
 	} while (PositionEPD[++k]);
 
-	Tampon[i] = '\0';		
+	Tampon[i] = '\0';
 	fprintf(Output, "%s\n\t%s\n\t%u\n\n", GetTexte(MESSAGE_PROBLEMEANALYSE, 256, false), Tampon, DemiCoups);
 
 	fprintf(Output, "\t+---+---+---+---+---+---+---+---+\n\t");
@@ -285,7 +285,7 @@ void OutputEntete(const char *PositionEPD, unsigned int DemiCoups)
 
 		if (isalpha(PositionEPD[k]))
 			fprintf(Output, "| %c ", PositionEPD[k]);
-			
+
 		if (PositionEPD[k] == '/')
 			fprintf(Output, "|\n\t+---+---+---+---+---+---+---+---+\n\t");
 	}
@@ -328,7 +328,7 @@ void OutputContinuerDe(unsigned int ContinuerDe)
 
 	fprintf(Output, "%s #%u\n", GetTexte(MESSAGE_REPRISE, 64, false), ContinuerDe);
 	fflush(Output);
-}	
+}
 
 /*************************************************************/
 
@@ -338,7 +338,7 @@ void OutputPiedDePage(unsigned int NombreSolutions, bool Duals, bool Escape)
 		return;
 
 	fprintf(Output, "\n%s\n", GetTexte(MESSAGE_VERDICT, 32, false));
-	
+
 	if (Duals) {
 		fprintf(Output, "\t%s\n", GetTexte(MESSAGE_COOKED, 32, false));
 	}

@@ -23,7 +23,7 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 
 int main(int NombreArguments, char *Arguments[])
 {
-	bool Continuer = true;	
+	bool Continuer = true;
 	bool ModeExpress = false;
 	unsigned int ContinuerDe = 0;
 
@@ -126,14 +126,14 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 	while (Encore) {
 		unsigned int Coups = 0;
 		int Scan = 0;
-				
+
 		if (sscanf(DemiCoups, "%u%n", &Coups, &Scan) == 1) {
 			diagramme *Diagramme = EPDToDiagramme(EPD, Coups, false);
-			
+
 			if (Diagramme) {
 				int NombreContraintes = 0;
 				const char *Contraintes[32];
-				
+
 				while (NombreContraintes < 32) {
 					while (DemiCoups[Scan] && isspace(DemiCoups[Scan]))
 						Scan++;
@@ -152,7 +152,7 @@ void LireLeFichier(const char *Nom, bool Continuer, unsigned int ContinuerDe, bo
 				}
 
 				Encore = Main(EPD, Coups, Contraintes, NombreContraintes, Continuer, ContinuerDe, ModeExpress);
-				Delete(Diagramme);				
+				Delete(Diagramme);
 				NombreTrouve++;
 			}
 		}

@@ -71,7 +71,7 @@ typedef struct _vie {
 	const trajetpion *TrajetSiPion;
 	const scenario *ScenariosSiPion[MaxRangees];
 
-    
+
 } vie;
 
 /**************/

@@ -13,7 +13,7 @@ unsigned int MemoireDisponible()
 	if (!GlobalMemoryStatusEx(&memory))
 		return 0;
 
-	double MemoirePhysiqueDisponible = log((double)memory.ullAvailPhys) / log(2.0); 
+	double MemoirePhysiqueDisponible = log((double)memory.ullAvailPhys) / log(2.0);
 	double MemoireVirtuelleDisponible = log((double)memory.ullAvailVirtual) / log(2.0);
 
 	if ((MemoirePhysiqueDisponible < 1) || (MemoireVirtuelleDisponible < 1))

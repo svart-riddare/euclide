@@ -37,7 +37,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, const char *Contraint
 		Sauvegarde(Diagramme, ContinuerDe);
 
 		texte Texte = (ContinuerDe > 1) ? MESSAGE_SUITE : MESSAGE_RECHERCHE;
-				
+
 		strategies *Strategies = ExamenDesStrategies(Position, (_texte)Texte);
 		pseudopartie *Partie = NULL;
 		unsigned int NombreSolutions = 0;
@@ -74,7 +74,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, const char *Contraint
 
 				if (Possible) {
 					OutputStrategie(&Strategies->StrategieActuelle, Partie);
-					
+
 					if (Strategies->StrategieActuelle.IDFinal >= ContinuerDe) {
 						OutputMessage(MESSAGE_ANALYSE);
 						Texte = MESSAGE_RECHERCHE;
@@ -112,7 +112,7 @@ bool Main(const char *PositionEPD, unsigned int DemiCoups, const char *Contraint
 
 				if (IsEscape() == ESCAPE_ESCAPE)
 					Escape = true;
-				
+
 			} while (!Escape && !Duals && ProchaineStrategie(Strategies, (_texte)Texte));
 
 #ifndef NDEBUG

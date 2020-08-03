@@ -483,7 +483,7 @@ bool FonctionRecursivePrincipale(etatdujeu *Partie, contraintes *Contraintes, un
 					}
 					else {
 						ModifyWithUndo(Undos, &NombreUndos, &CoupBis->NombreDeCoups, CoupsRestants);
-						ModifyWithUndo(Undos, &NombreUndos, &PremiersCoups[Qui], CoupBis);						
+						ModifyWithUndo(Undos, &NombreUndos, &PremiersCoups[Qui], CoupBis);
 						ModifyWithUndo(Undos, &NombreUndos, &Coup->CoupJoue, true);
 					}
 				}

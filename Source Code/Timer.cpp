@@ -39,7 +39,7 @@ const char *GetElapsedTime()
 
 	if (Heures > 0) {
 		sprintf(Tampon, "%u:%02u:%02u.%02u", Heures, Minutes, Secondes, Centiemes);
-	} 
+	}
 	else if (Minutes > 0) {
 		sprintf(Tampon, "%u:%02u.%02u", Minutes, Secondes, Centiemes);
 	}

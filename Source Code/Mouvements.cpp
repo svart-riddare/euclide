@@ -103,7 +103,7 @@ void CreationDesTablesDeMouvement()
 			TousLesMouvementsRoi[De][Vers] = false;
 			TousLesMouvementsPionBlancs[De][Vers] = false;
 			TousLesMouvementsPionNoirs[De][Vers] = false;
-			
+
 			if ((ColonneVers == ColonneDe) ^ (RangeeVers == RangeeDe))
 				TousLesMouvementsTour[De][Vers] = true;
 
@@ -117,7 +117,7 @@ void CreationDesTablesDeMouvement()
 			if (TousLesMouvementsTour[De][Vers] || TousLesMouvementsFou[De][Vers])
 				if ((abs((int)ColonneDe - (int)ColonneVers) <= 1) && (abs((int)RangeeDe - (int)RangeeVers) <= 1))
 					TousLesMouvementsRoi[De][Vers] = true;
-			
+
 			if ((RangeeDe != UN) && (RangeeDe != HUIT)) {
 				if (abs((int)RangeeDe - (int)RangeeVers) == 1)
 					if (abs((int)ColonneDe - (int)ColonneVers) <= 1)
@@ -148,7 +148,7 @@ void CreationDesTablesInterception()
 		unsigned int NombreInterceptions = 0;
 		TablesInterception[Case] = NULL;
 		TablesBlocages[Case] = NULL;
-		
+
 		colonnes Colonne = QuelleColonne(Case);
 		rangees Rangee = QuelleRangee(Case);
 
@@ -208,7 +208,7 @@ void CreationDesTablesInterception()
 }
 
 		Verifier(NombreInterceptions <= 256);
-		
+
 		TablesInterception[Case] = new bool *[NombreInterceptions + 1];
 		memcpy(TablesInterception[Case], Interceptions, NombreInterceptions * sizeof(bool *));
 		TablesInterception[Case][NombreInterceptions] = NULL;
@@ -255,7 +255,7 @@ void AjouteUneCaseMorte(cases Case)
 	while (*Interception) {
 		**Interception = false;
 		Interception++;
-	}		
+	}
 }
 
 /*************************************************************/
@@ -280,7 +280,7 @@ void IdentificationDesCasesMortes(bonhomme Pieces[16])
 	for (unsigned int i = 0; i < 16; i++) {
 		if (Pieces[i].Piece != PION)
 			continue;
-		
+
 		if (Pieces[i].PasDePion)
 			continue;
 
@@ -310,7 +310,7 @@ unsigned int MeilleureTrajectoire(pieces Piece, cases De, cases Vers, couleurs C
 	memset(Coups, 0, MaxCases * sizeof(unsigned int));
 
 	_tablemouvements *TableMouvements = NULL;
-	
+
 	switch (Piece) {
 		case PION :
 			Verifier(Couleur != NEUTRE);
@@ -389,7 +389,7 @@ void RestrictionDesMouvementsVerticauxTraversant(rangees RangeeX, rangees Rangee
 			continue;
 
 		cases CaseDe = QuelleCase(ColonneXY, RangeeDe);
-		
+
 		for (rangees RangeeVers = A; RangeeVers < MaxRangees; RangeeVers++) {
 			if (!EnHaut[RangeeVers])
 				continue;
@@ -401,9 +401,9 @@ void RestrictionDesMouvementsVerticauxTraversant(rangees RangeeX, rangees Rangee
 			MouvementsDame[CaseDe][CaseVers] = false;
 			MouvementsDame[CaseVers][CaseDe] = false;
 			MouvementsRoi[CaseDe][CaseVers] = false;
-			MouvementsRoi[CaseVers][CaseDe] = false;				
+			MouvementsRoi[CaseVers][CaseDe] = false;
 		}
-	}		
+	}
 }
 
 /*************************************************************/
@@ -432,19 +432,19 @@ void RestrictionDesMouvementsDiagonauxTraversant(rangees RangeeX, rangees Rangee
 				RangeeDe = RangeeGauche - (ColonneGauche - ColonneDe);
 				RangeeVers = RangeeDroite + (ColonneVers - ColonneDroite);  // Attention: UNDERFLOW
 			}
-	
+
 			if ((RangeeDe >= MaxRangees) || (RangeeVers >= MaxRangees))
 				continue;
-			
+
 			cases CaseDe = QuelleCase(ColonneDe, RangeeDe);
 			cases CaseVers = QuelleCase(ColonneVers, RangeeVers);
-	
+
 			MouvementsDame[CaseDe][CaseVers] = false;
 			MouvementsDame[CaseVers][CaseDe] = false;
 			MouvementsFou[CaseDe][CaseVers] = false;
 			MouvementsFou[CaseVers][CaseDe] = false;
 			MouvementsRoi[CaseDe][CaseVers] = false;
-			MouvementsRoi[CaseVers][CaseDe] = false;				
+			MouvementsRoi[CaseVers][CaseDe] = false;
 		}
 	}
 }
@@ -458,7 +458,7 @@ void InitialisationDesTablesDeDeplacements()
 		DeplacementsFouCorrects[i] = false;
 		DeplacementsTourCorrects[i] = false;
 		DeplacementsDameCorrects[i] = false;
-		DeplacementsRoiCorrects[i] = false;		
+		DeplacementsRoiCorrects[i] = false;
 
 		for (cases j = A1; j < MaxCases; j++) {
 			DeplacementsCavalier[i][j] = UINT_MAX;
@@ -498,7 +498,7 @@ void CalculDesDeplacementsPossibles(cases De, _tablemouvements *TableMouvements,
 	Coups[De] = 0;
 
 	while (Pop < Push) {
-		cases Source = File[Pop++];	
+		cases Source = File[Pop++];
 		unsigned int Longueur = 1 + Coups[Source];
 
 		for (cases Sink = A1; Sink <= H8; Sink++) {
@@ -695,7 +695,7 @@ bool AvancePossibleSansCapture(cases De, cases Vers)
 		return true;
 
 	Verifier(QuelleColonne(De) == QuelleColonne(Vers));
-		
+
 	return MouvementsTour[De][Vers];
 }
 
@@ -771,7 +771,7 @@ void CalculDesTrajetsDePionPossibles(cases De, cases Vers, trajetpion *Trajets, 
 
 					if (CasesMortes[CaseSept])
 						Possible = false;
-				} 
+				}
 			}
 
 			if (Possible) {
@@ -799,14 +799,14 @@ void CalculDesTrajetsDePionPossibles(cases De, cases Vers, trajetpion *Trajets, 
 		unsigned int k = Pas;
 		if (k > MaxPas)
 			k = MaxPas;
-		
+
 		for ( ; k >= 1; k--) {
 			if (Compteurs[k]++ < 1)
 				break;
 
 			Compteurs[k] = -1;
 		}
-		
+
 		if (!k)
 			break;
 	}
@@ -915,7 +915,7 @@ void AjouteUneCaseMorteTemporaire(cases Case)
 			InterceptionsTemporaires[NombreInterceptionsTemporaires++] = *Interception;
 			**Interception = false;
 		}
-		
+
 		Interception++;
 	}
 
@@ -1042,13 +1042,13 @@ void BloquerUneLigne(cases CaseX, cases CaseY, pieces Piece)
 			if ((Rangee >= RangeeX) && (Rangee >= RangeeY))
 				EnHaut[Rangee] = true;
 		}
-	
+
 		for (rangees RangeeDe = UN; RangeeDe < MaxRangees; RangeeDe++) {
 			if (!EnBas[RangeeDe])
 				continue;
-	
+
 			cases CaseDe = QuelleCase(ColonneX, RangeeDe);
-			
+
 			for (rangees RangeeVers = UN; RangeeVers < MaxRangees; RangeeVers++) {
 				if (!EnHaut[RangeeVers])
 					continue;
@@ -1062,7 +1062,7 @@ void BloquerUneLigne(cases CaseX, cases CaseY, pieces Piece)
 				BloqueursRoi[CaseDe][CaseVers]++;
 				BloqueursRoi[CaseVers][CaseDe]++;
 			}
-		}		
+		}
 	}
 	else if (RangeeX == RangeeY) {
 		bool AGauche[MaxColonnes];
@@ -1079,9 +1079,9 @@ void BloquerUneLigne(cases CaseX, cases CaseY, pieces Piece)
 		for (colonnes ColonneDe = A; ColonneDe < MaxColonnes; ColonneDe++) {
 			if (!AGauche[ColonneDe])
 				continue;
-	
+
 			cases CaseDe = QuelleCase(ColonneDe, RangeeX);
-			
+
 			for (colonnes ColonneVers = A; ColonneVers < MaxColonnes; ColonneVers++) {
 				if (!ADroite[ColonneVers])
 					continue;
@@ -1107,10 +1107,10 @@ void BloquerUneLigne(cases CaseX, cases CaseY, pieces Piece)
 
 		for (colonnes ColonneDe = A; ColonneDe <= ColonneGauche; ColonneDe++) {
 			for (colonnes ColonneVers = ColonneDroite; ColonneVers < MaxColonnes; ColonneVers++) {
-	
+
 				rangees RangeeDe = MaxRangees;
 				rangees RangeeVers = MaxRangees;
-	
+
 				if (RangeeGauche > RangeeDroite) {
 					RangeeDe = RangeeGauche + (ColonneGauche - ColonneDe);
 					RangeeVers = RangeeDroite - (ColonneVers - ColonneDroite);  // Attention: UNDERFLOW
@@ -1119,13 +1119,13 @@ void BloquerUneLigne(cases CaseX, cases CaseY, pieces Piece)
 					RangeeDe = RangeeGauche - (ColonneGauche - ColonneDe);
 					RangeeVers = RangeeDroite + (ColonneVers - ColonneDroite);  // Attention: UNDERFLOW
 				}
-		
+
 				if ((RangeeDe >= MaxRangees) || (RangeeVers >= MaxRangees))
 					continue;
-				
+
 				cases CaseDe = QuelleCase(ColonneDe, RangeeDe);
 				cases CaseVers = QuelleCase(ColonneVers, RangeeVers);
-		
+
 				BloqueursDame[CaseDe][CaseVers]++;
 				BloqueursDame[CaseVers][CaseDe]++;
 				BloqueursFou[CaseDe][CaseVers]++;
@@ -1365,7 +1365,7 @@ bool TrajetPionPossible(const trajetpion *Trajet)
 		unsigned int ColonneVers = QuelleColonne(De);
 		unsigned int RangeeVers = QuelleRangee(Trajet->Captures[i]) + Ajustement;
 		Vers = QuelleCase(ColonneVers, RangeeVers);
-		
+
 		if (De != Vers)
 			if (BloqueursTour[De][Vers])
 				return false;

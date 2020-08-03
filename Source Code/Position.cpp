@@ -50,7 +50,7 @@ position *ExamenDuDiagramme(const diagramme *Diagramme)
 	OutputNombreDePieces(Position->Blancs.NombreTotalDePieces, Position->Noirs.NombreTotalDePieces);
 
 	unsigned int MaxStep = 54;
-	
+
 	unsigned int StepPions = 0;
 	unsigned int StepMortes = 0;
 	unsigned int StepFous = 0;
@@ -130,10 +130,10 @@ position *ExamenDuDiagramme(const diagramme *Diagramme)
 				Position->Blancs.CoupsLibresReels = Position->Blancs.CoupsLibres;
 				Position->Noirs.CoupsLibresReels = Position->Noirs.CoupsLibres;
 				OutputCoupsLibres(Position->Blancs.CoupsLibres, Position->Noirs.CoupsLibres);
-				break;				
+				break;
 			case 44 :
 				OutputCoupsLibres(Position->Blancs.CoupsLibresReels, Position->Noirs.CoupsLibresReels);
-				break;				
+				break;
 			case 12 :
 			case 20 :
 			case 26 :
@@ -244,7 +244,7 @@ void DecompteDesPieces(position* Position)
 		if (Couleur != NEUTRE) {
 			Pieces[Couleur]->NombreTotalDePieces++;
 			Pieces[Couleur]->NombreDePieces[Piece]++;
-			
+
 			Listes[Couleur]->CaseActuelle = Case;
 			Listes[Couleur]->CaseActuelleMin = Case;
 			Listes[Couleur]->CaseActuelleMax = Case;
@@ -297,7 +297,7 @@ void DecompteDesPieces(position* Position)
 			Blancs->NombreMinimumDePromotions += (Blancs->NombreDePieces[Piece] - Max);
 
 		if (Noirs->NombreDePieces[Piece] > Max)
-			Noirs->NombreMinimumDePromotions += (Noirs->NombreDePieces[Piece] - Max);		
+			Noirs->NombreMinimumDePromotions += (Noirs->NombreDePieces[Piece] - Max);
 	}
 
 	if ((Blancs->NombreMinimumDePromotions > Blancs->NombreMaximumDePromotions) || (Noirs->NombreMinimumDePromotions > Noirs->NombreMaximumDePromotions))
@@ -423,7 +423,7 @@ void RestrictionDeLaProvenanceDesPions(bonhomme Pieces[MaxHommes])
 {
 	bool Unique[MaxColonnes];
 	cases QuelPion[MaxColonnes];
-	
+
 	for (colonnes Colonne = A; Colonne < MaxColonnes; Colonne++)
 		Unique[Colonne] = false;
 
@@ -514,7 +514,7 @@ void FousDePromotion(position *Position, couleurs Couleur)
 
 		bool PromotionSupplementaire = false;
 		bonhomme *Bonhomme = (Couleur == BLANCS) ? Position->PiecesBlanches : Position->PiecesNoires;
-		
+
 		for (unsigned int i = 0; i < MaxHommes; i++, Bonhomme++) {
 			if (Bonhomme->Piece == VIDE)
 				break;
@@ -633,7 +633,7 @@ void ProvenanceDesPionsII(bonhomme Pieces[MaxHommes], unsigned int CapturesDispo
 		if (Possible) {
 			for (k = 0; k < NombreDePions; k++)
 				Possibilites[k][Compteurs[k]] = true;
-			
+
 			if (CapturesRequises < MinCaptures)
 				MinCaptures = CapturesRequises;
 		}
@@ -720,7 +720,7 @@ void CalculDesTrajectoiresMinimales(bonhomme Pieces[MaxHommes], couleurs Couleur
 		De = CaseDepart(Pieces[i].Piece, Couleur, true, false, true);
 		if (De < MaxCases) {
 			Pieces[i].DeplacementsSiGrandRoque = MeilleureTrajectoire(Pieces[i].Piece, De, Pieces[i].CaseActuelle);
-			
+
 			if (Pieces[i].DeplacementsSiGrandRoque < UINT_MAX) {
 				Pieces[i].ExGrandRoque = true;
 
@@ -733,7 +733,7 @@ void CalculDesTrajectoiresMinimales(bonhomme Pieces[MaxHommes], couleurs Couleur
 			else {
 				Pieces[i].ExGrandRoque = false;
 				Pieces[i].DeplacementsSiGrandRoque = 0;
-			}				
+			}
 		}
 		else {
 			Pieces[i].ExGrandRoque = false;
@@ -743,10 +743,10 @@ void CalculDesTrajectoiresMinimales(bonhomme Pieces[MaxHommes], couleurs Couleur
 		De = CaseDepart(Pieces[i].Piece, Couleur, false, true, true);
 		if (De < MaxCases) {
 			Pieces[i].DeplacementsSiPetitRoque = MeilleureTrajectoire(Pieces[i].Piece, De, Pieces[i].CaseActuelle);
-			
+
 			if (Pieces[i].DeplacementsSiPetitRoque < UINT_MAX) {
 				Pieces[i].ExPetitRoque = true;
-	
+
 				if (Pieces[i].Piece == ROI)
 					Pieces[i].DeplacementsSiPetitRoque++;
 
@@ -762,7 +762,7 @@ void CalculDesTrajectoiresMinimales(bonhomme Pieces[MaxHommes], couleurs Couleur
 			Pieces[i].ExPetitRoque = false;
 			Pieces[i].DeplacementsSiPetitRoque = 0;
 		}
-		
+
 		Pieces[i].PasDePion = 6;
 		rangees RangeePromotion = (Couleur == BLANCS) ? HUIT : UN;
 		if (QuelleRangee(Pieces[i].CaseActuelle) == RangeePromotion) {
@@ -773,10 +773,10 @@ void CalculDesTrajectoiresMinimales(bonhomme Pieces[MaxHommes], couleurs Couleur
 			for (colonnes Colonne = A; Colonne <= H; Colonne++) {
 				De = QuelleCase(Colonne, RangeePromotion);
 				unsigned int Coups = MeilleureTrajectoire(Pieces[i].Piece, De, Pieces[i].CaseActuelle);
-				
+
 				if (Coups < MinimumSiPromotion)
 					MinimumSiPromotion = Coups;
-				
+
 				if (Coups <= 1)
 					break;
 			}
@@ -852,11 +852,11 @@ cases CaseDepart(pieces Piece, couleurs Couleur, bool ExAileDame, bool ExAileRoi
 		default :
 			break;
 	}
-			
+
 	if (Colonne == MaxColonnes)
 		return MaxCases;
-		
-	return QuelleCase(Colonne, Rangee);		
+
+	return QuelleCase(Colonne, Rangee);
 }
 
 /*************************************************************/
@@ -864,7 +864,7 @@ cases CaseDepart(pieces Piece, couleurs Couleur, bool ExAileDame, bool ExAileRoi
 void RestrictionDesMouvementsParLesPions(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int CapturesLibres)
 {
 	rangees RangeeDepart = (Couleur == BLANCS) ? DEUX : SEPT;
-			
+
 	for (unsigned int k = 0; k < MaxHommes; k++) {
 		if (Pieces[k].Piece != PION)
 			continue;
@@ -874,7 +874,7 @@ void RestrictionDesMouvementsParLesPions(bonhomme Pieces[MaxHommes], couleurs Co
 
 		if (RangeeActuelle == RangeeDepart)
 			continue;
-		
+
 		colonnes ColonneDepart = MaxColonnes;
 		unsigned int Possibilites = 0;
 		for (colonnes Colonne = A; Colonne < MaxColonnes; Colonne++) {
@@ -911,7 +911,7 @@ unsigned int DecompteDesCoupsLibres(const position *Position, couleurs Couleur)
 		CoupsUtilises += Pieces->Deplacements;
 
 	if (CoupsUtilises > CoupsDisponibles)
-		ErreurEnonce(MESSAGE_PASASSEZDECOUPS);		
+		ErreurEnonce(MESSAGE_PASASSEZDECOUPS);
 
 	return CoupsDisponibles - CoupsUtilises;
 }
@@ -954,7 +954,7 @@ void EliminationDesTrajectoiresTropLongues(bonhomme Pieces[MaxHommes], constatat
 				if (Extra > Deductions->CoupsLibres)
 					Pieces[i].ExGrandRoque = false;
 			}
-			
+
 			if (Pieces[i].ExPetitRoque) {
 				unsigned int Extra = Pieces[i].DeplacementsSiPetitRoque - Pieces[i].Deplacements;
 				if (Extra > Deductions->CoupsLibres)
@@ -987,7 +987,7 @@ void VerificationDesDeductions(bonhomme Pieces[MaxHommes])
 				}
 				else if (Pieces[i].PromotionImpossible) {
 					ErreurEnonce(MESSAGE_AUCUNEPOSSIBILITE);
-				}				
+				}
 			}
 		}
 		else if (Pieces[i].PieceDisparue != VIDE) {
@@ -1109,7 +1109,7 @@ void TrajectoiresDesPiecesCapturees(bonhomme Pieces[MaxHommes], couleurs Couleur
 				if (Pieces[k].PieceDePromotion && (ExPiece == PION))
 					Nombre++;
 			}
-				
+
 			Verifier(Nombre <= NombreMaximum[ExPiece]);
 
 			if (Nombre >= NombreMaximum[ExPiece]) {
@@ -1153,7 +1153,7 @@ void TrajectoiresDesPiecesCapturees(bonhomme Pieces[MaxHommes], couleurs Couleur
 
 				if (Deplacements == UINT_MAX)
 					Pieces[i].ExPiece[ExPiece] = false;
-				else 
+				else
 					Pieces[i].DeplacementsSiExPiece[ExPiece] = Deplacements;
 			}
 			else {
@@ -1194,7 +1194,7 @@ void TrajectoiresDesPiecesCapturees(bonhomme Pieces[MaxHommes], couleurs Couleur
 		unsigned int PiecesPossible = 0;
 		Pieces[i].Deplacements = UINT_MAX;
 		for (pieces Piece = PION; Piece < ROI; Piece++) {
-			if (Pieces[i].ExPiece[Piece]) { 
+			if (Pieces[i].ExPiece[Piece]) {
 				PiecesPossible++;
 				SeulePiece = Piece;
 
@@ -1212,7 +1212,7 @@ void TrajectoiresDesPiecesCapturees(bonhomme Pieces[MaxHommes], couleurs Couleur
 				Pieces[i].PromotionImpossible = true;
 		}
 	}
-}	
+}
 
 /*************************************************************/
 
@@ -1236,7 +1236,7 @@ void AnalyseDesRoques(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int
 		if (Pieces[k].Piece == TOUR) {
 			if (Pieces[k].PromotionImpossible)
 				CompteurTours++;
-				
+
 			if (Pieces[k].ExGrandRoque) {
 				CompteurGrandRoque++;
 				unsigned int Extra = Pieces[k].DeplacementsSiGrandRoque - Pieces[k].Deplacements;
@@ -1254,7 +1254,7 @@ void AnalyseDesRoques(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int
 		else if ((Pieces[k].Piece > PION) && (Pieces[k].Piece < ROI)) {
 			if (Pieces[k].ExAileDame && (Pieces[k].DeplacementsSiAileDame == 0))
 				ExtraGrandRoque += 2;
-				
+
 			if (Pieces[k].ExAileRoi && (Pieces[k].DeplacementsSiAileRoi == 0))
 				ExtraPetitRoque += 2;
 		}
@@ -1344,7 +1344,7 @@ void ExamenAttentifDesPiecesDePromotion(bonhomme Pieces[MaxHommes], couleurs Cou
 			Pieces[i].PromotionImpossible = !Pieces[i].ExPiece[PION];
 		else
 			continue;
-	
+
 		if (Pieces[i].PromotionImpossible || !Pieces[i].ExPion)
 			continue;
 
@@ -1421,7 +1421,7 @@ void ExamenAttentifDesPiecesDePromotion(bonhomme Pieces[MaxHommes], couleurs Cou
 							MinDeplacements = Deplacements;
 					}
 				}
-			
+
 				if (Pieces[i].DeplacementsSiCasePromotion[ExPion][Promotion] == UINT_MAX)
 					PromotionPossible[ExPion][Promotion] = false;
 			}
@@ -1472,7 +1472,7 @@ void PiecesImmobiles(bonhomme Pieces[MaxHommes], couleurs Couleur, unsigned int 
 		return;
 
 	rangees RangeeDepart = (Couleur == BLANCS) ? UN : HUIT;
-	
+
 	for (unsigned int i = 0; i < MaxHommes; i++) {
 		if (Pieces[i].Piece <= PION)
 			continue;
@@ -1518,18 +1518,18 @@ void RejetDesPossibilitesMutuellementExclusives(bonhomme Pieces[MaxHommes], cons
 
 		if (Pieces[i].PieceDisparue != MaxPieces)
 			continue;
-		
+
 		pieces SeulePossibilite = VIDE;
 		unsigned int Possibilites = 0;
 
 		for (pieces Promotion = PION; Promotion <= DAME; Promotion++) {
 			if (Pieces[i].ExPiece[Promotion]) {
-				
+
 				unsigned int NombreNonPromu = 0;
 				for (unsigned int k = 0; k < TailleDuGroupe[Promotion]; k++)
 					if (Groupes[Promotion][k]->PromotionImpossible)
 						NombreNonPromu++;
-				
+
 				if (NombreNonPromu >= NombreMaximum[Promotion]) {
 					Pieces[i].ExPiece[Promotion] = false;
 				}
@@ -1590,7 +1590,7 @@ void RejetDesPossibilitesMutuellementExclusives(bonhomme Pieces[MaxHommes], cons
 					case 0 :
 						if (AileRoiOk || !Groupes[Type][k]->ExAileRoi)
 							Impossible = true;
-						
+
 						AileRoiOk = true;
 						Deplacements += Groupes[Type][k]->DeplacementsSiAileRoi;
 						break;
@@ -1648,7 +1648,7 @@ void RejetDesPossibilitesMutuellementExclusives(bonhomme Pieces[MaxHommes], cons
 			}
 
 			// Ajustement du compteur
-								
+
 			if (k >= NumPieces)
 				k = NumPieces - 1;
 
@@ -1767,11 +1767,11 @@ void IdentificationDeToutesLesPiecesCapturees(bonhomme Pieces[MaxHommes])
 	for (Piece = PION; Piece < MaxPieces; Piece++) {
 		if (!ExPiece[Piece])
 			continue;
-			
+
 		if (NombrePur[Piece] >= NombreMaximum[Piece])
 			ExPiece[Piece] = false;
-	}	
-			
+	}
+
 	for (i = 0; i < MaxHommes; i++) {
 		if (Pieces[i].Piece != VIDE)
 			continue;
@@ -1784,7 +1784,7 @@ void IdentificationDeToutesLesPiecesCapturees(bonhomme Pieces[MaxHommes])
 		Pieces[i].CaseActuelleMin = MaxCases;
 		Pieces[i].CaseActuelleMax = MaxCases;
 		Pieces[i].Deplacements = 0;
-		
+
 		unsigned int Possibilites = 0;
 		pieces LaSeule = VIDE;
 

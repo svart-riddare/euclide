@@ -4,7 +4,7 @@
 /*************************************************************/
 
 const unsigned int NombreMaximum[MaxPieces] = {
-	0, 8, 2, 1, 1, 2, 1, 1 
+	0, 8, 2, 1, 1, 2, 1, 1
 };
 
 /*************************************************************/
@@ -166,7 +166,7 @@ promotions QuellePromotion(pieces Piece)
 		case TOUR :
 			Promotion = PROMOTIONTOUR;
 			break;
-		case FOUBLANC : 
+		case FOUBLANC :
 		case FOUNOIR :
 			Promotion = PROMOTIONFOU;
 			break;

@@ -120,7 +120,7 @@ void ConstructionDesScenarios(destin Destins[MaxHommes], const vie Pieces[MaxHom
 				}
 			}
 		}
-		
+
 		Verifier(k < sizeof(Destin->Scenarios) / sizeof(scenario));
 
 		qsort(Destin->Scenarios, k, sizeof(scenario), TriDesScenarios);
@@ -298,7 +298,7 @@ void DePositionAPermutation(const bonhomme Pieces[MaxHommes], permutations *Perm
 
 					if (ExAileDame) {
 						destin *Destin = &Permutations->Destins[QuelHomme(ExPiece, true, false)];
-						
+
 						Destin->PossiblementDisparu = true;
 						for (cases Case = CaseMin; Case <= CaseMax; Case++)
 							if (!CasesMortes[Case])
@@ -307,7 +307,7 @@ void DePositionAPermutation(const bonhomme Pieces[MaxHommes], permutations *Perm
 
 					if (ExAileRoi) {
 						destin *Destin = &Permutations->Destins[QuelHomme(ExPiece, false, true)];
-						
+
 						Destin->PossiblementDisparu = true;
 						for (cases Case = CaseMin; Case <= CaseMax; Case++)
 							if (!CasesMortes[Case])
@@ -343,13 +343,13 @@ bool ChoisirLesRoques(permutations *Permutations, vie Pieces[MaxHommes], couleur
 				*GrandRoque = false;
 				*PetitRoque = true;
 			}
-	
+
 			if (*GrandRoque && *PetitRoque)
 				return false;
-	
+
 			if (*GrandRoque && Permutations->GrandRoquePossible)
 				break;
-	
+
 			if (*PetitRoque && Permutations->PetitRoquePossible)
 				break;
 		}
@@ -428,7 +428,7 @@ unsigned int NombreDeCoupsNecessaires(cases CaseFinale, hommes Homme, cases Depa
 		cases VraiDepart = QuelleCase(ColonnePromotion, (QuelleRangee(Depart) == DEUX) ? HUIT : UN);
 
 		switch (PiecePromotion) {
-			case PROMOTIONDAME : 
+			case PROMOTIONDAME :
 				CoupsRequis = CombienDeDeplacements(XDAME, VraiDepart, CaseFinale);
 				break;
 			case PROMOTIONTOUR :
@@ -463,7 +463,7 @@ unsigned int NombreDeCapturesNecessaires(cases CaseFinale, hommes Homme, cases D
 
 		if (abs((int)CaseFinale - (int)Depart) > 1) {
 			Captures = abs((int)QuelleColonne(CaseFinale) - (int)QuelleColonne(Depart));
-			
+
 			cases FausseFinale = CaseFinale;
 			if (QuelleRangee(Depart) == DEUX)
 				FausseFinale--;
@@ -494,10 +494,10 @@ bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCas
 				Verifier(!Piece->Coups);
 				continue;
 			}
-			
+
 			Verifier(Piece->Scenario);
 			Verifier(Piece->Scenario->Coups == Piece->Coups);
-			
+
 			*CapturesLibres += Piece->Scenario->Captures;
 			*CoupsLibres += Piece->Scenario->Coups;
 			CasesPrises[Piece->Scenario->CaseFinale] = false;
@@ -524,7 +524,7 @@ bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCas
 				HommesSurLeJeu++;
 				break;
 			}
-			
+
 			Piece->Scenario = NULL;
 			if (Destin->PossiblementDisparu) {
 				if (HommesSurLeJeu + Homme >= NombreDePieces) {
@@ -553,7 +553,7 @@ bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCas
 
 				Piece->Scenario++;
 			}
-				
+
 			if (Piece->Scenario->Coups <= *CoupsLibres) {
 				Piece->Promue = (Piece->Scenario->Promotion != MaxColonnes);
 				CasesPrises[Piece->Scenario->CaseFinale] = true;
@@ -575,11 +575,11 @@ bool ChoisirLesCasesFinales(permutations *Permutations, cases CasesPrises[MaxCas
 		}
 
 		PremiereFois = false;
-	
+
 	} while ((signed int)Homme >= 0);
 
 	ConstructionDesScenariosSuicides(Permutations, Pieces, Couleur);
-	return true;		
+	return true;
 }
 
 /*************************************************************/
@@ -682,7 +682,7 @@ bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois)
 					}
 					break;
 				case 7 :
-					if (QuiCommencePourLesPions == BLANCS) 
+					if (QuiCommencePourLesPions == BLANCS)
 						Possible &= TrajectoiresDesPions(Strategie->PiecesNoires, Strategie->PiecesBlanches, NOIRS, &Strategies->PermutationsBlanches, &Strategie->CoupsLibresNoirs, &Strategie->CoupsLibresBlancs, &Strategie->CapturesLibresPourLesPionsNoirs, &Strategie->CapturesLibresPourLesPionsBlancs, false);
 					else
 						Possible &= TrajectoiresDesPions(Strategie->PiecesBlanches, Strategie->PiecesNoires, BLANCS, &Strategies->PermutationsNoires, &Strategie->CoupsLibresBlancs, &Strategie->CoupsLibresNoirs, &Strategie->CapturesLibresPourLesPionsBlancs, &Strategie->CapturesLibresPourLesPionsNoirs, false);
@@ -714,7 +714,7 @@ bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois)
 
 			SauvegardeCoupsLibresBlancs[Etape] = Strategie->CoupsLibresBlancs;
 			SauvegardeCoupsLibresNoirs[Etape] = Strategie->CoupsLibresNoirs;
-		
+
 			if (Possible)
 				break;
 
@@ -805,7 +805,7 @@ bool ProchaineStrategie(strategies *Strategies, _texte Texte, bool PremiereFois)
 			if (!Possible)
 				break;
 		}
-					
+
 	} while (Etape < MaxEtapes);
 
 	Strategie->IDFinal = 0;
@@ -1226,7 +1226,7 @@ bool SwitchbacksEvidents(vie Pieces[MaxHommes], unsigned int *CoupsLibres, bool 
 			CoupsNecessaires += 2;
 		}
 	}
-	
+
 	if (TourDame->Coups && !CavalierDame->Coups && !CavalierDame->Capturee && PionA->Scenario && !PionA->Scenario->Coups) {
 		CavalierDame->SwitchbackEvident = true;
 		CavalierDame->Coups = 2;
@@ -1238,18 +1238,18 @@ bool SwitchbacksEvidents(vie Pieces[MaxHommes], unsigned int *CoupsLibres, bool 
 		CavalierRoi->Coups = 2;
 		CoupsNecessaires += 2;
 	}
-						
+
 	if (CoupsNecessaires > *CoupsLibres) {
 		for (unsigned int i = 0; i < PIONA; i++) {
 			if (Pieces[i].SwitchbackEvident) {
 				Pieces[i].SwitchbackEvident = false;
 				Pieces[i].Coups = 0;
 			}
-		}		
+		}
 
 		return false;
 	}
-	
+
 	*CoupsLibres -= CoupsNecessaires;
 	return true;
 }
@@ -1516,7 +1516,7 @@ bool PionsDisparusSansTrace(vie Pieces[MaxHommes], const destin Destins[MaxHomme
 
 			if (!Calculer[Pion])
 				continue;
-			
+
 			Verifier(Piece->Scenario);
 
 			*CoupsLibres += Piece->Scenario->Coups;
@@ -1556,7 +1556,7 @@ bool PionsDisparusSansTrace(vie Pieces[MaxHommes], const destin Destins[MaxHomme
 		for ( ; ++Pion < MaxHommes; ) {
 			vie *Piece = &Pieces[Pion];
             const destin *Destin = &Destins[Pion];
-			
+
 			if (!Calculer[Pion])
 				continue;
 
@@ -1576,12 +1576,12 @@ bool PionsDisparusSansTrace(vie Pieces[MaxHommes], const destin Destins[MaxHomme
 					Piece->Scenario++;
 				}
 			}
-					
+
 			if (!Possible) {
 				Piece->Scenario = NULL;
 				break;
 			}
-			
+
 			*CoupsLibres -= Piece->Scenario->Coups;
 			*CapturesLibres -= Piece->Scenario->Captures;
 			Piece->Coups = Piece->Scenario->Coups;
@@ -1589,7 +1589,7 @@ bool PionsDisparusSansTrace(vie Pieces[MaxHommes], const destin Destins[MaxHomme
 		}
 	} while (Pion < MaxHommes);
 
-	return true;	
+	return true;
 }
 
 /*************************************************************/
@@ -1700,7 +1700,7 @@ bool XTrajectoiresDesPions(vie Pieces[MaxHommes], vie PiecesAdverses[MaxHommes],
 						Piece->TrajetSiPion++;
 						continue;
 					}
-					
+
 					CoupExtra = 1;
 				}
 
@@ -1718,7 +1718,7 @@ bool XTrajectoiresDesPions(vie Pieces[MaxHommes], vie PiecesAdverses[MaxHommes],
 			if (!Possible)
 				break;
 		}
-	
+
 	} while (Pion <= PIONH);
 
 	return true;
@@ -1733,7 +1733,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 	static unsigned int NombreMortsBlancs = 0;
 	static unsigned int NombreMortsNoirs = 0;
 	static unsigned int NombreMorts = 0;
-	
+
 	static unsigned int IndexBlanc = 0;
 	static unsigned int IndexNoir = 0;
 	static couleurs Couleurs[2 * MaxHommes];
@@ -1781,7 +1781,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 			bool Possible = ChoisirAssassin(Piece, Adversaires, CoupsLibresAdverses, false);
 			if (Possible)
 				break;
-			
+
 			if (Homme < PIONA) {
 				if (Piece->NombreAssassinats > 0) {
 					const scenario *TempScenario = Piece->Scenario;
@@ -1797,7 +1797,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 					*CoupsLibres += Piece->Coups;
 					Piece->Coups = 0;
 				}
-				
+
 				Verifier(Piece->Scenario->Coups < UINT_MAX);
 				Piece->Scenario++;
 
@@ -1852,7 +1852,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 			if (Couleur == BLANCS)
 				IndexBlanc--;
 			else
-				IndexNoir--;			
+				IndexNoir--;
 		}
 
 		if (!PremiereFois && ((int)Index < 0))
@@ -1916,7 +1916,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 				else {
 					while (Piece->Scenario->Coups <= *CoupsLibres) {
 						Possible = ChoisirAssassin(Piece, Adversaires, CoupsLibresAdverses, true);
-						
+
 						if (Possible) {
 							Piece->Coups = Piece->Scenario->Coups;
 							*CoupsLibres -= Piece->Coups;
@@ -1945,7 +1945,7 @@ bool ChoisirLesAssassinats(strategies *Strategies, bool PremiereFois)
 		}
 
 	} while (Index < NombreMorts);
-	
+
 	return true;
 }
 
@@ -2016,7 +2016,7 @@ bool ChoisirAssassin(vie *Victime, vie AssassinsPlausibles[MaxHommes], unsigned 
 			if (PremierEssai) {
 				for (unsigned int k = Assassin->NombreAssassinats; k-- > 0; )
 					Assassin->Assassinats[k + 1] = Assassin->Assassinats[k];
-	
+
 				Assassin->Assassinats[0] = Victime;
 				Assassin->NombreAssassinats++;
 				PremierEssai = false;
@@ -2161,7 +2161,7 @@ unsigned int CalculDesCoupsAvecMeurtres(const vie *Assassin, hommes Homme, cases
 {
 	Verifier(Homme < PIONA);
 	unsigned int Coups = 0;
-	
+
 	cases De = Depart;
 
 	for (unsigned int k = 0; k < Assassin->NombreAssassinats; k++) {

@@ -82,7 +82,7 @@ bool IsPositionIn(const etatdujeu *Position, unsigned int Index)
 
 	if (HashTables[Index].Entete.Strategie == Position->Strategie) {
 		PositionToHashEntry(Position, &HashEntry);
-	
+
 		for (unsigned int Slot = 0; Slot < HASHSLOTS; Slot++) {
 			if (HashTables[Index + Slot].Entete.Strategie != Position->Strategie)
 				return false;

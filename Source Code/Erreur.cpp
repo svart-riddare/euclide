@@ -21,7 +21,7 @@ void ErreurFichierLangue(const char *Fichier)
 
 	OutputMessageErreur(Tampon);
 	OutputDestroy();
-	
+
 	fprintf(stderr, "%s\n", Tampon);
 
 	delete[] Tampon;
@@ -57,9 +57,9 @@ void ErreurInterne(const char *Fichier, unsigned int Ligne)
 		if ((Fichier[i] == '/') || (Fichier[i] == '\\'))
 			j = 0;
 
-		i++;                                                           
+		i++;
 	}
-	
+
 	FichierNu[j] = '\0';
 
 	char Tampon[128];

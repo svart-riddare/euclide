@@ -49,7 +49,7 @@ diagramme *EPDToDiagramme(const char *EPD, unsigned int DemiCoups, bool Afficher
 	memset(RoisAllemand, 0, sizeof(RoisAllemand));
 	memset(RoisAnglais, 0, sizeof(RoisAnglais));
 	memset(RoisItalien, 0, sizeof(RoisItalien));
-	
+
 	bool EspacesOk = true;
 
 	while (*EPD) {
@@ -73,7 +73,7 @@ diagramme *EPDToDiagramme(const char *EPD, unsigned int DemiCoups, bool Afficher
 				goto GotoErreur;
 
 			cases Case = QuelleCase(Colonne - 1, Rangee);
-					
+
 			DiagrammeFrancais->Couleurs[Case] = Couleur;
 			DiagrammeAllemand->Couleurs[Case] = Couleur;
 			DiagrammeAnglais->Couleurs[Case] = Couleur;
@@ -174,7 +174,7 @@ diagramme *EPDToDiagramme(const char *EPD, unsigned int DemiCoups, bool Afficher
 			goto GotoErreur;
 		}
 
-		EPD++;		
+		EPD++;
 	}
 
 	if ((RoisFrancais[BLANCS] != 1) || (RoisFrancais[NOIRS] != 1))
@@ -197,7 +197,7 @@ diagramme *EPDToDiagramme(const char *EPD, unsigned int DemiCoups, bool Afficher
 		ErreurEnonce(MESSAGE_CONFUSIONDELANGUE);
 	if (Italien && (Francais || Allemand || Anglais))
 		ErreurEnonce(MESSAGE_CONFUSIONDELANGUE);
-	
+
 	if (!Francais)
 		delete DiagrammeFrancais;
 	if (!Allemand)
@@ -218,7 +218,7 @@ diagramme *EPDToDiagramme(const char *EPD, unsigned int DemiCoups, bool Afficher
 
 	if (Italien)
 		return DiagrammeItalien;
-	
+
 	DiagrammeFrancais = NULL;
 	DiagrammeAllemand = NULL;
 	DiagrammeAnglais = NULL;
@@ -232,7 +232,7 @@ GotoErreur:
 
 	if (Afficher)
 		ErreurEnonce(MESSAGE_ERREURCONVERSIONEPD);
-	
+
 	return NULL;
 }
 

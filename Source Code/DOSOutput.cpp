@@ -62,7 +62,7 @@ void OutputCreate()
 	GetConsoleMode(Console, &InitialOutputConsoleMode);
 	GetConsoleMode(InputConsole, &InitialInputConsoleMode);
 	SetConsoleMode(InputConsole, ENABLE_PROCESSED_INPUT);
-		
+
 	CONSOLE_CURSOR_INFO CursorInfo;
 	GetConsoleCursorInfo(Console, &CursorInfo);
 	InitialCursorState = (CursorInfo.bVisible != 0);
@@ -98,13 +98,13 @@ void OutputClear()
 	static char *Tampon = NULL;
 	if (!Tampon)
 		Tampon = new char[WIDTH];
-	
+
 	strcpy(Tampon, EUCLIDE_VERSION);
    char *CopySign = strchr(Tampon, '\xA9');
 	CharToOem(EUCLIDE_VERSION, Tampon);
 	if (CopySign)
 		 *CopySign = '\002';
-	
+
 	SetConsoleCursorPosition(Console, Copyright);
 	SetConsoleTextAttribute(Console, COULEUR_VIOLET);
 	WriteConsole(Console, Tampon, strlen(EUCLIDE_VERSION), &Written, NULL);
@@ -157,7 +157,7 @@ void OutputMessage(const char *Message)
 
 	DWORD Written;
 	COORD Position = { 9, 1 };
-	
+
 	SetConsoleCursorPosition(Console, Position);
 	SetConsoleTextAttribute(Console, COULEUR_BLANC);
 	WriteConsole(Console, Tampon, WIDTH - 10, &Written, NULL);
@@ -172,7 +172,7 @@ void OutputMessageErreur(const char *Message)
 		Tampon = new char[WIDTH];
 
 	memset(Tampon, ' ', WIDTH - 10);
-	
+
 	unsigned int L = strlen(Message);
 	if (L > WIDTH - 10)
 		L = WIDTH - 10;
@@ -236,11 +236,11 @@ int IsEscape()
 					delete[] InputRecords;
 					return ESCAPE_ESCAPE;
 				}
-				
+
 				if ((InputRecords[k].Event.KeyEvent.wVirtualKeyCode == 's') || (InputRecords[k].Event.KeyEvent.wVirtualKeyCode == 'S')) {
 					delete[] InputRecords;
 					return ESCAPE_SKIP;
-				}				
+				}
 			}
 		}
 
@@ -279,7 +279,7 @@ void OutputDiagramme(const diagramme *Diagramme)
 
 	DWORD Written;
 	COORD Curseur = { 9, 7 };
-	
+
 	SetConsoleCursorPosition(Console, Curseur);
 	SetConsoleTextAttribute(Console, COULEUR_BLANC);
 	WriteConsole(Console, Tampon, strlen(Tampon), &Written, NULL);
@@ -355,11 +355,11 @@ void OutputDeplacementsMinimaux(const bonhomme PiecesBlanches[MaxHommes], const 
 						Out[4].Char.AsciiChar = '?';
 					}
 				}
-				
+
 				unsigned int Position = 8;
 				for (pieces PiecePossible = DAME; PiecePossible > VIDE; PiecePossible--, Position += 3)
 					if (Piece->ExPiece[PiecePossible])
-						PrintIt(&Out[Position], Piece->DeplacementsSiExPiece[PiecePossible]);			
+						PrintIt(&Out[Position], Piece->DeplacementsSiExPiece[PiecePossible]);
 			}
 
 			if (Piece->Deplacements)
@@ -493,14 +493,14 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 				Out[1].Attributes = COULEUR_BLANC;
 				Out[2].Attributes = COULEUR_BLANC;
 			}
-			
+
 			unsigned int k = 5;
-			
-			if (Piece->Scenario) {	
+
+			if (Piece->Scenario) {
 				Out[k++].Char.AsciiChar = HommeToChar(i);
 				Out[k++].Char.AsciiChar = ColonneToChar(QuelleColonne(Piece->Depart));
 				Out[k++].Char.AsciiChar = RangeeToChar(QuelleRangee(Piece->Depart));
-			
+
 				if (Piece->TrajetSiPion) {
 					for (unsigned int j = 0; j < Piece->TrajetSiPion->NombreDeCaptures; j++) {
 						Out[k++].Char.AsciiChar = 'x';
@@ -549,7 +549,7 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 						Out[k++].Char.AsciiChar = ColonneToChar(QuelleColonne(Piece->Assassinats[s]->Scenario->CaseFinale));
 						Out[k++].Char.AsciiChar = RangeeToChar(QuelleRangee(Piece->Assassinats[s]->Scenario->CaseFinale));
 					}
-					
+
 					if (!Piece->NombreAssassinats || (Piece->Assassinats[Piece->NombreAssassinats - 1]->Scenario->CaseFinale != Piece->Scenario->CaseFinale)) {
 						if (Piece->NombreAssassinats || (Piece->Scenario->CaseFinale != Piece->Depart)) {
 							Out[k++].Char.AsciiChar = '-';
@@ -598,12 +598,12 @@ void OutputStrategie(const strategie *Strategie, const pseudopartie *Partie)
 		fprintf(Debug, "\n********************************************************************************\n\n");
       fprintf(Debug, "Strat\xE9gie #%u (%u)   %u - %u\n\n", Strategie->IDFinal, Strategie->IDPhaseA, Strategie->CoupsLibresBlancs, Strategie->CoupsLibresNoirs);
 		unsigned int z = 0;
-		
+
 		static char *String = NULL;
 		if (!String)
 			String = new char[WIDTH + 8];
 
-		for (unsigned int y = 0; y < MaxHommes; y++) {			
+		for (unsigned int y = 0; y < MaxHommes; y++) {
 			for (unsigned int x = 0; x < WIDTH; x++)
 				String[x] = Output[z++].Char.AsciiChar;
 
@@ -667,14 +667,14 @@ void OutputDebutPartie(deplacement **Deplacements)
 	if (Deplacements) {
 		for (unsigned int k = 0; k < DemiCoups; k++) {
 			char *Out = &Tampon[k * 5];
-	
+
 			*Out++ = HommeToChar(Deplacements[k]->Qui);
 			if (Deplacements[k]->Mort != MaxHommes)
 				*Out++ = 'x';
 			*Out++ = ColonneToChar(QuelleColonne(Deplacements[k]->Vers));
 			*Out = RangeeToChar(QuelleRangee(Deplacements[k]->Vers));
 		}
-	}	
+	}
 
 	COORD Curseur = { (short)(WIDTH - DemiCoups * 5), 3 };
 	DWORD Written;

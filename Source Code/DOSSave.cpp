@@ -8,12 +8,12 @@ static bool SauvegardeOk = false;
 
 /*************************************************************/
 
-HKEY EuclideKey() 
+HKEY EuclideKey()
 {
 	HKEY Key;
 	DWORD Operation;
 	LONG Result = RegCreateKeyEx(HKEY_CURRENT_USER, "Software\\Euclide", NULL, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_WRITE | KEY_QUERY_VALUE, NULL, &Key, &Operation);
-	
+
 	if (Result != ERROR_SUCCESS)
 		return NULL;
 
@@ -37,7 +37,7 @@ void Sauvegarde(const diagramme *Diagramme, unsigned int ContinuerDe)
 	LONG ReturnB = RegSetValueEx(Key, "Stratégie", NULL, REG_DWORD, (const BYTE *)&ContinuerDe, sizeof(unsigned int));
 	LONG ReturnC = RegSetValueEx(Key, "Version", NULL, REG_SZ, (const BYTE *)EUCLIDE_VERSION, strlen(EUCLIDE_VERSION) + 1);
 	RegCloseKey(Key);
-	
+
 	if ((ReturnA != ERROR_SUCCESS) || (ReturnB != ERROR_SUCCESS) || (ReturnC != ERROR_SUCCESS))
 		return;
 
@@ -61,16 +61,16 @@ void SetSauvegarde(unsigned int Strategie)
 
 /*************************************************************/
 
-unsigned int GetSauvegarde(const diagramme *Diagramme) 
+unsigned int GetSauvegarde(const diagramme *Diagramme)
 {
 	HKEY Key = EuclideKey();
 	if (!Key)
 		return 0;
 
-	unsigned int Strategie = 0;	
+	unsigned int Strategie = 0;
 	diagramme Sauvegarde;
 	char Version[128];
-	
+
 	DWORD SizeofVersion = sizeof(Version);
 	DWORD SizeofDiagramme = sizeof(diagramme);
 	DWORD SizeofUnsignedInt = sizeof(unsigned int);
