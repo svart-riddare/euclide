@@ -10,22 +10,14 @@ namespace intel
 
 /* -------------------------------------------------------------------------- */
 
-static inline bool bt(uint32_t bits, int bit)
+static inline constexpr bool bt(uint32_t bits, int bit)
 {
-#ifdef EUCLIDE_WIN_IMPLEMENTATION
-	return _bittest(reinterpret_cast<const long *>(&bits), bit) ? true : false;
-#else
 	return ((bits >> bit) & 1) ? true : false;
-#endif
 }
 
-static inline bool bt(uint64_t bits, int bit)
+static inline constexpr bool bt(uint64_t bits, int bit)
 {
-#ifdef EUCLIDE_WIN_IMPLEMENTATION
-	return _bittest64(reinterpret_cast<const int64_t *>(&bits), bit) ? true : false;
-#else
 	return ((bits >> bit) & 1) ? true : false;
-#endif
 }
 
 /* -------------------------------------------------------------------------- */

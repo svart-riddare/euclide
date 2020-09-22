@@ -61,26 +61,26 @@ static constexpr uint64_t pawn(Square square, Color color, bool capture, bool cy
 	type(H1, x, y, c), type(H2, x, y, c), type(H3, x, y, c), type(H4, x, y, c), type(H5, x, y, c), type(H6, x, y, c), type(H7, x, y, c), type(H8, x, y, c) \
 }
 
-static const ArrayOfSquares WazirMoves[2] = { MOVES(leaper, 0, 1, false), MOVES(leaper, 0, 1, true) };
-static const ArrayOfSquares FerzMoves[2] = { MOVES(leaper, 1, 1, false), MOVES(leaper, 1, 1, true) };
-static const ArrayOfSquares KnightMoves[2] = { MOVES(leaper, 1, 2, false), MOVES(leaper, 1, 2, true) };
-static const ArrayOfSquares AlfilMoves[2] = { MOVES(leaper, 2, 2, false), MOVES(leaper, 2, 2, true) };
-static const ArrayOfSquares CamelMoves[2] = { MOVES(leaper, 1, 3, false), MOVES(leaper, 1, 3, true) };
-static const ArrayOfSquares ZebraMoves[2] = { MOVES(leaper, 2, 3, false), MOVES(leaper, 2, 3, true) };
+static constexpr ArrayOfSquares WazirMoves[2] = { MOVES(leaper, 0, 1, false), MOVES(leaper, 0, 1, true) };
+static constexpr ArrayOfSquares FerzMoves[2] = { MOVES(leaper, 1, 1, false), MOVES(leaper, 1, 1, true) };
+static constexpr ArrayOfSquares KnightMoves[2] = { MOVES(leaper, 1, 2, false), MOVES(leaper, 1, 2, true) };
+static constexpr ArrayOfSquares AlfilMoves[2] = { MOVES(leaper, 2, 2, false), MOVES(leaper, 2, 2, true) };
+static constexpr ArrayOfSquares CamelMoves[2] = { MOVES(leaper, 1, 3, false), MOVES(leaper, 1, 3, true) };
+static constexpr ArrayOfSquares ZebraMoves[2] = { MOVES(leaper, 2, 3, false), MOVES(leaper, 2, 3, true) };
 
-static const ArrayOfSquares RookMoves[2] = { MOVES(runner, 0, 1, false), MOVES(runner, 0, 1, true) };
-static const ArrayOfSquares BishopMoves[2] = { MOVES(runner, 1, 1, false), MOVES(runner, 1, 1, true) };
-static const ArrayOfSquares NightriderMoves[2] = { MOVES(runner, 1, 2, false), MOVES(runner, 1, 2, true) };
+static constexpr ArrayOfSquares RookMoves[2] = { MOVES(runner, 0, 1, false), MOVES(runner, 0, 1, true) };
+static constexpr ArrayOfSquares BishopMoves[2] = { MOVES(runner, 1, 1, false), MOVES(runner, 1, 1, true) };
+static constexpr ArrayOfSquares NightriderMoves[2] = { MOVES(runner, 1, 2, false), MOVES(runner, 1, 2, true) };
 
-static const ArrayOfSquares PawnMoves[2][NumColors] = { { MOVES(pawn, White, false, false), MOVES(pawn, Black, false, false) }, { MOVES(pawn, White, false, true), MOVES(pawn, Black, false, true) } };
-static const ArrayOfSquares PawnCaptures[2][NumColors] = { { MOVES(pawn, White, true, false), MOVES(pawn, Black, true, false) }, { MOVES(pawn, White, true, true), MOVES(pawn, Black, true, true) } };
+static constexpr ArrayOfSquares PawnMoves[2][NumColors] = { { MOVES(pawn, White, false, false), MOVES(pawn, Black, false, false) }, { MOVES(pawn, White, false, true), MOVES(pawn, Black, false, true) } };
+static constexpr ArrayOfSquares PawnCaptures[2][NumColors] = { { MOVES(pawn, White, true, false), MOVES(pawn, Black, true, false) }, { MOVES(pawn, White, true, true), MOVES(pawn, Black, true, true) } };
 
 /* -------------------------------------------------------------------------- */
 
-static const Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
-static const Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
+static constexpr Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
+static constexpr Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
 
-static const Squares GridSquares[NumSquares] =
+static constexpr Squares GridSquares[NumSquares] =
 {
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,

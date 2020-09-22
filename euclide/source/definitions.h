@@ -93,7 +93,7 @@ constexpr int row(Square square)
 
 constexpr Square square(int col, int row)
 {
-	return static_cast<Square>((col << 3) | row);
+	return assert(col >= 0 && col <= 7 && row >= 0 && row <= 7), static_cast<Square>((col << 3) | row);
 }
 
 /* -------------------------------------------------------------------------- */

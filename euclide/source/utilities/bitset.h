@@ -18,8 +18,8 @@ class BitSet
 		bits_t m_bits;
 
 	public:
-		BitSet(bits_t bits = 0) : m_bits(bits) {}
-		BitSet(Type position) : m_bits(bits_t(1) << position) {}
+		constexpr BitSet(bits_t bits = 0) : m_bits(bits) {}
+		constexpr BitSet(Type position) : m_bits(bits_t(1) << position) {}
 
 		template <typename Predicate> inline
 		BitSet(const Predicate& predicate, bool value = true) : m_bits(0)
@@ -50,24 +50,24 @@ class BitSet
 			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) flip(position); return *this; }
 
 	public:
-		inline bool test(Type position) const
-			{ assert((position >= 0) && (position < Bits)); return intel::bt(m_bits, position); }
+		inline constexpr bool test(Type position) const
+			{ return assert((position >= 0) && (position < Bits)), intel::bt(m_bits, position); }
 
-		inline bool all() const
+		inline constexpr bool all() const
 			{ return ~m_bits == 0; }
-		inline bool any() const
+		inline constexpr bool any() const
 			{ return m_bits != 0; }
-		inline bool none() const
+		inline constexpr bool none() const
 			{ return m_bits == 0; }
 
-		inline operator bits_t() const
+		inline constexpr operator bits_t() const
 			{ return m_bits; }
-		inline bool operator!() const
+		inline constexpr bool operator!() const
 			{ return none(); }
 
-		inline int count() const
+		inline constexpr int count() const
 			{ return intel::popcnt(m_bits); }
-		inline int size() const
+		inline constexpr int size() const
 			{ return Bits; }
 
 	public:
@@ -147,8 +147,8 @@ class BitSet
 				Type m_position;
 		};
 
-		inline bool operator[](Type position) const
-			{ assert((position >= 0) && (position < Bits)); return test(position); }
+		inline constexpr bool operator[](Type position) const
+			{ return assert((position >= 0) && (position < Bits)), test(position); }
 		inline BitReference operator[](Type position)
 			{ assert((position >= 0) && (position < Bits)); return BitReference(*this, position); }
 

@@ -55,15 +55,29 @@ static constexpr uint64_t pawn(Square from, Square to, bool /*capture*/)
 static constexpr uint64_t neighbors(Square square)
 {
 	return 0
-		| (uint64_t(1) << ((col(square) > 0 && row(square) > 0) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square) - 1) : 0))
-		| (uint64_t(1) << ((col(square) > 0 && row(square) < 7) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square) + 1) : 0))
-		| (uint64_t(1) << ((col(square) < 7 && row(square) > 0) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square) - 1) : 0))
-		| (uint64_t(1) << ((col(square) < 7 && row(square) < 7) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square) + 1) : 0))
-		| (uint64_t(1) << ((col(square) > 0) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square)) : 0))
-		| (uint64_t(1) << ((col(square) < 7) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square)) : 0))
-		| (uint64_t(1) << ((row(square) > 0) ? uint64_t(1) << Euclide::square(col(square), row(square) - 1) : 0))
-		| (uint64_t(1) << ((row(square) < 7) ? uint64_t(1) << Euclide::square(col(square), row(square) + 1) : 0));
+		| ((col(square) > 0 && row(square) > 0) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square) - 1) : 0)
+		| ((col(square) > 0 && row(square) < 7) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square) + 1) : 0)
+		| ((col(square) < 7 && row(square) > 0) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square) - 1) : 0)
+		| ((col(square) < 7 && row(square) < 7) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square) + 1) : 0)
+		| ((col(square) > 0) ? uint64_t(1) << Euclide::square(col(square) - 1, row(square)) : 0)
+		| ((col(square) < 7) ? uint64_t(1) << Euclide::square(col(square) + 1, row(square)) : 0)
+		| ((row(square) > 0) ? uint64_t(1) << Euclide::square(col(square), row(square) - 1) : 0)
+		| ((row(square) < 7) ? uint64_t(1) << Euclide::square(col(square), row(square) + 1) : 0);
 }
+
+#ifdef EUCLIDE_WIN_IMPLEMENTATION
+   static constexpr uint64_t Neighbors[NumSquares] = {
+	   neighbors(A1), neighbors(A2), neighbors(A3), neighbors(A4), neighbors(A5), neighbors(A6), neighbors(A7), neighbors(A8),
+	   neighbors(B1), neighbors(B2), neighbors(B3), neighbors(B4), neighbors(B5), neighbors(B6), neighbors(B7), neighbors(B8),
+	   neighbors(C1), neighbors(C2), neighbors(C3), neighbors(C4), neighbors(C5), neighbors(C6), neighbors(C7), neighbors(C8),
+	   neighbors(D1), neighbors(D2), neighbors(D3), neighbors(D4), neighbors(D5), neighbors(D6), neighbors(D7), neighbors(D8),
+	   neighbors(E1), neighbors(E2), neighbors(E3), neighbors(E4), neighbors(E5), neighbors(E6), neighbors(E7), neighbors(E8),
+	   neighbors(F1), neighbors(F2), neighbors(F3), neighbors(F4), neighbors(F5), neighbors(F6), neighbors(F7), neighbors(F8),
+	   neighbors(G1), neighbors(G2), neighbors(G3), neighbors(G4), neighbors(G5), neighbors(G6), neighbors(G7), neighbors(G8),
+	   neighbors(H1), neighbors(H2), neighbors(H3), neighbors(H4), neighbors(H5), neighbors(H6), neighbors(H7), neighbors(H8)
+   };
+   #define neighbors(square) Neighbors[square]
+#endif
 
 static constexpr uint64_t grasshopper(Square from, Square to, bool capture)
 {
@@ -90,7 +104,7 @@ static constexpr uint64_t mao(Square from, Square to, bool capture)
 	function(square, H1, capture), function(square, H2, capture), function(square, H3, capture), function(square, H4, capture), function(square, H5, capture), function(square, H6, capture), function(square, H7, capture), function(square, H8, capture)  \
 }
 
-static const MatrixOfSquares NoConstraints = { {
+static constexpr MatrixOfSquares NoConstraints = { {
 	CONSTRAINTS(none, A1, false), CONSTRAINTS(none, A2, false), CONSTRAINTS(none, A3, false), CONSTRAINTS(none, A4, false), CONSTRAINTS(none, A5, false), CONSTRAINTS(none, A6, false), CONSTRAINTS(none, A7, false), CONSTRAINTS(none, A8, false),
 	CONSTRAINTS(none, B1, false), CONSTRAINTS(none, B2, false), CONSTRAINTS(none, B3, false), CONSTRAINTS(none, B4, false), CONSTRAINTS(none, B5, false), CONSTRAINTS(none, B6, false), CONSTRAINTS(none, B7, false), CONSTRAINTS(none, B8, false),
 	CONSTRAINTS(none, C1, false), CONSTRAINTS(none, C2, false), CONSTRAINTS(none, C3, false), CONSTRAINTS(none, C4, false), CONSTRAINTS(none, C5, false), CONSTRAINTS(none, C6, false), CONSTRAINTS(none, C7, false), CONSTRAINTS(none, C8, false),
@@ -101,7 +115,7 @@ static const MatrixOfSquares NoConstraints = { {
 	CONSTRAINTS(none, H1, false), CONSTRAINTS(none, H2, false), CONSTRAINTS(none, H3, false), CONSTRAINTS(none, H4, false), CONSTRAINTS(none, H5, false), CONSTRAINTS(none, H6, false), CONSTRAINTS(none, H7, false), CONSTRAINTS(none, H8, false)
 }};
 
-static const MatrixOfSquares KingMoveConstraints = {{
+static constexpr MatrixOfSquares KingMoveConstraints = {{
 	CONSTRAINTS(king, A1, false), CONSTRAINTS(king, A2, false), CONSTRAINTS(king, A3, false), CONSTRAINTS(king, A4, false), CONSTRAINTS(king, A5, false), CONSTRAINTS(king, A6, false), CONSTRAINTS(king, A7, false), CONSTRAINTS(king, A8, false),
 	CONSTRAINTS(king, B1, false), CONSTRAINTS(king, B2, false), CONSTRAINTS(king, B3, false), CONSTRAINTS(king, B4, false), CONSTRAINTS(king, B5, false), CONSTRAINTS(king, B6, false), CONSTRAINTS(king, B7, false), CONSTRAINTS(king, B8, false),
 	CONSTRAINTS(king, C1, false), CONSTRAINTS(king, C2, false), CONSTRAINTS(king, C3, false), CONSTRAINTS(king, C4, false), CONSTRAINTS(king, C5, false), CONSTRAINTS(king, C6, false), CONSTRAINTS(king, C7, false), CONSTRAINTS(king, C8, false),
@@ -123,7 +137,7 @@ static const MatrixOfSquares LeaperMoveConstraints = {{
 	CONSTRAINTS(leaper, H1, false), CONSTRAINTS(leaper, H2, false), CONSTRAINTS(leaper, H3, false), CONSTRAINTS(leaper, H4, false), CONSTRAINTS(leaper, H5, false), CONSTRAINTS(leaper, H6, false), CONSTRAINTS(leaper, H7, false), CONSTRAINTS(leaper, H8, false)
 }};
 
-static const MatrixOfSquares RunnerMoveConstraints = {{
+static constexpr MatrixOfSquares RunnerMoveConstraints = {{
 	CONSTRAINTS(runner, A1, false), CONSTRAINTS(runner, A2, false), CONSTRAINTS(runner, A3, false), CONSTRAINTS(runner, A4, false), CONSTRAINTS(runner, A5, false), CONSTRAINTS(runner, A6, false), CONSTRAINTS(runner, A7, false), CONSTRAINTS(runner, A8, false),
 	CONSTRAINTS(runner, B1, false), CONSTRAINTS(runner, B2, false), CONSTRAINTS(runner, B3, false), CONSTRAINTS(runner, B4, false), CONSTRAINTS(runner, B5, false), CONSTRAINTS(runner, B6, false), CONSTRAINTS(runner, B7, false), CONSTRAINTS(runner, B8, false),
 	CONSTRAINTS(runner, C1, false), CONSTRAINTS(runner, C2, false), CONSTRAINTS(runner, C3, false), CONSTRAINTS(runner, C4, false), CONSTRAINTS(runner, C5, false), CONSTRAINTS(runner, C6, false), CONSTRAINTS(runner, C7, false), CONSTRAINTS(runner, C8, false),
@@ -134,7 +148,7 @@ static const MatrixOfSquares RunnerMoveConstraints = {{
 	CONSTRAINTS(runner, H1, false), CONSTRAINTS(runner, H2, false), CONSTRAINTS(runner, H3, false), CONSTRAINTS(runner, H4, false), CONSTRAINTS(runner, H5, false), CONSTRAINTS(runner, H6, false), CONSTRAINTS(runner, H7, false), CONSTRAINTS(runner, H8, false)
 }};
 
-static const MatrixOfSquares RunnerCaptureConstraints = {{
+static constexpr MatrixOfSquares RunnerCaptureConstraints = {{
 	CONSTRAINTS(runner, A1, true), CONSTRAINTS(runner, A2, true), CONSTRAINTS(runner, A3, true), CONSTRAINTS(runner, A4, true), CONSTRAINTS(runner, A5, true), CONSTRAINTS(runner, A6, true), CONSTRAINTS(runner, A7, true), CONSTRAINTS(runner, A8, true),
 	CONSTRAINTS(runner, B1, true), CONSTRAINTS(runner, B2, true), CONSTRAINTS(runner, B3, true), CONSTRAINTS(runner, B4, true), CONSTRAINTS(runner, B5, true), CONSTRAINTS(runner, B6, true), CONSTRAINTS(runner, B7, true), CONSTRAINTS(runner, B8, true),
 	CONSTRAINTS(runner, C1, true), CONSTRAINTS(runner, C2, true), CONSTRAINTS(runner, C3, true), CONSTRAINTS(runner, C4, true), CONSTRAINTS(runner, C5, true), CONSTRAINTS(runner, C6, true), CONSTRAINTS(runner, C7, true), CONSTRAINTS(runner, C8, true),
@@ -145,7 +159,7 @@ static const MatrixOfSquares RunnerCaptureConstraints = {{
 	CONSTRAINTS(runner, H1, true), CONSTRAINTS(runner, H2, true), CONSTRAINTS(runner, H3, true), CONSTRAINTS(runner, H4, true), CONSTRAINTS(runner, H5, true), CONSTRAINTS(runner, H6, true), CONSTRAINTS(runner, H7, true), CONSTRAINTS(runner, H8, true)
 }};
 
-static const MatrixOfSquares PawnMoveAndCaptureConstraints = {{
+static constexpr MatrixOfSquares PawnMoveAndCaptureConstraints = {{
 	CONSTRAINTS(pawn, A1, false), CONSTRAINTS(pawn, A2, false), CONSTRAINTS(pawn, A3, false), CONSTRAINTS(pawn, A4, false), CONSTRAINTS(pawn, A5, false), CONSTRAINTS(pawn, A6, false), CONSTRAINTS(pawn, A7, false), CONSTRAINTS(pawn, A8, false),
 	CONSTRAINTS(pawn, B1, false), CONSTRAINTS(pawn, B2, false), CONSTRAINTS(pawn, B3, false), CONSTRAINTS(pawn, B4, false), CONSTRAINTS(pawn, B5, false), CONSTRAINTS(pawn, B6, false), CONSTRAINTS(pawn, B7, false), CONSTRAINTS(pawn, B8, false),
 	CONSTRAINTS(pawn, C1, false), CONSTRAINTS(pawn, C2, false), CONSTRAINTS(pawn, C3, false), CONSTRAINTS(pawn, C4, false), CONSTRAINTS(pawn, C5, false), CONSTRAINTS(pawn, C6, false), CONSTRAINTS(pawn, C7, false), CONSTRAINTS(pawn, C8, false),
@@ -156,7 +170,7 @@ static const MatrixOfSquares PawnMoveAndCaptureConstraints = {{
 	CONSTRAINTS(pawn, H1, false), CONSTRAINTS(pawn, H2, false), CONSTRAINTS(pawn, H3, false), CONSTRAINTS(pawn, H4, false), CONSTRAINTS(pawn, H5, false), CONSTRAINTS(pawn, H6, false), CONSTRAINTS(pawn, H7, false), CONSTRAINTS(pawn, H8, false)
 }};
 
-static const MatrixOfSquares GrasshopperMoveConstraints = {{
+static constexpr MatrixOfSquares GrasshopperMoveConstraints = {{
 	CONSTRAINTS(grasshopper, A1, false), CONSTRAINTS(grasshopper, A2, false), CONSTRAINTS(grasshopper, A3, false), CONSTRAINTS(grasshopper, A4, false), CONSTRAINTS(grasshopper, A5, false), CONSTRAINTS(grasshopper, A6, false), CONSTRAINTS(grasshopper, A7, false), CONSTRAINTS(grasshopper, A8, false),
 	CONSTRAINTS(grasshopper, B1, false), CONSTRAINTS(grasshopper, B2, false), CONSTRAINTS(grasshopper, B3, false), CONSTRAINTS(grasshopper, B4, false), CONSTRAINTS(grasshopper, B5, false), CONSTRAINTS(grasshopper, B6, false), CONSTRAINTS(grasshopper, B7, false), CONSTRAINTS(grasshopper, B8, false),
 	CONSTRAINTS(grasshopper, C1, false), CONSTRAINTS(grasshopper, C2, false), CONSTRAINTS(grasshopper, C3, false), CONSTRAINTS(grasshopper, C4, false), CONSTRAINTS(grasshopper, C5, false), CONSTRAINTS(grasshopper, C6, false), CONSTRAINTS(grasshopper, C7, false), CONSTRAINTS(grasshopper, C8, false),
@@ -167,7 +181,7 @@ static const MatrixOfSquares GrasshopperMoveConstraints = {{
 	CONSTRAINTS(grasshopper, H1, false), CONSTRAINTS(grasshopper, H2, false), CONSTRAINTS(grasshopper, H3, false), CONSTRAINTS(grasshopper, H4, false), CONSTRAINTS(grasshopper, H5, false), CONSTRAINTS(grasshopper, H6, false), CONSTRAINTS(grasshopper, H7, false), CONSTRAINTS(grasshopper, H8, false)
 }};
 
-static const MatrixOfSquares GrasshopperCaptureConstraints = {{
+static constexpr MatrixOfSquares GrasshopperCaptureConstraints = {{
 	CONSTRAINTS(grasshopper, A1, true), CONSTRAINTS(grasshopper, A2, true), CONSTRAINTS(grasshopper, A3, true), CONSTRAINTS(grasshopper, A4, true), CONSTRAINTS(grasshopper, A5, true), CONSTRAINTS(grasshopper, A6, true), CONSTRAINTS(grasshopper, A7, true), CONSTRAINTS(grasshopper, A8, true),
 	CONSTRAINTS(grasshopper, B1, true), CONSTRAINTS(grasshopper, B2, true), CONSTRAINTS(grasshopper, B3, true), CONSTRAINTS(grasshopper, B4, true), CONSTRAINTS(grasshopper, B5, true), CONSTRAINTS(grasshopper, B6, true), CONSTRAINTS(grasshopper, B7, true), CONSTRAINTS(grasshopper, B8, true),
 	CONSTRAINTS(grasshopper, C1, true), CONSTRAINTS(grasshopper, C2, true), CONSTRAINTS(grasshopper, C3, true), CONSTRAINTS(grasshopper, C4, true), CONSTRAINTS(grasshopper, C5, true), CONSTRAINTS(grasshopper, C6, true), CONSTRAINTS(grasshopper, C7, true), CONSTRAINTS(grasshopper, C8, true),
@@ -178,7 +192,7 @@ static const MatrixOfSquares GrasshopperCaptureConstraints = {{
 	CONSTRAINTS(grasshopper, H1, true), CONSTRAINTS(grasshopper, H2, true), CONSTRAINTS(grasshopper, H3, true), CONSTRAINTS(grasshopper, H4, true), CONSTRAINTS(grasshopper, H5, true), CONSTRAINTS(grasshopper, H6, true), CONSTRAINTS(grasshopper, H7, true), CONSTRAINTS(grasshopper, H8, true)
 }};
 
-static const MatrixOfSquares MaoMoveConstraints = {{
+static constexpr MatrixOfSquares MaoMoveConstraints = {{
 	CONSTRAINTS(mao, A1, false), CONSTRAINTS(mao, A2, false), CONSTRAINTS(mao, A3, false), CONSTRAINTS(mao, A4, false), CONSTRAINTS(mao, A5, false), CONSTRAINTS(mao, A6, false), CONSTRAINTS(mao, A7, false), CONSTRAINTS(mao, A8, false),
 	CONSTRAINTS(mao, B1, false), CONSTRAINTS(mao, B2, false), CONSTRAINTS(mao, B3, false), CONSTRAINTS(mao, B4, false), CONSTRAINTS(mao, B5, false), CONSTRAINTS(mao, B6, false), CONSTRAINTS(mao, B7, false), CONSTRAINTS(mao, B8, false),
 	CONSTRAINTS(mao, C1, false), CONSTRAINTS(mao, C2, false), CONSTRAINTS(mao, C3, false), CONSTRAINTS(mao, C4, false), CONSTRAINTS(mao, C5, false), CONSTRAINTS(mao, C6, false), CONSTRAINTS(mao, C7, false), CONSTRAINTS(mao, C8, false),
@@ -189,7 +203,7 @@ static const MatrixOfSquares MaoMoveConstraints = {{
 	CONSTRAINTS(mao, H1, false), CONSTRAINTS(mao, H2, false), CONSTRAINTS(mao, H3, false), CONSTRAINTS(mao, H4, false), CONSTRAINTS(mao, H5, false), CONSTRAINTS(mao, H6, false), CONSTRAINTS(mao, H7, false), CONSTRAINTS(mao, H8, false)
 }};
 
-static const MatrixOfSquares MaoCaptureConstraints = {{
+static constexpr MatrixOfSquares MaoCaptureConstraints = {{
 	CONSTRAINTS(mao, A1, true), CONSTRAINTS(mao, A2, true), CONSTRAINTS(mao, A3, true), CONSTRAINTS(mao, A4, true), CONSTRAINTS(mao, A5, true), CONSTRAINTS(mao, A6, true), CONSTRAINTS(mao, A7, true), CONSTRAINTS(mao, A8, true),
 	CONSTRAINTS(mao, B1, true), CONSTRAINTS(mao, B2, true), CONSTRAINTS(mao, B3, true), CONSTRAINTS(mao, B4, true), CONSTRAINTS(mao, B5, true), CONSTRAINTS(mao, B6, true), CONSTRAINTS(mao, B7, true), CONSTRAINTS(mao, B8, true),
 	CONSTRAINTS(mao, C1, true), CONSTRAINTS(mao, C2, true), CONSTRAINTS(mao, C3, true), CONSTRAINTS(mao, C4, true), CONSTRAINTS(mao, C5, true), CONSTRAINTS(mao, C6, true), CONSTRAINTS(mao, C7, true), CONSTRAINTS(mao, C8, true),

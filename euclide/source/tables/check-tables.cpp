@@ -7,10 +7,10 @@ namespace Tables
 
 /* -------------------------------------------------------------------------- */
 
-static const Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
-static const Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
+static constexpr Squares WhiteSquares = UINT64_C(0x55AA55AA55AA55AA);
+static constexpr Squares BlackSquares = UINT64_C(0xAA55AA55AA55AA55);
 
-static const Squares GridSquares[NumSquares] =
+static constexpr Squares GridSquares[NumSquares] =
 {
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
 	UINT64_C(0x0303) <<  0, UINT64_C(0x0303) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0C0C) <<  0, UINT64_C(0x0303) <<  4, UINT64_C(0x0303) <<  4, UINT64_C(0x0C0C) <<  4, UINT64_C(0x0C0C) <<  4,
@@ -36,7 +36,7 @@ static constexpr bool valid(Square square, int x, int y, Variant variant)
 {
 	return ((variant == Cylinder) || ((col(square) + x) >= 0)) && ((variant == Cylinder) || ((col(square) + x) < 8))
 		&& ((row(square) + y) >= 0) && ((row(square) + y) < 8)
-		&& possible(square, Euclide::square(col(square) + x, row(square) + y), variant);
+		&& possible(square, Euclide::square((col(square) + x) & 7, row(square) + y), variant);
 }
 
 static constexpr uint64_t move(Square square, int x, int y, Variant variant)
@@ -103,18 +103,18 @@ static constexpr uint64_t pawn(Square square, int /*x*/, int y, Variant variant)
 	CHECKS(type, x, y, Cylinder) \
 }
 
-static const ArrayOfSquares NoChecks = CHECKS(leaper, 0, 0, Orthodox);
-static const ArrayOfSquares KingChecks[NumVariants] = ALLCHECKS(vicinity, 0, 0);
-static const ArrayOfSquares RookChecks[NumVariants] = ALLCHECKS(leaper, 0, 1);
-static const ArrayOfSquares BishopChecks[NumVariants] = ALLCHECKS(leaper, 1, 1);
-static const ArrayOfSquares KnightChecks[NumVariants] = ALLCHECKS(knight, 0, 0);
-static const ArrayOfSquares AmazonChecks[NumVariants] = ALLCHECKS(vicinity, 1, 2);
-static const ArrayOfSquares EmpressChecks[NumVariants] = ALLCHECKS(knight, 0, 1);
-static const ArrayOfSquares PrincessChecks[NumVariants] = ALLCHECKS(knight, 1, 1);
-static const ArrayOfSquares AlfilChecks[NumVariants] = ALLCHECKS(leaper, 2, 2);
-static const ArrayOfSquares CamelChecks[NumVariants] = ALLCHECKS(leaper, 1, 3);
-static const ArrayOfSquares ZebraChecks[NumVariants] = ALLCHECKS(leaper, 2, 3);
-static const ArrayOfSquares PawnChecks[NumColors][NumVariants] = { ALLCHECKS(pawn, 0, 1), ALLCHECKS(pawn, 0, -1) };
+static constexpr ArrayOfSquares NoChecks = CHECKS(leaper, 0, 0, Orthodox);
+static constexpr ArrayOfSquares KingChecks[NumVariants] = ALLCHECKS(vicinity, 0, 0);
+static constexpr ArrayOfSquares RookChecks[NumVariants] = ALLCHECKS(leaper, 0, 1);
+static constexpr ArrayOfSquares BishopChecks[NumVariants] = ALLCHECKS(leaper, 1, 1);
+static constexpr ArrayOfSquares KnightChecks[NumVariants] = ALLCHECKS(knight, 0, 0);
+static constexpr ArrayOfSquares AmazonChecks[NumVariants] = ALLCHECKS(vicinity, 1, 2);
+static constexpr ArrayOfSquares EmpressChecks[NumVariants] = ALLCHECKS(knight, 0, 1);
+static constexpr ArrayOfSquares PrincessChecks[NumVariants] = ALLCHECKS(knight, 1, 1);
+static constexpr ArrayOfSquares AlfilChecks[NumVariants] = ALLCHECKS(leaper, 2, 2);
+static constexpr ArrayOfSquares CamelChecks[NumVariants] = ALLCHECKS(leaper, 1, 3);
+static constexpr ArrayOfSquares ZebraChecks[NumVariants] = ALLCHECKS(leaper, 2, 3);
+static constexpr ArrayOfSquares PawnChecks[NumColors][NumVariants] = { ALLCHECKS(pawn, 0, 1), ALLCHECKS(pawn, 0, -1) };
 
 /* -------------------------------------------------------------------------- */
 
