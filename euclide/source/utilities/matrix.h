@@ -24,13 +24,6 @@ class matrix : public array<array<T, N>, M>
 		typedef T value_type;
 		typedef T& reference;
 		typedef const T& const_reference;
-
-	public:
-		const array<T, N>& operator[](int index) const
-			{ return this->at(index); }
-
-		array<T, N>& operator[](int index)
-			{ return this->at(index); }
 };
 
 /* -------------------------------------------------------------------------- */

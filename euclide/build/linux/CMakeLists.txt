@@ -52,6 +52,7 @@ set_target_properties(euclide PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../bin/)
 
 add_definitions(-std=c++11 -DNDEBUG -O3 -mavx)
 add_definitions(-Wall -Wextra -Wno-parentheses)
+add_definitions(-save-temps -fverbose-asm -masm=intel)
 
 foreach(FILE ${TABLES})
 	set_source_files_properties(${FILE} PROPERTIES COMPILE_FLAGS -O0)
