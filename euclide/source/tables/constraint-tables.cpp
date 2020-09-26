@@ -159,7 +159,11 @@ static constexpr MatrixOfSquares RunnerCaptureConstraints = {{
 	CONSTRAINTS(runner, H1, true), CONSTRAINTS(runner, H2, true), CONSTRAINTS(runner, H3, true), CONSTRAINTS(runner, H4, true), CONSTRAINTS(runner, H5, true), CONSTRAINTS(runner, H6, true), CONSTRAINTS(runner, H7, true), CONSTRAINTS(runner, H8, true)
 }};
 
+#ifdef EUCLIDE_WIN_IMPLEMENTATION
+static const MatrixOfSquares PawnMoveAndCaptureConstraints = {{
+#else
 static constexpr MatrixOfSquares PawnMoveAndCaptureConstraints = {{
+#endif
 	CONSTRAINTS(pawn, A1, false), CONSTRAINTS(pawn, A2, false), CONSTRAINTS(pawn, A3, false), CONSTRAINTS(pawn, A4, false), CONSTRAINTS(pawn, A5, false), CONSTRAINTS(pawn, A6, false), CONSTRAINTS(pawn, A7, false), CONSTRAINTS(pawn, A8, false),
 	CONSTRAINTS(pawn, B1, false), CONSTRAINTS(pawn, B2, false), CONSTRAINTS(pawn, B3, false), CONSTRAINTS(pawn, B4, false), CONSTRAINTS(pawn, B5, false), CONSTRAINTS(pawn, B6, false), CONSTRAINTS(pawn, B7, false), CONSTRAINTS(pawn, B8, false),
 	CONSTRAINTS(pawn, C1, false), CONSTRAINTS(pawn, C2, false), CONSTRAINTS(pawn, C3, false), CONSTRAINTS(pawn, C4, false), CONSTRAINTS(pawn, C5, false), CONSTRAINTS(pawn, C6, false), CONSTRAINTS(pawn, C7, false), CONSTRAINTS(pawn, C8, false),
