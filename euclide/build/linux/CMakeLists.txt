@@ -50,9 +50,19 @@ set_target_properties(euclide PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../../bin/)
 
 # Compilation flags
 
-add_definitions(-std=c++11 -DNDEBUG -O3 -mavx)
-add_definitions(-Wall -Wextra -Wno-parentheses)
-add_definitions(-save-temps -fverbose-asm -masm=intel)
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -mavx")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-parentheses")
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -save-temps -fverbose-asm -masm=intel")
+
+set(CMAKE_CXX_FLAGS_ASAN "${CMAKE_CXX_FLAGS_ASAN} -O1 -g -fsanitize=address -fno-omit-frame-pointer")
+set(CMAKE_LINKER_FLAGS_ASAN "${CMAKE_LINKER_FLAGS_ASAN} -fsanitize=address")
 
 foreach(FILE ${TABLES})
 	set_source_files_properties(${FILE} PROPERTIES COMPILE_FLAGS -O0)
