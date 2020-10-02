@@ -24,17 +24,19 @@ Target::Target(Glyph glyph, Square square)
 
 /* -------------------------------------------------------------------------- */
 
-const Men& Target::updatePossibleMen(const Men& men)
+bool Target::updatePossibleMen(const Men& men)
 {
-	m_men &= men;
+	if ((m_men & men) == m_men)
+		return false;
 
+	m_men &= men;
 	if (men.count() == 1)
 		m_man = men.first();
 
 	if (!men)
 		throw NoSolution;
 
-	return m_men;
+	return true;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -51,8 +53,8 @@ bool Target::applyPigeonHolePrinciple(Targets& targets) const
 	if (squares.count() >= m_men.count())
 		for (Target& target : targets)
 			if (target.men() != m_men)
-				if (target.men() & m_men)
-					updated = (target.updatePossibleMen(~m_men), true);
+				if (target.updatePossibleMen(~m_men))
+					updated = true;
 
 	return updated;
 }
@@ -214,16 +216,9 @@ bool TargetPartition::disjoint(const Pieces& pieces, int freeMoves, int freeCapt
 
 	bool updated = false;
 	for (Target& target : targets)
-	{
 		if (m_squares[target.square()])
-		{
-			if (destinations[target.square()] != target.men())
-			{
-				target.updatePossibleMen(destinations[target.square()]);
+			if (target.updatePossibleMen(destinations[target.square()]))
 				updated = true;
-			}
-		}
-	}
 
 	return updated;
 }

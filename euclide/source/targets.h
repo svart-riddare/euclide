@@ -23,7 +23,7 @@ class Target
 		int updateRequiredCaptures(int requiredCaptures)
 			{ return xstd::maximize(m_requiredCaptures, requiredCaptures); }
 
-		const Men& updatePossibleMen(const Men& men);
+		bool updatePossibleMen(const Men& men);
 
 		bool applyPigeonHolePrinciple(Targets& targets) const;
 

@@ -82,12 +82,18 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	/* -- Initialize pieces -- */
 
+	for (Color color : AllColors())
+		m_pieces[color].reserve(m_problem.initialPieces(color));
+
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
 			if (m_problem.initialPosition(square) == glyph)
 				m_pieces[color(glyph)].emplace_back(m_problem, square);
 
 	/* -- Initialize targets -- */
+
+	for (Color color : AllColors())
+		m_targets[color].reserve(m_problem.diagramPieces(color));
 
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
@@ -155,10 +161,12 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				{
 					for (Target& target : targets)
 					{
-						Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()]; });
-						men = target.updatePossibleMen(men);
+						Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()] && maybe(!pieces[man].captured()); });
+						target.updatePossibleMen(men);
+						men = target.men();
+						assert(men);
 
-						target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square()), piece.requiredMoves()); }));
+						target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square(), target.glyph()), piece.requiredMoves()); }));
 						target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(target.square()), piece.requiredCaptures()); }));
 					}
 
@@ -349,8 +357,8 @@ int Euclide::update(std::vector<Piece *>& pieces)
 
 void Euclide::reset()
 {
-	m_pieces[White].clear();
-	m_pieces[Black].clear();
+	for (Color color : AllColors())
+		m_pieces[color].clear();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -380,7 +388,7 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 			EUCLIDE_Deduction& deduction = color ? m_deductions.blackPieces[k] : m_deductions.whitePieces[k];
 			const Piece& piece = m_pieces[color][k];
 
-			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.initialGlyph());
+			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
 			deduction.diagramGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
 
 			deduction.initialSquare = static_cast<int>(piece.initialSquare());

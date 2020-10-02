@@ -94,7 +94,7 @@ static constexpr Squares GridSquares[NumSquares] =
 
 /* -------------------------------------------------------------------------- */
 
-void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, Variant variant, tribool capture)
+void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, Variant variant, tribool capture, bool promotion)
 {
 	const int cylindrical = (variant == Cylinder) ? 1 : 0;
 
@@ -130,6 +130,9 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 			else
 				for (Square square : AllSquares())
 					(*moves)[square] = PawnMoves[cylindrical][color][square] | PawnCaptures[cylindrical][color][square];
+			if (!promotion)
+				for (Square square : AllSquares())
+					(*moves)[square] &= ~PromotionSquares[color];
 			break;
 		case Grasshopper:
 			for (Square square : AllSquares())
@@ -211,7 +214,7 @@ void initializeLineOfSights(const array<Species, NumGlyphs>& species, Variant va
 		Color color = Euclide::color(glyph);
 
 		ArrayOfSquares captures;
-		initializeLegalMoves(&captures, species[glyph], color, variant, true);
+		initializeLegalMoves(&captures, species[glyph], color, variant, true, true);
 		const MatrixOfSquares *constraints = getMoveConstraints(species[glyph], variant, true);
 
 		for (Square from : AllSquares())

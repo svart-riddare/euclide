@@ -17,7 +17,7 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 	/* -- Initialize constant tables -- */
 
 	for (Glyph glyph : AllGlyphs())
-		Tables::initializeLegalMoves(&m_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true);
+		Tables::initializeLegalMoves(&m_captures[glyph], problem.piece(glyph), color(glyph), problem.variant(), true, true);
 
 	for (Glyph glyph : AllGlyphs())
 		m_constraints[glyph] = *Tables::getMoveConstraints(problem.piece(glyph), problem.variant(), true, false);
@@ -45,7 +45,7 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 	{
 		for (const Piece& piece : m_pieces[color])
 		{
-			piece.state.glyph = piece.initialGlyph();
+			piece.state.glyph = piece.glyph();
 			piece.state.square = piece.initialSquare();
 			piece.state.moves = 0;
 		}
@@ -187,11 +187,6 @@ bool Game::play(const State& _state)
 			if (extraMoves > m_moves[color])
 				continue;
 
-			/* -- Check if the king is not in check -- */
-
-			if (false)
-				continue;
-
 			/* -- Additional checks for castling -- */
 
 			CastlingSide castling = NoCastling;
@@ -204,56 +199,63 @@ bool Game::play(const State& _state)
 				if (_state.check() || checked(Castlings[color][castling].free, color))
 					continue;
 
-			/* -- Perform move and compute new game state -- */
+			/* -- Handle promotion -- */
 
-			State state = move(_state, from, to, castling);
-			m_states.push_back(&state);
-
-			m_moves[color] -= extraMoves;
-
-			/* -- Move is valid only if the king is not in check -- */
-
-			bool valid = true;
-			if (piece.royal() || _state.check())
-				valid &= !checked(m_kings[color], color);
-			else
-				valid &= !checked(m_kings[color], from, color);
-
-			if (valid)
+			const bool promotion = piece.promotions()[to];
+			const Glyphs glyphs = promotion ? piece.glyphs() - Glyphs(piece.glyph()) : Glyphs(piece.glyph());
+			for (Glyph glyph : ValidGlyphs(glyphs))
 			{
-				/* -- Set check state -- */
+				/* -- Perform move and compute new game state -- */
 
-				if (checks(piece.initialGlyph(), to, m_kings[!color]))
-					state.check(true);
+				State state = move(_state, from, to, glyph, castling);
+				m_states.push_back(&state);
 
-				if (checked(m_kings[!color], from, !color))
-					state.check(true);
+				m_moves[color] -= extraMoves;
 
-				if (castling != NoCastling)
-					if (checks(m_board[Castlings[color][castling].free]->initialGlyph(), Castlings[color][castling].free, m_kings[!color]))
+				/* -- Move is valid only if the king is not in check -- */
+
+				bool valid = true;
+				if (piece.royal() || _state.check())
+					valid &= !checked(m_kings[color], color);
+				else
+					valid &= !checked(m_kings[color], from, color);
+
+				if (valid)
+				{
+					/* -- Set check state -- */
+
+					if (checks(glyph, to, m_kings[!color]))
 						state.check(true);
 
-				/* -- Recursive call -- */
+					if (checked(m_kings[!color], from, !color))
+						state.check(true);
 
-				if (!play(state))
-				{
-					/* -- Add position to cache if it does not lead to a solution -- */
+					if (castling != NoCastling)
+						if (checks(m_board[Castlings[color][castling].free]->glyph(), Castlings[color][castling].free, m_kings[!color]))
+							state.check(true);
 
-					if (cachable(m_states.size()))
-						m_cache.insert(m_hash, m_states.size());
+					/* -- Recursive call -- */
+
+					if (!play(state))
+					{
+						/* -- Add position to cache if it does not lead to a solution -- */
+
+						if (cachable(m_states.size()))
+							m_cache.insert(m_hash, m_states.size());
+					}
+					else
+					{
+						solved = true;
+					}
 				}
-				else
-				{
-					solved = true;
-				}
+
+				/* -- Undo move -- */
+
+				m_moves[color] += extraMoves;
+
+				m_states.pop_back();
+				undo(state);
 			}
-
-			/* -- Undo move -- */
-
-			m_moves[color] += extraMoves;
-
-			m_states.pop_back();
-			undo(state);
 		}
 	}
 
@@ -264,7 +266,7 @@ bool Game::play(const State& _state)
 
 /* -------------------------------------------------------------------------- */
 
-Game::State Game::move(const State& state, Square from, Square to, CastlingSide castling)
+Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, CastlingSide castling)
 {
 	const Piece *piece = m_board[from];
 	const Color color = state.color();
@@ -275,7 +277,7 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 	/* -- Update board position -- */
 
 	m_hash[capture] = Empty;
-	m_hash[to] = piece->glyph();
+	m_hash[to] = glyph;
 	m_hash[from] = Empty;
 
 	m_board[capture] = nullptr;
@@ -294,6 +296,7 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	/* -- Update piece state -- */
 
+	piece->state.glyph = glyph;
 	piece->state.square = to;
 	piece->state.moves += 1;
 
@@ -341,7 +344,7 @@ Game::State Game::move(const State& state, Square from, Square to, CastlingSide 
 
 	/* -- Return new state -- */
 
-	return State(state, from, to, captured, capture, castling, castlings, enpassant);
+	return State(state, from, to, (glyph != piece->glyph()) ? glyph : Empty, captured, capture, castling, castlings, enpassant);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -354,11 +357,12 @@ void Game::undo(const State& state)
 	const Square to = state.to();
 	const Piece *piece = m_board[to];
 	const Piece *captured = state.captured();
+	const Glyph promotion = state.promotion();
 
 	/* -- Update board position -- */
 
 	m_hash[to] = Empty;
-	m_hash[from] = piece->glyph();
+	m_hash[from] = promotion ? piece->glyph() : piece->state.glyph;
 	if (captured)
 		m_hash[capture] = captured->glyph();
 
@@ -375,6 +379,7 @@ void Game::undo(const State& state)
 
 	/* -- Update piece state -- */
 
+	piece->state.glyph = promotion ? piece->glyph() : piece->state.glyph;
 	piece->state.square = from;
 	piece->state.moves -= 1;
 
@@ -430,7 +435,7 @@ bool Game::checked(Square king, Square free, Color color) const
 	const Squares enemies = m_lines[color][king][free] & m_position[!color];
 
 	for (Square from : ValidSquares(enemies))
-		if (checks(m_board[from]->initialGlyph(), from, king))
+		if (checks(m_board[from]->state.glyph, from, king))
 			return true;
 
 	return false;
@@ -442,7 +447,7 @@ bool Game::solved() const
 {
 	/* -- Check number of moves -- */
 
-	assert(m_states.size() == m_problem.moves());
+	assert(int(m_states.size()) == m_problem.moves());
 
 	/* -- Quick check for diagram layout -- */
 
@@ -452,7 +457,7 @@ bool Game::solved() const
 	/* -- Check all pieces -- */
 
 	for (Square square : ValidSquares(m_diagram))
-		if (m_board[square]->glyph() != m_problem.diagramPosition(square))
+		if (m_board[square]->state.glyph != m_problem.diagramPosition(square))
 			return false;
 
 	/* -- Solution found -- */
@@ -474,12 +479,13 @@ void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 		const Color color = state.color();
 		const Square from = state.from();
 		const Square to = state.to();
+		const Glyph glyph = state.promotion() ? state.promotion() : diagram[from];
 
 		const Square capture = state.capture();
 		const CastlingSide castling = state.castling();
 
 		move->glyph = static_cast<EUCLIDE_Glyph>(diagram[from]);
-		move->promotion = static_cast<EUCLIDE_Glyph>(diagram[from]);
+		move->promotion = static_cast<EUCLIDE_Glyph>(glyph);
 		move->captured = static_cast<EUCLIDE_Glyph>(diagram[capture]);
 
 		move->move = (m + ((color == Black) ? 3 : 2)) / 2;
@@ -494,7 +500,7 @@ void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 		move->queenSideCastling = castling == QueenSideCastling;
 
 		diagram[capture] = Empty;
-		diagram[move->to] = diagram[move->from];
+		diagram[move->to] = glyph;
 		diagram[move->from] = Empty;
 
 		if (castling != NoCastling)
@@ -514,7 +520,7 @@ Game::State::State(const Problem& problem)
 	m_castlings = problem.castlings();
 	m_enpassant = Nowhere;
 	m_color = problem.turn();
-	m_check = false;  // TODO
+	m_check = false;
 
 	m_castling = NoCastling;
 	m_captured = nullptr;
@@ -524,7 +530,7 @@ Game::State::State(const Problem& problem)
 
 /* -------------------------------------------------------------------------- */
 
-Game::State::State(const State& state, Square from, Square to, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant)
+Game::State::State(const State& state, Square from, Square to, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant)
 {
 	m_castlings = state.m_castlings;
 	for (CastlingSide side : AllCastlingSides())
@@ -534,6 +540,7 @@ Game::State::State(const State& state, Square from, Square to, const Piece *capt
 	m_color = !state.m_color;
 	m_check = false;
 
+	m_promotion = promotion;
 	m_castling = castling;
 	m_captured = captured;
 	m_capture = capture;

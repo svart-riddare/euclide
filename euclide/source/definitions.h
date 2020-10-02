@@ -43,6 +43,7 @@ static_assert(NumGlyphs == int(EUCLIDE_NUM_GLYPHS));
 typedef BitSet<Glyph, NumGlyphs> Glyphs;
 typedef EnumRange<Glyph, NumGlyphs> AllGlyphs;
 typedef EnumRange<Glyph, NumGlyphs, WhiteKing> MostGlyphs;
+typedef Glyphs::BitSetRange ValidGlyphs;
 
 constexpr Color color(Glyph glyph)
 {
@@ -110,6 +111,22 @@ static const Castling Castlings[NumColors][NumCastlingSides] =
 {
 	{ { E1, F1, G1, H1 }, { E1, D1, C1, A1 } },
 	{ { E8, F8, G8, H8 }, { E8, D8, C8, A8 } }
+};
+
+/* -------------------------------------------------------------------------- */
+/* -- Promotion                                                            -- */
+/* -------------------------------------------------------------------------- */
+
+static const Squares PromotionSquares[NumColors] =
+{
+	(uint64_t(1) << A8) | (uint64_t(1) << B8) | (uint64_t(1) << C8) | (uint64_t(1) << D8) | (uint64_t(1) << E8) | (uint64_t(1) << F8) | (uint64_t(1) << G8) | (uint64_t(1) << H8),
+	(uint64_t(1) << A1) | (uint64_t(1) << B1) | (uint64_t(1) << C1) | (uint64_t(1) << D1) | (uint64_t(1) << E1) | (uint64_t(1) << F1) | (uint64_t(1) << G1) | (uint64_t(1) << H1)
+};
+
+static const Glyphs PromotionGlyphs[NumColors] =
+{
+	(uint32_t(1) << WhiteQueen) | (uint32_t(1) << WhiteRook) | (uint32_t(1) << WhiteBishop) | (uint32_t(1) << WhiteKnight),
+	(uint32_t(1) << BlackQueen) | (uint32_t(1) << BlackRook) | (uint32_t(1) << BlackBishop) | (uint32_t(1) << BlackKnight),
 };
 
 /* -------------------------------------------------------------------------- */

@@ -126,6 +126,12 @@ Problem::Problem(const EUCLIDE_Problem& problem)
 	for (Color color : AllColors())
 		if ((m_diagramPieces[color] = xstd::count_if(m_diagramPosition, [=](Glyph glyph) { return Euclide::color(glyph) == color; })) > m_initialPieces[color])
 			throw InvalidProblem;
+
+	m_initialPawns[White] = xstd::count(m_initialPosition, WhitePawn);
+	m_initialPawns[Black] = xstd::count(m_initialPosition, BlackPawn);
+
+	m_diagramPawns[White] = xstd::count(m_diagramPosition, WhitePawn);
+	m_diagramPawns[Black] = xstd::count(m_diagramPosition, BlackPawn);
 }
 
 /* -------------------------------------------------------------------------- */

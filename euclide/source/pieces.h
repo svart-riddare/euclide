@@ -20,6 +20,7 @@ class Piece
 {
 	public:
 		Piece(const Problem& problem, Square square);
+		Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *promotee);
 		~Piece();
 
 		void initializeConditions();
@@ -30,8 +31,9 @@ class Piece
 		void setAvailableMoves(int availableMoves, int freeMoves);
 		void setAvailableCaptures(int availableCaptures, int freeCaptures);
 
-		void setPossibleSquares(const Squares& squares);
-		void setPossibleCaptures(const Squares& captures);
+		void setPossibleGlyphs(Glyphs glyphs);
+		void setPossibleSquares(Squares squares);
+		void setPossibleCaptures(Squares captures);
 
 		void bypassObstacles(const Piece& blocker);
 		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
@@ -41,8 +43,6 @@ class Piece
 		bool update();
 
 	public:
-		inline Glyph initialGlyph() const
-			{ return m_glyph; }
 		inline Glyph glyph() const
 			{ return m_glyph; }
 		inline Color color() const
@@ -67,8 +67,10 @@ class Piece
 			{ return m_initialSquare; }
 		inline Square square() const
 			{ return m_finalSquare; }
-		inline const Squares& squares() const
+		inline Squares squares() const
 			{ return m_possibleSquares; }
+		inline Squares promotions() const
+			{ return m_promotionSquares; }
 
 		inline int requiredMoves() const
 			{ return m_requiredMoves; }
@@ -77,8 +79,12 @@ class Piece
 
 		inline int requiredMovesTo(Square square) const
 			{ return m_distances[square]; }
+		inline int requiredMovesTo(Square square, Glyph glyph) const
+			{ return m_pieces[glyph]->requiredMovesTo(square); }
 		inline int requiredMovesFrom(Square square) const
 			{ return m_rdistances[square]; }
+		inline int requiredMovesFrom(Square square, Glyph glyph) const
+			{ return m_pieces[glyph]->requiredMovesFrom(square); }
 		inline int requiredCapturesTo(Square square) const
 			{ return m_captures[square]; }
 		inline int requiresCapturesFrom(Square square) const
@@ -113,7 +119,7 @@ class Piece
 		void updateDeductions();
 		void updateDistances(bool castling);
 
-		array<int, NumSquares> computeDistances(Square square, Square castling) const;
+		array<int, NumSquares> computeDistances(Squares squares) const;
 		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
 		array<int, NumSquares> computeDistancesTo(Squares destinations, const Piece& blocker, Square obstruction) const;
 
@@ -136,7 +142,7 @@ class Piece
 
 			array<int, NumSquares> distances;    /**< Moves required to reach each square, assuming goals are reached. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece.m_initialSquare != piece.m_castlingSquare) && !piece.m_distances[piece.m_castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece.m_initialSquare)
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece.m_castlingSquare != Nowhere) && !piece.m_distances[piece.m_castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece.m_initialSquare)
 			{
 				distances.fill(Infinity);
 				distances[piece.m_initialSquare] = 0;
@@ -153,7 +159,9 @@ class Piece
 
 		bool m_royal;                                  /**< A royal piece (the king) can not be captured and may not be left in check. */
 
-		Square m_initialSquare;                        /**< Piece's initial square. */
+		Square m_initialSquare;                        /**< Piece's initial square, if known. */
+		Squares m_initialSquares;                      /**< Piece's initial squares, more than one for promotion pieces. */
+		Squares m_promotionSquares;                    /**< Piece's possible promotion squares, if any. */
 		Square m_castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
 		Square m_finalSquare;                          /**< Piece's final square, if known. */
 
@@ -162,6 +170,9 @@ class Piece
 		tribool m_promoted;                            /**< Set if the piece has been promoted. */
 
 		Glyphs m_glyphs;                               /**< Piece's possible glyphs after promotion. */
+		std::list<Piece> m_promotions;                 /**< Promoted pieces. At most four entries for pawns. */
+		array<Piece *, NumGlyphs> m_pieces;            /**< Pointer to own piece and promoted pieces. */
+		const Piece *m_promotee;                       /**< For promoted piece, reference to promoted pawn. */
 
 		Squares m_possibleSquares;                     /**< Possible final squares of this piece. */
 		Squares m_possibleCaptures;                    /**< Possible captures made by this piece. */

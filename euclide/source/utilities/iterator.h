@@ -21,27 +21,27 @@ struct EnumRange
 			typedef Enum& reference;
 
 		public:
-			EnumIterator(int value) : m_value(value) {}
+			constexpr EnumIterator(int value) : m_value(value) {}
 
 		public:
-			inline bool operator==(const EnumIterator& iterator) const
+			inline constexpr bool operator==(const EnumIterator& iterator) const
 				{ return m_value == iterator.m_value; }
-			inline bool operator!=(const EnumIterator& iterator) const
+			inline constexpr bool operator!=(const EnumIterator& iterator) const
 				{ return m_value != iterator.m_value; }
 
 			inline void operator++()
 				{ m_value += 1; }
 
-			inline Enum operator*() const
+			inline constexpr Enum operator*() const
 				{ return static_cast<Enum>(m_value); }
 
 		private:
 			int m_value;    /**< Enum value, as integer. */
 	};
 
-	inline EnumIterator begin() const
+	inline constexpr EnumIterator begin() const
 		{ return EnumIterator(FirstValue); }
-	inline EnumIterator end() const
+	inline constexpr EnumIterator end() const
 		{ return EnumIterator(NumValues); }
 };
 

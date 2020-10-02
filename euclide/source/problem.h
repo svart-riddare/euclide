@@ -50,6 +50,8 @@ class Problem
 			{ return m_diagramPieces[color]; }
 		inline int capturedPieces(Color color) const
 			{ return m_initialPieces[color] - m_diagramPieces[color]; }
+		inline int promotionPieces(Color color) const
+			{ return m_initialPawns[color] - m_diagramPawns[color]; }
 
 	private:
 		array<Glyph, NumSquares> m_initialPosition;               /**< Initial position. */
@@ -64,6 +66,8 @@ class Problem
 
 		array<int, NumColors> m_initialPieces;                    /**< Number of pieces in initial position. */
 		array<int, NumColors> m_diagramPieces;                    /**< Number of pieces in diagram position. */
+		array<int, NumColors> m_initialPawns;                     /**< Number of pawns in initial position. */
+		array<int, NumColors> m_diagramPawns;                     /**< Number of panws in diagram position. */
 };
 
 /* -------------------------------------------------------------------------- */
