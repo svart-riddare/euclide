@@ -13,6 +13,8 @@ class Output
 		~Output();
 
 		void open(const char *inputFileName);
+		void bind(FILE *file);
+		void close();
 
 		void reset();
 		void done(EUCLIDE_Status status);
@@ -52,6 +54,7 @@ class Output
 
 		EUCLIDE_Callbacks m_callbacks;    /**< Euclide callbacks. */
 		FILE *m_file;                     /**< Output file. */
+		bool m_close;                     /**< Set if output file should be closed when done. */
 
 		Timer m_timer;                    /**< Timer used to output total solving time. */
 		mutable double m_complexity;      /**< Solving complexity, only the last value is written to file. */

@@ -7,7 +7,7 @@ const wchar_t *Output::Hyphens = L"---------------------------------------------
 /* -------------------------------------------------------------------------- */
 
 Output::Output(const Strings& strings, const char *inputFileName)
-	: m_strings(strings), m_file(nullptr)
+	: m_strings(strings), m_file(nullptr), m_close(false)
 {
 	reset();
 	memset(&m_callbacks, 0, sizeof(m_callbacks));
@@ -28,8 +28,7 @@ Output::Output(const Strings& strings, const char *inputFileName)
 
 Output::~Output()
 {
-	if (m_file)
-		fclose(m_file);
+	close();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -38,10 +37,7 @@ void Output::open(const char *inputFileName)
 {
 	/* -- Close previously opened file -- */
 
-	if (m_file)
-		fclose(m_file);
-
-	m_file = nullptr;
+	close();
 
 	/* -- Early exit if no filename was provided -- */
 
@@ -59,8 +55,33 @@ void Output::open(const char *inputFileName)
 		strcat(outputFileName, ".output.txt");
 
 	m_file = fopen(outputFileName, "w");
-	delete[] outputFileName;
+	m_close = m_file != nullptr;
 
+	delete[] outputFileName;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Output::bind(FILE *file)
+{
+	/* -- Close previously opened file -- */
+
+	close();
+
+	/* -- Keep reference to user provided file pointer -- */
+
+	m_file = file;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Output::close()
+{
+	if (m_close)
+		fclose(m_file);
+
+	m_file = nullptr;
+	m_close = false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -112,7 +133,7 @@ void Output::displayCopyright(const wchar_t *copyright) const
 	if (m_file)
 	{
 		fprintf(m_file, "%ls\n", Hyphens);
-		fprintf(m_file, "-- %-*ls --\n", int(wcslen(Hyphens)) - 6, copyright);
+		fprintf(m_file, "-- %ls%*s --\n", copyright, int(wcslen(Hyphens) - wcslen(copyright) - 6), "");
 		fprintf(m_file, "%ls\n", Hyphens);
 		fprintf(m_file, "\n");
 		fflush(m_file);

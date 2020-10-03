@@ -29,11 +29,17 @@
 	#define WIN32_LEAN_AND_MEAN
 	#include <Windows.h>
 	#include <crtdbg.h>
+	#include <conio.h>
+	#include <fcntl.h>
+	#include <io.h>
 
 	#undef min
 	#undef max
 #else
 	#include <ncursesw/curses.h>
+	#include <sys/ioctl.h>
+	#include <termios.h>
+	#include <unistd.h>
 #endif
 
 /* -------------------------------------------------------------------------- */

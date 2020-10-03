@@ -12,6 +12,9 @@
 class Console
 {
 	public:
+		static Console *create(const Strings& strings, bool quiet);
+
+	public:
 		Console(const Strings& strings);
 		virtual ~Console();
 
@@ -41,7 +44,7 @@ class Console
 			{ return !m_valid || m_abort; }
 
 	public:
-		void open(const char *inputFileName);
+		void open(const char *inputFileName, bool print = false);
 
 	protected:
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
@@ -66,6 +69,7 @@ class Console
 
 	private:
 		EUCLIDE_Callbacks m_callbacks;     /**< Euclide engine callbacks. */
+		Output m_stdout;                   /**< Stdout output, when not using console mode. */
 		Output m_output;                   /**< Output file for solving results. */
 		Timer m_timer;                     /**< Timer use to output solving time. */
 

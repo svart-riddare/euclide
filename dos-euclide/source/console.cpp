@@ -1,9 +1,33 @@
 #include "console.h"
+#include "console-none.h"
+
+#ifdef EUCLIDE_WINDOWS
+	#include "console-win.h"
+	typedef WinConsole EuclideConsole;
+#else
+	#include "console-linux.h"
+	typedef LinuxConsole EuclideConsole;
+#endif
+
+/* -------------------------------------------------------------------------- */
+
+Console *Console::create(const Strings& strings, bool quiet)
+{
+	if (quiet)
+		return new NoConsole(strings);
+
+	Console *console = new EuclideConsole(strings);
+	if (console->m_valid)
+		return console;
+
+	delete console;
+	return nullptr;
+}
 
 /* -------------------------------------------------------------------------- */
 
 Console::Console(const Strings& strings)
-	: m_output(strings), m_strings(strings), m_width(0), m_height(0), m_valid(false), m_abort(false)
+	: m_stdout(strings), m_output(strings), m_strings(strings), m_width(0), m_height(0), m_valid(false), m_abort(false)
 {
 	/* -- Initialize callbacks -- */
 
@@ -30,6 +54,7 @@ Console::~Console()
 
 void Console::reset(std::chrono::seconds timeout)
 {
+	m_stdout.reset();
 	m_output.reset();
 
 	m_timer = Timer();
@@ -50,6 +75,7 @@ void Console::clear()
 
 void Console::done(EUCLIDE_Status status)
 {
+	m_stdout.done(status);
 	m_output.done(status);
 
 	displayMessage(L"");
@@ -97,6 +123,7 @@ void Console::displayMessage(const wchar_t *string) const
 
 void Console::displayCopyright(const wchar_t *copyright) const
 {
+	m_stdout.displayCopyright(copyright);
 	m_output.displayCopyright(copyright);
 
 	const int length = wcslen(copyright);
@@ -112,6 +139,7 @@ void Console::displayCopyright(const wchar_t *copyright) const
 
 void Console::displayMessage(EUCLIDE_Message message) const
 {
+	m_stdout.displayMessage(message);
 	m_output.displayMessage(message);
 
 	displayMessage(m_strings[message]);
@@ -122,6 +150,7 @@ void Console::displayMessage(EUCLIDE_Message message) const
 
 void Console::displayProblem(const EUCLIDE_Problem& problem) const
 {
+	m_stdout.displayProblem(problem);
 	m_output.displayProblem(problem);
 
 	/* -- Count number of pieces, by color -- */
@@ -161,6 +190,7 @@ void Console::displayProblem(const EUCLIDE_Problem& problem) const
 
 void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const
 {
+	m_stdout.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
 	m_output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
 
 	wchar_t string[32];
@@ -178,6 +208,7 @@ void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double com
 
 void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
+	m_stdout.displayDeductions(deductions);
 	m_output.displayDeductions(deductions);
 
 	displayProgress(deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
@@ -188,6 +219,7 @@ void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 {
+	m_stdout.displayThinking(thinking);
 	m_output.displayThinking(thinking);
 
 	wchar_t string[6 * countof(thinking.moves) + 1];
@@ -238,6 +270,7 @@ void Console::displaySolution(const EUCLIDE_Solution& solution) const
 {
 	m_solutions = solution.solution;
 
+	m_stdout.displaySolution(solution);
 	m_output.displaySolution(solution);
 
 	wchar_t string[32];
@@ -258,9 +291,13 @@ bool Console::abort() const
 
 /* -------------------------------------------------------------------------- */
 
-void Console::open(const char *inputFileName)
+void Console::open(const char *inputFileName, bool print)
 {
-	m_output.open(inputFileName);
+	if (inputFileName)
+		m_output.open(inputFileName);
+
+	if (print)
+		m_stdout.bind(stdout);
 }
 
 /* -------------------------------------------------------------------------- */

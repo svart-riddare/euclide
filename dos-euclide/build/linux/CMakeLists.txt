@@ -8,6 +8,8 @@ set(SOURCES
 	../../source/console.h
 	../../source/console-linux.cpp
 	../../source/console-linux.h
+	../../source/console-none.cpp
+	../../source/console-none.h
 	../../source/forsythe.cpp
 	../../source/forsythe.h
 	../../source/includes.h

@@ -1,13 +1,6 @@
 #include "includes.h"
 #include "forsythe.h"
-
-#ifdef EUCLIDE_WINDOWS
-	#include "console-win.h"
-	typedef WinConsole DosConsole;
-#else
-	#include "console-linux.h"
-	typedef LinuxConsole DosConsole;
-#endif
+#include "console.h"
 
 /* -------------------------------------------------------------------------- */
 
@@ -104,17 +97,12 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	Strings strings;
 
-	/* -- Initialize console output -- */
-
-	DosConsole console(strings);
-	if (!console)
-		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
-
 	/* -- Parse arguments, either a file path or a forsythe string -- */
 
 	Strings::Error error = (numArguments > 1) ? Strings::NumErrors : Strings::NoArguments;
 
 	const char *problems = nullptr, *moves = nullptr;
+	bool quiet = false;
 	bool wait = false;
 	int timeout = 0;
 
@@ -144,11 +132,26 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 			timeout = atoi(arguments[argument] + strlen("--timeout="));
 		}
 		else
-		if (strcmp(arguments[argument], "--wait") == 0)
-			wait = true;
+		if (strcmp(arguments[argument], "--quiet") == 0)
+		{
+			quiet = true;
+		}
 		else
+		if (strcmp(arguments[argument], "--wait") == 0)
+		{
+			wait = true;
+		}
+		else
+		{
 			error = Strings::InvalidArguments;
+		}
 	}
+
+	/* -- Initialize console output -- */
+
+	std::unique_ptr<Console> console(Console::create(strings, quiet));
+	if (!console)
+		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
 
 	/* -- Solve problems -- */
 
@@ -156,13 +159,13 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	{
 		if (problems && moves)
 		{
-			if (!solve(strings, console, problems, atoi(moves), "", timeout, wait))
+			if (!solve(strings, *console, problems, atoi(moves), "", timeout, wait))
 				error = Strings::InvalidProblem;
 		}
 		else
 		if (problems)
 		{
-			if (!solve(strings, console, problems, timeout, wait))
+			if (!solve(strings, *console, problems, timeout, wait))
 				error = Strings::InvalidInputFile;
 		}
 	}
@@ -173,8 +176,8 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	if (failed)
 	{
-		console.displayError(strings[error]);
-		console.wait();
+		console->displayError(strings[error]);
+		console->wait();
 	}
 
 	/* -- Done -- */
