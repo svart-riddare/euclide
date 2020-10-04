@@ -17,8 +17,11 @@ class BitSet
 		typedef typename std::conditional<Bits <= 32, uint32_t, uint64_t>::type bits_t;
 		bits_t m_bits;
 
+		static const constexpr bits_t None = 0;
+		static const constexpr bits_t All = ~None >> (std::numeric_limits<bits_t>::digits - Bits);
+
 	public:
-		constexpr BitSet(bits_t bits = 0) : m_bits(bits) {}
+		constexpr BitSet(bits_t bits = None) : m_bits(bits) {}
 		constexpr BitSet(Type position) : m_bits(bits_t(1) << position) {}
 
 		template <typename Predicate> inline
@@ -26,11 +29,11 @@ class BitSet
 			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) set(position, value); }
 
 		inline BitSet& set()
-			{ m_bits = ~bits_t(0); return *this; }
+			{ m_bits = All; return *this; }
 		inline BitSet& reset()
-			{ m_bits = bits_t(0); return *this; }
+			{ m_bits = None; return *this; }
 		inline BitSet& flip()
-			{ m_bits = ~m_bits; return *this; }
+			{ m_bits = ~m_bits & All; return *this; }
 
 		inline BitSet& set(Type position, bool value = true)
 			{ assert((position >= 0) && (position < Bits)); m_bits = value ? intel::bts(m_bits, position) : intel::btr(m_bits, position); return *this; }
@@ -54,11 +57,11 @@ class BitSet
 			{ return assert((position >= 0) && (position < Bits)), intel::bt(m_bits, position); }
 
 		inline constexpr bool all() const
-			{ return ~m_bits == 0; }
+			{ return m_bits == All; }
 		inline constexpr bool any() const
-			{ return m_bits != 0; }
+			{ return m_bits != None; }
 		inline constexpr bool none() const
-			{ return m_bits == 0; }
+			{ return m_bits == None; }
 
 		inline constexpr operator bits_t() const
 			{ return m_bits; }
@@ -127,8 +130,8 @@ class BitSet
 			{ return BitSet(*this).flip(); }
 
 	public:
-		static BitSet mask(int n)
-			{ return BitSet((n < Bits) ? (bits_t(1) << n) - 1 : std::numeric_limits<bits_t>::max()); }
+		static constexpr BitSet mask(int n)
+			{ return BitSet((n < Bits) ? (bits_t(1) << n) - 1 : All); }
 
 	public:
 		class BitReference
@@ -193,7 +196,7 @@ class BitSet
 					{ return BitSetIterator(); }
 
 			private:
-				const BitSet& m_bitset;
+				const BitSet m_bitset;
 		};
 
 		inline BitSetRange range() const
@@ -243,7 +246,7 @@ class BitSet
 
 			private:
 				const Collection& m_collection;
-				const BitSet& m_bitset;
+				const BitSet m_bitset;
 		};
 
 		template <typename Collection>
