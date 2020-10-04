@@ -42,6 +42,7 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 
 	/* -- Check multiple languages for diagram description -- */
 
+	assert(wcslen(strings[Strings::ForsytheSymbols]) % 7 == 0);
 	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !m_valid; symbols += 7)
 	{
 		const ForsytheSymbols forsythe(symbols);
