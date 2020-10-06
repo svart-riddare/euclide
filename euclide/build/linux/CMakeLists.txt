@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 2.8)
 set(SOURCES
 	../../source/cache.cpp
 	../../source/cache.h
+	../../source/captures.cpp
+	../../source/captures.h
 	../../source/conditions.cpp
 	../../source/conditions.h
 	../../source/copyright.cpp

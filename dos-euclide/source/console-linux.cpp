@@ -128,21 +128,30 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			/* -- Print deduction -- */
 
-			if (deduction.finalSquare >= 0)
+			if (deduction.final.square >= 0)
 			{
 				const unsigned attribute =  color ? (deduction.captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction.captured ? Colors::WhiteCaptures : Colors::WhiteMoves);
 
-				mvaddch(y, x + 5, toupper(symbols[deduction.initialGlyph]) | attribute);
-				mvaddch(y, x + 6, ('a' + deduction.initialSquare / 8) | attribute);
-				mvaddch(y, x + 7, ('1' + deduction.initialSquare % 8) | attribute);
+				mvaddch(y, x + 5, toupper(symbols[deduction.initial.glyph]) | attribute);
+				mvaddch(y, x + 6, ('a' + deduction.initial.square / 8) | attribute);
+				mvaddch(y, x + 7, ('1' + deduction.initial.square % 8) | attribute);
 
-				if ((deduction.finalSquare != deduction.initialSquare) || (deduction.requiredMoves > 0))
+				if ((deduction.final.square != deduction.initial.square) || (deduction.requiredMoves > 0))
 				{
 					mvaddch(y, x + 9, '-' | attribute);
 					mvaddch(y, x + 10, '>' | attribute);
-					mvaddch(y, x + 12, toupper(symbols[deduction.diagramGlyph]) | attribute);
-					mvaddch(y, x + 13, ('a' + deduction.finalSquare / 8) | attribute);
-					mvaddch(y, x + 14, ('1' + deduction.finalSquare % 8) | attribute);
+					mvaddch(y, x + 12, toupper(symbols[deduction.final.glyph]) | attribute);
+					mvaddch(y, x + 13, ('a' + deduction.final.square / 8) | attribute);
+					mvaddch(y, x + 14, ('1' + deduction.final.square % 8) | attribute);
+				}
+
+				if (deduction.captured && (deduction.capturer.square >= 0))
+				{
+					mvaddch(y, x + 16, '(' | attribute);
+					mvaddch(y, x + 17, toupper(symbols[deduction.capturer.glyph]) | attribute);
+					mvaddch(y, x + 18, ('a' + deduction.capturer.square / 8) | attribute);
+					mvaddch(y, x + 19, ('1' + deduction.capturer.square % 8) | attribute);
+					mvaddch(y, x + 20, ')' | attribute);
 				}
 			}
 

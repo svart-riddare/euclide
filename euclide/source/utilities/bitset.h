@@ -28,6 +28,10 @@ class BitSet
 		BitSet(const Predicate& predicate, bool value = true) : m_bits(0)
 			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) set(position, value); }
 
+		template <typename Predicate, typename Range> inline
+		BitSet(const Predicate& predicate, const Range& range, bool value = true) : m_bits(0)
+			{ for (Type position : range) if (predicate(position)) set(position, value); }
+
 		inline BitSet& set()
 			{ m_bits = All; return *this; }
 		inline BitSet& reset()
@@ -51,6 +55,16 @@ class BitSet
 		template <typename Predicate> inline
 		BitSet& flip(const Predicate& predicate)
 			{ for (Type position : EnumRange<Type, Bits>()) if (predicate(position)) flip(position); return *this; }
+
+		template <typename Predicate, typename Range> inline
+		BitSet& set(const Predicate& predicate, const Range& range, bool value = true)
+			{ for (Type position : range) if (predicate(position)) set(position, value); return *this; }
+		template <typename Predicate, typename Range> inline
+		BitSet& reset(const Predicate& predicate, const Range& range)
+			{ for (Type position : range) if (predicate(position)) reset(position); return *this; }
+		template <typename Predicate, typename Range> inline
+		BitSet& flip(const Predicate& predicate, const Range& range)
+			{ for (Type position : range) if (predicate(position)) flip(position); return *this; }
 
 	public:
 		inline constexpr bool test(Type position) const
@@ -188,7 +202,7 @@ class BitSet
 				typedef BitSetIterator iterator;
 
 			public:
-				BitSetRange(const BitSet& bitset) : m_bitset(bitset) {}
+				BitSetRange(const BitSet& bitset, bool complement = false) : m_bitset(complement ? ~bitset : bitset) {}
 
 				inline BitSetIterator begin() const
 					{ return BitSetIterator(m_bitset); }
@@ -199,8 +213,8 @@ class BitSet
 				const BitSet m_bitset;
 		};
 
-		inline BitSetRange range() const
-			{ return BitSetRange(*this); }
+		inline BitSetRange range(bool complement = false) const
+			{ return BitSetRange(*this, complement); }
 
 	public:
 		template <typename Collection>

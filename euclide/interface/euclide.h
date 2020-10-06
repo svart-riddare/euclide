@@ -156,17 +156,25 @@ typedef enum
 
 typedef struct
 {
-	EUCLIDE_Glyph initialGlyph;           /**< Glyph, as given by user. */
-	EUCLIDE_Glyph diagramGlyph;           /**< Glyph after promotion, for pawns only, if known. */
+	EUCLIDE_Glyph glyph;                  /**< Glyph, if known, empty otherwise. */
+	int square;                           /**< Square, if known, -1 otherwise. A1 = 0, A2 = 1, ... */
 
-	int initialSquare;                    /**< Initial square, as given by user. A1 = 0, A2 = 1, ... */
-	int finalSquare;                      /**< Final square, if known, -1 otherwise. */
+} EUCLIDE_Location;
+
+typedef struct
+{
+	EUCLIDE_Location initial;             /**< Piece's initial location, as given by user. */
+	EUCLIDE_Location final;               /**< Piece's final location. */
+
+	bool promoted;                        /**< Piece's promotion, if known. */
+	EUCLIDE_Location promotion;           /**< Piece's promotion location, if any. */
+
+	bool captured;                        /**< Set if the piece has been captured and is no longer present on the board. */
+	EUCLIDE_Location capturer;            /**< Capturer's initial location. */
 
 	int requiredMoves;                    /**< Minimum number of moves required to reach final square, if known. */
 	int numSquares;                       /**< Number of different possible final squares for this piece. One if final square is known. */
 	int numMoves;                         /**< Number of different legal moves this piece may have performed on the board. At most number of required moves if the full path is known. */
-
-	bool captured;                        /**< Set if the piece has been captured and is no longer present on the board. */
 
 } EUCLIDE_Deduction;
 

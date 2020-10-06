@@ -16,14 +16,14 @@ class Pieces;
 class Target
 {
 	public:
-		Target(Glyph glyph, Square square);
+		Target(Glyph glyph, Square square, Men men);
 
 		int updateRequiredMoves(int requiredMoves)
 			{ return xstd::maximize(m_requiredMoves, requiredMoves); }
 		int updateRequiredCaptures(int requiredCaptures)
 			{ return xstd::maximize(m_requiredCaptures, requiredCaptures); }
 
-		bool updatePossibleMen(const Men& men);
+		bool updatePossibleMen(Men men);
 
 		bool applyPigeonHolePrinciple(Targets& targets) const;
 
@@ -40,7 +40,7 @@ class Target
 		inline int requiredCaptures() const
 			{ return m_requiredCaptures; }
 
-		inline const Men& men() const
+		inline Men men() const
 			{ return m_men; }
 		inline Man man() const
 			{ return m_man; }
@@ -82,9 +82,9 @@ class TargetPartition
 		bool disjoint(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets) const;
 
 	public:
-		inline const Squares& squares() const
+		inline Squares squares() const
 			{ return m_squares; }
-		inline const Men& men() const
+		inline Men men() const
 			{ return m_men; }
 
 		inline int requiredMoves() const

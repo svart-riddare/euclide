@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "captures.h"
 #include "problem.h"
 #include "targets.h"
 #include "pieces.h"
@@ -33,6 +34,7 @@ class Euclide
 
 		array<Pieces, NumColors> m_pieces;          /**< Deductions on pieces. */
 		array<Targets, NumColors> m_targets;        /**< Targets that must be fullfilled. */
+		array<Captures, NumColors> m_captures;      /**< Captures that must be realized. */
 
 		array<int, NumColors> m_freeMoves;          /**< Unassigned moves. */
 		array<int, NumColors> m_freeCaptures;       /**< Unassigned captures. */
@@ -90,7 +92,11 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			if (m_problem.initialPosition(square) == glyph)
 				m_pieces[color(glyph)].emplace_back(m_problem, square);
 
-	/* -- Initialize targets -- */
+	/* -- Initialize targets and captures -- */
+
+	array<Men, NumColors> masks;
+	for (Color color : AllColors())
+		masks[color] = Men::mask(m_problem.initialPieces(color));
 
 	for (Color color : AllColors())
 		m_targets[color].reserve(m_problem.diagramPieces(color));
@@ -98,7 +104,10 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
 			if (m_problem.diagramPosition(square) == glyph)
-				m_targets[color(glyph)].emplace_back(glyph, square);
+				m_targets[color(glyph)].emplace_back(glyph, square, masks[color(glyph)]);
+
+	for (Color color : AllColors())
+		m_captures[color].assign(m_problem.capturedPieces(color), Capture(color, masks[color], masks[!color]));
 
 	/* -- Local array to store pieces -- */
 
@@ -152,8 +161,10 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 			bool analyse = true;
 			while (analyse)
 			{
+				Captures& captures = m_captures[color];
 				Targets& targets = m_targets[color];
 				Pieces& pieces = m_pieces[color];
+				Pieces& xpieces = m_pieces[!color];
 
 				/* -- Assign moves and captures to targets -- */
 
@@ -161,13 +172,29 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				{
 					for (Target& target : targets)
 					{
-						Men men([&](Man man) { return (man < int(pieces.size())) && pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()] && maybe(!pieces[man].captured()); });
+						const Men men([&](Man man) { return pieces[man].glyphs()[target.glyph()] && pieces[man].squares()[target.square()] && maybe(!pieces[man].captured()); }, target.men().range());
 						target.updatePossibleMen(men);
-						men = target.men();
-						assert(men);
 
-						target.updateRequiredMoves(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square(), target.glyph()), piece.requiredMoves()); }));
-						target.updateRequiredCaptures(xstd::min(men.in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(target.square()), piece.requiredCaptures()); }));
+						target.updateRequiredMoves(xstd::min(men.in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredMovesTo(target.square(), target.glyph()), piece.requiredMoves()); }));
+						target.updateRequiredCaptures(xstd::min(men.in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(target.square()), piece.requiredCaptures()); }));
+					}
+
+					for (Capture& capture : captures)
+					{
+						for (bool update = true; update; )
+						{
+							const Men men([&](Man man) { return (pieces[man].glyphs() & capture.glyphs()) && (pieces[man].squares() & capture.squares()) && maybe(pieces[man].captured()); }, capture.men().range());
+							const Men xmen([&](Man xman) { return xpieces[xman].availableMoves() && (xpieces[xman].stops() & capture.squares()); }, capture.xmen().range());
+							capture.updatePossibleMen(men, xmen);
+
+							const Squares squares = xstd::accumulate(men.in(pieces), Squares(), [](Squares squares, const Piece& piece) { return squares | piece.squares(); });
+							const Squares xsquares = xstd::accumulate(xmen.in(xpieces), Squares(), [](Squares squares, const Piece& xpiece) { return squares | xpiece.stops(); });
+							update = capture.updatePossibleSquares(squares & xsquares);
+
+						}
+
+						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredMovesTo(capture.squares()), piece.requiredMoves()); }));
+						capture.updateRequiredCaptures(xstd::min(capture.men().in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(capture.squares()), piece.requiredCaptures()); }));
 					}
 
 				} while (targets.update());
@@ -187,6 +214,14 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 					for (Man man : ValidMen(partition.men()))
 						if (!maybe(pieces[man].captured()))
 							pieces[man].setPossibleSquares(partition.squares());
+
+				for (const Capture& capture : captures)
+					if (capture.man() >= 0)
+						pieces[capture.man()].setCaptured(true);
+
+				for (const Capture& capture : captures)
+					if (capture.man() >= 0)
+						pieces[capture.man()].setPossibleSquares(capture.squares());
 
 				/* -- Assign moves and captures -- */
 
@@ -388,17 +423,24 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 			EUCLIDE_Deduction& deduction = color ? m_deductions.blackPieces[k] : m_deductions.whitePieces[k];
 			const Piece& piece = m_pieces[color][k];
 
-			deduction.initialGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
-			deduction.diagramGlyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
+			deduction.initial.glyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
+			deduction.initial.square = static_cast<int>(piece.initialSquare());
 
-			deduction.initialSquare = static_cast<int>(piece.initialSquare());
-			deduction.finalSquare = static_cast<int>(piece.square());
+			deduction.final.glyph = static_cast<EUCLIDE_Glyph>(piece.glyph());
+			deduction.final.square = static_cast<int>(piece.square());
+
+			deduction.promoted = is(piece.promoted());
+			deduction.promotion.glyph = deduction.final.glyph;
+			deduction.promotion.square = static_cast<int>((piece.promotions().count() == 1) ? piece.promotions().first() : Nowhere);
+
+			deduction.captured = is(piece.captured());
+			const auto capture = xstd::find_if(m_captures[color], [=](const Capture& capture) { return (capture.man() == k) && (capture.xman() >= 0); });
+			deduction.capturer.glyph = static_cast<EUCLIDE_Glyph>((capture != m_captures[color].end()) ? m_pieces[!color][capture->xman()].glyph() : Empty);
+			deduction.capturer.square = static_cast<int>((capture != m_captures[color].end()) ? m_pieces[!color][capture->xman()].initialSquare() : Nowhere);
 
 			deduction.requiredMoves = piece.requiredMoves();
 			deduction.numSquares = piece.squares().count();
 			deduction.numMoves = piece.nmoves();
-
-			deduction.captured = false;
 
 			m_deductions.complexity += std::log(0.0 + deduction.numSquares);
 			m_deductions.complexity += std::log(1.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));

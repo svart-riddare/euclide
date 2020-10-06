@@ -193,20 +193,29 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			/* -- Print deduction -- */
 
-			if (deduction.finalSquare >= 0)
+			if (deduction.final.square >= 0)
 			{
-				characters[5].Char.UnicodeChar = toupper(symbols[deduction.initialGlyph]);
-				characters[6].Char.UnicodeChar = 'a' + (deduction.initialSquare / 8);
-				characters[7].Char.UnicodeChar = '1' + (deduction.initialSquare % 8);
+				characters[5].Char.UnicodeChar = toupper(symbols[deduction.initial.glyph]);
+				characters[6].Char.UnicodeChar = 'a' + (deduction.initial.square / 8);
+				characters[7].Char.UnicodeChar = '1' + (deduction.initial.square % 8);
 
-				if ((deduction.finalSquare != deduction.initialSquare) || (deduction.requiredMoves > 0))
+				if ((deduction.final.square != deduction.initial.square) || (deduction.requiredMoves > 0))
 				{
 					characters[9].Char.UnicodeChar = '-';
 					characters[10].Char.UnicodeChar = '>';
 
-					characters[12].Char.UnicodeChar = toupper(symbols[deduction.diagramGlyph]);
-					characters[13].Char.UnicodeChar = 'a' + (deduction.finalSquare / 8);
-					characters[14].Char.UnicodeChar = '1' + (deduction.finalSquare % 8);
+					characters[12].Char.UnicodeChar = toupper(symbols[deduction.final.glyph]);
+					characters[13].Char.UnicodeChar = 'a' + (deduction.final.square / 8);
+					characters[14].Char.UnicodeChar = '1' + (deduction.final.square % 8);
+				}
+
+				if (deduction.captured && (deduction.capturer.square >= 0))
+				{
+					characters[16].Char.UnicodeChar = '(';
+					characters[17].Char.UnicodeChar = toupper(symbols[deduction.capturer.glyph]);
+					characters[18].Char.UnicodeChar = 'a' + (deduction.capturer.square / 8);
+					characters[19].Char.UnicodeChar = '1' + (deduction.capturer.square % 8);
+					characters[20].Char.UnicodeChar = ')';
 				}
 			}
 
@@ -214,10 +223,6 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 
 			if (deduction.numSquares > 1)
 			{
-				if (deduction.numSquares >= 10000)
-					characters[20].Char.UnicodeChar = '0' + ((deduction.numSquares / 10000) % 10);
-				if (deduction.numSquares >= 1000)
-					characters[21].Char.UnicodeChar = '0' + ((deduction.numSquares / 1000) % 10);
 				if (deduction.numSquares >= 100)
 					characters[22].Char.UnicodeChar = '0' + ((deduction.numSquares / 100) % 10);
 				if (deduction.numSquares >= 10)
@@ -225,8 +230,6 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 				if (deduction.numSquares >= 1)
 					characters[24].Char.UnicodeChar = '0' + ((deduction.numSquares / 1) % 10);
 
-				characters[20].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
-				characters[21].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
 				characters[22].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
 				characters[23].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
 				characters[24].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;

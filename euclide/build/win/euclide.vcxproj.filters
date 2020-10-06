@@ -55,6 +55,9 @@
     <ClCompile Include="..\..\source\conditions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\captures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\interface\euclide.h">
@@ -109,6 +112,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\conditions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\captures.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

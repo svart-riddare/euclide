@@ -72,6 +72,10 @@ class Piece
 		inline Squares promotions() const
 			{ return m_promotionSquares; }
 
+		inline int availableMoves() const
+			{ return m_availableMoves; }
+		inline int availableCaptures() const
+			{ return m_availableCaptures; }
 		inline int requiredMoves() const
 			{ return m_requiredMoves; }
 		inline int requiredCaptures() const
@@ -79,6 +83,8 @@ class Piece
 
 		inline int requiredMovesTo(Square square) const
 			{ return m_distances[square]; }
+		inline int requiredMovesTo(Squares squares) const
+			{ return xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return m_distances[square]; }); }
 		inline int requiredMovesTo(Square square, Glyph glyph) const
 			{ return m_pieces[glyph]->requiredMovesTo(square); }
 		inline int requiredMovesFrom(Square square) const
@@ -87,6 +93,8 @@ class Piece
 			{ return m_pieces[glyph]->requiredMovesFrom(square); }
 		inline int requiredCapturesTo(Square square) const
 			{ return m_captures[square]; }
+		inline int requiredCapturesTo(Squares squares) const
+			{ return m_xmoves ? xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return m_captures[square]; }) : 0; }
 		inline int requiresCapturesFrom(Square square) const
 			{ return m_rcaptures[square]; }
 

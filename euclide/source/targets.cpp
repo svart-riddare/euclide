@@ -8,7 +8,7 @@ namespace Euclide
 /* -- Target                                                               -- */
 /* -------------------------------------------------------------------------- */
 
-Target::Target(Glyph glyph, Square square)
+Target::Target(Glyph glyph, Square square, Men men)
 {
 	m_glyph = glyph;
 	m_color = Euclide::color(glyph);
@@ -18,22 +18,22 @@ Target::Target(Glyph glyph, Square square)
 	m_requiredMoves = 0;
 	m_requiredCaptures = 0;
 
-	m_men.set();
+	m_men = men;
 	m_man = -1;
 }
 
 /* -------------------------------------------------------------------------- */
 
-bool Target::updatePossibleMen(const Men& men)
+bool Target::updatePossibleMen(Men men)
 {
 	if ((m_men & men) == m_men)
 		return false;
 
 	m_men &= men;
-	if (men.count() == 1)
-		m_man = men.first();
+	if (m_men.count() == 1)
+		m_man = m_men.first();
 
-	if (!men)
+	if (!m_men)
 		throw NoSolution;
 
 	return true;
