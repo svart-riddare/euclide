@@ -24,18 +24,18 @@ set(SOURCES
 
 # Project definition
 
-project(dos-euclide)
+project(euclide-console)
 
-add_executable(dos-euclide ${SOURCES})
+add_executable(euclide-console ${SOURCES})
 
-set_target_properties(dos-euclide PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../../bin)
+set_target_properties(euclide-console PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../../bin)
 
 # Add dependency on euclide library
 
 add_subdirectory(../../../euclide/build/linux ../../../euclide/build/linux)
 include_directories(../../../euclide/interface)
-target_link_libraries(dos-euclide euclide)
-add_dependencies(dos-euclide euclide)
+target_link_libraries(euclide-console euclide)
+add_dependencies(euclide-console euclide)
 
 # Compile options
 
@@ -58,4 +58,4 @@ set(CURSES_NEED_WIDE TRUE)
 set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 
-target_link_libraries(dos-euclide ${CURSES_LIBRARIES})
+target_link_libraries(euclide-console ${CURSES_LIBRARIES})

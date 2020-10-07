@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4FBA6E2A-47F7-4E5C-AA48-AFB1BF4F36BE}</ProjectGuid>
-    <RootNamespace>dos-euclide</RootNamespace>
+    <RootNamespace>euclide-console</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -112,9 +112,9 @@
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
-      <OutputFile>../../bin/dos-euclide-debug-legacy.exe</OutputFile>
+      <OutputFile>../../bin/euclide-console-debug-legacy.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)dos-euclide-debug.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)euclide-console-debug.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
@@ -136,9 +136,9 @@
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
-      <OutputFile>../../bin/dos-euclide-debug.exe</OutputFile>
+      <OutputFile>../../bin/euclide-console-debug.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)dos-euclide-debug.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)euclide-console-debug.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -164,7 +164,7 @@
       <AdditionalIncludeDirectories>..\..\..\Euclide\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <OutputFile>../../bin/dos-euclide-legacy.exe</OutputFile>
+      <OutputFile>../../bin/euclide-console-legacy.exe</OutputFile>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -192,7 +192,7 @@
       <AdditionalIncludeDirectories>..\..\..\Euclide\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <OutputFile>../../bin/dos-euclide.exe</OutputFile>
+      <OutputFile>../../bin/euclide-console.exe</OutputFile>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
