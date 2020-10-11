@@ -134,6 +134,17 @@ static constexpr MatrixOfSquares KingMoveConstraints = {{
 	CONSTRAINTS(king, H1, false), CONSTRAINTS(king, H2, false), CONSTRAINTS(king, H3, false), CONSTRAINTS(king, H4, false), CONSTRAINTS(king, H5, false), CONSTRAINTS(king, H6, false), CONSTRAINTS(king, H7, false), CONSTRAINTS(king, H8, false)
 }};
 
+static constexpr MatrixOfSquares KingCaptureConstraints = {{
+	CONSTRAINTS(king, A1, true), CONSTRAINTS(king, A2, true), CONSTRAINTS(king, A3, true), CONSTRAINTS(king, A4, true), CONSTRAINTS(king, A5, true), CONSTRAINTS(king, A6, true), CONSTRAINTS(king, A7, true), CONSTRAINTS(king, A8, true),
+	CONSTRAINTS(king, B1, true), CONSTRAINTS(king, B2, true), CONSTRAINTS(king, B3, true), CONSTRAINTS(king, B4, true), CONSTRAINTS(king, B5, true), CONSTRAINTS(king, B6, true), CONSTRAINTS(king, B7, true), CONSTRAINTS(king, B8, true),
+	CONSTRAINTS(king, C1, true), CONSTRAINTS(king, C2, true), CONSTRAINTS(king, C3, true), CONSTRAINTS(king, C4, true), CONSTRAINTS(king, C5, true), CONSTRAINTS(king, C6, true), CONSTRAINTS(king, C7, true), CONSTRAINTS(king, C8, true),
+	CONSTRAINTS(king, D1, true), CONSTRAINTS(king, D2, true), CONSTRAINTS(king, D3, true), CONSTRAINTS(king, D4, true), CONSTRAINTS(king, D5, true), CONSTRAINTS(king, D6, true), CONSTRAINTS(king, D7, true), CONSTRAINTS(king, D8, true),
+	CONSTRAINTS(king, E1, true), CONSTRAINTS(king, E2, true), CONSTRAINTS(king, E3, true), CONSTRAINTS(king, E4, true), CONSTRAINTS(king, E5, true), CONSTRAINTS(king, E6, true), CONSTRAINTS(king, E7, true), CONSTRAINTS(king, E8, true),
+	CONSTRAINTS(king, F1, true), CONSTRAINTS(king, F2, true), CONSTRAINTS(king, F3, true), CONSTRAINTS(king, F4, true), CONSTRAINTS(king, F5, true), CONSTRAINTS(king, F6, true), CONSTRAINTS(king, F7, true), CONSTRAINTS(king, F8, true),
+	CONSTRAINTS(king, G1, true), CONSTRAINTS(king, G2, true), CONSTRAINTS(king, G3, true), CONSTRAINTS(king, G4, true), CONSTRAINTS(king, G5, true), CONSTRAINTS(king, G6, true), CONSTRAINTS(king, G7, true), CONSTRAINTS(king, G8, true),
+	CONSTRAINTS(king, H1, true), CONSTRAINTS(king, H2, true), CONSTRAINTS(king, H3, true), CONSTRAINTS(king, H4, true), CONSTRAINTS(king, H5, true), CONSTRAINTS(king, H6, true), CONSTRAINTS(king, H7, true), CONSTRAINTS(king, H8, true)
+}};
+
 static const MatrixOfSquares LeaperMoveConstraints = {{
 	CONSTRAINTS(leaper, A1, false), CONSTRAINTS(leaper, A2, false), CONSTRAINTS(leaper, A3, false), CONSTRAINTS(leaper, A4, false), CONSTRAINTS(leaper, A5, false), CONSTRAINTS(leaper, A6, false), CONSTRAINTS(leaper, A7, false), CONSTRAINTS(leaper, A8, false),
 	CONSTRAINTS(leaper, B1, false), CONSTRAINTS(leaper, B2, false), CONSTRAINTS(leaper, B3, false), CONSTRAINTS(leaper, B4, false), CONSTRAINTS(leaper, B5, false), CONSTRAINTS(leaper, B6, false), CONSTRAINTS(leaper, B7, false), CONSTRAINTS(leaper, B8, false),
@@ -232,7 +243,7 @@ const MatrixOfSquares *getMoveConstraints(Species species, Variant variant, bool
 
 	static const MatrixOfSquares *constraints[][2] = {
 		{ nullptr, nullptr },                                                // None
-		{ &KingMoveConstraints, &NoConstraints },                            // King
+		{ &KingMoveConstraints, &KingCaptureConstraints },                   // King
 		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Queen
 		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Rook
 		{ &RunnerMoveConstraints, &RunnerCaptureConstraints },               // Bishop
