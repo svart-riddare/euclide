@@ -254,10 +254,12 @@
     <ClInclude Include="..\..\source\timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\problems\bichromatic.txt" />
+    <Text Include="..\..\..\problems\monochromatic.txt" />
+    <Text Include="..\..\..\problems\no-captures.txt" />
+    <Text Include="..\..\..\problems\single-capture.txt" />
     <Text Include="..\..\bin\edupuis.txt" />
-    <Text Include="..\..\bin\no-captures.txt" />
     <Text Include="..\..\bin\sample-input.txt" />
-    <Text Include="..\..\bin\single-capture.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\euclide\build\win\euclide.vcxproj">

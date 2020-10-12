@@ -1,4 +1,12 @@
 
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND APIECES=32 AND NOT G='Fairies' AND NOT K='Synthetic Problem' AND NOT K='Series mover'
+-> PROBID='P1267877'
+-> PROBID='P1189483'
+
+October 7, 2020
+
 --------------------------------------------------------------
 
 Gianni Donati, Noam D. Elkies, Görun Forslund
@@ -16,18 +24,6 @@ P1267877
 
 tcf1rfct/pppp1ppp/8/4p3/3d4/4RP2/PPPPP1PP/TCFD1FCT
 6
-
---------------------------------------------------------------
-
-Pascal Wassong
-Phénix 2016
-P1338822
-
-tcfdrfct/ppp1p1pp/8/3p1p2/7D/2P5/PP1PPPPP/TCF1RFCT
-6
-
-tcfdrfct/ppp1p1pp/8/3p1p2/7D/2P5/PP1PPPPP/TCF1RFCT
-!6 - Cylinder
 
 --------------------------------------------------------------
 
@@ -57,6 +53,15 @@ t1fdrfct/pppppppp/1F6/8/3P4/1c6/PPP1PPPP/TC1DRFCT
 7
 
 (2 solutions)
+
+--------------------------------------------------------------
+
+Thierry Le Gleuher
+Phénix 2019
+P1375027
+
+tcfdr1ct/pppp1ppp/4p3/8/3R4/3P4/PPP1PPPP/TCFDfFCT
+7
 
 --------------------------------------------------------------
 
@@ -133,15 +138,6 @@ P0008144
 
 1cfdrf1t/1ppppppp/5c2/p7/5PtR/7C/PPPPP1PP/TCFD1F1T
 10
-
---------------------------------------------------------------
-
-Michel Caillaud - Jacques Rotenberg
-Problemkiste 1995
-P0006467
-
-tcfdrfct/pppp1ppp/8/8/4R3/5d2/PPPP1PPP/TC3FCT
-?12 - Nightriders
 
 --------------------------------------------------------------
 
@@ -804,6 +800,15 @@ R3D3/3c2tt/pppppppp/d2Cr3/1ff3c1/1PP5/P2PPPPP/F2T1FCT
 
 --------------------------------------------------------------
 
+Alan Bell
+Phénix 2010
+P1189483
+
+2rc4/pp3ppp/1fcFptT1/T1ppPF2/d1f5/D1tP2PC/PPPC1P1P/2R5
+43
+
+--------------------------------------------------------------
+
 Rustam Ubaïdullaev
 Phénix 2003
 P1013119
@@ -924,6 +929,7 @@ P0000271
 Alexander Kisljak
 Die Schwalbe 1992
 P0000280
+
 3d1fF1/p1pppp1T/2c2rpc/1p2t2p/P2T2P1/CPD2C2/t1PPPP1P/1fF1R3
 50 - Cooked
 
@@ -1081,4 +1087,3 @@ cF2d2C/RppCpp2/FD3Tp1/p1Tp3p/PfP4P/tP1f2P1/r2PPP2/c5t1
 87 - Cooked
 
 --------------------------------------------------------------
-

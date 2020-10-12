@@ -74,13 +74,19 @@
     <Text Include="..\..\bin\sample-input.txt">
       <Filter>Problem Files</Filter>
     </Text>
-    <Text Include="..\..\bin\no-captures.txt">
-      <Filter>Problem Files</Filter>
-    </Text>
     <Text Include="..\..\bin\edupuis.txt">
       <Filter>Problem Files</Filter>
     </Text>
-    <Text Include="..\..\bin\single-capture.txt">
+    <Text Include="..\..\..\problems\bichromatic.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\..\problems\no-captures.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\..\problems\single-capture.txt">
+      <Filter>Problem Files</Filter>
+    </Text>
+    <Text Include="..\..\..\problems\monochromatic.txt">
       <Filter>Problem Files</Filter>
     </Text>
   </ItemGroup>

@@ -1,0 +1,190 @@
+
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND K='Monochrome' AND NOT K='Circe'
+
+October 8, 2020
+
+--------------------------------------------------------------
+
+Alain Brobecker
+Phénix 2008
+P1098626
+
+???
+8 - Monochromatic
+
+--------------------------------------------------------------
+
+Thierry Le Gleuher
+Messigny 1996
+P1000942
+
+tcf1r1ct/pppp1ppp/8/6d1/8/8/PPPPPRPP/TCFD1F1T
+12 - Monochromatic
+
+--------------------------------------------------------------
+
+Marco Bonavoglia
+Eteroscacco 1996
+P0008434
+
+t1fdrfct/pp3ppp/8/8/8/8/PPP1PPPP/TCFDRFCT
+13 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Phénix 1998
+P0009117
+
+1c1d1fct/p2rpppp/8/8/8/8/PP1PPP1P/TCFDRFCT
+13 - Monochromatic
+
+--------------------------------------------------------------
+
+Itamar Faybish
+Mat Plus 2008
+P1084678
+
+t1fdrfct/pp3ppp/8/8/8/8/PPP1PPPP/TCFDRFCT
+13 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Diagrammes 1997
+P0009081
+
+tfcdr1ct/pppp1p1p/8/8/8/8/P3PPPP/1C1DRFCT
+14 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Feenschach 1999
+P1000363
+
+tcfdrfct/pp1ppp1p/8/8/8/8/P3PPPP/TCFDRFCT
+14 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Ceskoslovensky Sach 1999
+P1000779
+
+tcf1rfct/pppp1ppp/8/d7/Q7/8/P3PPPP/1C2RFCT
+14 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+The Problemist 1998
+P0008871
+
+tc1drfct/p1ppp1pp/2f5/7D/F7/8/PPPP3P/TCF1R1C1
+15 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Die Schwalbe 1999
+P1000241
+
+tcfd1t2/ppp1p1fr/8/3p4/2F5/8/P1PP1PPP/TCFDR1cT
+16 - Monochromatic
+
+(Deux solutions)
+
+--------------------------------------------------------------
+
+Michael Grushko
+Thema Danicum 2006
+P1068438
+
+tcfdDfct/ppp1pppp/8/3P4/4F3/8/PPPP1P1P/TCFrR1cT
+16 - Monochromatic
+
+--------------------------------------------------------------
+
+Ivan Antonov
+StrateGems 2009
+P1088578
+
+tcf1r1ct/pppp1ppp/8/d1R5/3P4/8/PPP1P1PP/TCFD1F1T
+16 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Eteroscacco 1996
+P0008485
+
+tc4ct/pp3pfp/5d2/3p4/P3P1r1/7f/1PPP1PPP/1CFDRFCT
+17 - Monochromatic
+
+--------------------------------------------------------------
+
+Koen Versmissen
+WCCC Rhodes 2007
+P1240593
+
+tcfdrfct/p1pp1pp1/8/8/2P5/1p2p2p/P2P1PP1/TC2R1CT
+18 - Monochromatic
+
+--------------------------------------------------------------
+
+Joachim Iglesias
+Problemesis 2004
+P1066753
+
+tcf1rf1t/ppp1pp1p/2p5/6p1/1RP3P1/8/PP2PP1P/TCF2FCT
+19 - Monochromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Phénix 1998
+P0009116
+
+t2d1f1t/pp2prpp/8/8/5F2/3p4/PPf2PPP/T2DRFCT
+21 - Monochromatic, Cooked
+
+--------------------------------------------------------------
+
+Bernard Rothmann
+Europe Echecs 1995
+P0006511
+
+t1f1r1c1/1p1p1p1p/1f6/6p1/8/6R1/P1PPP3/1CFD1F1T
+26 - Monochromatic, Cooked
+
+--------------------------------------------------------------
+
+Timothy Luffingham
+Retros mailing list 1997
+P1004116
+
+tcf3c1/pp1pp2p/8/R4p2/r4P2/8/1P1PP2P/TCF3C1
+47 - Monochromatic
+
+--------------------------------------------------------------
+
+Thierry Le Gleuher
+Phénix 1997
+P0008961
+
+6r1/F2p1pp1/p7/2T1p3/P1P3P1/2PFP2T/3t1RPP/8
+62 - Monochromatic
+
+--------------------------------------------------------------
+
+Michel Caillaud
+Phénix 2008
+P1098618
+
+t7/p2p1p2/1pptP3/T5pT/r7/P4D1p/P2PPP1R/4d3
+78 - Monochromatic, Cooked
+
+--------------------------------------------------------------

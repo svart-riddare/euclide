@@ -1,0 +1,47 @@
+
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND K='Bichrome'
+
+October 8, 2020
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Probleemblad 1997
+P0009135
+
+t2dr1ct/ppp2ppp/8/8/8/8/PPP2PPP/TC1DR2T
+18 - Bichromatic
+
+--------------------------------------------------------------
+
+Bernd Gräfrath
+Die Schwalbe 2008
+P1080391
+
+2f1rfct/1pp1pppp/8/8/8/2Pd1D2/PP2PPPP/TCFtRFCT
+18 - Bichromatic
+
+2f1rfct/1pp1pppp/3d4/8/8/2P2D2/PP2PPPP/TCFtRFCT
+18 - Bichromatic
+
+--------------------------------------------------------------
+
+Berd Gräfrath
+Die Schwalbe 2009
+P1083546
+
+t1fdrf1t/pppppppp/8/8/5P2/5C2/PPP3PP/TCF1DTR1
+19 - Bichromatic
+
+--------------------------------------------------------------
+
+Mario Velucchi
+Probleemblad 1997
+P0008928
+
+tcf1rfct/ppp1pppp/4D2P/3d4/8/7C/PPP1PPP1/T1F2FTR
+33 - Bichromatic
+
+--------------------------------------------------------------

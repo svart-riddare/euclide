@@ -1,6 +1,9 @@
 
-Chess Problem Database Server
-K='Unique Proof Game' AND APIECES=31 AND NOT G='Fairies'
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND APIECES=31 AND NOT G='Fairies' AND NOT K='Series mover' AND NOT K='Constrained Problem'
+
+October 10, 2020
 
 --------------------------------------------------------------
 
@@ -56,6 +59,15 @@ tcfdrfct/ppppp2p/5p2/7F/8/4P3/PPPP1PPP/TCFDR1CT
 
 --------------------------------------------------------------
 
+Thierry Le Gleuher
+Phénix 2019
+P1375026
+
+tcFdrfct/p1p1pppp/3p4/8/8/6P1/PPPPPP1P/TCFDRfCT
+7
+
+--------------------------------------------------------------
+
 Martin Wolfgang Hoffmann
 Schweizerische Schachzeitung 1989
 P0002230
@@ -88,9 +100,18 @@ tcfdrfct/ppp2ppp/3pp3/8/8/1PP5/P2PPPPP/TCF1RFCT
 
 Andrew Buchanan
 PDB Website 2016
-P1322914
+P1323914
 
 1tfdrfct/pppppppp/8/8/5PR1/8/PPPPP1PP/TCFD1FCT
+8
+
+--------------------------------------------------------------
+
+Thierry Le Gleuher
+Phénix 2019
+P1375028
+
+tcfdrfct/pp1ppppp/8/8/1R6/8/PPPpPPPP/TCFD1FCT
 8
 
 --------------------------------------------------------------
@@ -147,6 +168,15 @@ Retros Mailing List 1996
 P0008143
 
 1cfdrfct/1ppppppp/5F2/p7/D7/1P6/P2PPPPP/TCt1RFCT
+10
+
+--------------------------------------------------------------
+
+Raul Ocampo
+Facebook 2018
+P1359002
+
+t2drfct/ppp1pppp/2cp4/8/8/P1P5/1P1PPPPP/TCFDRFCT
 10
 
 --------------------------------------------------------------
@@ -424,8 +454,8 @@ Andrey Frolkin, Henri Nouguier
 Diagrammes 1990
 P0002320
 
-1FDBAD1F/CCCDCCC/2E1C3/8/3E3C/4C3/CCCC1CC1/FEDBA1E1
-?19 - Identify and color the pieces!
+1tfrdf1t/pppFpppp/2c1p3/8/3c3P/4P3/PPPP1PP1/TCFRD1C1
+19
 
 --------------------------------------------------------------
 
@@ -491,6 +521,15 @@ Die Schwalbe 2008
 P1080470
 
 tcffr2r/ppp1cppp/1d2p3/4p3/8/8/PPP1PPP/TCFDRFCT
+21
+
+--------------------------------------------------------------
+
+Raul Ocampo
+Facebook 2018
+P1359003
+
+tcfdrfc1/pppp1pp1/4p3/7t/7p/3P3P/PPP1PPP1/TCFDR1CT
 21
 
 --------------------------------------------------------------
@@ -612,6 +651,15 @@ P1066709
 
 --------------------------------------------------------------
 
+Etienne Dupuis
+RIFACE 2017
+P1347227
+
+tcfdrfct/ppppp1pp/5P2/TD2P3/6F1/8/PPPPp1pp/tcf4r
+28
+
+--------------------------------------------------------------
+
 Andrey Frolkin, Kostas Prentos
 www.ajedrez.com.ar 2007
 P1240531
@@ -698,7 +746,7 @@ The Problemist 1993
 P0005908
 
 t1f2fct/ppppp1pp/1F1r1p2/3Fd2D/2PCPcR1/2CP3T/PP3PPT/8
-!34 - Cooked
+34 - Cooked
 
 --------------------------------------------------------------
 
@@ -707,7 +755,7 @@ Retros Mailing List 2003
 P1007272
 
 t6t/3PCrfD/5c1F/pppppppp/f2P2C1/d7/PP2PPPP/T3RF1T
-!34 - Cooked
+34 - Cooked
 
 --------------------------------------------------------------
 
@@ -724,8 +772,8 @@ Andray Frolkin
 The Problemist 1989
 P0002318
 
-TCF1RF2/1P1PPCP1/4P2T/PFP3PP/4P3/2P1C1P/PPP2P2/TCFDR2T
-?35 - Color the pieces!
+tcf1Rf2/1p1ppcp1/4p2t/pFp3Pp/4P3/3P1C1P/PPP2P2/TCFdr2T
+35
 
 --------------------------------------------------------------
 
@@ -752,7 +800,7 @@ The Problemist 1990
 P0005934
 
 t1fdrfct/ppppp1pp/4Tp1F/4c2R/P4P2/1PT1P3/2PP2P1/1C3FCD
-!36 - Cooked
+36 - Cooked
 
 --------------------------------------------------------------
 
@@ -779,7 +827,7 @@ The Problemist 2003
 P1009487
 
 rc4c1/pppF1pp1/TTtt1D2/3pp1fp/P6P/1P4P/f1PPP1F/1C2R1C1
-!36 - Cooked
+36 - Cooked
 
 --------------------------------------------------------------
 
@@ -842,7 +890,7 @@ Die Schwalbe 1987
 P0000082
 
 T7/2pprp1p/1p3c2/c3p1pt/4f2P/1F2t1P1/dPPPPP1f/TCFDR1CT
-38
+38 - Cooked
 
 --------------------------------------------------------------
 
@@ -877,7 +925,7 @@ tc1d1fc1/ppp1p1pD/3pf3/3t1p1p/5C2/P1P4P/1PrPPPP1/TCF1R2T
 
 Ion Murarasu, Vlaicu Crisan
 StrateGems 2010
-P11008002
+P1100802
 
 2Frt3/p1ppdf2/2cfpp1p/1p6/2P1P1ct/5C1p/PP1P1PPP/TCFD2R1
 38
@@ -889,7 +937,7 @@ The Problemist 1985
 P0005935
 
 2fdrf1t/p1ppp1pp/c1pTDp2/7c/P2F2P1/C2PPR2/1PP1tP1P/2CT4
-!39 - Cooked
+39 - Cooked
 
 --------------------------------------------------------------
 
@@ -941,6 +989,15 @@ tcf1rfct/pp1ppppp/2p2T2/F2D3F/4P2T/1P1P1PR1/1PP3PP/1C2C3
 
 --------------------------------------------------------------
 
+Henrik Juel
+Problemskak 2018
+P1369427
+
+t2d1fc1/p1ppp1pD/2c4t/1p1C1p1p/P7/CfP4P/1PrPPPP1/T1F1R2T
+41
+
+--------------------------------------------------------------
+
 Valery Semenenko
 FIDE World Cup 2010
 P1106508
@@ -973,6 +1030,15 @@ FIDE-Tagung 2005
 P1068371
 
 1tf3ct/1ppcpp1p/d1dp1C2/2f3pT/FD2PP2/R2Pr3/1FPC2PP/6CT
+45
+
+--------------------------------------------------------------
+
+Nicolas Dupont
+RIFACE 2017
+P1347229
+
+8/1pp1p1tp/cp4pP/3p3r/2d1cp1t/3f2f1/1PPPPPP1/TCFDRFCT
 45
 
 --------------------------------------------------------------
