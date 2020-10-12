@@ -905,7 +905,7 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 	/* -- Initialize captures and square queue -- */
 
 	array<int, NumSquares> captures;
-	Queue<Square, NumSquares> squares;
+	Queue<Square, 8 * NumSquares> squares;
 
 	captures.fill(Infinity);
 
