@@ -536,6 +536,11 @@ Game::State::State(const State& state, Square from, Square to, Glyph promotion, 
 	for (CastlingSide side : AllCastlingSides())
 		m_castlings[state.m_color][side] = m_castlings[state.m_color][side] && castlings[side];
 
+	if (captured)
+		for (CastlingSide side : AllCastlingSides())
+			if (captured->initialSquare() == Castlings[!state.m_color][side].rook)
+				m_castlings[!state.m_color][side] = false;
+
 	m_enpassant = enpassant;
 	m_color = !state.m_color;
 	m_check = false;
