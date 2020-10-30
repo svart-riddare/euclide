@@ -86,7 +86,7 @@ TargetPartition::TargetPartition()
 	m_requiredCaptures = 0;
 
 	m_assignedRequiredMoves = 0;
-	m_unassignedRequiredCaptures = 0;
+	m_assignedRequiredCaptures = 0;
 
 	m_unassignedRequiredMoves = 0;
 	m_unassignedRequiredCaptures = 0;

@@ -49,7 +49,7 @@ bool NoConsole::wait()
 		getchar();
 #else
 	while (_kbhit())
-		_getch();
+		(void)_getch();
 #endif
 
 	/* -- Show "press any key" message -- */

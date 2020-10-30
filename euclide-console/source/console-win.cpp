@@ -52,6 +52,9 @@ WinConsole::WinConsole(const Strings& strings)
 
 WinConsole::~WinConsole()
 {
+	if (!m_valid)
+		return;
+
 	/* -- Restore console output -- */
 
 	COORD cursor = { 0, 8 };

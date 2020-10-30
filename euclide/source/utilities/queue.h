@@ -8,7 +8,7 @@ namespace Euclide
 
 /* -------------------------------------------------------------------------- */
 
-template <typename T, int MaxSize>
+template <typename T, size_t MaxSize>
 class Queue
 {
 	public:
@@ -33,7 +33,7 @@ class Queue
 			{ return m_in == m_out; }
 		inline constexpr bool full() const
 			{ return m_in >= MaxSize; }
-		inline constexpr int size() const
+		inline constexpr size_t size() const
 			{ return m_in - m_out; }
 
 		inline void sort()
@@ -44,8 +44,8 @@ class Queue
 
 	private:
 		array<T, MaxSize> m_queue;    /**< Queued elements. No more than MaxSize elements can be pushed in queue, ever. */
-		int m_out;                    /**< Index in above array, of oldest element. */
-		int m_in;                     /**< Index, in above array, or newest element. */
+		size_t m_out;                 /**< Index in above array, of oldest element. */
+		size_t m_in;                  /**< Index, in above array, or newest element. */
 };
 
 /* -------------------------------------------------------------------------- */

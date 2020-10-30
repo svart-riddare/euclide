@@ -11,7 +11,7 @@ namespace Euclide
 class Problem
 {
 	public:
-		Problem();
+		Problem() = default;
 		Problem(const EUCLIDE_Problem& problem);
 
 	public:

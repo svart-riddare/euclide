@@ -528,8 +528,11 @@ Game::State::State(const Problem& problem)
 	m_color = problem.turn();
 	m_check = false;
 
+	m_glyph = Empty;
+	m_promotion = Empty;
 	m_castling = NoCastling;
 	m_captured = nullptr;
+	m_capture = Nowhere;
 	m_from = Nowhere;
 	m_to = Nowhere;
 }

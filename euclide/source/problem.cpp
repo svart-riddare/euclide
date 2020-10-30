@@ -7,12 +7,6 @@ namespace Euclide
 /* -- Problem implementation                                               -- */
 /* -------------------------------------------------------------------------- */
 
-Problem::Problem()
-{
-}
-
-/* -------------------------------------------------------------------------- */
-
 Problem::Problem(const EUCLIDE_Problem& problem)
 {
 	/* -- Initialize initial position and perform some basic checks -- */

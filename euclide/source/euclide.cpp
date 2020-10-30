@@ -190,7 +190,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 							const Squares squares = xstd::merge(men.in(pieces), Squares(), [](const Piece& piece) { return piece.squares(); });
 							const Squares xsquares = xstd::merge(xmen.in(xpieces), Squares(), [](const Piece& xpiece) { return xpiece.stops(); });
 							update = capture.updatePossibleSquares(squares & xsquares);
-
 						}
 
 						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredMovesTo(capture.squares()), piece.requiredMoves()); }));
@@ -448,8 +447,9 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 			deduction.numSquares = piece.squares().count();
 			deduction.numMoves = piece.nmoves();
 
-			m_deductions.complexity += std::log(0.0 + deduction.numSquares);
-			m_deductions.complexity += std::log(1.0 + std::max(0, deduction.numMoves - deduction.requiredMoves));
+			m_deductions.complexity += std::log(0.0 + piece.glyphs().count());
+			m_deductions.complexity += std::log(0.0 + piece.squares().count());
+			m_deductions.complexity += std::log(1.0 + std::max(0, piece.nmoves() - piece.requiredMoves()));
 		}
 	}
 
