@@ -463,7 +463,7 @@ Andrew Buchanan
 Retros Mailing List 2003
 P1011910
 
-tct1f1r1/ppp2ppp/2pDpD1c/2f5/8/8/PPP1PPPP/TCF1RFCT
+tct1f1r1/ppp2ppp/2pDpd1c/2f5/8/8/PPP1PPPP/TCF1RFCT
 19
 
 --------------------------------------------------------------
@@ -637,7 +637,7 @@ Andrey Frolkin, Nicolas Dupont, Andrew Buchanan
 Problemist of Ukraine
 P1292793
 
-1ct2fct/1p1ppppp/2p5/d6P/6P1/p4P2/PPPPPC2/TCFDRFrT
+1cf2fct/1p1ppppp/2p5/d6P/6P1/p4P2/PPPPPC2/TCFDRFrT
 27
 
 --------------------------------------------------------------
@@ -853,7 +853,7 @@ Paul Raican
 StrateGems 2005
 P1080569
 
-2r2fct/pp2pppp/2P5/P1p5/2P1FTPP/3d4/1P2PPt1/cCfDRfCT
+2r2fct/pp2pppp/2P5/P1p5/2P1FTPP/3d4/1P2PPt1/cCFDRfCT
 37
 
 --------------------------------------------------------------
@@ -1074,7 +1074,7 @@ Rustam Ubaidullajew
 Problemesis 2004
 P1017488
 
-Tcc5/C1ppr3/F2dpp/Rp2ffpp/DPC1P1tt/F1P5/C2P1PPP/T7
+Tcc5/C1ppr3/F2dpp2/Rp2ffpp/DPC1P1tt/F1P5/C2P1PPP/T7
 51
 
 --------------------------------------------------------------

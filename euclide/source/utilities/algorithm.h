@@ -70,6 +70,14 @@ template<typename Collection, typename Function> inline
 int max(const Collection& collection, const Function& function)
 	{ return xstd::max(collection, std::numeric_limits<int>::min(), function); }
 
+template<typename Collection, typename T, typename Function> inline
+T merge(const Collection& collection, T initial, const Function& function)
+	{ return std::accumulate(std::begin(collection), std::end(collection), initial, [&](T merge, const typename Collection::value_type& x) { return merge | function(x); }); }
+
+template<typename Collection, typename T> inline
+T merge(const Collection& collection, T initial)
+	{ return std::accumulate(std::begin(collection), std::end(collection), initial, [&](T merge, const typename Collection::value_type& x) { return merge | x; }); }
+
 /* -------------------------------------------------------------------------- */
 
 template <typename Collection, typename T> inline
@@ -161,6 +169,18 @@ void maximize(T *variables, const T *values, int size)
 template <class T>
 void minimize(T *variables, const T *values, int size)
 	{ for (int k = 0; k < size; k++) variables[k] = std::min(variables[k], values[k]); }
+
+template <class T, int N>
+void maximize(array<T, N>& variables, const array<T, N>& values)
+{
+	maximize(variables.data(), values.data(), N);
+}
+
+template <class T, int N>
+void minimize(array<T, N>& variables, const array<T, N>& values)
+{
+	minimize(variables.data(), values.data(), N);
+}
 
 /* -------------------------------------------------------------------------- */
 

@@ -223,11 +223,13 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 	m_output.displayThinking(thinking);
 
 	wchar_t string[6 * countof(thinking.moves) + 1];
+	string[0] = '\0';
 
 	if (thinking.numHalfMoves)
 	{
 		const int black = (thinking.moves[0].glyph & 1) ^ 1;
-		wcscpy(string, black ? L"1. ...  " : L"");
+		if (black)
+			wcscpy(string, L"1. ...  ");
 
 		wchar_t *s = string + wcslen(string);
 		for (int m = 0; m < thinking.numHalfMoves - black; m++)
@@ -250,13 +252,9 @@ void Console::displayThinking(const EUCLIDE_Thinking& thinking) const
 			*s++ = ' ';
 		}
 		*s++ = '\0';
+	}
 
-		write(string, m_width - (s - string) - 1, 3, Colors::Thinking);
-	}
-	else
-	{
-		write(L"", countof(string), true, m_width - countof(string) - 1, 3, Colors::Thinking);
-	}
+	write(string, countof(string), true, m_width - countof(string) - 1, 3, Colors::Thinking);
 
 	swprintf(string, countof(string), L"%" PRId64, thinking.positions);
 	write(string, 16, true, 43, 2, Colors::Complexity);

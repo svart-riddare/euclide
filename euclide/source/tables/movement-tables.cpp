@@ -94,6 +94,21 @@ static constexpr Squares GridSquares[NumSquares] =
 
 /* -------------------------------------------------------------------------- */
 
+static constexpr Squares NoSquares;
+static constexpr ArrayOfSquares NoCaptures =
+{
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares,
+	NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares, NoSquares
+};
+
+/* -------------------------------------------------------------------------- */
+
 void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, Variant variant, tribool capture, bool promotion)
 {
 	const int cylindrical = (variant == Cylinder) ? 1 : 0;
@@ -197,12 +212,12 @@ void initializeLegalMoves(ArrayOfSquares *moves, Species species, Color color, V
 
 /* -------------------------------------------------------------------------- */
 
-const ArrayOfSquares *getCaptureMoves(Species species, Color color, Variant variant)
+const ArrayOfSquares *getCaptureMoves(Species species, Color color, Variant variant, bool null)
 {
 	if (species == Pawn)
 		return &PawnCaptures[variant == Cylinder][color];
 
-	return nullptr;
+	return null ? nullptr : &NoCaptures;
 }
 
 /* -------------------------------------------------------------------------- */

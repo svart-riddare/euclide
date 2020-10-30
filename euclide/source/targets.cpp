@@ -85,6 +85,9 @@ TargetPartition::TargetPartition()
 	m_requiredMoves = 0;
 	m_requiredCaptures = 0;
 
+	m_assignedRequiredMoves = 0;
+	m_unassignedRequiredCaptures = 0;
+
 	m_unassignedRequiredMoves = 0;
 	m_unassignedRequiredCaptures = 0;
 }
@@ -97,6 +100,7 @@ bool TargetPartition::merge(const Target& target)
 		return false;
 
 	m_squares.set(target.square());
+	m_glyphs.set(target.glyph());
 	m_men |= target.men();
 
 	m_requiredMoves += target.requiredMoves();
@@ -122,10 +126,23 @@ void TargetPartition::assign(const Pieces& pieces)
 	if (m < s)
 		throw NoSolution;
 
+	/* -- Count assigned moves and captures -- */
+
+	m_assignedRequiredMoves = 0;
+	for (int k = 0; k < m; k++)
+		m_assignedRequiredMoves += men[k]->requiredMoves();
+
+	m_assignedRequiredCaptures = 0;
+	for (int k = 0; k < m; k++)
+		m_assignedRequiredCaptures += men[k]->requiredCaptures();
+
+	m_requiredMoves = std::max(m_requiredMoves, m_assignedRequiredMoves);
+	m_requiredCaptures = std::max(m_requiredCaptures, m_assignedRequiredCaptures);
+
 	/* -- Find required moves and captures by trying all permutations of men and squares -- */
 
-	int minRequiredMoves = Infinity;
-	int minRequiredCaptures = Infinity;
+	int minRequiredMoves = (m > 8) ? m_requiredMoves : Infinity;
+	int minRequiredCaptures = (m > 8) ? m_requiredCaptures : Infinity;
 
 	do
 	{
@@ -149,14 +166,6 @@ void TargetPartition::assign(const Pieces& pieces)
 
 	assert(minRequiredMoves >= m_requiredMoves);
 	assert(minRequiredCaptures >= m_requiredCaptures);
-
-	m_assignedRequiredMoves = 0;
-	for (int k = 0; k < m; k++)
-		m_assignedRequiredMoves += men[k]->requiredMoves();
-
-	m_assignedRequiredCaptures = 0;
-	for (int k = 0; k < m; k++)
-		m_assignedRequiredCaptures += men[k]->requiredCaptures();
 
 	m_unassignedRequiredMoves = minRequiredMoves - m_assignedRequiredMoves;
 	m_unassignedRequiredCaptures = minRequiredCaptures - m_assignedRequiredCaptures;

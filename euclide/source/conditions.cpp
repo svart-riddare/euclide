@@ -85,7 +85,7 @@ PieceConditions::PieceConditions(const Piece& piece)
 	{
 		m_pointers[from].fill(nullptr);
 
-		for (Square to : ValidSquares(piece.moves(from)))
+		for (Square to : ValidSquares(piece.moves(from, false)))
 		{
 			m_conditions.emplace_back(piece, from, to);
 			m_pointers[from][to] = &m_conditions.back();

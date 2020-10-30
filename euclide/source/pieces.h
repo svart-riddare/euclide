@@ -19,8 +19,7 @@ class PieceConditions;
 class Piece
 {
 	public:
-		Piece(const Problem& problem, Square square);
-		Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *promotee);
+		Piece(const Problem& problem, Square square, Glyph glyph = Empty, tribool promoted = unknown);
 		~Piece();
 
 		void initializeConditions();
@@ -44,7 +43,7 @@ class Piece
 
 	public:
 		inline Glyph glyph() const
-			{ return m_glyph; }
+			{ return m_glyph ? m_glyph : m_child; }
 		inline Color color() const
 			{ return m_color; }
 		inline Species species() const
@@ -69,6 +68,8 @@ class Piece
 			{ return m_finalSquare; }
 		inline Squares squares() const
 			{ return m_possibleSquares; }
+		inline Squares squares(Glyph glyph) const
+			{ return m_pieces[glyph]->m_possibleSquares; }
 		inline Squares promotions() const
 			{ return m_promotionSquares; }
 
@@ -81,32 +82,36 @@ class Piece
 		inline int requiredCaptures() const
 			{ return m_requiredCaptures; }
 
-		inline int requiredMovesTo(Square square) const
-			{ return m_distances[square]; }
-		inline int requiredMovesTo(Squares squares) const
-			{ return xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return m_distances[square]; }); }
+		inline int requiredMovesTo(Square square, bool pawn = false) const
+			{ return pawn ? m_pawn.distances[square] : m_distances[square]; }
+		inline int requiredMovesTo(Squares squares, bool pawn = false) const
+			{ return xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return pawn ? m_pawn.distances[square] : m_distances[square]; }); }
 		inline int requiredMovesTo(Square square, Glyph glyph) const
-			{ return m_pieces[glyph]->requiredMovesTo(square); }
-		inline int requiredMovesFrom(Square square) const
-			{ return m_rdistances[square]; }
+			{ return m_pieces[glyph]->m_distances[square]; }
+		inline int requiredMovesFrom(Square square, bool pawn = false) const
+			{ return pawn ? m_pawn.rdistances[square] : m_rdistances[square]; }
 		inline int requiredMovesFrom(Square square, Glyph glyph) const
-			{ return m_pieces[glyph]->requiredMovesFrom(square); }
-		inline int requiredCapturesTo(Square square) const
-			{ return m_captures[square]; }
-		inline int requiredCapturesTo(Squares squares) const
-			{ return m_xmoves ? xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return m_captures[square]; }) : 0; }
-		inline int requiresCapturesFrom(Square square) const
-			{ return m_rcaptures[square]; }
+			{ return m_pieces[glyph]->m_rdistances[square]; }
+		inline int requiredCapturesTo(Square square, bool pawn = false) const
+			{ return pawn ? m_pawn.captures[square] : m_captures[square]; }
+		inline int requiredCapturesTo(Squares squares, bool pawn = false) const
+			{ return (pawn ? m_xmoves : m_pawn.xmoves) ? xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return pawn ? m_pawn.captures[square] : m_captures[square]; }) : 0; }
+		inline int requiredCapturesTo(Square square, Glyph glyph) const
+			{ return m_pieces[glyph]->m_captures[square]; }
+		inline int requiresCapturesFrom(Square square, bool pawn = false) const
+			{ return pawn ? m_pawn.rcaptures[square] : m_rcaptures[square]; }
+		inline int requiredCapturesFrom(Square square, Glyph glyph) const
+			{ return m_pieces[glyph]->m_rcaptures[square]; }
 
 		inline int nmoves() const
-			{ return xstd::sum(m_moves, 0, [](Squares squares) { return squares.count(); }); }
+			{ return m_nmoves; }
 
-		inline const Squares& moves(Square from) const
-			{ return m_moves[from]; }
-		inline Squares captures(Square from) const
-			{ return m_xmoves ? (*m_xmoves)[from] : Squares(); }
-		inline Squares constraints(Square from, Square to, bool capture) const
-			{ return capture ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]; }
+		inline const Squares& moves(Square from, bool pawn) const
+			{ return (pawn ? m_pawn.moves : m_moves)[from]; }
+		inline Squares captures(Square from, bool pawn) const
+			{ return (pawn ? m_pawn.xmoves : m_xmoves) ? (*(pawn ? m_pawn.xmoves : m_xmoves))[from] : Squares(); }
+		inline Squares constraints(Square from, Square to, bool capture, bool pawn) const
+			{ return pawn ? (capture ? (*m_pawn.xconstraints)[from][to] : (*m_pawn.constraints)[from][to]) : (capture ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]); }
 
 		inline const Squares& stops() const
 			{ return m_stops; }
@@ -124,15 +129,22 @@ class Piece
 			{ return this != &piece; }
 
 	protected:
-		void updateDeductions();
-		void updateDistances(bool castling);
+		void unfold();
+		void summarize();
+		void updateDistances();
+		void updateDistancesTo();
+		void updateCaptures();
+		void updateCapturesTo();
 
-		array<int, NumSquares> computeDistances(Squares squares) const;
-		array<int, NumSquares> computeDistancesTo(Squares destinations) const;
+		array<int, NumSquares> computeDistances(Square initial, Square castling, bool pawn) const;
+		array<int, NumSquares> computeDistances(Squares promotions, const array<int, NumSquares>& initial) const;
+		array<int, NumSquares> computeDistancesTo(Squares destinations, bool pawn) const;
+		array<int, NumSquares> computeDistancesTo(Squares promotions, const array<int, NumSquares>& initial) const;
 		array<int, NumSquares> computeDistancesTo(Squares destinations, const Piece& blocker, Square obstruction) const;
 
-		array<int, NumSquares> computeCaptures(Square square, Square castling) const;
-		array<int, NumSquares> computeCapturesTo(Squares destinations) const;
+		array<int, NumSquares> computeCaptures(Square initial, Square castling, bool pawn) const;
+		array<int, NumSquares> computeCaptures(Squares promotions, const array<int, NumSquares>& initial) const;
+		array<int, NumSquares> computeCapturesTo(Squares destinations, bool pawn) const;
 
 	protected:
 		struct State
@@ -161,14 +173,14 @@ class Piece
 		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
 	private:
-		Glyph m_glyph;                                 /**< Piece's glyph. */
+		Glyph m_child;                                 /**< Piece's initial glyph, for promoted pawns. */
+		Glyph m_glyph;                                 /**< Piece's final glyph, if known. */
 		Color m_color;                                 /**< Piece's color, implicit from glyph. */
 		Species m_species;                             /**< Piece type. */
 
 		bool m_royal;                                  /**< A royal piece (the king) can not be captured and may not be left in check. */
 
 		Square m_initialSquare;                        /**< Piece's initial square, if known. */
-		Squares m_initialSquares;                      /**< Piece's initial squares, more than one for promotion pieces. */
 		Squares m_promotionSquares;                    /**< Piece's possible promotion squares, if any. */
 		Square m_castlingSquare;                       /**< Piece's initial square, for rooks that have castled. */
 		Square m_finalSquare;                          /**< Piece's final square, if known. */
@@ -177,10 +189,10 @@ class Piece
 		tribool m_captured;                            /**< Set if the piece has been captured. */
 		tribool m_promoted;                            /**< Set if the piece has been promoted. */
 
-		Glyphs m_glyphs;                               /**< Piece's possible glyphs after promotion. */
-		std::list<Piece> m_promotions;                 /**< Promoted pieces. At most four entries for pawns. */
-		array<Piece *, NumGlyphs> m_pieces;            /**< Pointer to own piece and promoted pieces. */
-		const Piece *m_promotee;                       /**< For promoted piece, reference to promoted pawn. */
+		Glyphs m_glyphs;                               /**< Piece's possible final glyphs. Includes piece's glyph. */
+		std::list<Piece> m_personalities;              /**< Possible pieces. At most five entries for pawns. */
+		array<Piece *, NumGlyphs> m_pieces;            /**< Pointer to pieces for each personalities. One entry must be non null. */
+		bool m_virtual;                                /**< Set if this piece is a possible piece (a personality) which may not exist. */
 
 		Squares m_possibleSquares;                     /**< Possible final squares of this piece. */
 		Squares m_possibleCaptures;                    /**< Possible captures made by this piece. */
@@ -201,6 +213,21 @@ class Piece
 		const MatrixOfSquares *m_constraints;          /**< Move constraints, i.e. squares that must be empty for each possible move. */
 		const MatrixOfSquares *m_xconstraints;         /**< Capture move constraints, i.e. squares that must be empty for each possible capture. */
 		const ArrayOfSquares *m_checks;                /**< For each square, set of squares on which the enemy king is in check. */
+
+		struct {
+			array<int, NumSquares> distances;
+			array<int, NumSquares> rdistances;
+			array<int, NumSquares> captures;
+			array<int, NumSquares> rcaptures;
+
+			ArrayOfSquares moves;
+			const ArrayOfSquares *xmoves;
+			const MatrixOfSquares *constraints;
+			const MatrixOfSquares *xconstraints;
+			const ArrayOfSquares *checks;
+		} m_pawn;                                      /**< Same as above, for initial pawn when the piece is promoted. */
+
+		int m_nmoves;                                  /**< Total number of legal moves. */
 
 		struct Occupied { Squares squares; array<Piece *, NumSquares> pieces; };
 		array<Occupied, NumSquares> m_occupied;        /**< Occupied squares, for each square the piece may lie. */

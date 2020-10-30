@@ -84,6 +84,8 @@ class TargetPartition
 	public:
 		inline Squares squares() const
 			{ return m_squares; }
+		inline Glyphs glyphs() const
+			{ return m_glyphs; }
 		inline Men men() const
 			{ return m_men; }
 
@@ -104,6 +106,7 @@ class TargetPartition
 
 	private:
 		Squares m_squares;                   /**< Target squares for these targets. */
+		Glyphs m_glyphs;                     /**< Possible glyphs for these targets. */
 		Men m_men;                           /**< Possible men for these targets. */
 
 		int m_requiredMoves;                 /**< Required moves. */

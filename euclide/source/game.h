@@ -42,7 +42,7 @@ class Game
 		{
 			public:
 				State(const Problem& problem);
-				State(const State& state, Square from, Square to, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant);
+				State(const State& state, Square from, Square to, Glyph glyph, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant);
 
 				inline void check(bool check)
 					{ m_check = check; }
@@ -61,6 +61,8 @@ class Game
 				inline bool check() const
 					{ return m_check; }
 
+				inline Glyph glyph() const
+					{ return m_glyph; }
 				inline Glyph promotion() const
 					{ return m_promotion; }
 				inline CastlingSide castling() const
@@ -80,7 +82,8 @@ class Game
 				Color m_color;                                            /**< Whose turn it is. */
 				bool m_check;                                             /**< Set if side to move is in check. */
 
-				Glyph m_promotion;                                        /**< Last move is a pawn promotion. */
+				Glyph m_glyph;                                            /**< Last move glyph. */
+				Glyph m_promotion;                                        /**< Last move promotion glyph, if any. */
 				CastlingSide m_castling;                                  /**< Set if last move was a castling move. */
 				const Piece *m_captured;                                  /**< Piece captured last move. */
 				Square m_capture;                                         /**< Last move capture square (for enpassant captures). */

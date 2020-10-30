@@ -123,8 +123,7 @@ const ArrayOfSquares *getUnstoppableChecks(Species species, Color color, Variant
 	switch (species)
 	{
 		case None:
-			assert(false);
-			break;
+			return &NoChecks;
 		case King:
 			return &KingChecks[variant];
 		case Queen:

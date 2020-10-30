@@ -11,49 +11,36 @@ namespace Euclide
 /* -- Piece                                                                -- */
 /* -------------------------------------------------------------------------- */
 
-Piece::Piece(const Problem& problem, Square square)
-	: Piece(problem, square, problem.initialPosition(square), nullptr)
+Piece::Piece(const Problem& problem, Square square, Glyph glyph, tribool promoted)
 {
-}
+	/* -- Piece initial characteristics -- */
 
-/* -------------------------------------------------------------------------- */
+	m_child = problem.initialPosition(square);
+	m_color = Euclide::color(m_child);
 
-Piece::Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *promotee)
-{
-	assert(promotee || (squares.count() == 1));
-	assert(glyph);
+	/* -- Promotion -- */
 
-	/* -- Piece characteristics -- */
+	const Species species = problem.piece(m_child);
+	m_promoted = ((species == Pawn) && problem.promotionPieces(m_color)) ? promoted : tribool(false);
 
-	m_glyph = glyph;
-	m_color = Euclide::color(m_glyph);
+	/* -- Piece final characteristics -- */
+
+	m_glyph = maybe(m_promoted) ? glyph : m_child;
+	m_glyphs = m_glyph ? Glyphs(m_glyph) : (Glyphs(m_child) | PromotionGlyphs[m_color]);
+
 	m_species = problem.piece(m_glyph);
 
 	m_royal = (m_species == King);
+	m_captured = (m_royal || !problem.capturedPieces(m_color)) ? tribool(false) : unknown;
 
-	/* -- Initial square is known, final square not -- */
+	/* -- Piece squares -- */
 
-	m_initialSquare = promotee ? Nowhere : squares.first();
-	m_initialSquares = squares;
+	m_initialSquare = square;
 	m_castlingSquare = Nowhere;
 	m_finalSquare = Nowhere;
 
-	/* -- Has the piece been captured or promoted? -- */
-
-	m_captured = (m_royal || !problem.capturedPieces(m_color)) ? tribool(false) : unknown;
-	m_promoted = ((m_species == Pawn) && !promotee && problem.promotionPieces(m_color)) ? unknown : tribool(false);
-
 	if (maybe(m_promoted))
 		m_promotionSquares = PromotionSquares[m_color];
-
-	m_glyphs.set(m_glyph);
-	if (maybe(m_promoted))
-		m_glyphs |= PromotionGlyphs[m_color];
-
-	m_pieces.fill(nullptr);
-	m_pieces[m_glyph] = this;
-
-	m_promotee = promotee;
 
 	/* -- Initialize number of available moves and captures -- */
 
@@ -69,20 +56,41 @@ Piece::Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *
 	/* -- Initialize possible final squares and capture squares -- */
 
 	for (Square square : AllSquares())
-		m_possibleSquares.set(square, maybe(m_captured) || (problem.diagramPosition(square) == m_glyph) || (maybe(m_promoted) && (Euclide::color(problem.diagramPosition(square)) == m_color)));
+		m_possibleSquares.set(square, maybe(m_captured) || m_glyphs[problem.diagramPosition(square)]);
 
 	if (m_availableCaptures)
 		m_possibleCaptures.set();
 
 	/* -- Initialize legal moves and move tables -- */
 
-	Tables::initializeLegalMoves(&m_moves, m_species, m_color, problem.variant(), m_availableCaptures ? unknown : tribool(false), maybe(m_promoted));
-	m_xmoves = Tables::getCaptureMoves(m_species, m_color, problem.variant());
+	Tables::initializeLegalMoves(&m_moves, m_glyph ? m_species : Pawn, m_color, problem.variant(), m_availableCaptures ? unknown : tribool(false), maybe(m_promoted));
+	m_xmoves = Tables::getCaptureMoves(m_glyph ? m_species : Pawn, m_color, problem.variant());
 
-	m_constraints = Tables::getMoveConstraints(m_species, problem.variant(), false);
-	m_xconstraints = Tables::getMoveConstraints(m_species, problem.variant(), true);
+	m_constraints = Tables::getMoveConstraints(m_glyph ? m_species : Pawn, problem.variant(), false);
+	m_xconstraints = Tables::getMoveConstraints(m_glyph ? m_species : Pawn, problem.variant(), true);
 
-	m_checks = Tables::getUnstoppableChecks(m_species, m_color, problem.variant());
+	m_checks = Tables::getUnstoppableChecks(m_glyph ? m_species : Pawn, m_color, problem.variant());
+
+	if (is(m_promoted))
+	{
+		Tables::initializeLegalMoves(&m_pawn.moves, Pawn, m_color, problem.variant(), m_availableCaptures ? unknown : tribool(false), true);
+		m_pawn.xmoves = Tables::getCaptureMoves(Pawn, m_color, problem.variant());
+
+		m_pawn.constraints = Tables::getMoveConstraints(Pawn, problem.variant(), false);
+		m_pawn.xconstraints = Tables::getMoveConstraints(Pawn, problem.variant(), true);
+
+		m_pawn.checks = Tables::getUnstoppableChecks(Pawn, m_color, problem.variant());
+	}
+	else
+	{
+		m_pawn.moves.fill(Squares());
+		m_pawn.xmoves = nullptr;
+
+		m_pawn.constraints = nullptr;
+		m_pawn.xconstraints = nullptr;
+
+		m_pawn.checks = nullptr;
+	}
 
 	/* -- Initialize occupied squares -- */
 
@@ -92,26 +100,26 @@ Piece::Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *
 	/* -- Distances will be computed later -- */
 
 	m_distances.fill(0);
-	m_captures.fill(0);
 	m_rdistances.fill(0);
+	m_captures.fill(0);
 	m_rcaptures.fill(0);
 
-	/* -- Squares crossed will also be filled later -- */
-
-	m_stops.set();
-	m_route.set();
+	m_pawn.distances.fill(is(promoted) ? 0 : Infinity);
+	m_pawn.rdistances.fill(is(promoted) ? 0 : Infinity);
+	m_pawn.captures.fill(is(promoted) ? 0 : Infinity);
+	m_pawn.rcaptures.fill(is(promoted) ? 0 : Infinity);
 
 	/* -- Handle castling -- */
 
 	std::fill_n(m_castling, NumCastlingSides, false);
 
-	if (((m_glyph == WhiteKing) || (m_glyph == BlackKing)) && !promotee)
+	if (((m_glyph == WhiteKing) || (m_glyph == BlackKing)) && !is(promoted))
 		for (CastlingSide side : AllCastlingSides())
 			if (m_initialSquare == Castlings[m_color][side].from)
 				if (problem.castling(m_color, side))
 					m_moves[Castlings[m_color][side].from][Castlings[m_color][side].to] = true, m_castling[side] = unknown;
 
-	if (((m_glyph == WhiteRook) || (m_glyph == BlackRook)) && !promotee)
+	if (((m_glyph == WhiteRook) || (m_glyph == BlackRook)) && !is(promoted))
 		for (CastlingSide side : AllCastlingSides())
 			if (m_initialSquare == Castlings[m_color][side].rook)
 				if (problem.castling(m_color, side))
@@ -121,14 +129,20 @@ Piece::Piece(const Problem& problem, Squares squares, Glyph glyph, const Piece *
 
 	m_conditions = nullptr;
 
-	/* -- Initialize promoted pieces -- */
+	/* -- Initialize personalities, when the final glyph is not known -- */
 
-	for (Glyph glyph : AllGlyphs())
-		if (m_glyphs[glyph] && (glyph != m_glyph))
-			m_promotions.emplace_back(problem, m_promotionSquares, glyph, this);
+	m_pieces.fill(nullptr);
+	m_pieces[m_child] = this;
+	m_virtual = !unknown(promoted);
 
-	for (Piece& promotion : m_promotions)
-		m_pieces[promotion.glyph()] = &promotion;
+	if (!m_glyph)
+	{
+		for (Glyph glyph : ValidGlyphs(m_glyphs))
+			m_personalities.emplace_back(problem, m_initialSquare, glyph, glyph != m_child);
+
+		for (Piece& personality : m_personalities)
+			m_pieces[personality.glyph()] = &personality;
+	}
 
 	/* -- Update possible moves -- */
 
@@ -188,8 +202,8 @@ void Piece::setCaptured(bool captured)
 	if (!unknown(m_captured))
 		return;
 
-	for (Piece& promotion : m_promotions)
-		promotion.setCaptured(captured);
+	for (Piece& personality : m_personalities)
+		personality.setCaptured(captured);
 
 	m_captured = captured;
 	m_update = true;
@@ -202,8 +216,8 @@ void Piece::setAvailableMoves(int availableMoves, int freeMoves)
 	if ((availableMoves >= m_availableMoves) && (freeMoves >= m_freeMoves))
 		return;
 
-	for (Piece& promotion : m_promotions)
-		promotion.setAvailableMoves(availableMoves, freeMoves);
+	for (Piece& personality : m_personalities)
+		personality.setAvailableMoves(availableMoves, freeMoves);
 
 	xstd::minimize(m_availableMoves, availableMoves);
 	xstd::minimize(m_freeMoves, freeMoves);
@@ -217,8 +231,8 @@ void Piece::setAvailableCaptures(int availableCaptures, int freeCaptures)
 	if ((availableCaptures >= m_availableCaptures) && (freeCaptures >= m_freeCaptures))
 		return;
 
-	for (Piece& promotion : m_promotions)
-		promotion.setAvailableCaptures(availableCaptures, freeCaptures);
+	for (Piece& personality : m_personalities)
+		personality.setAvailableCaptures(availableCaptures, freeCaptures);
 
 	xstd::minimize(m_availableCaptures, availableCaptures);
 	xstd::minimize(m_freeCaptures, freeCaptures);
@@ -243,8 +257,8 @@ void Piece::setPossibleSquares(Squares squares)
 	if ((m_possibleSquares & squares) == m_possibleSquares)
 		return;
 
-	for (Piece& promotion : m_promotions)
-		promotion.setPossibleSquares(squares);
+	for (Piece& personality : m_personalities)
+		personality.setPossibleSquares(squares);
 
 	m_possibleSquares &= squares;
 	m_update = true;
@@ -257,8 +271,8 @@ void Piece::setPossibleCaptures(Squares squares)
 	if ((m_possibleCaptures & squares) == m_possibleCaptures)
 		return;
 
-	for (Piece& promotion : m_promotions)
-		promotion.setPossibleCaptures(squares);
+	for (Piece& personality : m_personalities)
+		personality.setPossibleCaptures(squares);
 
 	m_possibleCaptures &= squares;
 	m_update = true;
@@ -269,6 +283,14 @@ void Piece::setPossibleCaptures(Squares squares)
 void Piece::bypassObstacles(const Piece& blocker)
 {
 	const Squares& obstacles = blocker.stops();
+
+	/* -- Handle personalities -- */
+
+	for (Piece& personality : m_personalities)
+		personality.bypassObstacles(blocker);
+
+	if (!m_glyph)
+		return;
 
 	/* -- Blocked movements -- */
 
@@ -315,6 +337,11 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 	/* -- Interactions with captures are not yet implemented -- */
 
 	if (maybe(pieceA.m_captured) || maybe(pieceB.m_captured))
+		return requiredMoves;
+
+	/* -- Interactions with promotions are not yet implemented -- */
+
+	if (maybe(pieceA.m_promoted) || maybe(pieceB.m_promoted))
 		return requiredMoves;
 
 	/* -- Use fast method if the search space is too large -- */
@@ -388,7 +415,7 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 {
 	/* -- Some moves must occur before the final square is reached -- */
 
-	if ((m_finalSquare == Nowhere) || !m_requiredMoves || maybe(m_captured))
+	if ((m_finalSquare == Nowhere) || !m_requiredMoves || maybe(m_captured) || maybe(m_promoted))
 		return;
 
 	if (m_moves[m_finalSquare].any())
@@ -415,7 +442,7 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 						if (castling && (piece.m_castlingSquare == castling->free))
 							continue;
 
-						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares) : piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
+						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares, false) : piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
 						Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
 
 						if (squares != piece.m_stops)
@@ -459,19 +486,16 @@ void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
 bool Piece::update()
 {
 	bool updated = false;
-	for (Piece& promotion : m_promotions)
-		if (promotion.update())
+	for (Piece& personality : m_personalities)
+		if (personality.update())
 			updated = true;
 
-	if (!m_update)
+	if (!m_update && !updated)
 		return updated;
 
-	updateDeductions();
+	m_glyph ? unfold() : summarize();
+
 	m_update = false;
-
-	for (Piece& promotion : m_promotions)
-		promotion.update();
-
 	return true;
 }
 
@@ -484,8 +508,10 @@ const Conditions& Piece::conditions(Square from, Square to) const
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::updateDeductions()
+void Piece::unfold()
 {
+	assert(m_glyph);
+
 	/* -- Castling for rooks -- */
 
 	if (m_castlingSquare != Nowhere)
@@ -505,57 +531,26 @@ void Piece::updateDeductions()
 
 	/* -- Compute distances -- */
 
-	const bool castling = xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(m_castling[side]); }) && (m_castlingSquare != Nowhere);
-
-	updateDistances(castling);
-	if (m_xmoves)
-		m_captures = computeCaptures(castling ? m_castlingSquare : m_initialSquare, m_castlingSquare);
+	updateDistances();
+	updateCaptures();
 
 	for (Square square : ValidSquares(m_possibleSquares))
-		if (m_distances[square] > m_availableMoves)
+		if ((m_distances[square] > m_availableMoves) || (m_captures[square] > m_availableCaptures))
 			m_possibleSquares[square] = false;
 
-	for (Square square : ValidSquares(m_possibleCaptures))
-		if (m_captures[square] > m_availableCaptures)
-			m_possibleCaptures[square] = false;
+	const Squares pawnCaptures = is(m_promoted) ? Squares([&](Square square) { return m_pawn.distances[square] < Infinity; }) : Squares();
+	m_possibleCaptures &= m_possibleSquares | pawnCaptures;
 
-	m_rdistances = computeDistancesTo(m_possibleSquares);
-	if (m_xmoves)
-		m_rcaptures = computeCapturesTo(m_possibleSquares);
+	for (Square square : ValidSquares(m_promotionSquares))
+		if ((m_pawn.distances[square] > m_availableMoves) || (m_pawn.captures[square] > m_availableCaptures))
+			m_promotionSquares[square] = false;
 
-	/* -- Update possible promotion pieces -- */
+	updateDistancesTo();
+	updateCapturesTo();
 
-	if (maybe(m_promoted))
-	{
-		for (Square square : ValidSquares(m_promotionSquares))
-			if ((m_distances[square] > m_availableMoves) || (m_captures[square] > m_availableCaptures))
-				m_promotionSquares.reset(square);
+	/* -- Update possible final square -- */
 
-		Glyphs glyphs = m_glyphs;
-		for (Piece& promotion : m_promotions)
-			if (!(promotion.m_initialSquares &= m_promotionSquares) || !promotion.m_possibleSquares)
-				glyphs.reset(promotion.glyph());
-
-		if (glyphs != m_glyphs)
-			setPossibleGlyphs(glyphs);
-
-		if (m_glyphs.count() == 1)
-			m_promoted = m_glyphs[m_glyph] ? false : true;
-	}
-
-	if (!m_promotions.empty())
-	{
-		m_promotions.remove_if([=](const Piece& piece) { return !m_glyphs[piece.glyph()]; });
-		for (Glyph glyph : ValidGlyphs(~m_glyphs))
-			m_pieces[glyph] = nullptr;
-	}
-
-	/* -- Are there any possible final squares left? -- */
-
-	if (!m_possibleSquares && m_promotee)
-		return;
-
-	if (!m_possibleSquares)
+	if (!m_possibleSquares && !m_virtual)
 		throw NoSolution;
 
 	if (m_possibleSquares.count() == 1)
@@ -579,6 +574,24 @@ void Piece::updateDeductions()
 				if (m_captures[from] + (*m_xmoves)[from][to] + m_rcaptures[to] > m_availableCaptures)
 					m_moves[from][to] = false;
 
+	if (is(m_promoted))
+		for (Square from : AllSquares())
+			for (Square to : ValidSquares(m_pawn.moves[from]))
+				if (m_pawn.distances[from] + 1 + m_pawn.rdistances[to] > m_availableMoves)
+					m_pawn.moves[from][to] = false;
+
+	if (m_pawn.xmoves)
+		for (Square from : AllSquares())
+			for (Square to : ValidSquares(m_pawn.moves[from]))
+				if (m_pawn.captures[from] + (*m_pawn.xmoves)[from][to] + m_pawn.rcaptures[to] > m_availableCaptures)
+					m_pawn.moves[from][to] = false;
+
+	/* -- Update number of possible moves -- */
+
+	m_nmoves = xstd::sum(m_moves, [](const Squares& squares) { return squares.count(); });
+	if (is(m_promoted))
+		m_nmoves += xstd::sum(m_pawn.moves, [](const Squares& squares) { return squares.count(); });
+
 	/* -- Update castling state according to corresponding king moves -- */
 
 	if (m_royal)
@@ -599,11 +612,12 @@ void Piece::updateDeductions()
 
 	/* -- Get all squares the piece may have crossed or stopped on -- */
 
-	m_stops = m_initialSquares | m_possibleSquares;
+	m_stops = Squares(m_initialSquare);
 	if (m_castlingSquare != Nowhere)
 		m_stops.set(m_castlingSquare);
-	for (Square from : AllSquares())
-		m_stops |= m_moves[from];
+	m_stops = xstd::merge(m_moves, m_stops);
+	if (is(m_promoted))
+		m_stops = xstd::merge(m_pawn.moves, m_stops);
 
 	m_route = m_stops;
 	for (Square from : AllSquares())
@@ -639,29 +653,241 @@ void Piece::updateDeductions()
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::updateDistances(bool castling)
+void Piece::summarize()
 {
-	const Squares squares = ((m_castlingSquare != Nowhere) ? Squares(m_castlingSquare) : Squares()) | (castling ? Squares() : m_initialSquares);
-	const array<int, NumSquares> distances = computeDistances(squares);
+	assert(!m_glyph);
+
+	/* -- Update distances -- */
+
+	m_distances.fill(Infinity);
+	for (const Piece& personality : m_personalities)
+		xstd::minimize(m_distances, personality.m_distances);
+
+	m_captures.fill(Infinity);
+	for (const Piece& personality : m_personalities)
+		xstd::minimize(m_captures, personality.m_captures);
+
+	m_possibleSquares = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_possibleSquares; });
+	m_possibleCaptures = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_possibleCaptures; });
+
+	m_rdistances.fill(Infinity);
+	for (const Piece& personality : m_personalities)
+		xstd::minimize(m_rdistances, personality.m_rdistances);
+
+	m_rcaptures.fill(Infinity);
+	for (const Piece& personality : m_personalities)
+		xstd::minimize(m_rcaptures, personality.m_rcaptures);
+
+	/* -- Update possible promotion squares -- */
+
+	m_promotionSquares = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_promotionSquares; });
+
+	/* -- Update possible glyphs -- */
+
+	for (Glyph glyph : ValidGlyphs(m_glyphs))
+		if (!m_pieces[glyph]->m_possibleSquares)
+			m_glyphs.reset(glyph);
+
+	/* -- Remove unused personalities -- */
+
+	m_personalities.remove_if([&](const Piece& piece) -> bool
+		{ if (!m_glyphs[piece.m_glyph]) { m_pieces[piece.m_glyph] = nullptr; return true; } return false; }
+	);
+
+	if (m_personalities.empty())
+		throw NoSolution;
+
+	/* -- Collapse piece if only one personality remains -- */
+
+	if (m_glyphs.count() == 1)
+	{
+		assert(m_personalities.size() == 1);
+		Piece myself = m_personalities.front();
+		*this = myself;
+
+		m_pieces[m_glyph] = this;
+		return;
+	}
+
+	/* -- Update possible final square -- */
+
+	if (m_possibleSquares.count() == 1)
+		m_finalSquare = m_possibleSquares.first();
+
+	/* -- Compute minimum number of moves and captures performed by this piece -- */
+
+	xstd::maximize(m_requiredMoves, xstd::min(ValidSquares(m_possibleSquares), [&](Square square) { return m_distances[square]; }));
+	xstd::maximize(m_requiredCaptures, xstd::min(ValidSquares(m_possibleSquares), [&](Square square) { return m_captures[square]; }));
+
+	/* -- Update legal moves -- */
+
+	m_moves.fill(Squares());
+	for (const Piece& personality : m_personalities)
+		for (Square from : AllSquares())
+			m_moves[from] |= is(personality.m_promoted) ? personality.m_pawn.moves[from] : personality.m_moves[from];
+
+	m_pawn.moves = m_moves;
+
+	/* -- Update number of possible moves -- */
+
+	m_nmoves = xstd::sum(m_moves, [](Squares squares) { return squares.count(); });
+	for (const Piece& piece : m_personalities)
+		if (!is(piece.m_promoted))
+			m_nmoves += xstd::sum(piece.m_moves, [](Squares squares) { return squares.count(); });
+
+	/* -- Get all squares the piece may have crossed or stopped on -- */
+
+	m_stops = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_stops; });
+	m_route = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_route; });
+	m_threats = xstd::merge(m_personalities, Squares(), [](const Piece& piece) { return piece.m_threats; });
+
+	/* -- Update occupied squares -- */
 
 	for (Square square : AllSquares())
-		xstd::maximize(m_distances[square], distances[square]);
+	{
+		for (bool loop = true; loop; )
+		{
+			loop = false;
+			for (Square occupied : ValidSquares(m_occupied[square].squares))
+			{
+				for (Square other : ValidSquares(m_occupied[square].pieces[occupied]->m_occupied[occupied].squares))
+				{
+					if (!m_occupied[square].squares[other])
+					{
+						m_occupied[square].pieces[other] = m_occupied[square].pieces[occupied]->m_occupied[occupied].pieces[other];
+						m_occupied[square].squares[other] = true;
+						loop = true;
+					}
+				}
+			}
+		}
+	}
 }
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeDistances(Squares squares) const
+void Piece::updateDistances()
 {
-	/* -- Initialize distances and unpreocessed square queue -- */
+	if (is(m_promoted))
+	{
+		m_pawn.distances = computeDistances(m_initialSquare, Nowhere, true);
+		xstd::maximize(m_distances, computeDistances(m_promotionSquares, m_pawn.distances));
+	}
+	else
+	{
+		const bool castling = (m_castlingSquare != Nowhere) && xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(m_castling[side]); });
+		const auto distances = computeDistances(castling ? m_castlingSquare : m_initialSquare, castling ? Nowhere : m_castlingSquare, false);
+		xstd::maximize(m_distances, distances);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::updateDistancesTo()
+{
+	m_rdistances = computeDistancesTo(m_possibleSquares, false);
+	if (is(m_promoted))
+		m_pawn.rdistances = computeDistancesTo(m_promotionSquares, m_rdistances);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::updateCaptures()
+{
+	if (is(m_promoted))
+	{
+		if (m_pawn.xmoves)
+			xstd::maximize(m_pawn.captures, computeCaptures(m_initialSquare, Nowhere, true));
+		xstd::maximize(m_captures, computeCaptures(m_promotionSquares, m_pawn.captures));
+	}
+	else
+	if (m_xmoves)
+	{
+		const bool castling = (m_castlingSquare != Nowhere) && xstd::any_of(AllCastlingSides(), [&](CastlingSide side) { return is(m_castling[side]); });
+		const auto captures = computeCaptures(castling ? m_castlingSquare : m_initialSquare, castling ? Nowhere : m_castlingSquare, false);
+		xstd::maximize(m_captures, captures);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::updateCapturesTo()
+{
+	if (m_xmoves)
+		m_rcaptures = computeCapturesTo(m_possibleSquares, false);
+	if (is(m_promoted) && m_pawn.xmoves)
+		m_pawn.rcaptures = computeCapturesTo(m_promotionSquares, true);
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeDistances(Square initial, Square castling, bool pawn) const
+{
+	/* -- Initialize distances -- */
+
+	array<int, NumSquares> distances;
+	distances.fill(Infinity);
+	distances[initial] = 0;
+	if (castling != Nowhere)
+		distances[castling] = 0;
+
+	/* -- Initialized square queue -- */
+
+	Queue<Square, NumSquares> queue;
+	queue.push(initial);
+	if (castling != Nowhere)
+		queue.push(castling);
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	const ArrayOfSquares& moves = pawn ? m_pawn.moves : m_moves;
+
+	while (!queue.empty())
+	{
+		const Square from = queue.front(); queue.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square to : ValidSquares(moves[from]))
+		{
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[to] < Infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[to] = distances[from] + 1;
+
+			/* -- Add it to queue of reachable queue -- */
+
+			queue.push(to);
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeDistances(Squares promotions, const array<int, NumSquares>& initial) const
+{
+	assert(is(m_promoted));
+
+	/* -- Initialize distances and square queue -- */
 
 	array<int, NumSquares> distances;
 	distances.fill(Infinity);
 
 	Queue<Square, NumSquares> queue;
 
-	for (Square square : ValidSquares(squares))
-		if ((distances[square] = m_promotee ? m_promotee->m_distances[square] : 0) < Infinity)
+	for (Square square : ValidSquares(promotions))
+		if ((distances[square] = initial[square]) < Infinity)
 			queue.push(square);
+
+	queue.sort([&](Square lhs, Square rhs) { return distances[lhs] < distances[rhs]; });
 
 	/* -- Loop until every reachable square has been handled -- */
 
@@ -695,7 +921,7 @@ array<int, NumSquares> Piece::computeDistances(Squares squares) const
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
+array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, bool pawn) const
 {
 	/* -- Initialize distances and square queue -- */
 
@@ -706,11 +932,15 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 		if ((distances[square] = (destinations[square] ? 0 : Infinity)) == 0)
 			squares.push(square);
 
+	/* -- Handle castling -- */
+
 	if ((m_castlingSquare != Nowhere) && !distances[m_castlingSquare] && distances[m_initialSquare])
 		if ((distances[m_initialSquare] = 0) == 0)
 			squares.push(m_initialSquare);
 
 	/* -- Loop until every reachable square has been handled -- */
+
+	const ArrayOfSquares& moves = pawn ? m_pawn.moves : m_moves;
 
 	while (!squares.empty())
 	{
@@ -722,7 +952,7 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 		{
 			/* -- Skip illegal moves -- */
 
-			if (!m_moves[from][to])
+			if (!moves[from][to])
 				continue;
 
 			/* -- This square may have been attained by a quicker path -- */
@@ -758,6 +988,56 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations) const
 
 /* -------------------------------------------------------------------------- */
 
+array<int, NumSquares> Piece::computeDistancesTo(Squares promotions, const array<int, NumSquares>& initial) const
+{
+	/* -- Initialize distances and square queue -- */
+
+	array<int, NumSquares> distances;
+	Queue<Square, NumSquares> squares;
+
+	for (Square square : AllSquares())
+		if ((distances[square] = (promotions[square] ? initial[square] : Infinity)) < Infinity)
+			squares.push(square);
+
+	squares.sort([&](Square lhs, Square rhs) { return distances[lhs] < distances[rhs]; });
+
+	/* -- Loop until every reachable square has been handled -- */
+
+	while (!squares.empty())
+	{
+		const Square to = squares.front(); squares.pop();
+
+		/* -- Handle every possible immediate destination -- */
+
+		for (Square from : AllSquares())
+		{
+			/* -- Skip illegal moves -- */
+
+			if (!m_pawn.moves[from][to])
+				continue;
+
+			/* -- This square may have been attained by a quicker path -- */
+
+			if (distances[from] < Infinity)
+				continue;
+
+			/* -- Set square distance -- */
+
+			distances[from] = distances[to] + 1;
+
+			/* -- Add it to queue of reachable squares -- */
+
+			squares.push(from);
+		}
+	}
+
+	/* -- Done -- */
+
+	return distances;
+}
+
+/* -------------------------------------------------------------------------- */
+
 array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Piece& blocker, Square obstruction) const
 {
 	const bool enemies = (m_color != blocker.m_color);
@@ -765,7 +1045,7 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Pie
 	/* -- Early exit if the blocker is ourself -- */
 
 	if (&blocker == this)
-		return computeDistancesTo(destinations);
+		return computeDistancesTo(destinations, false);
 
 	/* -- Initialize distances and square queue -- */
 
@@ -777,7 +1057,7 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Pie
 			squares.push(square);
 
 	if ((m_castlingSquare != Nowhere) && !distances[m_castlingSquare] && distances[m_initialSquare])
-		if (!(*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])  // WARNING KING SHOULD NOT BLOCK IT'S OWN CASTLING
+		if (!(*m_constraints)[m_initialSquare][m_castlingSquare][obstruction])
 			if ((distances[m_initialSquare] = 0) == 0)
 				squares.push(m_initialSquare);
 
@@ -848,48 +1128,57 @@ array<int, NumSquares> Piece::computeDistancesTo(Squares destinations, const Pie
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeCaptures(Square square, Square castling) const
+array<int, NumSquares> Piece::computeCaptures(Square initial, Square castling, bool pawn) const
 {
-	assert(m_xmoves);
-
-	/* -- Initialize captures -- */
+	/* -- Initialize required captures -- */
 
 	array<int, NumSquares> captures;
 	captures.fill(Infinity);
-	captures[square] = 0;
+	captures[initial] = 0;
 	if (castling != Nowhere)
 		captures[castling] = 0;
 
-	/* -- Initialize square queue -- */
+	/* -- Initialize squares to process -- */
 
-	Queue<Square, NumSquares> squares;
-	squares.push(square);
+	Squares candidates(initial);
 	if (castling != Nowhere)
-		squares.push(castling);
+		candidates.set(castling);
 
-	/* -- Loop until every reachable square has been handled -- */
+	/* -- Loop until every reachable square has been handled, by order of number of captures -- */
 
-	while (!squares.empty())
+	const ArrayOfSquares& moves = pawn ? m_pawn.moves : m_moves;
+	const ArrayOfSquares *xmoves = pawn ? m_pawn.xmoves : m_xmoves;
+
+	while (candidates)
 	{
-		const Square from = squares.front(); squares.pop();
+		Squares squares = candidates;
+		candidates.reset();
 
-		/* -- Handle every possible immediate destination -- */
-
-		for (Square to : ValidSquares(m_moves[from]))
+		while (squares)
 		{
-			/* -- This square may have been attained using less captures -- */
+			const Square from = squares.pop();
 
-			const int required = captures[from] + (*m_xmoves)[from][to];
-			if (required >= captures[to])
-				continue;
+			/* -- Handle every possible immediate destination -- */
 
-			/* -- Set required captures -- */
+			for (Square to : ValidSquares(moves[from]))
+			{
+				/* -- This square may have been attained using less captures -- */
 
-			captures[to] = required;
+				const int required = captures[from] + (xmoves && (*xmoves)[from][to]);
+				if (required >= captures[to])
+					continue;
 
-			/* -- Add it to queue of squares -- */
+				/* -- Set required captures -- */
 
-			squares.push(to);
+				captures[to] = required;
+
+				/* -- Add it to queue of squares -- */
+
+				if (captures[to] > captures[from])
+					candidates.set(to);
+				else
+					squares.set(to);
+			}
 		}
 	}
 
@@ -900,8 +1189,55 @@ array<int, NumSquares> Piece::computeCaptures(Square square, Square castling) co
 
 /* -------------------------------------------------------------------------- */
 
-array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
+array<int, NumSquares> Piece::computeCaptures(Squares promotions, const array<int, NumSquares>& initial) const
 {
+	/* -- Initialize required captures and square queue -- */
+
+	array<int, NumSquares> captures;
+	captures.fill(Infinity);
+
+	Queue<Square, NumSquares> queue;
+
+	for (Square square : ValidSquares(promotions))
+		if ((captures[square] = initial[square]) < Infinity)
+			queue.push(square);
+
+	queue.sort([&](Square lhs, Square rhs) { return captures[lhs] < captures[rhs]; });
+
+	/* -- Flood fill required captures -- */
+
+	assert(!m_xmoves);
+
+	while (!queue.empty())
+	{
+		Squares squares = queue.front(); queue.pop();
+
+		while (squares)
+		{
+			Square from = squares.pop();
+
+			for (Square to : ValidSquares(m_moves[from]))
+			{
+				if (captures[to] > captures[from])
+				{
+					captures[to] = captures[from];
+					squares.set(to);
+				}
+			}
+		}
+	}
+
+	/* -- Done -- */
+
+	return captures;
+}
+
+/* -------------------------------------------------------------------------- */
+
+array<int, NumSquares> Piece::computeCapturesTo(Squares destinations, bool pawn) const
+{
+	assert(pawn ? m_pawn.xmoves : m_xmoves);
+
 	/* -- Initialize captures and square queue -- */
 
 	array<int, NumSquares> captures;
@@ -910,10 +1246,13 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 	captures.fill(Infinity);
 
 	for (Square square : AllSquares())
-		if ((captures[square] = destinations[square] ? 0 : Infinity) == 0)
+		if ((captures[square] = destinations[square] ? 0 : Infinity) < Infinity)
 			squares.push(square);
 
 	/* -- Loop until every reachable square has been handled -- */
+
+	const ArrayOfSquares& moves = pawn ? m_pawn.moves : m_moves;
+	const ArrayOfSquares *xmoves = pawn ? m_pawn.xmoves : m_xmoves;
 
 	while (!squares.empty())
 	{
@@ -925,12 +1264,12 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations) const
 		{
 			/* -- Skip illegal moves -- */
 
-			if (!m_moves[from][to])
+			if (!moves[from][to])
 				continue;
 
 			/* -- This square may have been attained using less captures -- */
 
-			const int required = captures[to] + (*m_xmoves)[from][to];
+			const int required = captures[to] + (*xmoves)[from][to];
 			if (required >= captures[from])
 				continue;
 

@@ -12,7 +12,10 @@ template <typename T, int MaxSize>
 class Queue
 {
 	public:
-		Queue() : m_out(0), m_in(0) {}
+		constexpr Queue() : m_out(0), m_in(0) {}
+
+		inline void clear()
+			{ m_out = m_in = 0; }
 
 		inline void push(const T& value)
 			{ assert(m_in < MaxSize); m_queue[m_in++] = value; }
@@ -26,12 +29,18 @@ class Queue
 		inline const T& back() const
 			{ assert(size()); return m_queue[m_in - 1]; }
 
-		inline bool empty() const
+		inline constexpr bool empty() const
 			{ return m_in == m_out; }
-		inline bool full() const
+		inline constexpr bool full() const
 			{ return m_in >= MaxSize; }
-		inline int size() const
+		inline constexpr int size() const
 			{ return m_in - m_out; }
+
+		inline void sort()
+			{ std::sort(m_queue.data() + m_out, m_queue.data() + m_in); }
+		template<typename Comparator>
+		inline void sort(const Comparator& comparator)
+			{ std::sort(m_queue.data() + m_out, m_queue.data() + m_in, comparator); }
 
 	private:
 		array<T, MaxSize> m_queue;    /**< Queued elements. No more than MaxSize elements can be pushed in queue, ever. */

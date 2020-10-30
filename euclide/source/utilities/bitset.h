@@ -93,6 +93,9 @@ class BitSet
 		inline Type next(int position) const
 			{ int bit; return static_cast<Type>(intel::bsf(m_bits >> position >> 1, &bit) ? bit + position + 1 : Bits); }
 
+		inline Type pop()
+			{ const Type position = first(); assert(m_bits); reset(position); return position; }
+
 	public:
 		inline BitSet& operator&=(const BitSet& bitset)
 			{ m_bits &= bitset.m_bits; return *this; }
