@@ -904,10 +904,10 @@ tcf1Dfct/pppppFpp/2r2p1T/8/2P1PF2/2CPP1CP/PP4P1/6TR
 --------------------------------------------------------------
 
 Peter Wong
-The PRoblemist 1993
+The Problemist 1993
 P0005900
 
-2c2f1c1/p1p12rd/Tp4pf/4t2p/P1t4P/1D4D1/1PP1PPP/1CFTRFC1
+2c1f1c1/p1p1pprd/Tp4pf/4t2p/P1t4P/1D4D1/1PP1PPP/1CFTRFC1
 38
 
 (Deux solutions)

@@ -19,6 +19,8 @@ set(SOURCES
 	../../source/includes.h
 	../../source/pieces.cpp
 	../../source/pieces.h
+	../../source/partitions.cpp
+	../../source/partitions.h
 	../../source/problem.cpp
 	../../source/problem.h
 	../../source/targets.cpp

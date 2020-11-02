@@ -32,6 +32,14 @@ template<typename Iterator, typename T, typename X, typename Function> inline
 T max(Iterator first, Iterator last, T initial, const Function& function)
 	{ return std::accumulate(first, last, initial, [&](T max, const typename Iterator::value_type& x) { return std::max<T>(max, function(x)); }); }
 
+template<typename Iterator, typename T, typename Function> inline
+T merge(Iterator first, Iterator last, T initial, const Function& function)
+	{ return std::accumulate(first, last, initial, [&](T merge, const typename Iterator::value_type& x) { return merge | function(x); }); }
+
+template<typename Iterator, typename T> inline
+T merge(Iterator first, Iterator last, T initial)
+	{ return std::accumulate(first, last, initial, [&](T merge, const typename Iterator::value_type& x) { return merge | x; }); }
+
 /* -------------------------------------------------------------------------- */
 
 template <typename Collection, typename T> inline

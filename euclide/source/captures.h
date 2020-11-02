@@ -6,6 +6,7 @@
 namespace Euclide
 {
 
+class Captures;
 class Targets;
 class Pieces;
 
@@ -25,6 +26,8 @@ class Capture
 
 		bool updatePossibleSquares(Squares squares);
 		bool updatePossibleMen(Men men, Men xmen);
+
+		bool applyPigeonHolePrinciple(Targets& targets, Captures& captures) const;
 
 	public:
 		inline Glyphs glyphs() const
@@ -78,6 +81,8 @@ class Capture
 
 class Captures : public std::vector<Capture>
 {
+	public:
+		bool update(Targets& targets);
 };
 
 /* -------------------------------------------------------------------------- */

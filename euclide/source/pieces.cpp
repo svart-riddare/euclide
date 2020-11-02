@@ -538,9 +538,6 @@ void Piece::unfold()
 		if ((m_distances[square] > m_availableMoves) || (m_captures[square] > m_availableCaptures))
 			m_possibleSquares[square] = false;
 
-	const Squares pawnCaptures = is(m_promoted) ? Squares([&](Square square) { return m_pawn.distances[square] < Infinity; }) : Squares();
-	m_possibleCaptures &= m_possibleSquares | pawnCaptures;
-
 	for (Square square : ValidSquares(m_promotionSquares))
 		if ((m_pawn.distances[square] > m_availableMoves) || (m_pawn.captures[square] > m_availableCaptures))
 			m_promotionSquares[square] = false;
@@ -628,6 +625,14 @@ void Piece::unfold()
 	for (Square square : ValidSquares(m_stops))
 		m_threats |= (*m_checks)[square];
 
+	/* -- Update possible captures -- */
+
+	Squares captures = xstd::merge(m_xmoves ? *m_xmoves : m_moves, Squares());
+	if (is(m_promoted))
+		captures = xstd::merge(m_pawn.xmoves ? *m_pawn.xmoves : m_pawn.moves, captures);
+
+	m_possibleCaptures &= captures;
+
 	/* -- Update occupied squares -- */
 
 	for (Square square : AllSquares())
@@ -702,8 +707,8 @@ void Piece::summarize()
 	if (m_glyphs.count() == 1)
 	{
 		assert(m_personalities.size() == 1);
-		Piece myself = m_personalities.front();
-		*this = myself;
+		std::list<Piece> personalities(std::move(m_personalities));
+		*this = personalities.front();
 
 		m_pieces[m_glyph] = this;
 		return;

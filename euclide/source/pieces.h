@@ -70,6 +70,10 @@ class Piece
 			{ return m_possibleSquares; }
 		inline Squares squares(Glyph glyph) const
 			{ return m_pieces[glyph]->m_possibleSquares; }
+		inline Squares captures() const
+			{ return m_possibleCaptures; }
+		inline Squares captures(Glyph glyph) const
+			{ return m_pieces[glyph]->m_possibleCaptures; }
 		inline Squares promotions() const
 			{ return m_promotionSquares; }
 
@@ -87,17 +91,21 @@ class Piece
 		inline int requiredMovesTo(Squares squares, bool pawn = false) const
 			{ return xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return pawn ? m_pawn.distances[square] : m_distances[square]; }); }
 		inline int requiredMovesTo(Square square, Glyph glyph) const
-			{ return m_pieces[glyph]->m_distances[square]; }
+			{ return m_pieces[glyph]->requiredMovesTo(square); }
+		inline int requiredMovesTo(Squares squares, Glyph glyph) const
+			{ return m_pieces[glyph]->requiredMovesTo(squares); }
 		inline int requiredMovesFrom(Square square, bool pawn = false) const
 			{ return pawn ? m_pawn.rdistances[square] : m_rdistances[square]; }
 		inline int requiredMovesFrom(Square square, Glyph glyph) const
-			{ return m_pieces[glyph]->m_rdistances[square]; }
+			{ return m_pieces[glyph]->requiredMovesFrom(square); }
 		inline int requiredCapturesTo(Square square, bool pawn = false) const
 			{ return pawn ? m_pawn.captures[square] : m_captures[square]; }
 		inline int requiredCapturesTo(Squares squares, bool pawn = false) const
-			{ return (pawn ? m_xmoves : m_pawn.xmoves) ? xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return pawn ? m_pawn.captures[square] : m_captures[square]; }) : 0; }
+			{ return (pawn ? m_pawn.xmoves : m_xmoves) ? xstd::min(ValidSquares(squares), Infinity, [&](const Square square) { return pawn ? m_pawn.captures[square] : m_captures[square]; }) : 0; }
 		inline int requiredCapturesTo(Square square, Glyph glyph) const
-			{ return m_pieces[glyph]->m_captures[square]; }
+			{ return m_pieces[glyph]->requiredCapturesTo(square); }
+		inline int requiredCapturesTo(Squares squares, Glyph glyph) const
+			{ return m_pieces[glyph]->requiredCapturesTo(squares); }
 		inline int requiresCapturesFrom(Square square, bool pawn = false) const
 			{ return pawn ? m_pawn.rcaptures[square] : m_rcaptures[square]; }
 		inline int requiredCapturesFrom(Square square, Glyph glyph) const

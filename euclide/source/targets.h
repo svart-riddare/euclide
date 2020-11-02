@@ -6,6 +6,7 @@
 namespace Euclide
 {
 
+class Captures;
 class Targets;
 class Pieces;
 
@@ -25,7 +26,7 @@ class Target
 
 		bool updatePossibleMen(Men men);
 
-		bool applyPigeonHolePrinciple(Targets& targets) const;
+		bool applyPigeonHolePrinciple(Targets& targets, Captures& captures) const;
 
 	public:
 		inline Glyph glyph() const
@@ -64,100 +65,7 @@ class Target
 class Targets : public std::vector<Target>
 {
 	public:
-		bool update();
-};
-
-/* -------------------------------------------------------------------------- */
-/* -- TargetPartition                                                      -- */
-/* -------------------------------------------------------------------------- */
-
-class TargetPartition
-{
-	public:
-		TargetPartition();
-
-		bool merge(const Target& target);
-		void assign(const Pieces& pieces);
-
-		bool disjoint(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets) const;
-
-	public:
-		inline Squares squares() const
-			{ return m_squares; }
-		inline Glyphs glyphs() const
-			{ return m_glyphs; }
-		inline Men men() const
-			{ return m_men; }
-
-		inline int requiredMoves() const
-			{ return m_requiredMoves; }
-		inline int requiredCaptures() const
-			{ return m_requiredCaptures; }
-
-		inline int assignedRequiredMoves() const
-			{ return m_assignedRequiredMoves; }
-		inline int assignedRequiredCaptures() const
-			{ return m_assignedRequiredCaptures; }
-
-		inline int unassignedRequiredMoves() const
-			{ return m_unassignedRequiredMoves; }
-		inline int unassignedRequiredCaptures() const
-			{ return m_unassignedRequiredCaptures; }
-
-	private:
-		Squares m_squares;                   /**< Target squares for these targets. */
-		Glyphs m_glyphs;                     /**< Possible glyphs for these targets. */
-		Men m_men;                           /**< Possible men for these targets. */
-
-		int m_requiredMoves;                 /**< Required moves. */
-		int m_requiredCaptures;              /**< Required captures. */
-
-		int m_assignedRequiredMoves;         /**< Required moves assigned to a specific piece. */
-		int m_assignedRequiredCaptures;      /**< Required captures assigned to a specific piece. */
-
-		int m_unassignedRequiredMoves;       /**< Required moves unassigned to a specific piece. */
-		int m_unassignedRequiredCaptures;    /**< Required captures unassigned to a specific piece. */
-};
-
-/* -------------------------------------------------------------------------- */
-/* -- TargetPartitions                                                     -- */
-/* -------------------------------------------------------------------------- */
-
-class TargetPartitions : public std::vector<TargetPartition>
-{
-	public:
-		TargetPartitions(const Pieces& pieces, const Targets& targets);
-
-	public:
-		inline int requiredMoves() const
-			{ return m_requiredMoves; }
-		inline int requiredCaptures() const
-			{ return m_requiredCaptures; }
-
-		inline int unassignedRequiredMoves() const
-			{ return m_unassignedRequiredMoves; }
-		inline int unassignedRequiredCaptures() const
-			{ return m_unassignedRequiredCaptures; }
-
-		inline int requiredMoves(Man man) const
-			{ return m_map[man]->requiredMoves(); }
-		inline int requiredCaptures(Man man) const
-			{ return m_map[man]->requiredCaptures(); }
-
-		inline int unassignedRequiredMoves(Man man) const
-			{ return m_map[man]->unassignedRequiredMoves(); }
-		inline int unassignedRequiredCaptures(Man man) const
-			{ return m_map[man]->unassignedRequiredCaptures(); }
-
-	private:
-		int m_requiredMoves;                                /**< Required moves. */
-		int m_requiredCaptures;                             /**< Required capture. */
-
-		int m_unassignedRequiredMoves;                      /**< Required moves unassigned to a specific piece. */
-		int m_unassignedRequiredCaptures;                   /**< Required captures unassigned to a specific piece. */
-
-		array<const TargetPartition *, MaxPieces> m_map;    /**< Quick map between men and partitions. */
-		TargetPartition m_null;                             /**< Null partition, used in above map. */
+		bool update(Captures& captures);
 };
 
 /* -------------------------------------------------------------------------- */

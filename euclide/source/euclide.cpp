@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "partitions.h"
 #include "captures.h"
 #include "problem.h"
 #include "targets.h"
@@ -184,37 +185,37 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 						for (bool update = true; update; )
 						{
 							const Men men([&](Man man) { return (pieces[man].glyphs() & capture.glyphs()) && (pieces[man].squares() & capture.squares()) && maybe(pieces[man].captured()); }, capture.men().range());
-							const Men xmen([&](Man xman) { return xpieces[xman].availableMoves() && (xpieces[xman].stops() & capture.squares()); }, capture.xmen().range());
+							const Men xmen([&](Man xman) { return xpieces[xman].availableMoves() && (xpieces[xman].captures() & capture.squares()); }, capture.xmen().range());
 							capture.updatePossibleMen(men, xmen);
 
 							const Squares squares = xstd::merge(men.in(pieces), Squares(), [](const Piece& piece) { return piece.squares(); });
-							const Squares xsquares = xstd::merge(xmen.in(xpieces), Squares(), [](const Piece& xpiece) { return xpiece.stops(); });
+							const Squares xsquares = xstd::merge(xmen.in(xpieces), Squares(), [](const Piece& xpiece) { return xpiece.captures(); });
 							update = capture.updatePossibleSquares(squares & xsquares);
 						}
 
-						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredMovesTo(capture.squares()), piece.requiredMoves()); }));
-						capture.updateRequiredCaptures(xstd::min(capture.men().in(pieces), 0, [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(capture.squares()), piece.requiredCaptures()); }));
+						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(capture.squares()), piece.requiredMoves()); }));
+						capture.updateRequiredCaptures(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(capture.squares()), piece.requiredCaptures()); }));
 					}
 
-				} while (targets.update());
+				} while (targets.update(captures) || captures.update(targets));
 
 				/* -- Merge targets into partitions -- */
 
-				TargetPartitions partitions(pieces, m_targets[color]);
+				Partitions partitions(pieces, m_targets[color], m_captures[color]);
 
 				/* -- Update possible glyphs and squares -- */
 
-				for (const TargetPartition& partition : partitions)
-					for (Man man : ValidMen(partition.men()))
-						if (!maybe(pieces[man].captured()))
-							pieces[man].setPossibleGlyphs(partition.glyphs());
-
-				for (const TargetPartition& partition : partitions)
+				for (const Partition& partition : partitions)
 					if (partition.men().count() <= partition.squares().count())
 						for (Man man : ValidMen(partition.men()))
 							pieces[man].setCaptured(false);
 
-				for (const TargetPartition& partition : partitions)
+				for (const Partition& partition : partitions)
+					for (Man man : ValidMen(partition.men()))
+						if (!maybe(pieces[man].captured()))
+							pieces[man].setPossibleGlyphs(partition.glyphs());
+
+				for (const Partition& partition : partitions)
 					for (Man man : ValidMen(partition.men()))
 						if (!maybe(pieces[man].captured()))
 							pieces[man].setPossibleSquares(partition.squares());
@@ -268,8 +269,8 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				/* -- Split partitions if possible and loop if we did -- */
 
 				analyse = false;
-				for (const TargetPartition& partition : partitions)
-					if (partition.disjoint(pieces, freeMoves, freeCaptures, targets))
+				for (const Partition& partition : partitions)
+					if (partition.split(pieces, freeMoves, freeCaptures, targets, captures))
 						analyse = true;
 			}
 		}
