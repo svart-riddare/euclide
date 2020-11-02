@@ -1,0 +1,85 @@
+
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND K='Gitterschach'
+
+November 2, 2020
+
+--------------------------------------------------------------
+
+Alain Brobecker
+Phénix 2009
+P1098638
+
+tc2rfct/ppp1pppp/8/8/4d1f/7C/PPPP1PPP/TCF1RF1T
+8 - Grid
+
+(Proofgame ending by 4. ... Qxe4#)
+
+--------------------------------------------------------------
+
+Michel Caillaud
+Problemkiste 2001
+P1004430
+
+1t1drfct/pppcpppp/3p4/8/4P3/8/PPPPRPPP/TCFD2CT
+8
+
+1t1drfct/pppcpppp/3p4/8/4P3/8/PPPPRPPP/TCFD2CT
+14 - Grid
+
+--------------------------------------------------------------
+
+Henryk Grudzinski
+Quartz 2009
+P1091671
+
+5fct/p1prp1pp/8/3d4/5P1/8/PPPPPP1P/TCFDR1CT
+16 - Grid
+
+--------------------------------------------------------------
+
+Bernd Gräfrath
+Phénix 2008
+P1098615
+
+2rtdfct/p1p1pppp/2cp4/8/4P1P1/7P/PPPP1P2/TCFDRFCT
+16 - Grid
+
+--------------------------------------------------------------
+
+Henryk Grudzinski
+Phénix 2009
+P1098639
+
+tcft2r1/p1ppcppp/8/8/8/8/PPP1Pf2/TCFDRFCT
+16 - Grid
+
+--------------------------------------------------------------
+
+Bernd Gräfrath
+Phénix 2008
+P1098623
+
+tcf2dr1/1pp2ppp/p7/8/8/P7/1PP1PPPP/TCFDRFCT
+17 - Grid
+
+--------------------------------------------------------------
+
+Alexandr A. Klibanski, Nikita M. Platskin
+feenschach 1978
+P0007496
+
+5f2/3pp1p1/4rcp1/c7/p4ptP/DPC3PT/FRPPPP1F/T5C1
+49 - Grid
+
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
