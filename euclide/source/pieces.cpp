@@ -1,6 +1,6 @@
 #include "pieces.h"
+#include "actions.h"
 #include "problem.h"
-#include "conditions.h"
 #include "tables/tables.h"
 #include "cache.h"
 
@@ -11,10 +11,11 @@ namespace Euclide
 /* -- Piece                                                                -- */
 /* -------------------------------------------------------------------------- */
 
-Piece::Piece(const Problem& problem, Square square, Glyph glyph, tribool promoted)
+Piece::Piece(const Problem& problem, Square square, Man man, Glyph glyph, tribool promoted)
 {
 	/* -- Piece initial characteristics -- */
 
+	m_man = man;
 	m_child = problem.initialPosition(square);
 	m_color = Euclide::color(m_child);
 
@@ -125,9 +126,9 @@ Piece::Piece(const Problem& problem, Square square, Glyph glyph, tribool promote
 				if (problem.castling(m_color, side))
 					m_castlingSquare = Castlings[m_color][side].free, m_castling[side] = unknown;
 
-	/* -- Conditions will be initialized later -- */
+	/* -- Actions will be initialized later -- */
 
-	m_conditions = nullptr;
+	m_actions = nullptr;
 
 	/* -- Initialize personalities, when the final glyph is not known -- */
 
@@ -138,7 +139,7 @@ Piece::Piece(const Problem& problem, Square square, Glyph glyph, tribool promote
 	if (!m_glyph)
 	{
 		for (Glyph glyph : ValidGlyphs(m_glyphs))
-			m_personalities.emplace_back(problem, m_initialSquare, glyph, glyph != m_child);
+			m_personalities.emplace_back(problem, m_initialSquare, -1, glyph, glyph != m_child);
 
 		for (Piece& personality : m_personalities)
 			m_pieces[personality.glyph()] = &personality;
@@ -154,15 +155,16 @@ Piece::Piece(const Problem& problem, Square square, Glyph glyph, tribool promote
 
 Piece::~Piece()
 {
-	delete m_conditions;
+	delete m_actions;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::initializeConditions()
+void Piece::initializeActions()
 {
-	assert(!m_conditions);
-	m_conditions = new PieceConditions(*this);
+	assert(!m_actions);
+	m_actions = new Actions(*this);
+	updateConsequences();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -411,68 +413,67 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 
 /* -------------------------------------------------------------------------- */
 
-void Piece::basicConditions(const array<Pieces, NumColors>& pieces)
+void Piece::findConsequences(const std::array<Pieces, NumColors>& pieces)
 {
-	/* -- Some moves must occur before the final square is reached -- */
+	/* -- Early exit conditions -- */
 
-	if ((m_finalSquare == Nowhere) || !m_requiredMoves || maybe(m_captured) || maybe(m_promoted))
+	if (!m_requiredMoves || maybe(m_captured) || maybe(m_promoted))
 		return;
 
-	if (m_moves[m_finalSquare].any())
-		return;
+	/* -- Find consequences of playing on a final square -- */
 
-	for (Square from : AllSquares())
+	for (Square final : ValidSquares(m_possibleSquares))
 	{
-		if (m_moves[from][m_finalSquare])
+		if (!m_moves[final])
 		{
 			const Castling *castling = nullptr;
 			if (m_royal)
 				for (const Castling& c : Castlings[m_color])
-					if ((from == c.from) && (m_finalSquare == c.to))
+					if (final == c.to)
 						castling = &c;
 
-			ArrayOfSquares possibleSquares;
+			/* -- List actions reaching this final square -- */
+
+			std::vector<Action *> actions;
+			for (Square from : AllSquares())
+				if (m_moves[from][final])
+					actions.push_back(&m_actions->get(from, final));
+
+			/* -- Find interactions with all other relevant pieces -- */
 
 			for (Color color : AllColors())
 			{
 				for (const Piece& piece : pieces[color])
 				{
-					if (((m_route & piece.m_route) && (&piece != this)) || ((m_royal || piece.m_royal) && (m_color != piece.m_color)) || (piece.m_finalSquare == Nowhere))
+					if (((m_route & piece.m_route) && (&piece != this)) || ((m_royal || piece.m_royal) && (m_color != piece.m_color)))
 					{
+						/* -- Exception for castling -- */
+
 						if (castling && (piece.m_castlingSquare == castling->free))
 							continue;
 
-						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares, false) : piece.computeDistancesTo(piece.m_possibleSquares, *this, m_finalSquare);
-						Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
+						/* -- Find distances assuming final square is blocked, and record any extra moves required -- */
 
-						if (squares != piece.m_stops)
-							m_conditions->get(from, m_finalSquare).add(new PositionalCondition(piece, squares));
-
-						if (!maybe(piece.m_captured) && (piece.m_finalSquare == Nowhere))
+						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares, false) : piece.computeDistancesTo(piece.m_possibleSquares, *this, final);
+						for (Square square : ValidSquares(piece.m_stops - Squares(final)))
 						{
-							for (Square square : ValidSquares(piece.m_possibleSquares))
-							{
-								const array<int, NumSquares> rdistances = piece.computeDistancesTo(square, *this, m_finalSquare);
-								Squares squares = Squares([&](Square square) { return rdistances[square] < Infinity; }, true);
-								possibleSquares[square] |= squares;
-							}
+							const int requiredMoves = std::min(piece.m_distances[square] + rdistances[square], Infinity);
+							const int nominalMoves = std::max(piece.m_distances[square] + piece.m_rdistances[square], piece.m_requiredMoves);
+							if (requiredMoves > nominalMoves)
+								for (Action *action : actions)
+									action->consequences().updateRequiredMoves(piece, square, requiredMoves);
 						}
-					}
-				}
-			}
 
-			for (Color color : AllColors())
-			{
-				for (const Piece& piece : pieces[color])
-				{
-					if (!is(piece.m_captured))
-					{
-						for (Square square : ValidSquares(piece.m_possibleSquares))
+						/* -- Sepcial case for rooks which have performed castling -- */
+
+						if (piece.m_distances[piece.m_initialSquare] && (m_castlingSquare != Nowhere))
 						{
-							if (possibleSquares[square].count() == 1)
-								m_conditions->get(from, m_finalSquare).add(new DiagramCondition(square, piece.glyph()));
+							assert(piece.m_initialSquare != piece.m_castlingSquare);
 
-							possibleSquares[square].reset();
+							for (Action *action : actions)
+								for (const Consequence& consequence : action->consequences().consequences())
+									if ((&consequence.piece() == &piece) && consequence.requiredMoves(piece.m_castlingSquare))
+										action->consequences().updateRequiredMoves(piece, piece.m_initialSquare, consequence.requiredMoves(piece.m_castlingSquare));
 						}
 					}
 				}
@@ -501,9 +502,17 @@ bool Piece::update()
 
 /* -------------------------------------------------------------------------- */
 
-const Conditions& Piece::conditions(Square from, Square to) const
+const Action& Piece::action(Square from, Square to) const
 {
-	return m_conditions->get(from, to);
+	assert(m_actions);
+	return m_actions->get(from, to);
+}
+
+/* -------------------------------------------------------------------------- */
+
+const Consequences& Piece::consequences(Square from, Square to) const
+{
+	return action(from, to).consequences();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -708,6 +717,7 @@ void Piece::summarize()
 	{
 		assert(m_personalities.size() == 1);
 		std::list<Piece> personalities(std::move(m_personalities));
+		personalities.front().m_man = m_man;
 		*this = personalities.front();
 
 		m_pieces[m_glyph] = this;
@@ -822,6 +832,48 @@ void Piece::updateCapturesTo()
 		m_rcaptures = computeCapturesTo(m_possibleSquares, false);
 	if (is(m_promoted) && m_pawn.xmoves)
 		m_pawn.rcaptures = computeCapturesTo(m_promotionSquares, true);
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::updateConsequences()
+{
+	m_actions->clean();
+
+	/* -- Promoted pawns required special treatment -- */
+
+	if (maybe(m_promoted))
+		return;
+
+	/* -- Find mandatory moves, using a simple condition -- */
+
+	const int minimumMoves = xstd::min(ValidSquares(m_possibleSquares), [&](Square square) { return m_distances[square]; });
+	if (m_nmoves <= minimumMoves)
+		for (Action& action : *m_actions)
+			action.mandatory(true);
+
+	/* -- Find unique moves, again using a simple condition -- */
+
+	if ((m_species == Pawn) || (m_availableMoves <= minimumMoves + 1))
+		for (Action& action : *m_actions)
+			action.unique(true);
+
+	/* -- Find unique last moves -- */
+
+	const Squares beyond = xstd::merge(ValidSquares(m_possibleSquares), Squares(), [&](Square square) { return m_moves[square]; });
+	if (!beyond)
+		for (Action& action : *m_actions)
+			if (m_possibleSquares[action.to()])
+				action.unique(true);
+
+	/* -- Basic consequences -- */
+
+	for (Action& action : *m_actions)
+	{
+		const int requiredMoves = m_distances[action.from()] + 1 + m_rdistances[action.to()];
+		if (requiredMoves > m_requiredMoves)
+			action.consequences().updateRequiredMoves(*this, action.to(), requiredMoves);
+	}
 }
 
 /* -------------------------------------------------------------------------- */

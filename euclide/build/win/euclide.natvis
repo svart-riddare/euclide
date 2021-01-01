@@ -17,7 +17,7 @@
     </Expand>
   </Type>
 
-  <Type Name="std::array&lt;int,64&gt;">
+  <Type Name="std::array&lt;*,64&gt;">
     <DisplayString>{{ NumSquares }}</DisplayString>
     <Expand>
       <CustomListItems>

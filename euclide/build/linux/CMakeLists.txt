@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 2.8)
 # Source files
 
 set(SOURCES
+	../../source/actions.cpp
+	../../source/actions.h
 	../../source/cache.cpp
 	../../source/cache.h
 	../../source/captures.cpp
 	../../source/captures.h
-	../../source/conditions.cpp
-	../../source/conditions.h
 	../../source/copyright.cpp
 	../../source/definitions.h
 	../../source/euclide.cpp

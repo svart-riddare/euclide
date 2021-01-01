@@ -18,7 +18,7 @@ class matrix : public array<array<T, N>, M>
 			{ fill(value); }
 
 		void fill(const T& value)
-			{ for (std::size_t n = 0; n < N; n++)  (*this)[n].fill(value); }
+			{ for (std::size_t m = 0; m < M; m++)  (*this)[m].fill(value); }
 
 	public:
 		typedef T value_type;

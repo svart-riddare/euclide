@@ -111,6 +111,21 @@ class Game
 
 		std::vector<const State *> m_states;                /**< Game states, excluding initial state. */
 
+		class Assignment {
+			public :
+				Assignment() noexcept { assert(false); }
+				Assignment(int *assignedMoves, int *freeMoves, int extraMoves) noexcept;
+				Assignment(const Assignment&) noexcept = delete;
+				Assignment(Assignment&& assignment) noexcept;
+				~Assignment() noexcept;
+
+			private:
+				int *m_assignedMoves;
+				int *m_freeMoves;
+				int m_extraMoves;
+		};
+		std::vector<Assignment> m_assignments;              /**< Extra move assignments performed while playing game. */
+
 		HashTable m_cache;                                  /**< Cache of already explored positions. */
 
 		int64_t m_positions;                                /**< Number of positions examined. */

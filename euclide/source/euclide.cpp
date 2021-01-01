@@ -91,7 +91,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 	for (Glyph glyph : MostGlyphs())
 		for (Square square : AllSquares())
 			if (m_problem.initialPosition(square) == glyph)
-				m_pieces[color(glyph)].emplace_back(m_problem, square);
+				m_pieces[color(glyph)].emplace_back(m_problem, square, m_pieces[color(glyph)].size());
 
 	/* -- Initialize targets and captures -- */
 
@@ -135,7 +135,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	/* -- Repeat the following deductions until there is no improvements -- */
 
-	bool conditions = false;
+	bool consequences = false;
 
 	for (bool loop = true; loop; )
 	{
@@ -343,20 +343,19 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		if (update(pieces))
 			continue;
 
-		/* -- Create list of moves and related conditions -- */
+		/* -- Create list of moves and related consequences -- */
 
-		if (!conditions)
+		if (!consequences)
 		{
 			for (Color color : AllColors())
 				for (Piece& piece : m_pieces[color])
-					piece.initializeConditions();
+					piece.initializeActions();
 
-			if (!m_problem.capturedPieces(White) && !m_problem.capturedPieces(Black))
-				for (Color color : AllColors())
-					for (Piece& piece : m_pieces[color])
-						piece.basicConditions(m_pieces);
+			for (Color color : AllColors())
+				for (Piece& piece : m_pieces[color])
+					piece.findConsequences(m_pieces);
 
-			conditions = true;
+			consequences = true;
 			//continue;
 		}
 

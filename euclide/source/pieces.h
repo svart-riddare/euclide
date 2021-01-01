@@ -6,9 +6,11 @@
 namespace Euclide
 {
 
+class Action;
 class Pieces;
+class Actions;
 class Problem;
-class Conditions;
+class Consequences;
 class TwoPieceCache;
 class PieceConditions;
 
@@ -19,10 +21,10 @@ class PieceConditions;
 class Piece
 {
 	public:
-		Piece(const Problem& problem, Square square, Glyph glyph = Empty, tribool promoted = unknown);
+		Piece(const Problem& problem, Square square, Man man, Glyph glyph = Empty, tribool promoted = unknown);
 		~Piece();
 
-		void initializeConditions();
+		void initializeActions();
 
 		void setCastling(CastlingSide side, bool castling);
 		void setCaptured(bool captured);
@@ -37,11 +39,13 @@ class Piece
 		void bypassObstacles(const Piece& blocker);
 		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
 
-		void basicConditions(const std::array<Pieces, NumColors>& pieces);
+		void findConsequences(const std::array<Pieces, NumColors>& pieces);
 
 		bool update();
 
 	public:
+		inline Man man() const
+			{ return m_man; }
 		inline Glyph glyph() const
 			{ return m_glyph ? m_glyph : m_child; }
 		inline Color color() const
@@ -114,6 +118,8 @@ class Piece
 		inline int nmoves() const
 			{ return m_nmoves; }
 
+		inline const bool move(Square from, Square to, bool pawn) const
+			{ return (pawn ?  m_pawn.moves : m_moves)[from][to]; }
 		inline const Squares& moves(Square from, bool pawn) const
 			{ return (pawn ? m_pawn.moves : m_moves)[from]; }
 		inline Squares captures(Square from, bool pawn) const
@@ -126,9 +132,10 @@ class Piece
 		inline const Squares& route() const
 			{ return m_route; }
 
-		inline const PieceConditions& conditions() const
-			{ return *m_conditions; }
-		const Conditions& conditions(Square from, Square to) const;
+		inline const Actions& actions() const
+			{ return *m_actions; }
+		const Action& action(Square from, Square to) const;
+		const Consequences& consequences(Square from, Square to) const;
 
 	public:
 		inline bool operator==(const Piece& piece) const
@@ -143,6 +150,7 @@ class Piece
 		void updateDistancesTo();
 		void updateCaptures();
 		void updateCapturesTo();
+		void updateConsequences();
 
 		array<int, NumSquares> computeDistances(Square initial, Square castling, bool pawn) const;
 		array<int, NumSquares> computeDistances(Squares promotions, const array<int, NumSquares>& initial) const;
@@ -181,6 +189,7 @@ class Piece
 		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
 
 	private:
+		Man m_man;                                     /**< Piece's man. */
 		Glyph m_child;                                 /**< Piece's initial glyph, for promoted pawns. */
 		Glyph m_glyph;                                 /**< Piece's final glyph, if known. */
 		Color m_color;                                 /**< Piece's color, implicit from glyph. */
@@ -244,7 +253,7 @@ class Piece
 		Squares m_route;                               /**< Set of all squares the piece may have crossed or stopped. */
 		Squares m_threats;                             /**< Set of all squares on which the enemy king is threatened. */
 
-		PieceConditions *m_conditions;                 /**< Conditions associated with possible piece moves. */
+		Actions *m_actions;                            /**< Actions associated with possible piece moves and their consequences. */
 
 		bool m_update;                                 /**< Set when deductions must be updated and update() shall return true. */
 
@@ -253,6 +262,8 @@ class Piece
 			Glyph glyph;                               /**< Piece current glyph, different than initial if promoted. */
 			Square square;                             /**< Piece current square, NoWhere if captured. */
 			int moves;                                 /**< Number of moves played. */
+
+			int assignedMoves;                         /**< Assigned number of moves. */
 
 		} state;                                       /**< State, used when playing possible games, stored here for performance reasons. */
 };

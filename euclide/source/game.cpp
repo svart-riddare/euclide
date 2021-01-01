@@ -1,7 +1,7 @@
 #include "game.h"
 #include "pieces.h"
 #include "problem.h"
-#include "conditions.h"
+#include "actions.h"
 #include "tables/tables.h"
 
 namespace Euclide
@@ -48,6 +48,8 @@ Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& 
 			piece.state.glyph = problem.initialPosition(piece.initialSquare());
 			piece.state.square = piece.initialSquare();
 			piece.state.moves = 0;
+
+			piece.state.assignedMoves = piece.requiredMoves();
 		}
 	}
 
@@ -102,7 +104,7 @@ bool Game::play(const State& _state)
 
 	/* -- Thinking callback -- */
 
-	if ((m_states.size() == countof(EUCLIDE_Thinking::moves)) || (m_positions % (0 * 1024 * 1024 + 1) == 0))
+	if ((m_states.size() == countof(EUCLIDE_Thinking::moves)) || (m_positions % (1024 * 1024) == 0))
 	{
 		EUCLIDE_Thinking thinking;
 		thinking.positions = m_positions;
@@ -177,30 +179,56 @@ bool Game::play(const State& _state)
 			if (position & piece.constraints(from, to, capture, pawn))
 				continue;
 
-			/* -- Check if all conditions have been satisfied -- */
-
-			if (!maybe(piece.promoted()))
-				if (!piece.conditions(from, to).satisfied(m_board))
-					continue;
-
-			/* -- Check if there are any free moves left -- */
-
-			const int hiddenMoves = std::max(0, piece.requiredMoves() - (piece.requiredMovesTo(from, pawn) + piece.requiredMovesFrom(from, pawn)));
-			const int extraMoves = std::max(0, 1 + piece.requiredMovesFrom(to, pawn) - piece.requiredMovesFrom(from, pawn) - hiddenMoves);
-			if (extraMoves > m_moves[color])
-				continue;
-
 			/* -- Additional checks for castling -- */
 
 			CastlingSide castling = NoCastling;
 			if (piece.royal())
 				for (CastlingSide side : AllCastlingSides())
-					if (_state.castling(side) && (from == Castlings[color][side].from) && (to == Castlings[color][side].to))
+					if ((from == Castlings[color][side].from) && (to == Castlings[color][side].to))
 						castling = side;
 
 			if (castling != NoCastling)
+			{
+				if (!_state.castling(castling))
+					continue;
+
+				const Piece *rook = m_board[Castlings[color][castling].rook];
+				if (!rook || (rook->color() != color) || !maybe(rook->castling(castling)) || rook->state.moves)
+					continue;
+
 				if (_state.check() || checked(Castlings[color][castling].free, color))
 					continue;
+			}
+
+			/* -- Check consequences of that move and if there are any free moves left -- */
+
+			size_t assignments = m_assignments.size();
+			auto cleanup = [&](size_t *assignments) { m_assignments.resize(*assignments); };
+			std::unique_ptr<size_t, decltype(cleanup)> _(&assignments, cleanup);
+
+			if (!maybe(piece.promoted()))
+			{
+				const Consequences& consequences = piece.consequences(from, to);
+				for (const Consequence& consequence : consequences.consequences())
+				{
+					const Piece& impacted = consequence.piece();
+					if (&impacted != &piece)
+					{
+						const int requiredMoves = consequence.requiredMoves(impacted.state.square);
+						const int extraMoves = requiredMoves - impacted.state.assignedMoves;
+						if (extraMoves > 0)
+							m_assignments.emplace_back(&impacted.state.assignedMoves, &m_moves[impacted.color()], extraMoves);
+					}
+				}
+			}
+
+			const int requiredMoves = piece.state.moves + 1 + piece.requiredMovesFrom(to, pawn);
+			const int extraMoves = requiredMoves - piece.state.assignedMoves;
+			if (extraMoves > 0)
+				m_assignments.emplace_back(&piece.state.assignedMoves, &m_moves[color], extraMoves);
+
+			if (xstd::any_of(m_moves, [](int freeMoves) { return freeMoves < 0; }))
+				continue;
 
 			/* -- Handle promotion -- */
 
@@ -212,8 +240,6 @@ bool Game::play(const State& _state)
 
 				State state = move(_state, from, to, glyph, castling);
 				m_states.push_back(&state);
-
-				m_moves[color] -= extraMoves;
 
 				/* -- Move is valid only if the king is not in check -- */
 
@@ -253,8 +279,6 @@ bool Game::play(const State& _state)
 				}
 
 				/* -- Undo move -- */
-
-				m_moves[color] += extraMoves;
 
 				m_states.pop_back();
 				undo(state);
@@ -561,6 +585,31 @@ Game::State::State(const State& state, Square from, Square to, Glyph glyph, Glyp
 	m_capture = capture;
 	m_from = from;
 	m_to = to;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Game::Assignment::Assignment(int *assignedMoves, int *freeMoves, int extraMoves) noexcept
+	: m_assignedMoves(assignedMoves), m_freeMoves(freeMoves), m_extraMoves(extraMoves)
+{
+	*assignedMoves += extraMoves;
+	*freeMoves -= extraMoves;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Game::Assignment::Assignment(Assignment&& assignment) noexcept
+	: m_assignedMoves(assignment.m_assignedMoves), m_freeMoves(assignment.m_freeMoves), m_extraMoves(assignment.m_extraMoves)
+{
+	assignment.m_extraMoves = 0;
+}
+
+/* -------------------------------------------------------------------------- */
+
+Game::Assignment::~Assignment() noexcept
+{
+	*m_assignedMoves -= m_extraMoves;
+	*m_freeMoves += m_extraMoves;
 }
 
 /* -------------------------------------------------------------------------- */
