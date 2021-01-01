@@ -452,6 +452,11 @@ void Piece::findConsequences(const std::array<Pieces, NumColors>& pieces)
 						if (castling && (piece.m_castlingSquare == castling->free))
 							continue;
 
+						/* -- Early exit if promoted -- */
+
+						if (maybe(piece.m_promoted))
+							continue;
+
 						/* -- Find distances assuming final square is blocked, and record any extra moves required -- */
 
 						const array<int, NumSquares> rdistances = maybe(piece.m_captured) ? piece.computeDistancesTo(piece.m_possibleSquares, false) : piece.computeDistancesTo(piece.m_possibleSquares, *this, final);
@@ -636,11 +641,21 @@ void Piece::unfold()
 
 	/* -- Update possible captures -- */
 
-	Squares captures = xstd::merge(m_xmoves ? *m_xmoves : m_moves, Squares());
-	if (is(m_promoted))
-		captures = xstd::merge(m_pawn.xmoves ? *m_pawn.xmoves : m_pawn.moves, captures);
+	if (!m_availableCaptures)
+		m_possibleCaptures.reset();
 
-	m_possibleCaptures &= captures;
+	if (m_possibleCaptures)
+	{
+		Squares captures;
+		for (Square square : AllSquares())
+		{
+			captures |= m_xmoves ? m_moves[square] & (*m_xmoves)[square] : m_moves[square];
+			if (is(m_promoted))
+				captures |= m_pawn.xmoves ? m_pawn.moves[square] & (*m_pawn.xmoves)[square] : m_pawn.moves[square];
+		}
+
+		m_possibleCaptures &= captures;
+	}
 
 	/* -- Update occupied squares -- */
 

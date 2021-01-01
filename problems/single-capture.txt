@@ -425,7 +425,7 @@ Yis Yoront
 Feenschach 1989
 P0005946
 
-1r1t1fct/pppcpp1p/2Fp4/6P1/4P1PT/1D1d3f/PPP&P2/TCF1R1C1
+1r1t1fct/pppcpp1p/2Fp4/6P1/4P1PT/1D1d3f/PPPP1P2/TCF1R1C1
 18
 
 --------------------------------------------------------------
@@ -547,7 +547,7 @@ Joost de Heer
 StrateGems 2008
 P1080530
 
-1cfd3t/tpp1cppp/rf1p1p2/p7/8/8/PPP1PPP/TCFDRFCT
+1cfd3t/tpp1cppp/rf1p1p2/p7/8/8/PPP1PPPP/TCFDRFCT
 23
 
 --------------------------------------------------------------
