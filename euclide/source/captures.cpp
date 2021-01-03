@@ -30,6 +30,23 @@ Capture::Capture(Color color, Men men, Men xmen)
 
 /* -------------------------------------------------------------------------- */
 
+bool Capture::updatePossibleGlyphs(Glyphs glyphs)
+{
+	if ((m_glyphs & glyphs) == m_glyphs)
+		return false;
+
+	m_glyphs = glyphs;
+	if (m_glyphs.count() == 1)
+		m_glyph = m_glyphs.first();
+
+	if (!m_glyphs)
+		throw NoSolution;
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 bool Capture::updatePossibleSquares(Squares squares)
 {
 	if ((m_squares & squares) == m_squares)

@@ -188,6 +188,9 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 							const Men xmen([&](Man xman) { return xpieces[xman].availableMoves() && (xpieces[xman].captures() & capture.squares()); }, capture.xmen().range());
 							capture.updatePossibleMen(men, xmen);
 
+							const Glyphs glyphs = xstd::merge(men.in(pieces), Glyphs(), [](const Piece& piece) { return piece.glyphs(); });
+							capture.updatePossibleGlyphs(glyphs);
+
 							const Squares squares = xstd::merge(men.in(pieces), Squares(), [](const Piece& piece) { return piece.squares(); });
 							const Squares xsquares = xstd::merge(xmen.in(xpieces), Squares(), [](const Piece& xpiece) { return xpiece.captures(); });
 							update = capture.updatePossibleSquares(squares & xsquares);
@@ -212,13 +215,11 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 				for (const Partition& partition : partitions)
 					for (Man man : ValidMen(partition.men()))
-						if (!maybe(pieces[man].captured()))
-							pieces[man].setPossibleGlyphs(partition.glyphs());
+						pieces[man].setPossibleGlyphs(partition.glyphs());
 
 				for (const Partition& partition : partitions)
 					for (Man man : ValidMen(partition.men()))
-						if (!maybe(pieces[man].captured()))
-							pieces[man].setPossibleSquares(partition.squares());
+						pieces[man].setPossibleSquares(partition.squares() | partition.captures());
 
 				for (const Capture& capture : captures)
 					if (capture.man() >= 0)

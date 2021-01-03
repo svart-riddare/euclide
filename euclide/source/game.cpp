@@ -168,7 +168,7 @@ bool Game::play(const State& _state)
 			const bool capture = m_position[!color][to] || enpassant;
 			const Square where = enpassant ? square(col(to), row(from)) : to;
 
-			if (capture && !maybe(m_board[where]->captured()))
+			if (capture && !maybe(m_board[where]->captured(where)))
 				continue;
 
 			if (!capture && piece.captures(from, pawn)[to])
@@ -232,7 +232,7 @@ bool Game::play(const State& _state)
 
 			/* -- Handle promotion -- */
 
-			const bool promotion = piece.promotions()[to];
+			const bool promotion = piece.promotions()[to] && ((glyph == WhitePawn) || (glyph == BlackPawn));
 			const Glyphs glyphs = promotion ? piece.glyphs() - Glyphs(glyph) : Glyphs(glyph);
 			for (Glyph glyph : ValidGlyphs(glyphs))
 			{
@@ -302,6 +302,7 @@ Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, 
 	const Piece *captured = m_board[capture];
 
 	const Glyph initial = piece->state.glyph;
+	const Piece *promotion = (glyph != initial) ? piece->piece(glyph) : piece;
 
 	/* -- Update board position -- */
 
@@ -310,7 +311,7 @@ Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, 
 	m_hash[from] = Empty;
 
 	m_board[capture] = nullptr;
-	m_board[to] = piece;
+	m_board[to] = promotion;
 	m_board[from] = nullptr;
 
 	assert(m_position[color][from]);
@@ -325,9 +326,10 @@ Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, 
 
 	/* -- Update piece state -- */
 
-	piece->state.glyph = glyph;
-	piece->state.square = to;
-	piece->state.moves += 1;
+	promotion->state.glyph = glyph;
+	promotion->state.square = to;
+	promotion->state.moves = piece->state.moves + 1;
+	promotion->state.assignedMoves = piece->state.assignedMoves;
 
 	if (captured)
 		captured->state.square = Nowhere;
@@ -384,7 +386,8 @@ void Game::undo(const State& state)
 	const Square capture = state.capture();
 	const Square from = state.from();
 	const Square to = state.to();
-	const Piece *piece = m_board[to];
+	const Piece *original = m_board[to];
+	const Piece *piece = state.promotion() ? original->piece() : original;
 	const Piece *captured = state.captured();
 	const Glyph glyph = state.glyph();
 
@@ -410,7 +413,8 @@ void Game::undo(const State& state)
 
 	piece->state.glyph = glyph;
 	piece->state.square = from;
-	piece->state.moves -= 1;
+	piece->state.moves = original->state.moves - 1;
+	assert(piece->state.assignedMoves == original->state.assignedMoves);
 
 	if (captured)
 		captured->state.square = to;

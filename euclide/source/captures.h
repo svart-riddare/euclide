@@ -24,6 +24,7 @@ class Capture
 		int updateRequiredCaptures(int requiredCaptures)
 			{ return xstd::maximize(m_requiredCaptures, requiredCaptures); }
 
+		bool updatePossibleGlyphs(Glyphs glyphs);
 		bool updatePossibleSquares(Squares squares);
 		bool updatePossibleMen(Men men, Men xmen);
 

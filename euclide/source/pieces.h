@@ -60,6 +60,8 @@ class Piece
 			{ return m_castling[side]; }
 		inline tribool captured() const
 			{ return m_captured; }
+		inline tribool captured(Square square) const
+			{ return m_possibleSquares[square] ? m_captured : tribool(false); }
 		inline tribool promoted() const
 			{ return m_promoted; }
 
@@ -80,6 +82,11 @@ class Piece
 			{ return m_pieces[glyph]->m_possibleCaptures; }
 		inline Squares promotions() const
 			{ return m_promotionSquares; }
+
+		inline const Piece *piece(Glyph glyph) const
+			{ return m_pieces[glyph]; }
+		inline const Piece *piece() const
+			{ return m_piece; }
 
 		inline int availableMoves() const
 			{ return m_availableMoves; }
@@ -209,6 +216,7 @@ class Piece
 		Glyphs m_glyphs;                               /**< Piece's possible final glyphs. Includes piece's glyph. */
 		std::list<Piece> m_personalities;              /**< Possible pieces. At most five entries for pawns. */
 		array<Piece *, NumGlyphs> m_pieces;            /**< Pointer to pieces for each personalities. One entry must be non null. */
+		Piece *m_piece;                                /**< Master piece for personalities, or 'this' if we are not a virtual piece. */
 		bool m_virtual;                                /**< Set if this piece is a possible piece (a personality) which may not exist. */
 
 		Squares m_possibleSquares;                     /**< Possible final squares of this piece. */

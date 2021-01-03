@@ -134,15 +134,19 @@ Piece::Piece(const Problem& problem, Square square, Man man, Glyph glyph, triboo
 
 	m_pieces.fill(nullptr);
 	m_pieces[m_child] = this;
+	m_piece = this;
 	m_virtual = !unknown(promoted);
 
 	if (!m_glyph)
 	{
 		for (Glyph glyph : ValidGlyphs(m_glyphs))
-			m_personalities.emplace_back(problem, m_initialSquare, -1, glyph, glyph != m_child);
+			m_personalities.emplace_back(problem, m_initialSquare, m_man, glyph, glyph != m_child);
 
 		for (Piece& personality : m_personalities)
 			m_pieces[personality.glyph()] = &personality;
+
+		for (Piece& personality : m_personalities)
+			personality.m_piece = this;
 	}
 
 	/* -- Update possible moves -- */
@@ -732,10 +736,11 @@ void Piece::summarize()
 	{
 		assert(m_personalities.size() == 1);
 		std::list<Piece> personalities(std::move(m_personalities));
-		personalities.front().m_man = m_man;
 		*this = personalities.front();
 
 		m_pieces[m_glyph] = this;
+		m_piece = this;
+		m_virtual = false;
 		return;
 	}
 
