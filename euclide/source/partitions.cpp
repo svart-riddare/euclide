@@ -154,7 +154,7 @@ void Partition::assign(const Pieces& pieces)
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets, Captures& captures) const
+bool Partition::split(Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets, Captures& captures) const
 {
 	/* -- Get available moves and captures -- */
 
@@ -181,7 +181,7 @@ bool Partition::split(const Pieces& pieces, int freeMoves, int freeCaptures, Tar
 
 /* -------------------------------------------------------------------------- */
 
-bool Partition::split(const Pieces& pieces, Glyph glyph, int availableMoves, int availableCaptures, Targets& targets, Captures& captures) const
+bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int availableCaptures, Targets& targets, Captures& captures) const
 {
 	/* -- List men -- */
 
@@ -235,6 +235,7 @@ bool Partition::split(const Pieces& pieces, Glyph glyph, int availableMoves, int
 	/* -- Try all permutations -- */
 
 	array<Men, MaxPieces> permutations;
+	array<Squares, MaxPieces> squares;
 
 	int indices[MaxMen];
 	for (int k = 0; k < m; k++)
@@ -251,8 +252,21 @@ bool Partition::split(const Pieces& pieces, Glyph glyph, int availableMoves, int
 		}
 
 		if ((requiredMoves <= availableMoves) && (requiredCaptures <= availableCaptures))
+		{
 			for (int k = 0; k < m; k++)
 				permutations[k].set(men[indices[k]]);
+
+			for (int k = 0; k < s; k++)
+			{
+				const int myAvailableMoves = costs[indices[k]][k].moves + (availableMoves - requiredMoves);
+				const int myAvailableCaptures = costs[indices[k]][k].captures + (availableCaptures - requiredCaptures);
+
+				const Destination& destination = m_destinations[destinations[k]];
+				const Squares reachableSquares = destination.glyph ? pieces[men[indices[k]]].reachableSquares(destination.squares, myAvailableMoves, myAvailableCaptures, destination.glyph) : pieces[men[indices[k]]].reachableSquares(destination.squares, myAvailableMoves, myAvailableCaptures);
+
+				squares[indices[k]] |= reachableSquares;
+			}
+		}
 
 	} while (std::next_permutation(indices, indices + m));
 
@@ -299,6 +313,14 @@ bool Partition::split(const Pieces& pieces, Glyph glyph, int availableMoves, int
 				if (captures[k].updatePossibleMen(~selected, captures[k].xmen()))
 					updated = true;
 	}
+
+	/* -- Update pieces -- */
+
+	for (int i = 0; i < m; i++)
+		if (glyph)
+			pieces[men[i]].piece(glyph)->setPossibleSquares(squares[i]);
+		else
+			pieces[men[i]].setPossibleSquares(squares[i]);
 
 	/* -- Done -- */
 

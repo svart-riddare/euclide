@@ -445,7 +445,7 @@ Eyjolfur O. Eyjolfsson
 Probleemblad 2007
 P1070025
 
-t1fcr2t/pppp1ppp/5F2/4p1f1/3P1D2/2R5/PPPdPPP/TC3FCT
+t1fcr2t/pppp1ppp/5F2/4p1f1/3P1D2/2R5/PPPdPPPP/TC3FCT
 18
 
 --------------------------------------------------------------
@@ -826,7 +826,7 @@ Wiktor J. Peretjakto
 The Problemist 2003
 P1009487
 
-rc4c1/pppF1pp1/TTtt1D2/3pp1fp/P6P/1P4P/f1PPP1F/1C2R1C1
+rc4c1/pppF1pp1/TTtt1D2/3pp1fp/P6P/1P4P/f1PPPP1F/1C2R1C1
 36 - Cooked
 
 --------------------------------------------------------------

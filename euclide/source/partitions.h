@@ -25,8 +25,8 @@ class Partition
 		bool merge(const Capture& capture);
 		void assign(const Pieces& pieces);
 
-		bool split(const Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets, Captures& captures) const;
-		bool split(const Pieces& pieces, Glyph glyph, int availableMoves, int availableCaptures, Targets& targets, Captures& captures) const;
+		bool split(Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets, Captures& captures) const;
+		bool split(Pieces& pieces, Glyph glyph, int availableMoves, int availableCaptures, Targets& targets, Captures& captures) const;
 
 	public:
 		inline Squares squares() const
