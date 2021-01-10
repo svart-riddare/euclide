@@ -817,8 +817,8 @@ Solution n° 2 :
  7. Fe2-g4+   Re6-f7      8. Fg4-h3    Rf7-e8      9. Dd1-h5+   
 
 Verdict :
-	Échelle de difficulté = 33.62
-	Positions examinées : 140116
+	Échelle de difficulté = 7.00
+	Positions examinées : 305
 	Deux solutions
 
 
@@ -856,8 +856,8 @@ Solution n° 1 :
  7. Rg3-h4    Dg6-e8      8. Pg2-g3    De8-d8      9. Dh5-d5+   
 
 Verdict :
-	Échelle de difficulté = 24.46
-	Positions examinées : 360
+	Échelle de difficulté = 17.60
+	Positions examinées : 195
 	Solution unique
 
 
@@ -1086,8 +1086,8 @@ Solution n° 1 :
 10. Rf2-e1    Fg5-h6     
 
 Verdict :
-	Échelle de difficulté = 38.48
-	Positions examinées : 324823
+	Échelle de difficulté = 25.43
+	Positions examinées : 18134
 	Solution unique
 
 
@@ -1158,9 +1158,17 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	10,5 coups                (16+16)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Cg1-f3    Cg8-f6      2. Cf3-h4    Cf6-d5      3. Pf2-f3    Pf7-f6     
+ 4. Re1-f2    Re8-f7      5. Rf2-g3    Rf7-e6      6. Rg3-g4    Re6-e5     
+ 7. Rg4-h3    Re5-f4      8. Th1-g1    Rf4-g5      9. Rh3-g3    Rg5-h6     
+10. Rg3-f2    Rh6-h5     11. Rf2-e1    
+
 Verdict :
-	Échelle de difficulté = 57.13
-	Recherche interrompue
+	Échelle de difficulté = 29.75
+	Positions examinées : 400
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -1630,8 +1638,8 @@ Solution n° 1 :
 10. De1-d1    Pc7-c5     11. Rg3-f2    Cb8-c6     12. Rf2-e1    Ta8-b8     
 
 Verdict :
-	Échelle de difficulté = 39.71
-	Positions examinées : 468315
+	Échelle de difficulté = 31.22
+	Positions examinées : 51184
 	Solution unique
 
 

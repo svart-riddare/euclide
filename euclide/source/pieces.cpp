@@ -217,6 +217,34 @@ void Piece::setCaptured(bool captured)
 
 /* -------------------------------------------------------------------------- */
 
+void Piece::setRequiredMoves(int requiredMoves)
+{
+	if (requiredMoves <= m_requiredMoves)
+		return;
+
+	for (Piece& personality : m_personalities)
+		personality.setRequiredMoves(requiredMoves);
+
+	xstd::maximize(m_requiredMoves, requiredMoves);
+	m_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Piece::setRequiredCaptures(int requiredCaptures)
+{
+	if (requiredCaptures <= m_requiredCaptures)
+		return;
+
+	for (Piece& personality : m_personalities)
+		personality.setRequiredCaptures(requiredCaptures);
+
+	xstd::maximize(m_requiredCaptures, requiredCaptures);
+	m_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Piece::setAvailableMoves(int availableMoves, int freeMoves)
 {
 	if ((availableMoves >= m_availableMoves) && (freeMoves >= m_freeMoves))

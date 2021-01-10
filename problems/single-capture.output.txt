@@ -522,8 +522,8 @@ Solution n° 1 :
  4. Pc2-c3    Fg7-f8      5. Pc3-c4    
 
 Verdict :
-	Échelle de difficulté = 18.12
-	Positions examinées : 674
+	Échelle de difficulté = 10.67
+	Positions examinées : 261
 	Solution unique
 
 
@@ -755,8 +755,8 @@ Solution n° 1 :
  4. Pa2-a3    Fc2-d1      5. Db3xd1    Cb8-c6     
 
 Verdict :
-	Échelle de difficulté = 35.76
-	Positions examinées : 28604
+	Échelle de difficulté = 11.75
+	Positions examinées : 2075
 	Solution unique
 
 
@@ -1063,8 +1063,8 @@ Solution n° 1 :
  7. Re3-f2    Fc8-d7      8. Rf2-e1    0-0-0      
 
 Verdict :
-	Échelle de difficulté = 62.18
-	Positions examinées : 1140673
+	Échelle de difficulté = 7.32
+	Positions examinées : 242
 	Solution unique
 
 
@@ -1141,8 +1141,8 @@ Solution n° 1 :
  7. Rg3-f2    Cg6-h4      8. Rf2-e1    
 
 Verdict :
-	Échelle de difficulté = 46.15
-	Positions examinées : 2978155
+	Échelle de difficulté = 12.98
+	Positions examinées : 1775
 	Solution unique
 
 
@@ -1180,8 +1180,8 @@ Solution n° 1 :
  7. Cb6-d5    
 
 Verdict :
-	Échelle de difficulté = 34.42
-	Positions examinées : 110878
+	Échelle de difficulté = 27.85
+	Positions examinées : 35031
 	Solution unique
 
 
@@ -2014,7 +2014,7 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
-	t1fcr2t/pppp1ppp/5F2/4p1f1/3P1D2/2R5/PPPdPPP1/TC3FCT
+	t1fcr2t/pppp1ppp/5F2/4p1f1/3P1D2/2R5/PPPdPPPP/TC3FCT
 	18
 
 	+---+---+---+---+---+---+---+---+
@@ -2034,7 +2034,7 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	| T | C |   |   |   | F | C | T |
 	+---+---+---+---+---+---+---+---+
-	9,0 coups                 (15+15)
+	9,0 coups                 (16+15)
 
 Verdict :
 	Échelle de difficulté = 49.70
@@ -2309,9 +2309,17 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	10,5 coups                (15+16)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pf2-f3    Cg8-f6      2. Re1-f2    Cf6-e4+     3. Rf2-e3    Pf7-f6     
+ 4. Ph2-h4    Re8-f7      5. Cg1-h3    Rf7-g6      6. Ph4-h5+   Rg6xh5     
+ 7. Re3-f4    Rh5-h6      8. Rf4-g4    Rh6-g6      9. Ch3-f4+   Rg6-f7     
+10. Rg4-h3    Rf7-e8     11. Rh3-h2    
+
 Verdict :
-	Échelle de difficulté = 80.66
-	Recherche interrompue
+	Échelle de difficulté = 28.85
+	Positions examinées : 1677
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -3514,7 +3522,7 @@ Problème analysé :
 	18,0 coups                (15+16)
 
 Verdict :
-	Échelle de difficulté = 44.94
+	Échelle de difficulté = 44.86
 	Recherche interrompue
 
 

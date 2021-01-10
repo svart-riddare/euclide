@@ -19,11 +19,12 @@ class Euclide
 		Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks);
 		~Euclide();
 
+		void reset();
 		void solve(const EUCLIDE_Problem& problem);
-		int update(std::vector<Piece *>& pieces);
 
 	protected:
-		void reset();
+		bool update(std::vector<Piece *>& pieces);
+		bool triangulation();
 
 		const EUCLIDE_Deductions& deductions() const;
 
@@ -62,6 +63,20 @@ Euclide::Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callb
 
 Euclide::~Euclide()
 {
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Euclide::reset()
+{
+	for (Color color : AllColors())
+	{
+		m_pieces[color].clear();
+		m_targets[color].clear();
+		m_captures[color].clear();
+	}
+
+	m_tandems.clear();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -136,6 +151,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 	/* -- Repeat the following deductions until there is no improvements -- */
 
 	bool consequences = false;
+	bool triangulations = false;
 
 	for (bool loop = true; loop; )
 	{
@@ -344,6 +360,15 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 		if (update(pieces))
 			continue;
 
+		/* -- Check for triangulations -- */
+
+		if (!triangulations) {
+			triangulations = true;
+
+			if (triangulation())
+				continue;
+		}
+
 		/* -- Create list of moves and related consequences -- */
 
 		if (!consequences)
@@ -383,7 +408,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 /* -------------------------------------------------------------------------- */
 
-int Euclide::update(std::vector<Piece *>& pieces)
+bool Euclide::update(std::vector<Piece *>& pieces)
 {
 	unsigned updated = 0;
 
@@ -391,15 +416,144 @@ int Euclide::update(std::vector<Piece *>& pieces)
 		if (pieces[piece]->update())
 			std::swap(pieces[piece], pieces[updated++]);
 
-	return updated;
+	return updated > 0;
 }
 
 /* -------------------------------------------------------------------------- */
 
-void Euclide::reset()
+bool Euclide::triangulation()
 {
+	bool updated = false;
+
 	for (Color color : AllColors())
-		m_pieces[color].clear();
+	{
+		const Pieces& pieces = m_pieces[color];
+
+		/* -- Triangulation requires an odd number of free moves -- */
+
+		const int freeMoves = m_freeMoves[color];
+		if ((freeMoves < 3) || (freeMoves % 2 == 0))
+			continue;
+
+		/* -- Find pieces that may perform a triangulation (easy way, should be improved later) -- */
+
+		Men candidates([&](Man man) -> bool {
+			if (size_t(man) >= pieces.size())
+				return false;
+
+			if (pieces[man].nmoves() <= 2)
+				return false;
+
+			if (pieces[man].species() == Knight)
+				if (!maybe(pieces[man].captured()) && !maybe(pieces[man].promoted()))
+					return false;
+
+			return true;
+			});
+
+		if (!candidates)
+			throw NoSolution;
+
+		/* -- Handle only simple triangulation cases -- */
+
+		if (candidates.count() > 2)
+			continue;
+
+		if (xstd::any_of(candidates.range(), [&](Man man) -> bool { return maybe(pieces[man].captured()) || maybe(pieces[man].promoted()); }))
+			continue;
+
+		/* -- Find squares and cost of triangulation for each piece -- */
+
+		int triangulationMoves = Infinity;
+
+		for (Man man : ValidMen(candidates))
+		{
+			const Piece& piece = pieces[man];
+			bool possible = false;
+
+			for (Square square : ValidSquares(piece.stops()))
+			{
+				for (Square trip : ValidSquares(piece.moves(square, false)))
+				{
+					const int requiredMovesTo = piece.requiredMovesTo(square);
+					const int requiredMovesFrom = piece.requiredMovesFrom(trip);
+					const int requiredMoves = requiredMovesTo + 1 + requiredMovesFrom;
+
+					if (requiredMoves < piece.requiredMoves())
+						continue;
+
+					if (((requiredMoves - piece.requiredMoves()) % 2) == 0)
+						continue;
+
+					if (requiredMoves > piece.requiredMoves() + piece.availableMoves())
+						continue;
+
+					xstd::minimize(triangulationMoves, requiredMoves - piece.requiredMoves());
+					possible = true;
+				}
+			}
+
+			if (!possible)
+				candidates.reset(man);
+		}
+
+		if (triangulationMoves >= Infinity)
+			continue;
+
+		/* -- Special case for dedicated pattern (should be replaced by generic code) -- */
+
+		if (candidates.count() == 2)
+		{
+			Piece& king = m_pieces[color][candidates.first()];
+			Piece& queen = m_pieces[color][candidates.next(king.man())];
+
+			const Square pivot = (color ? F7 : F2);
+			const Squares star = Squares(color ? E8 : E1) | Squares(color ? G8 : G1) | Squares(color ? E6 : E3) | Squares(color ? G6 : G3);
+
+			bool special = false;
+			if ((king.species() == King) && (queen.species() == Queen))
+				if (!king.requiredMoves() && !queen.requiredMoves())
+					if (queen.moves(queen.initialSquare(), false) == Squares(king.initialSquare()))
+						if (king.moves(king.initialSquare(), false).count() <= (Squares(queen.initialSquare()) | Squares(pivot)))
+							if (king.moves(pivot, false) <= star)
+								special = true;
+
+			if (special)
+			{
+				xstd::maximize(triangulationMoves, 7);
+
+				if (freeMoves < 9)
+					candidates.reset(queen.man());
+			}
+		}
+
+		/* -- Assign moves to pieces -- */
+
+		if (candidates.count() == 1)
+		{
+			Piece& piece = m_pieces[color][candidates.pop()];
+			piece.setRequiredMoves(piece.requiredMoves() + triangulationMoves);
+
+			updated = true;
+		}
+		else
+		if (candidates.count() == 2)
+		{
+			Piece& pieceA = m_pieces[color][candidates.pop()];
+			Piece& pieceB = m_pieces[color][candidates.pop()];
+
+			const int requiredMoves = pieceA.requiredMoves() + pieceB.requiredMoves() + triangulationMoves;
+
+			if (!xstd::any_of(m_tandems, [&](const Tandem& tandem) -> bool {
+				return (((&tandem.pieceA == &pieceA) && (&tandem.pieceB == &pieceB)) || ((&tandem.pieceA == &pieceB) && (&tandem.pieceB == &pieceA))) && (tandem.requiredMoves >= requiredMoves);
+			})) {
+				m_tandems.emplace_back(pieceA, pieceB, requiredMoves);
+				updated = true;
+			}
+		}
+	}
+
+	return updated;
 }
 
 /* -------------------------------------------------------------------------- */

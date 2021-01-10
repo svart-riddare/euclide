@@ -29,6 +29,9 @@ class Piece
 		void setCastling(CastlingSide side, bool castling);
 		void setCaptured(bool captured);
 
+		void setRequiredMoves(int requiredMoves);
+		void setRequiredCaptures(int requiredCaptures);
+
 		void setAvailableMoves(int availableMoves, int freeMoves);
 		void setAvailableCaptures(int availableCaptures, int freeCaptures);
 
