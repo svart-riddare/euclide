@@ -130,9 +130,9 @@ class Piece
 			{ return m_pieces[glyph]->m_rcaptures[square]; }
 
 		inline Squares reachableSquares(int availableMoves, int availableCaptures, bool pawn = false) const
-			{ reachableSquares(m_possibleSquares, availableMoves, availableCaptures, pawn); }
+			{ return reachableSquares(m_possibleSquares, availableMoves, availableCaptures, pawn); }
 		inline Squares reachableSquares(int availableMoves, int availableCaptures, Glyph glyph) const
-			{ reachableSquares(m_possibleSquares, availableMoves, availableCaptures, glyph); }
+			{ return reachableSquares(m_possibleSquares, availableMoves, availableCaptures, glyph); }
 		inline Squares reachableSquares(Squares squares, int availableMoves, int availableCaptures, bool pawn = false) const
 			{ return Squares([&](Square square) { return (requiredMovesTo(square, pawn) <= availableMoves) && (requiredCapturesTo(square, pawn) <= availableCaptures); }, ValidSquares(squares)); }
 		inline Squares reachableSquares(Squares squares, int availableMoves, int availableCaptures, Glyph glyph) const
@@ -141,7 +141,7 @@ class Piece
 		inline int nmoves() const
 			{ return m_nmoves; }
 
-		inline const bool move(Square from, Square to, bool pawn) const
+		inline bool move(Square from, Square to, bool pawn) const
 			{ return (pawn ?  m_pawn.moves : m_moves)[from][to]; }
 		inline const Squares& moves(Square from, bool pawn) const
 			{ return (pawn ? m_pawn.moves : m_moves)[from]; }

@@ -514,7 +514,7 @@ bool Euclide::triangulation()
 			if ((king.species() == King) && (queen.species() == Queen))
 				if (!king.requiredMoves() && !queen.requiredMoves())
 					if (queen.moves(queen.initialSquare(), false) == Squares(king.initialSquare()))
-						if (king.moves(king.initialSquare(), false).count() <= (Squares(queen.initialSquare()) | Squares(pivot)))
+						if (king.moves(king.initialSquare(), false) <= (Squares(queen.initialSquare()) | Squares(pivot)))
 							if (king.moves(pivot, false) <= star)
 								special = true;
 
@@ -637,7 +637,7 @@ EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configu
 
 	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(configuration ? *configuration : nullconfiguration, callbacks ? *callbacks : nullcallbacks)); }
 	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
-	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
+	catch (std::bad_alloc&) { return EUCLIDE_STATUS_MEMORY; }
 	catch (EUCLIDE_Status status) { return status; }
 
 	/* -- Done -- */
@@ -655,7 +655,7 @@ EUCLIDE_Status EUCLIDE_problem(EUCLIDE_Handle euclide, const EUCLIDE_Problem *pr
 
 	try { reinterpret_cast<Euclide::Euclide *>(euclide)->solve(*problem); }
 	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
-	catch (std::bad_alloc) { return EUCLIDE_STATUS_MEMORY; }
+	catch (std::bad_alloc&) { return EUCLIDE_STATUS_MEMORY; }
 	catch (EUCLIDE_Status status) { return status; }
 
 	return EUCLIDE_STATUS_OK;
