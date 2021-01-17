@@ -18,7 +18,7 @@ class Console
 		Console(const Strings& strings);
 		virtual ~Console();
 
-		virtual void reset(std::chrono::seconds timeout);
+		virtual void reset(std::chrono::seconds timeout, const Timer& timer = Timer());
 		virtual void clear();
 		virtual void done(EUCLIDE_Status status);
 		virtual bool wait();
@@ -40,8 +40,20 @@ class Console
 	public:
 		inline operator const EUCLIDE_Callbacks *() const
 			{ return &m_callbacks; }
+		inline operator const Strings&() const
+			{ return m_strings; }
 		inline bool operator!() const
 			{ return !m_valid || m_abort; }
+		inline explicit operator bool() const
+			{ return m_valid && !m_abort; }
+
+		inline const EUCLIDE_Callbacks *callbacks() const
+			{ return &m_callbacks; }
+		inline const Strings& strings() const
+			{ return m_strings; }
+
+		inline const Timer& timer() const
+			{ return m_timer; }
 
 	public:
 		void open(const char *inputFileName, bool print = false);

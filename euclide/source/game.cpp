@@ -86,6 +86,9 @@ void Game::play()
 
 	if (m_callbacks.displayThinking)
 		(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
+
+	if (!m_solutions)
+		throw NoSolution;
 }
 
 /* -------------------------------------------------------------------------- */

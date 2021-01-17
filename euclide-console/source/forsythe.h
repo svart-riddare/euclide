@@ -29,6 +29,8 @@ class ForsytheString
 			{ return &m_problem; }
 		inline bool operator!() const
 			{ return !m_valid; }
+		inline explicit operator bool() const
+			{ return m_valid; }
 
 	private:
 		EUCLIDE_Problem m_problem;    /**< Problem description. */

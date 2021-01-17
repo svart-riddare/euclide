@@ -52,12 +52,12 @@ Console::~Console()
 
 /* -------------------------------------------------------------------------- */
 
-void Console::reset(std::chrono::seconds timeout)
+void Console::reset(std::chrono::seconds timeout, const Timer& timer)
 {
 	m_stdout.reset();
 	m_output.reset();
 
-	m_timer = Timer();
+	m_timer = timer;
 
 	m_solutions = 0;
 	m_timeout = timeout;
@@ -75,6 +75,9 @@ void Console::clear()
 
 void Console::done(EUCLIDE_Status status)
 {
+	if (status != EUCLIDE_STATUS_OK)
+		displayError(m_strings[status]);
+
 	m_stdout.done(status);
 	m_output.done(status);
 
@@ -86,6 +89,8 @@ void Console::done(EUCLIDE_Status status)
 		swprintf(string, countof(string), L"%24ls", m_strings[m_solutions ? Strings::UniqueSolution : Strings::NoSolution]);
 		write(string, m_width - 25, 5, Colors::Verdict);
 	}
+
+	m_timer.stop();
 }
 
 /* -------------------------------------------------------------------------- */

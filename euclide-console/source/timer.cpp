@@ -9,6 +9,13 @@ Timer::Timer()
 
 /* -------------------------------------------------------------------------- */
 
+void Timer::stop()
+{
+	m_stop = now();
+}
+
+/* -------------------------------------------------------------------------- */
+
 std::chrono::seconds Timer::seconds() const
 {
 	return std::chrono::duration_cast<std::chrono::seconds>(now() - m_start);
@@ -38,8 +45,16 @@ const wchar_t *Timer::elapsed() const
 
 /* -------------------------------------------------------------------------- */
 
-std::chrono::steady_clock::time_point Timer::now()
+std::chrono::steady_clock::time_point Timer::now() const
 {
+	/* -- Return stop time if timer has been stopped -- */
+
+	const auto stopped = m_stop.time_since_epoch();
+	if (stopped != decltype(stopped)::zero())
+		return m_stop;
+
+	/* -- Return current time -- */
+
 #if defined(EUCLIDE_WINDOWS) && (_MSC_VER < 1900)
 	static LARGE_INTEGER frequency = (QueryPerformanceFrequency(&frequency), frequency);
 

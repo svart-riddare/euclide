@@ -6,6 +6,8 @@ set(SOURCES
 	../../source/colors.h
 	../../source/console.cpp
 	../../source/console.h
+	../../source/console-background.cpp
+	../../source/console-background.h
 	../../source/console-linux.cpp
 	../../source/console-linux.h
 	../../source/console-none.cpp
@@ -52,10 +54,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_ASAN "${CMAKE_CXX_FLAGS_ASAN} -O1 -g -fsanitize=address -fno-omit-frame-pointer")
 set(CMAKE_LINKER_FLAGS_ASAN "${CMAKE_LINKER_FLAGS_ASAN} -fsanitize=address")
 
+target_link_libraries(euclide-console pthread)
+
 # Dependent on ncurses library
 
-set(CURSES_NEED_WIDE TRUE)
-set(CURSES_NEED_NCURSES TRUE)
-find_package(Curses REQUIRED)
+if(NOT TRUE)
+	set(CURSES_NEED_WIDE TRUE)
+	set(CURSES_NEED_NCURSES TRUE)
+	find_package(Curses REQUIRED)
 
-target_link_libraries(euclide-console ${CURSES_LIBRARIES})
+	target_link_libraries(euclide-console ${CURSES_LIBRARIES})
+else()
+	target_link_libraries(euclide-console ncursesw)
+endif()

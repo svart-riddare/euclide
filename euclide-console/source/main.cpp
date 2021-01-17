@@ -1,37 +1,48 @@
 #include "includes.h"
 #include "forsythe.h"
 #include "console.h"
+#include "console-background.h"
 
 /* -------------------------------------------------------------------------- */
 
-static
-bool solve(const Strings& strings, Console& console, const char *forsytheString, int numHalfMoves, const char *options, int timeout, bool wait)
+struct Options
 {
-	/* -- Parse forsythe string -- */
+	bool quiet = false;    /**< If set, print to stdout rather than using console output. */
+	bool wait = false;     /**< If set, wait for user input after each problem solved. */
 
-	ForsytheString problem(strings, forsytheString, numHalfMoves, options);
-	if (!problem)
-		return false;
+	int timeout = 0;       /**< Timeout, in seconds, before aborting solving for a problem. */
+
+	int threads = 0;       /**< Number of threads used for batch solving. */
+};
+
+/* -------------------------------------------------------------------------- */
+
+bool solve(Console& console, const ForsytheString& problem, const Options& options, bool background = false)
+{
+	assert(problem);
 
 	/* -- Reset display -- */
 
-	console.reset(std::chrono::seconds(timeout));
+	console.reset(std::chrono::seconds(options.timeout));
 
 	/* -- Solve problem -- */
 
-   EUCLIDE_Configuration configuration;
-   memset(&configuration, 0, sizeof(configuration));
-   configuration.maxSolutions = 8;
+	EUCLIDE_Configuration configuration = {};
+	configuration.maxSolutions = 8;
 
 	const EUCLIDE_Status status = EUCLIDE_solve(&configuration, problem, console);
-	if (status != EUCLIDE_STATUS_OK)
-		console.displayError(strings[status]);
 
 	/* -- Done -- */
 
 	console.done(status);
-	if (wait || ((status != EUCLIDE_STATUS_OK) && (status != EUCLIDE_STATUS_ABORTED)))
-		console.wait();
+
+	/* -- Wait for user input -- */
+
+	if (options.wait && !background)
+		if (!console.wait())
+			return false;
+
+	/* -- Done -- */
 
 	return true;
 }
@@ -39,25 +50,109 @@ bool solve(const Strings& strings, Console& console, const char *forsytheString,
 /* -------------------------------------------------------------------------- */
 
 static
-bool solve(const Strings& strings, Console& console, const char *file, int timeout, bool wait)
+bool solve(Console& console, const std::list<ForsytheString>& problems, const Options& options)
 {
+	const size_t concurrency = std::min<size_t>(problems.size(), options.threads ? options.threads : std::thread::hardware_concurrency());
+
+	/* -- Solve each problem -- */
+
+	if (concurrency > 1)
+	{
+		std::list<BackgroundConsole> consoles;
+		std::list<std::thread> threads;
+		std::mutex mutex;
+
+		/* -- Create background consoles -- */
+
+		while (consoles.size() < problems.size())
+			consoles.emplace_back(console, consoles.empty());
+
+		/* -- Threads solve problems using a dedicated background console -- */
+
+		auto nextConsole = consoles.begin();
+		auto nextProblem = problems.begin();
+
+		const auto main = [&]() -> void {
+
+			/* -- Lower solving thread priority if we intend to use all cpu power -- */
+
+			if (concurrency >= std::thread::hardware_concurrency())
+			{
+#ifdef EUCLIDE_WINDOWS
+				SetThreadPriority(GetCurrentThread(), THREAD_MODE_BACKGROUND_BEGIN);
+#else
+				int policy;
+				struct sched_param parameters;
+				if (pthread_getschedparam(pthread_self(), &policy, &parameters) == 0)
+				{
+					parameters.sched_priority += 1;
+					pthread_setschedparam(pthread_self(), policy, &parameters);
+				}
+#endif
+			}
+
+			/* -- Solve next available problem -- */
+
+			std::unique_lock<std::mutex> lock(mutex);
+			while ((nextProblem != problems.end()) && console)
+			{
+				BackgroundConsole& background = *nextConsole++;
+				const ForsytheString& problem = *nextProblem++;
+
+				lock.unlock();
+				solve(background, problem, options, true);
+				lock.lock();
+			}
+		};
+
+		/* -- Create threads -- */
+
+		while (threads.size() < concurrency)
+			threads.emplace_back(std::thread(main));
+
+		/* -- Main thread displays background consoles one after the other -- */
+
+		for (auto& background : consoles)
+			if (!background.foreground(options.wait))
+				break;
+
+		/* -- Threads should be terminated, unless we aborted solving -- */
+
+		for (auto& thread : threads)
+			thread.join();
+	}
+	else
+	{
+		/* -- Single threaded implementation is straightforward -- */
+
+		for (const auto& problem : problems)
+			if (!solve(console, problem, options))
+				break;
+	}
+
+	/* -- Done -- */
+
+	return true;
+}
+
+/* -------------------------------------------------------------------------- */
+
+static
+bool solve(const Strings& strings, Console& console, const char *file, const Options& options)
+{
+   std::list<ForsytheString> problems;
+
 	/* -- Open input file -- */
 
 	FILE *input = fopen(file, "r");
 	if (!input)
 		return false;
 
-	/* -- Create output file -- */
-
-	console.open(file);
-
 	/* -- Read file, line by line, keeping two last lines in memory -- */
 
 	const int bufferSize = 1024;
 	char *bufferA = new char[bufferSize];
 	char *bufferB = new char[bufferSize];
-
-	int problems = 0;
 
 	if (fgets(bufferA, bufferSize, input))
 	{
@@ -67,8 +162,11 @@ bool solve(const Strings& strings, Console& console, const char *file, int timeo
 
 			int numHalfMoves, characters;
 			if (sscanf(bufferB, "%d%n", &numHalfMoves, &characters) >= 1)
-				if (solve(strings, console, bufferA, numHalfMoves, bufferB + characters, timeout, wait))
-					problems++;
+			{
+				ForsytheString problem(strings, bufferA, numHalfMoves, bufferB + characters);
+				if (problem)
+					problems.emplace_back(problem);
+			}
 
 			/* -- Loop -- */
 
@@ -76,16 +174,23 @@ bool solve(const Strings& strings, Console& console, const char *file, int timeo
 		}
 	}
 
-	/* -- Done -- */
+	delete[] bufferB;
+	delete[] bufferA;
 
 	fclose(input);
 
-	delete[] bufferA;
-	delete[] bufferB;
+	/* -- Early exit if there are no problems to solve -- */
 
-	/* -- Return number of problems found -- */
+	if (problems.empty())
+		return false;
 
-	return (problems > 0);
+	/* -- Create output file -- */
+
+	console.open(file);
+
+	/* -- Solve problems -- */
+
+	return solve(console, problems, options);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -102,9 +207,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	Strings::Error error = (numArguments > 1) ? Strings::NumErrors : Strings::NoArguments;
 
 	const char *problems = nullptr, *moves = nullptr;
-	bool quiet = false;
-	bool wait = false;
-	int timeout = 0;
+	Options options;
 
 	for (int argument = 1; argument < numArguments; argument++)
 	{
@@ -122,24 +225,37 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 		if (strcmp(arguments[argument], "--timeout") == 0)
 		{
 			if (++argument < numArguments)
-				timeout = atoi(arguments[argument]);
+				options.timeout = atoi(arguments[argument]);
 			else
 				error = Strings::InvalidArguments;
 		}
 		else
 		if (strncmp(arguments[argument], "--timeout=", strlen("--timeout=")) == 0)
 		{
-			timeout = atoi(arguments[argument] + strlen("--timeout="));
+			options.timeout = atoi(arguments[argument] + strlen("--timeout="));
 		}
 		else
-		if (strcmp(arguments[argument], "--quiet") == 0)
+		if (strcmp(arguments[argument], "--threads") == 0)
 		{
-			quiet = true;
+			if (++argument < numArguments)
+				options.threads = atoi(arguments[argument]);
+			else
+				error = Strings::InvalidArguments;
+		}
+		else
+		if (strncmp(arguments[argument], "--threads=", strlen("--threads=")) == 0)
+		{
+			options.threads = atoi(arguments[argument] + strlen("--threads="));
+		}
+		else
+      if (strcmp(arguments[argument], "--quiet") == 0)
+		{
+			options.quiet = true;
 		}
 		else
 		if (strcmp(arguments[argument], "--wait") == 0)
 		{
-			wait = true;
+			options.wait = true;
 		}
 		else
 		{
@@ -149,7 +265,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 
 	/* -- Initialize console output -- */
 
-	std::unique_ptr<Console> console(Console::create(strings, quiet));
+	std::unique_ptr<Console> console(Console::create(strings, options.quiet));
 	if (!console)
 		return fprintf(stderr, "\n\t\bUnexpected console initialization failure. Aborting.\n\n"), -1;
 
@@ -159,13 +275,13 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 	{
 		if (problems && moves)
 		{
-			if (!solve(strings, *console, problems, atoi(moves), "", timeout, wait))
+			if (!solve(*console, ForsytheString(strings, problems, atoi(moves), ""), options))
 				error = Strings::InvalidProblem;
 		}
 		else
 		if (problems)
 		{
-			if (!solve(strings, *console, problems, timeout, wait))
+			if (!solve(strings, *console, problems, options))
 				error = Strings::InvalidInputFile;
 		}
 	}

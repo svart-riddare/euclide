@@ -15,10 +15,14 @@
 
 #include <algorithm>
 #include <chrono>
+#include <condition_variable>
 #include <list>
 #include <memory>
+#include <mutex>
 #include <string>
+#include <thread>
 #include <type_traits>
+#include <vector>
 
 /* -------------------------------------------------------------------------- */
 
