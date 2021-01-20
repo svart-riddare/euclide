@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------
--- Euclide, ©2000-2020, Étienne Dupuis                                   --
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
 ---------------------------------------------------------------------------
 
 Problème analysé :
@@ -26,12 +26,12 @@ Problème analysé :
 	9,0 coups                 (11+11)
 
 Verdict :
-	Échelle de difficulté = 147.93
+	Échelle de difficulté = 115.07
 	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
--- Euclide, ©2000-2020, Étienne Dupuis                                   --
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
 ---------------------------------------------------------------------------
 
 Problème analysé :
@@ -58,12 +58,12 @@ Problème analysé :
 	9,0 coups                 (15+13)
 
 Verdict :
-	Échelle de difficulté = 100.47
+	Échelle de difficulté = 92.31
 	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
--- Euclide, ©2000-2020, Étienne Dupuis                                   --
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
 ---------------------------------------------------------------------------
 
 Problème analysé :
@@ -89,13 +89,19 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	9,0 coups                 (15+13)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pd2-d3    Cb8-c6      2. Pd3-d4    Cc6xd4      3. Dd1xd4    Pa7-a6     
+ 4. Dd4xd7    Ta8-a7      5. Dd7-d6    Dd8-d7      6. Dd6xa6    Dd7-d6     
+ 7. Da6-a3    Ta7-a4      8. Da3-f3    Ta4-d4      9. Pc2-c3    Td4-d1+    
+
 Verdict :
-	Échelle de difficulté = 100.47
+	Échelle de difficulté = 76.96
 	Recherche interrompue
 
 
 ---------------------------------------------------------------------------
--- Euclide, ©2000-2020, Étienne Dupuis                                   --
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
 ---------------------------------------------------------------------------
 
 Problème analysé :
@@ -121,13 +127,21 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	9,5 coups                 (13+14)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pf2-f3    Cg8-f6      2. Pf3-f4    Cf6-e4      3. Cg1-f3    Ce4xd2     
+ 4. Th1-g1    Cd2xf1      5. Tg1xf1    Cb8-c6      6. Tf1-f2    Cc6-d4     
+ 7. Re1-f1    Cd4xe2      8. Dd1-e1    Ce2-g3+     9. Rf1-g1    Cg3-f1     
+10. Tf2xf1    
+
 Verdict :
-	Échelle de difficulté = 73.95
-	Recherche interrompue
+	Échelle de difficulté = 30.86
+	Positions examinées : 7506
+	Solution unique
 
 
 ---------------------------------------------------------------------------
--- Euclide, ©2000-2020, Étienne Dupuis                                   --
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
 ---------------------------------------------------------------------------
 
 Problème analysé :
@@ -153,8 +167,17 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	16,5 coups                (14+15)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Ph2-h3    Cg8-f6      2. Ph3-h4    Cf6-e4      3. Ph4-h5    Ce4xd2     
+ 4. Ph5-h6    Cd2xb1      5. Dd1-d6    Cb1-d2      6. Dd6-e6    Pd7-d6     
+ 7. Re1-d1    Pd6-d5      8. Rd1xd2    Pd5-d4      9. Rd2-d3    Dd8-d5     
+10. Rd3-e3    Pd4-d3     11. Re3-f3    Pd3-d2     12. Rf3-g3    Pd2-d1=C   
+13. Rg3-h3    Cd1-c3     14. Rh3-h2    Cc3-e4     15. Cg1-h3    Ce4-f6     
+16. Th1-g1    Cf6-g8     17. Rh2-h1    
+
 Verdict :
-	Échelle de difficulté = 49.36
+	Échelle de difficulté = 56.80
 	Recherche interrompue
 
 

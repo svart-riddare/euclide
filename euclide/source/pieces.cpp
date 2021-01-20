@@ -117,7 +117,7 @@ Piece::Piece(const Problem& problem, Square square, Man man, Glyph glyph, triboo
 	if (((m_glyph == WhiteKing) || (m_glyph == BlackKing)) && !is(promoted))
 		for (CastlingSide side : AllCastlingSides())
 			if (m_initialSquare == Castlings[m_color][side].from)
-				if (problem.castling(m_color, side))
+				if (problem.castling(m_color, side) && (problem.variant() != Bichromatic))
 					m_moves[Castlings[m_color][side].from][Castlings[m_color][side].to] = true, m_castling[side] = unknown;
 
 	if (((m_glyph == WhiteRook) || (m_glyph == BlackRook)) && !is(promoted))
