@@ -378,10 +378,17 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 	if (maybe(pieceA.m_promoted) || maybe(pieceB.m_promoted))
 		return requiredMoves;
 
+	/* -- Compute available moves for these two pieces -- */
+
+	const int availableMoves = std::min(
+		pieceA.m_availableMoves + pieceB.m_availableMoves - (enemies ? 0 : std::min(pieceA.m_freeMoves, pieceB.m_freeMoves)),
+		requiredMoves + freeMoves[pieceA.m_color] + (enemies ? freeMoves[pieceB.m_color] : 0)
+	);
+
 	/* -- Use fast method if the search space is too large -- */
 
 	const int threshold = 5000;
-	if (pieceA.nmoves() * pieceB.nmoves() > threshold)
+	if ((pieceA.nmoves() * pieceB.nmoves() > threshold) || (availableMoves - requiredMoves > 20))
 		fast = true;
 
 	/* -- Play all possible moves with these two pieces -- */
@@ -390,11 +397,6 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 		State(pieceA, pieceA.m_availableMoves),
 		State(pieceB, pieceB.m_availableMoves)
 	};
-
-	const int availableMoves = std::min(
-		pieceA.m_availableMoves + pieceB.m_availableMoves - (enemies ? 0 : std::min(pieceA.m_freeMoves, pieceB.m_freeMoves)),
-		requiredMoves + freeMoves[pieceA.m_color] + (enemies ? freeMoves[pieceB.m_color] : 0)
-	);
 
 	TwoPieceCache cache;
 	const int newRequiredMoves = fast ? fastplay(states, availableMoves, cache) : fullplay(states, availableMoves, availableMoves, cache);

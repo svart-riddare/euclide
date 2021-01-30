@@ -187,7 +187,7 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 
 	Men selected;
 	for (const Destination& destination : m_destinations)
-		if (!glyph || (destination.glyph == glyph))
+		if (!glyph || destination.glyphs[glyph])
 			selected |= destination.men;
 
 	int m = 0;
@@ -200,7 +200,7 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 	int s = 0;
 	array<size_t, MaxPieces> destinations;
 	for (size_t k = 0; k < m_destinations.size(); k++)
-		if (!glyph || (m_destinations[k].glyph == glyph))
+		if (!glyph || m_destinations[k].glyphs[glyph])
 			destinations[s++] = k;
 
 	/* -- This should not happen -- */

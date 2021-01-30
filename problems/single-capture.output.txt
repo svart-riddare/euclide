@@ -1998,12 +1998,6 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	9,0 coups                 (16+15)
 
-Solution n° 1 :
----------------------------------------------------------------------------
- 1. Cb1-c3    Pe7-e5      2. Cc3-d5    Ff8-a3      3. Cd5-e7    Cb8-c6     
- 4. Ce7xg8    Dd8-e7      5. Pf2-f3    De7-c5      6. Cg8-f6+   Re8-e7     
- 7. Cf6-e4    Th8-d8      8. Ce4-c3    Re7-e8      9. Cc3-b1    Cc6-e7     
-
 Verdict :
 	Échelle de difficulté = 61.89
 	Recherche interrompue
@@ -4489,7 +4483,7 @@ Problème analysé :
 	22,5 coups                (15+16)
 
 Verdict :
-	Échelle de difficulté = 91.39
+	Échelle de difficulté = 93.13
 	Recherche interrompue
 
 
@@ -4617,7 +4611,7 @@ Problème analysé :
 	25,0 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 117.36
+	Échelle de difficulté = 117.45
 	Recherche interrompue
 
 
@@ -4713,7 +4707,7 @@ Problème analysé :
 	27,0 coups                (15+16)
 
 Verdict :
-	Échelle de difficulté = 126.35
+	Échelle de difficulté = 146.85
 	Recherche interrompue
 
 

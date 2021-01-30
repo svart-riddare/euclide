@@ -1,16 +1,36 @@
 
+https://pdb.dieschwalbe.de/
+
+-> K='Unique Proof Game' AND A='Dupuis'
+-> PROBID='P1267877'
+-> PROBID='P1189483'
+
+January 31, 2021
+
 --------------------------------------------------------------
 
-Étienne Dupuis
-Probleemblad 1999
-1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
-22
+Étienne Dupuis, Michel Caillaud
+Problem Paradise, 2000
+P1000006
+
+t5ct/1p1pr1pp/1pc1p3/2p5/4fP2/2P2C1F/2PPP2P/TC1DR1fT
+38
+
+--------------------------------------------------------------
+
+Étienne Dupuis, Michel Caillaud
+Probleemblad 2000
+P1000436
+
+t6t/1p1prpp1/1pc1pc2/1dp5/4f1F1/2P5/2PPPP1P/TC1DR1CT
+40
 
 --------------------------------------------------------------
 
 Étienne Dupuis
 Problemesis 1999
-4° Mention d'honneur
+P1000448
+
 tc2rfct/pppTppd1/2Dp2p1/8/7p/7P/PPPPPPRP/TCF2FC1
 36
 
@@ -18,112 +38,86 @@ tc2rfct/pppTppd1/2Dp2p1/8/7p/7P/PPPPPPRP/TCF2FC1
 
 Étienne Dupuis
 Probleemblad 1999
-2° Recommandé
+P1000600
+
 1ctdrfct/pppppp2/P5p1/6T1/6R1/6P1/1PPPPPTP/1CFD1FC1
-42
+//42
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Probleemblad 1999
+P100647
+
+1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
+22
 
 --------------------------------------------------------------
 
 Étienne Dupuis
 Problemesis 2000
+P1000664
+
 tcrd2ct/ppp1pp1p/6p1/8/3p4/P7/fPPPPPPP/TCFDRFCT
-!15, échiquier cylindrique
-
---------------------------------------------------------------
-
-Étienne Dupuis, Michel Caillaud
-Probleemblad 2000
-t6t/1p1prpp1/1pc1pc2/1dp5/4f1F1/2P5/2PPPP1P/TC1DR1CT
-40
-
---------------------------------------------------------------
-
-Étienne Dupuis, Michel Caillaud
-Problem Paradise, 2000
-t5ct/1p1pr1pp/1pc1p3/2p5/4fP2/2P2C1F/2PPP2P/TC1DR1fT
-38
+15 - Cylinder
 
 --------------------------------------------------------------
 
 Étienne Dupuis
 Problemesis 2000
-1° Recommandé
+P1000665
+
 t1f1r1c1/ppp2p1d/P2p4/t1cPp1pp/3f4/8/1PP1PPF1/TC3RCT
 28
 
 --------------------------------------------------------------
 
 Étienne Dupuis
-StrateGems 2000
-5° Recommandé
-tc1dr1c1/ppp2pp1/3pp2F/7t/P6p/T1PR3P/fPP1PPP1/2CD1FCR
-!21, échiquier cylindrique
-
---------------------------------------------------------------
-
-Étienne Dupuis
-StrateGems 2000
-3t1f2/1r1pppc/pp4c1/d4P1p/7T/P1PD1f2/PPPFP1P1/2RT1F2
-!31, échiquier cylindrique
-
---------------------------------------------------------------
-
-Étienne Dupuis
-StrateGems 2000
-Version corrigée
-5f1t/1r1pppc/pp4c1/d4P1p/7T/P1PD1f2/PPPFP1P1/2RT1F2
-!31, échiquier cylindrique
-
---------------------------------------------------------------
-
-Étienne Dupuis
-StrateGems 2001
-tc3fcr/p2ppppp/1p6/d7/8/P1P2f2/PPPDP1PF/2RT1FT
-!30, échiquier cylindrique
-
---------------------------------------------------------------
-
-Étienne Dupuis
 Probleemblad, 2000
+P1001062
+
 t2r4/p1p1p1p1/3p1p2/7p/1p2ft2/1c1d1P1P/PPPPP1P1/TCFDRFCT
 34
 
 --------------------------------------------------------------
 
 Étienne Dupuis
+StrateGems 2000
+P1001091
+
+tc1dr1c1/ppp2pp1/3pp2F/7t/P6p/T1PR3P/fPP1PPP1/2CD1FCR
+21 - Cylinder
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+StrateGems 2000
+P1001092
+
+3t1f2/1r1pppc/pp4c1/d4P1p/7T/P1PD1f2/PPPFP1P1/2RT1F2
+31 - Cylinder
+
+5f1t/1r1pppc/pp4c1/d4P1p/7T/P1PD1f2/PPPFP1P1/2RT1F2
+31 - Cylinder
+
+tc3fcr/p2ppppp/1p6/d7/8/P1P2f2/PPPDP1PF/2RT1FT
+30 - Cylinder
+
+--------------------------------------------------------------
+
+Étienne Dupuis
 Problemesis 2001
-2° Recommandé
+P1001132
+
 tc2r1ct/ppp3pp/4p3/8/4d3/1C1ff2P/PPPP1P1P/TCFDRF1T
 27
 
 --------------------------------------------------------------
 
 Étienne Dupuis
-Problemesis 2001
-TcfdrfcT/1pppppp1/8/7D/8/1P1PP1P1/3R1P2/tCF2FCt
-20
-
-tCf1r1Ct/ppppdppp/8/4p3/3P4/2P5/PFP1PPPP/TcDR1FcT
-25
-
-tcF1rFct/p1p2p1p/3p2p1/1p6/3P2P1/5P2/PPPD1P1P/TCf1RfCT
-18
-
-1t1DR1ct/Fp1pp2p/5pp1/p1c5/5P2/2P1P3/PPP1F1PP/TC1dr1CT
-36
-
---------------------------------------------------------------
-
-Étienne Dupuis
-Probleemblad 2001
-2rc1TfT/2ppf1pF/1d4cF/1p2p3/3T4/3P2t1/1PPt2p1/1CCD2RT
-46
-
---------------------------------------------------------------
-
-Étienne Dupuis
 Messigny 2001
-1° Place
+P1001344
+
 tc3f2/p2FTpp1/D1p2rc1/5ft1/1R6/1C1P4/PPP2PPP/TCF5
 31
 
@@ -131,21 +125,114 @@ tc3f2/p2FTpp1/D1p2rc1/5ft1/1R6/1C1P4/PPP2PPP/TCF5
 
 Étienne Dupuis
 Problemesis 2001
+P1001348
+
 1c6/1pprfpp1/P1Tpp1DP/p6p/1P2F1P1/2Pt1P2/ft1PP3/1C2R1C1
 40
 
 --------------------------------------------------------------
 
 Étienne Dupuis
+Problemesis 2002
+P1003972
+
+5fct/pp2pppp/2p1p3/r3c3/4f3/1dP1P3/PP1PP1PP/TCF1RFCT
+30
+
+--------------------------------------------------------------
+
+Étienne Dupuis
 Probleemblad 2001
+P1004181
+
 T6T/2ppp2f/1p2trp1/1p1D1p2/ctP1d2c/2CFPPC1/2PP2p1/T5RT
 55
 
 --------------------------------------------------------------
 
 Étienne Dupuis
-Problemesis 2002
-5fct/pp2pppp/2p1p3/r3c3/4f3/1dP1P3/PP1PP1PP/TCF1RFCT
-30
+Messigny 2005
+P1067910
+
+rn2kb2/pbppP2p/p1N2p2/8/r2P4/3QPP2/PPP2B2/2KR3q
+31
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Messigny 2009
+P1085395
+
+2kr2K1/pppq2p1/1n2pp2/3p1b1p/5r2/P4P2/P1PPPBPP/RN2QBNR
+26
+
+--------------------------------------------------------------
+
+Étienne Dupuis, Pascal Wassong
+Messigny 2010
+P1107612
+
+rnbqkbnr/1P1p1p1p/1R6/3Q4/1PB1K2B/1P1P1P1n/3PNP1P/1NR5
+48
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Problemesis 2001
+P1214066
+
+TcfdrfcT/1pppppp1/8/7D/8/1P1PP1P1/3R1P2/tCF2FCt
+20
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Problemesis 2001
+P1292800
+
+tCf1r1Ct/ppppdppp/8/4p3/3P4/2P5/PFP1PPPP/TcDR1FcT
+25
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Problemesis 2001
+P1292801
+
+tcF1rFct/p1p2p1p/3p2p1/1p6/3P2P1/5P2/PPPD1P1P/TCf1RfCT
+18
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Problemesis 2001
+P1292802
+
+1t1DR1ct/Fp1pp2p/5pp1/p1c5/5P2/2P1P3/PPP1F1PP/TC1dr1CT
+36
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Championnat de France 2017
+P1347227
+
+rnbqkbnr/ppppp1pp/5P2/RQ2P3/6B1/8/PPPPp1PP/RNB4K
+28
+
+--------------------------------------------------------------
+
+Étienne Dupuis
+Probleemblad 2001
+P0000000
+
+2rc1TfT/2ppf1pF/1d4cF/1p2p3/3T4/3P2t1/1PPt2p1/1CCD2RT
+46
+
+--------------------------------------------------------------
+
+
+
+
 
 
