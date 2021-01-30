@@ -58,7 +58,7 @@ Problème analysé :
 	9,0 coups                 (15+13)
 
 Verdict :
-	Échelle de difficulté = 92.31
+	Échelle de difficulté = 90.17
 	Recherche interrompue
 
 

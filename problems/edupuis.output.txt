@@ -26,7 +26,7 @@ Problème analysé :
 	19,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 308.05
+	Échelle de difficulté = 306.76
 	Recherche interrompue
 
 
@@ -58,7 +58,7 @@ Problème analysé :
 	20,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 217.02
+	Échelle de difficulté = 196.26
 	Recherche interrompue
 
 
@@ -99,6 +99,38 @@ Verdict :
 ---------------------------------------------------------------------------
 
 Problème analysé :
+	1ctdrfct/pppppp2/P5p1/6T1/6R1/6P1/1PPPPPTP/1CFD1FC1
+	42
+
+	+---+---+---+---+---+---+---+---+
+	|   | c | t | d | r | f | c | t |
+	+---+---+---+---+---+---+---+---+
+	| p | p | p | p | p | p |   |   |
+	+---+---+---+---+---+---+---+---+
+	| P |   |   |   |   |   | p |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   | T |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   | R |   |
+	+---+---+---+---+---+---+---+---+
+	|   |   |   |   |   |   | P |   |
+	+---+---+---+---+---+---+---+---+
+	|   | P | P | P | P | P | T | P |
+	+---+---+---+---+---+---+---+---+
+	|   | C | F | D |   | F | C |   |
+	+---+---+---+---+---+---+---+---+
+	21,0 coups                (16+14)
+
+Verdict :
+	Échelle de difficulté = 116.17
+	Recherche interrompue
+
+
+---------------------------------------------------------------------------
+-- Euclide, ©2000-2021, Étienne Dupuis                                   --
+---------------------------------------------------------------------------
+
+Problème analysé :
 	1cfdrfc1/pp1pp2p/7p/3p4/8/3P4/PPP1PP1P/TC1DRFCT
 	22
 
@@ -122,7 +154,7 @@ Problème analysé :
 	11,0 coups                (14+13)
 
 Verdict :
-	Échelle de difficulté = 149.39
+	Échelle de difficulté = 142.37
 	Recherche interrompue
 
 
@@ -342,7 +374,7 @@ Problème analysé :
 	13,5 coups                (15+14)
 
 Verdict :
-	Échelle de difficulté = 236.46
+	Échelle de difficulté = 236.07
 	Recherche interrompue
 
 
@@ -374,7 +406,7 @@ Problème analysé :
 	15,5 coups                (15+11)
 
 Verdict :
-	Échelle de difficulté = 316.88
+	Échelle de difficulté = 304.30
 	Recherche interrompue
 
 
@@ -479,7 +511,7 @@ Problème analysé :
 	27,5 coups                (14+15)
 
 Verdict :
-	Échelle de difficulté = 117.53
+	Échelle de difficulté = 88.56
 	Recherche interrompue
 
 
@@ -511,7 +543,7 @@ Problème analysé :
 	15,5 coups                (12+13)
 
 Verdict :
-	Échelle de difficulté = 341.80
+	Échelle de difficulté = 341.02
 	Recherche interrompue
 
 
@@ -628,7 +660,7 @@ Problème analysé :
 	10,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 283.96
+	Échelle de difficulté = 273.45
 	Recherche interrompue
 
 
@@ -813,7 +845,7 @@ Problème analysé :
 	23,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 386.26
+	Échelle de difficulté = 384.94
 	Recherche interrompue
 
 

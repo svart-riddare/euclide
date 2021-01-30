@@ -641,7 +641,7 @@ Solution n° 1 :
  4. Fc1-d2    Pb3xc2      5. Fd2-c3    Pc2-c1=D+  
 
 Verdict :
-	Échelle de difficulté = 5.13
+	Échelle de difficulté = 4.64
 	Positions examinées : 19
 	Solution unique
 
@@ -869,7 +869,7 @@ Solution n° 1 :
  4. Pf2-f3    Ph4-h3      5. Re1-f2    Ph3-h2      6. Dd1-e1    Ph2-h1=C+  
 
 Verdict :
-	Échelle de difficulté = 13.63
+	Échelle de difficulté = 13.38
 	Positions examinées : 43
 	Solution unique
 
@@ -1531,8 +1531,8 @@ Solution n° 1 :
  7. Tf1-h1    Te3-d3      8. Rf2-e1    
 
 Verdict :
-	Échelle de difficulté = 46.84
-	Positions examinées : 4699
+	Échelle de difficulté = 46.09
+	Positions examinées : 4648
 	Solution unique
 
 
@@ -1768,8 +1768,8 @@ Solution n° 8 :
  7. Rd1-e1    Re8-e7      8. Dc1-d1    Re7-d6      9. Fb2-c1    
 
 Verdict :
-	Échelle de difficulté = 85.75
-	Positions examinées : 3590115
+	Échelle de difficulté = 77.71
+	Positions examinées : 3035582
 	Problème démoli
 
 
@@ -1997,6 +1997,12 @@ Problème analysé :
 	| T | C | F | D | R | F | C | T |
 	+---+---+---+---+---+---+---+---+
 	9,0 coups                 (16+15)
+
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Cb1-c3    Pe7-e5      2. Cc3-d5    Ff8-a3      3. Cd5-e7    Cb8-c6     
+ 4. Ce7xg8    Dd8-e7      5. Pf2-f3    De7-c5      6. Cg8-f6+   Re8-e7     
+ 7. Cf6-e4    Th8-d8      8. Ce4-c3    Re7-e8      9. Cc3-b1    Cc6-e7     
 
 Verdict :
 	Échelle de difficulté = 61.89
@@ -2977,7 +2983,7 @@ Solution n° 1 :
 16. Cf6-g8    
 
 Verdict :
-	Échelle de difficulté = 54.45
+	Échelle de difficulté = 54.43
 	Positions examinées : 4825331
 	Solution unique
 
@@ -3369,7 +3375,7 @@ Problème analysé :
 	17,5 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 86.17
+	Échelle de difficulté = 83.81
 	Recherche interrompue
 
 
@@ -3846,7 +3852,7 @@ Problème analysé :
 	19,0 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 82.14
+	Échelle de difficulté = 82.12
 	Recherche interrompue
 
 
@@ -3930,7 +3936,7 @@ Solution n° 2 :
 19. Td3-d1    Td4-c4     
 
 Verdict :
-	Échelle de difficulté = 68.07
+	Échelle de difficulté = 68.03
 	Positions examinées : 1142827
 	Deux solutions
 
@@ -4407,7 +4413,7 @@ Problème analysé :
 	21,5 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 99.74
+	Échelle de difficulté = 77.62
 	Recherche interrompue
 
 
@@ -4482,9 +4488,21 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	22,5 coups                (15+16)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pe2-e4    Pd7-d6      2. Ff1-b5+   Dd8-d7      3. Pd2-d3    Pa7-a5     
+ 4. Dd1-d2    Pa5-a4      5. Dd2-b4    Pa4-a3      6. Re1-d2    Pa3xb2     
+ 7. Pa2-a4    Dd7-c6      8. Pa4-a5    Re8-d7      9. Pa5-a6    Rd7-e6     
+10. Ta1-a5    Cb8-d7     11. Fb5-a4    Ta8-b8     12. Ta5-h5    Pg7-g5     
+13. Pa6-a7    Ff8-g7     14. Pa7-a8=C  Fg7-d4     15. Ca8-b6    Fd4-c5     
+16. Rd2-c3    Re6-e5     17. Cb1-d2    Pb2-b1=D   18. Cb6-d5    Db1-a2     
+19. Cd5-f6    Da2-c4+    20. Rc3-b2    Re5-d4     21. Pf2-f4    Rd4-e3     
+22. Rb2-a3    Dc4-a6     23. Fc1-b2    
+
 Verdict :
-	Échelle de difficulté = 93.13
-	Recherche interrompue
+	Échelle de difficulté = 52.65
+	Positions examinées : 14030486
+	Solution unique
 
 
 ---------------------------------------------------------------------------
@@ -4579,7 +4597,7 @@ Problème analysé :
 	23,0 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 136.81
+	Échelle de difficulté = 122.41
 	Recherche interrompue
 
 
@@ -4643,7 +4661,7 @@ Problème analysé :
 	25,5 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 201.02
+	Échelle de difficulté = 200.48
 	Recherche interrompue
 
 
