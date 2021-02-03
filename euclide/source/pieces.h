@@ -13,6 +13,7 @@ class Problem;
 class Consequences;
 class TwoPieceCache;
 class PieceConditions;
+class TwoPieceFastCache;
 
 /* -------------------------------------------------------------------------- */
 /* -- Piece                                                                -- */
@@ -38,6 +39,8 @@ class Piece
 		void setPossibleGlyphs(Glyphs glyphs);
 		void setPossibleSquares(Squares squares);
 		void setPossibleCaptures(Squares captures);
+
+		void setVisitedSquares(Squares visits);
 
 		void bypassObstacles(const Piece& blocker);
 		static int mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, NumColors>& freeMoves, bool fast);
@@ -150,9 +153,11 @@ class Piece
 		inline Squares constraints(Square from, Square to, bool capture, bool pawn) const
 			{ return pawn ? (capture ? (*m_pawn.xconstraints)[from][to] : (*m_pawn.constraints)[from][to]) : (capture ? (*m_xconstraints)[from][to] : (*m_constraints)[from][to]); }
 
-		inline const Squares& stops() const
+		inline Squares stops() const
 			{ return m_stops; }
-		inline const Squares& route() const
+		inline Squares visits() const
+			{ return m_visits; }
+		inline Squares route() const
 			{ return m_route; }
 
 		inline const Actions& actions() const
@@ -197,19 +202,22 @@ class Piece
 
 			ArrayOfSquares moves;                /**< All moves that leads to the possible final squares in time. */
 			ArrayOfSquares squares;              /**< Occupied pair of squares. */
+			Squares visits;                      /**< List of visited squares. */
 			Square square;                       /**< Current square. */
 
 			array<int, NumSquares> distances;    /**< Moves required to reach each square, assuming goals are reached. */
 
-			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece.m_castlingSquare != Nowhere) && !piece.m_distances[piece.m_castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), square(piece.m_initialSquare)
+			State(Piece& piece, int availableMoves) : piece(piece), teleportation((piece.m_castlingSquare != Nowhere) && !piece.m_distances[piece.m_castlingSquare]), availableMoves(availableMoves), requiredMoves(Infinity), playedMoves(0), visits(), square(piece.m_initialSquare)
 			{
 				distances.fill(Infinity);
 				distances[piece.m_initialSquare] = 0;
 			}
 		};
 
-		static int fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& cache);
-		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate = nullptr);
+		static int fastplay(array<State, 2>& states, int availableMoves);
+		static int fullplay(array<State, 2>& states, int availableMoves);
+		static int fastplay(array<State, 2>& states, int availableMoves, TwoPieceFastCache& cache);
+		static int fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache);
 
 	private:
 		Man m_man;                                     /**< Piece's man. */
@@ -273,9 +281,10 @@ class Piece
 		struct Occupied { Squares squares; array<Piece *, NumSquares> pieces; };
 		array<Occupied, NumSquares> m_occupied;        /**< Occupied squares, for each square the piece may lie. */
 
-		Squares m_stops;                               /**< Set of all squares on which the piece may have stopped. */
-		Squares m_route;                               /**< Set of all squares the piece may have crossed or stopped. */
-		Squares m_threats;                             /**< Set of all squares on which the enemy king is threatened. */
+		Squares m_stops;                               /**< Set of squares on which the piece may have stopped. */
+		Squares m_visits;                              /**< Set of squares on which the piece must have stopped. */
+		Squares m_route;                               /**< Set of squares the piece may have crossed or stopped. */
+		Squares m_threats;                             /**< Set of squares on which the enemy king is threatened. */
 
 		Actions *m_actions;                            /**< Actions associated with possible piece moves and their consequences. */
 

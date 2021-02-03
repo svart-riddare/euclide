@@ -126,6 +126,13 @@ Piece::Piece(const Problem& problem, Square square, Man man, Glyph glyph, triboo
 				if (problem.castling(m_color, side))
 					m_castlingSquare = Castlings[m_color][side].free, m_castling[side] = unknown;
 
+	/* -- Initialize visited squares -- */
+
+	m_stops.set();
+	m_visits.reset();
+	m_route.set();
+	m_threats.reset();
+
 	/* -- Actions will be initialized later -- */
 
 	m_actions = nullptr;
@@ -314,6 +321,20 @@ void Piece::setPossibleCaptures(Squares squares)
 
 /* -------------------------------------------------------------------------- */
 
+void Piece::setVisitedSquares(Squares visits)
+{
+	if (visits <= m_visits)
+		return;
+
+	for (Piece& personality : m_personalities)
+		personality.setVisitedSquares(visits);
+
+	m_visits |= visits;
+	m_update = true;
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Piece::bypassObstacles(const Piece& blocker)
 {
 	const Squares& obstacles = blocker.stops();
@@ -327,6 +348,13 @@ void Piece::bypassObstacles(const Piece& blocker)
 		return;
 
 	/* -- Blocked movements -- */
+
+	if (is(m_promoted))
+		if ((obstacles & m_route).any())
+			for (Square from : ValidSquares(m_stops))
+				for (Square to : ValidSquares(m_pawn.moves[from]))
+					if (obstacles <= ((*m_pawn.constraints)[from][to] | from))
+						m_pawn.moves[from][to] = false, m_update = true;
 
 	if ((obstacles & m_route).any())
 		for (Square from : ValidSquares(m_stops))
@@ -398,8 +426,7 @@ int Piece::mutualInteractions(Piece& pieceA, Piece& pieceB, const array<int, Num
 		State(pieceB, pieceB.m_availableMoves)
 	};
 
-	TwoPieceCache cache;
-	const int newRequiredMoves = fast ? fastplay(states, availableMoves, cache) : fullplay(states, availableMoves, availableMoves, cache);
+	const int newRequiredMoves = fast ? fastplay(states, availableMoves) : fullplay(states, availableMoves);
 
 	if (newRequiredMoves >= Infinity)
 		throw NoSolution;
@@ -1397,9 +1424,25 @@ array<int, NumSquares> Piece::computeCapturesTo(Squares destinations, bool pawn)
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& cache)
+int Piece::fastplay(array<State, 2>& states, int availableMoves)
 {
-	typedef TwoPieceCache::Position Position;
+	TwoPieceFastCache cache;
+	return fastplay(states, availableMoves, cache);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::fullplay(array<State, 2>& states, int availableMoves)
+{
+	TwoPieceCache cache;
+	return fullplay(states, availableMoves, availableMoves, cache);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceFastCache& cache)
+{
+	typedef TwoPieceFastCache::Position Position;
 	Queue<Position, 8 * NumSquares * NumSquares> queue;
 
 	int requiredMoves = Infinity;
@@ -1549,7 +1592,7 @@ int Piece::fastplay(array<State, 2>& states, int availableMoves, TwoPieceCache& 
 
 /* -------------------------------------------------------------------------- */
 
-int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache, bool *invalidate)
+int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMoves, TwoPieceCache& cache)
 {
 	int requiredMoves = Infinity;
 
@@ -1557,16 +1600,19 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 
 	if (states[0].piece.m_possibleSquares[states[0].square] && states[1].piece.m_possibleSquares[states[1].square])
 	{
-		/* -- Get required moves -- */
+		if ((states[0].visits == states[0].piece.m_visits) && (states[1].visits == states[1].piece.m_visits))
+		{
+			/* -- Get required moves -- */
 
-		xstd::minimize(states[0].requiredMoves, states[0].playedMoves);
-		xstd::minimize(states[1].requiredMoves, states[1].playedMoves);
-		requiredMoves = states[0].playedMoves + states[1].playedMoves;
+			xstd::minimize(states[0].requiredMoves, states[0].playedMoves);
+			xstd::minimize(states[1].requiredMoves, states[1].playedMoves);
+			requiredMoves = states[0].playedMoves + states[1].playedMoves;
 
-		/* -- Label occupied squares -- */
+			/* -- Label occupied squares -- */
 
-		states[0].squares[states[0].square][states[1].square] = true;
-		states[1].squares[states[1].square][states[0].square] = true;
+			states[0].squares[states[0].square][states[1].square] = true;
+			states[1].squares[states[1].square][states[0].square] = true;
+		}
 	}
 
 	/* -- Break recursion if there are no more moves available -- */
@@ -1576,7 +1622,7 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 
 	/* -- Check for cache hit -- */
 
-	if (cache.hit(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, &requiredMoves))
+	if (cache.hit(states[0].square, states[0].playedMoves, states[0].visits, states[1].square, states[1].playedMoves, states[1].visits, &requiredMoves))
 		return requiredMoves;
 
 	/* -- Loop over both pieces -- */
@@ -1654,12 +1700,6 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 			if (1 + piece.m_rdistances[to] > std::min(availableMoves, state.availableMoves))
 				continue;
 
-			/* -- Reject move if we have taken a shortcut -- */
-
-			if (state.playedMoves + 1 < piece.m_distances[to])
-				if (!invalidate || ((*invalidate = true), true))
-					continue;
-
 			/* -- Reject move if we move into check -- */
 
 			if (piece.m_royal && !friends && (*xpiece.m_checks)[other][to])
@@ -1679,14 +1719,17 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 			state.playedMoves += 1;
 			state.square = to;
 
+			Squares visits = state.visits;
+			if (state.piece.m_visits[to])
+				state.visits |= to;
+
 			/* -- Recursion -- */
 
-			bool shortcuts = false;
-			const int myRequiredMoves = fullplay(states, availableMoves - 1, maximumMoves, cache, &shortcuts);
+			const int myRequiredMoves = fullplay(states, availableMoves - 1, maximumMoves, cache);
 
 			/* -- Cache this position, for tremendous speedups -- */
 
-			cache.add(states[0].square, states[0].playedMoves, states[1].square, states[1].playedMoves, myRequiredMoves, shortcuts);
+			cache.add(states[0].square, states[0].playedMoves, states[0].visits, states[1].square, states[1].playedMoves, states[1].visits, myRequiredMoves);
 
 			/* -- Label all valid moves that can be used to reach our goals and squares that were occupied -- */
 
@@ -1704,6 +1747,7 @@ int Piece::fullplay(array<State, 2>& states, int availableMoves, int maximumMove
 			state.availableMoves += 1;
 			state.playedMoves -= 1;
 			state.square = from;
+			state.visits = visits;
 
 			/* -- Update required moves -- */
 

@@ -161,6 +161,21 @@ bool Partition::split(Pieces& pieces, int freeMoves, int freeCaptures, Targets& 
 	const int availableMoves = m_assignedRequiredMoves + m_unassignedRequiredMoves + freeMoves;
 	const int availableCaptures = m_assignedRequiredCaptures + m_unassignedRequiredCaptures + freeCaptures;
 
+	/* -- Easily split partition if it contains identical captures -- */
+
+	if (!m_squares && (m_destinations.size() > 1) && (m_men.count() == m_destinations.size()))
+	{
+		const Destination& reference = m_destinations[0];
+		if (xstd::all_of(m_destinations, [&](const Destination& destination) { return (destination.squares == reference.squares) && (destination.glyphs == reference.glyphs) && (destination.men == reference.men); }))
+		{
+			Men men = m_men;
+			for (Capture& capture : captures)
+				capture.updatePossibleMen(Men(men.pop()), capture.xmen());
+
+			return true;
+		}
+	}
+
 	/* -- Split partition, working with subsets of men if there are too many possible men --  */
 
 	static constexpr int MaxMen = 8;

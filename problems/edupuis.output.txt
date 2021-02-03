@@ -122,7 +122,7 @@ Problème analysé :
 	21,0 coups                (16+14)
 
 Verdict :
-	Échelle de difficulté = 116.17
+	Échelle de difficulté = 78.00
 	Recherche interrompue
 
 
@@ -511,7 +511,7 @@ Problème analysé :
 	27,5 coups                (14+15)
 
 Verdict :
-	Échelle de difficulté = 88.56
+	Échelle de difficulté = 86.97
 	Recherche interrompue
 
 

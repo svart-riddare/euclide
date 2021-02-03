@@ -245,6 +245,10 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 					if (capture.man() >= 0)
 						pieces[capture.man()].setPossibleSquares(capture.squares());
 
+				for (const Capture& capture : captures)
+					if ((capture.xman() >= 0) && (capture.square() != Nowhere))
+						xpieces[capture.xman()].setVisitedSquares(capture.squares());
+
 				/* -- Assign moves and captures -- */
 
 				int freeMoves = m_freeMoves[color] - partitions.unassignedRequiredMoves();
