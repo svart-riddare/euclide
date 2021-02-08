@@ -183,7 +183,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				Pieces& pieces = m_pieces[color];
 				Pieces& xpieces = m_pieces[!color];
 
-				/* -- Assign moves and captures to targets -- */
+				/* -- Assign men, moves and captures to targets and captures -- */
 
 				do
 				{
@@ -202,18 +202,32 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 						{
 							const Men men([&](Man man) { return (pieces[man].glyphs() & capture.glyphs()) && (pieces[man].squares() & capture.squares()) && maybe(pieces[man].captured()); }, capture.men().range());
 							const Men xmen([&](Man xman) { return xpieces[xman].availableMoves() && (xpieces[xman].captures() & capture.squares()); }, capture.xmen().range());
-							capture.updatePossibleMen(men, xmen);
+							const bool menUpdated = capture.updatePossibleMen(men, xmen);
 
 							const Glyphs glyphs = xstd::merge(men.in(pieces), Glyphs(), [](const Piece& piece) { return piece.glyphs(); });
-							capture.updatePossibleGlyphs(glyphs);
+							const bool glyphsUpdated = capture.updatePossibleGlyphs(glyphs);
 
 							const Squares squares = xstd::merge(men.in(pieces), Squares(), [](const Piece& piece) { return piece.squares(); });
 							const Squares xsquares = xstd::merge(xmen.in(xpieces), Squares(), [](const Piece& xpiece) { return xpiece.captures(); });
-							update = capture.updatePossibleSquares(squares & xsquares);
+							const bool squaresUpdated = capture.updatePossibleSquares(squares & xsquares);
+
+							update = menUpdated || glyphsUpdated || squaresUpdated;
 						}
 
-						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(capture.squares()), piece.requiredMoves()); }));
-						capture.updateRequiredCaptures(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(capture.squares()), piece.requiredCaptures()); }));
+						const Man man = capture.man();
+						const Man xman = capture.xman();
+						const Squares squares = capture.squares();
+
+						capture.updateRequiredMoves(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredMovesTo(squares), piece.requiredMoves()); }));
+						capture.updateRequiredCaptures(xstd::min(capture.men().in(pieces), [&](const Piece& piece) { return std::max(piece.requiredCapturesTo(squares), piece.requiredCaptures()); }));
+
+						if (man >= 0)
+							pieces[man].setCaptured(true);
+						if (man >= 0)
+							pieces[man].setPossibleSquares(squares);
+
+						if ((xman >= 0) && (capture.square() != Nowhere))
+							xpieces[xman].setVisitedSquares(squares);
 					}
 
 				} while (targets.update(captures) || captures.update(targets));
@@ -236,18 +250,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				for (const Partition& partition : partitions)
 					for (Man man : ValidMen(partition.men()))
 						pieces[man].setPossibleSquares(partition.squares() | partition.captures());
-
-				for (const Capture& capture : captures)
-					if (capture.man() >= 0)
-						pieces[capture.man()].setCaptured(true);
-
-				for (const Capture& capture : captures)
-					if (capture.man() >= 0)
-						pieces[capture.man()].setPossibleSquares(capture.squares());
-
-				for (const Capture& capture : captures)
-					if ((capture.xman() >= 0) && (capture.square() != Nowhere))
-						xpieces[capture.xman()].setVisitedSquares(capture.squares());
 
 				/* -- Assign moves and captures -- */
 
@@ -292,6 +294,12 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 				analyse = false;
 				for (const Partition& partition : partitions)
 					if (partition.split(pieces, freeMoves, freeCaptures, targets, captures))
+						analyse = true;
+
+				/* -- Map captures if possible -- */
+
+				for (const Partition& partition : partitions)
+					if (partition.map(pieces, m_captures[!color]))
 						analyse = true;
 			}
 		}

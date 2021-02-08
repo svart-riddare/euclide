@@ -31,6 +31,12 @@ class Capture
 		bool applyPigeonHolePrinciple(Targets& targets, Captures& captures) const;
 
 	public:
+		bool operator==(const Capture& capture) const
+			{ return (capture.m_glyphs == m_glyphs) && (capture.m_squares == m_squares) && (capture.m_men == m_men) && (capture.m_xmen == m_xmen); }
+		bool operator!=(const Capture& capture) const
+			{ return (capture.m_glyphs != m_glyphs) || (capture.m_squares != m_squares) || (capture.m_men != m_men) || (capture.m_xmen != m_xmen); }
+
+	public:
 		inline Glyphs glyphs() const
 			{ return m_glyphs; }
 		inline Glyph glyph() const

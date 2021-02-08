@@ -28,6 +28,8 @@ class Partition
 		bool split(Pieces& pieces, int freeMoves, int freeCaptures, Targets& targets, Captures& captures) const;
 		bool split(Pieces& pieces, Glyph glyph, int availableMoves, int availableCaptures, Targets& targets, Captures& captures) const;
 
+		bool map(const Pieces& pieces, Captures& xcaptures) const;
+
 	public:
 		inline Squares squares() const
 			{ return m_squares; }

@@ -169,8 +169,11 @@ bool Partition::split(Pieces& pieces, int freeMoves, int freeCaptures, Targets& 
 		if (xstd::all_of(m_destinations, [&](const Destination& destination) { return (destination.squares == reference.squares) && (destination.glyphs == reference.glyphs) && (destination.men == reference.men); }))
 		{
 			Men men = m_men;
-			for (Capture& capture : captures)
+			for (const Destination& destination : m_destinations)
+			{
+				Capture& capture = captures[std::distance<Captures::const_pointer>(captures.data(), destination.capture)];
 				capture.updatePossibleMen(Men(men.pop()), capture.xmen());
+			}
 
 			return true;
 		}
@@ -200,10 +203,14 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 {
 	/* -- List men -- */
 
-	Men selected;
+	Men selected, unselected;
 	for (const Destination& destination : m_destinations)
-		if (!glyph || destination.glyphs[glyph])
+	{
+		if (!glyph || (destination.glyph == glyph))
 			selected |= destination.men;
+		else
+			unselected |= destination.men;
+	}
 
 	int m = 0;
 	array<Man, MaxPieces> men;
@@ -215,7 +222,7 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 	int s = 0;
 	array<size_t, MaxPieces> destinations;
 	for (size_t k = 0; k < m_destinations.size(); k++)
-		if (!glyph || m_destinations[k].glyphs[glyph])
+		if (!glyph || (m_destinations[k].glyph == glyph))
 			destinations[s++] = k;
 
 	/* -- This should not happen -- */
@@ -294,7 +301,6 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 	for (int k = 0; k < s; k++)
 	{
 		const Destination& destination = m_destinations[destinations[k]];
-
 		if (destination.target)
 		{
 			const ptrdiff_t index = destination.target - targets.data();
@@ -332,12 +338,69 @@ bool Partition::split(Pieces& pieces, Glyph glyph, int availableMoves, int avail
 	/* -- Update pieces -- */
 
 	for (int i = 0; i < m; i++)
+	{
 		if (glyph)
-			pieces[men[i]].piece(glyph)->setPossibleSquares(squares[i]);
+		{
+			if (!unselected[men[i]])
+				pieces[men[i]].piece(glyph)->setPossibleSquares(squares[i]);
+		}
 		else
+		{
 			pieces[men[i]].setPossibleSquares(squares[i]);
+		}
+	}
 
 	/* -- Done -- */
+
+	return updated;
+}
+
+/* -------------------------------------------------------------------------- */
+
+bool Partition::map(const Pieces& pieces, Captures& xcaptures) const
+{
+	if (!m_requiredCaptures || xcaptures.empty())
+		return false;
+
+	/* -- Find captures that may be used for this partition requirements -- */
+
+	BitSet<size_t, MaxPieces> captures;
+
+	Squares squares;
+	for (const Piece& piece : m_men.in(pieces))
+		squares |= piece.captures();
+
+	for (size_t c = 0; c < xcaptures.size(); c++)
+		if ((xcaptures[c].xmen() & m_men) && (xcaptures[c].squares() & squares))
+			captures.set(c);
+
+	/* -- Try to select some captures -- */
+
+	auto count = captures.count();
+	if (count < m_requiredCaptures)
+		throw NoSolution;
+
+	const Capture& reference = xcaptures[captures.first()];
+	for (size_t c = 0; c < xcaptures.size(); c++)
+		if (captures[c] && (xcaptures[c] != reference))
+			return false;
+
+	/* -- Update captures -- */
+
+	for ( ; count > m_requiredCaptures; count--)
+		captures.pop();
+
+	bool updated = false;
+	for (size_t c = 0; c < xcaptures.size(); c++)
+	{
+		if (captures[c])
+		{
+			if (xcaptures[c].updatePossibleSquares(squares))
+				updated = true;
+			if (xcaptures[c].updatePossibleMen(xcaptures[c].men(), m_men))
+				updated = true;
+		}
+	}
 
 	return updated;
 }

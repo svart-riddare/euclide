@@ -26,7 +26,7 @@ Problème analysé :
 	19,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 306.76
+	Échelle de difficulté = 226.01
 	Recherche interrompue
 
 
@@ -58,7 +58,7 @@ Problème analysé :
 	20,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 196.26
+	Échelle de difficulté = 184.51
 	Recherche interrompue
 
 
@@ -154,7 +154,7 @@ Problème analysé :
 	11,0 coups                (14+13)
 
 Verdict :
-	Échelle de difficulté = 142.37
+	Échelle de difficulté = 141.79
 	Recherche interrompue
 
 
@@ -374,7 +374,7 @@ Problème analysé :
 	13,5 coups                (15+14)
 
 Verdict :
-	Échelle de difficulté = 236.07
+	Échelle de difficulté = 236.03
 	Recherche interrompue
 
 
@@ -438,7 +438,7 @@ Problème analysé :
 	20,0 coups                (14+14)
 
 Verdict :
-	Échelle de difficulté = 244.09
+	Échelle de difficulté = 201.71
 	Recherche interrompue
 
 
@@ -511,7 +511,7 @@ Problème analysé :
 	27,5 coups                (14+15)
 
 Verdict :
-	Échelle de difficulté = 86.97
+	Échelle de difficulté = 85.95
 	Recherche interrompue
 
 
@@ -543,7 +543,7 @@ Problème analysé :
 	15,5 coups                (12+13)
 
 Verdict :
-	Échelle de difficulté = 341.02
+	Échelle de difficulté = 328.63
 	Recherche interrompue
 
 
@@ -627,8 +627,8 @@ Solution n° 1 :
 22. Fh3-e6    Pg3-g2     23. Fe6-c4    Pg2-g1=C   24. Dh5-d5    Cg1-h3     
 
 Verdict :
-	Échelle de difficulté = 48.96
-	Positions examinées : 2936205
+	Échelle de difficulté = 44.96
+	Positions examinées : 2934659
 	Solution unique
 
 
@@ -739,8 +739,8 @@ Solution n° 1 :
  7. Ff1-a6    Fc8-h3      8. Pg2-g4    Pb7-b5      9. Fa6-c8    Fh3-f1     
 
 Verdict :
-	Échelle de difficulté = 37.62
-	Positions examinées : 174400
+	Échelle de difficulté = 0.00
+	Positions examinées : 56
 	Solution unique
 
 
@@ -771,9 +771,19 @@ Problème analysé :
 	+---+---+---+---+---+---+---+---+
 	18,0 coups                (16+13)
 
+Solution n° 1 :
+---------------------------------------------------------------------------
+ 1. Pf2-f4    Pg7-g6      2. Re1-f2    Ff8-g7      3. Rf2-e3    Fg7-c3     
+ 4. Pd2xc3    Pf7-f6      5. Dd1-d6    Re8-f7      6. Dd6xc7    Rf7-e6     
+ 7. Dc7xc8    Dd8-a5      8. Re3-d4    Da5-h5      9. Fc1-e3    Re6-f5     
+10. Rd4-c5    Pa7-a5     11. Rc5-b6    Rf5-e4     12. Rb6-c7    Cb8-a6+    
+13. Rc7-d8    Ta8-b8     14. Fe3-a7    Ca6-c5     15. Rd8-e8    Re4-e3     
+16. Dc8-d8    Re3-f2     17. Pe2-e3    Dh5-d1     18. Ff1-e2    Rf2-e1     
+
 Verdict :
-	Échelle de difficulté = 73.04
-	Recherche interrompue
+	Échelle de difficulté = 35.83
+	Positions examinées : 1251320
+	Solution unique
 
 
 ---------------------------------------------------------------------------
