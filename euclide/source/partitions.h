@@ -45,6 +45,11 @@ class Partition
 		inline int requiredCaptures() const
 			{ return m_requiredCaptures; }
 
+		inline int minimumRequiredMoves() const
+			{ return m_minimumRequiredMoves; }
+		inline int minimumRequiredCaptures() const
+			{ return m_minimumRequiredCaptures; }
+
 		inline int assignedRequiredMoves() const
 			{ return m_assignedRequiredMoves; }
 		inline int assignedRequiredCaptures() const
@@ -54,6 +59,9 @@ class Partition
 			{ return m_unassignedRequiredMoves; }
 		inline int unassignedRequiredCaptures() const
 			{ return m_unassignedRequiredCaptures; }
+
+		int unassignedRequiredMoves(Man man) const;
+		int unassignedRequiredCaptures(Man man) const;
 
 	private:
 		Squares m_squares;                          /**< Target squares. */
@@ -76,6 +84,9 @@ class Partition
 
 		int m_requiredMoves;                        /**< Required moves. */
 		int m_requiredCaptures;                     /**< Required captures. */
+
+		int m_minimumRequiredMoves;                 /**< Minimum required moves (sum of required moves for partition targets). */
+		int m_minimumRequiredCaptures;              /**< Minimum required captures (sum of required captures for partition targets). */
 
 		int m_assignedRequiredMoves;                /**< Required moves assigned to a specific piece. */
 		int m_assignedRequiredCaptures;             /**< Required captures assigned to a specific piece. */
@@ -104,15 +115,10 @@ class Partitions : public std::vector<Partition>
 		inline int unassignedRequiredCaptures() const
 			{ return m_unassignedRequiredCaptures; }
 
-		inline int requiredMoves(Man man) const
-			{ return m_map[man]->requiredMoves(); }
-		inline int requiredCaptures(Man man) const
-			{ return m_map[man]->requiredCaptures(); }
-
 		inline int unassignedRequiredMoves(Man man) const
-			{ return m_map[man]->unassignedRequiredMoves(); }
+			{ return m_map[man]->unassignedRequiredMoves(man); }
 		inline int unassignedRequiredCaptures(Man man) const
-			{ return m_map[man]->unassignedRequiredCaptures(); }
+			{ return m_map[man]->unassignedRequiredCaptures(man); }
 
 	private:
 		int m_requiredMoves;                          /**< Required moves. */

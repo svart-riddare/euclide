@@ -15,6 +15,9 @@ Partition::Partition()
 	m_requiredMoves = 0;
 	m_requiredCaptures = 0;
 
+	m_minimumRequiredMoves = 0;
+	m_minimumRequiredCaptures = 0;
+
 	m_assignedRequiredMoves = 0;
 	m_assignedRequiredCaptures = 0;
 
@@ -81,6 +84,9 @@ void Partition::assign(const Pieces& pieces)
 	m_assignedRequiredCaptures = 0;
 	for (Man man : ValidMen(m_men))
 		m_assignedRequiredCaptures += pieces[man].requiredCaptures();
+
+	m_minimumRequiredMoves = m_requiredMoves;
+	m_minimumRequiredCaptures = m_requiredCaptures;
 
 	m_requiredMoves = std::max(m_requiredMoves, m_assignedRequiredMoves);
 	m_requiredCaptures = std::max(m_requiredCaptures, m_assignedRequiredCaptures);
@@ -150,6 +156,9 @@ void Partition::assign(const Pieces& pieces)
 
 	m_requiredMoves = std::max(m_requiredMoves, minRequiredMoves);
 	m_requiredCaptures = std::max(m_requiredCaptures, minRequiredCaptures);
+
+	assert(m_assignedRequiredMoves + m_unassignedRequiredMoves == m_requiredMoves);
+	assert(m_assignedRequiredCaptures + m_unassignedRequiredCaptures == m_requiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -403,6 +412,34 @@ bool Partition::map(const Pieces& pieces, Captures& xcaptures) const
 	}
 
 	return updated;
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Partition::unassignedRequiredMoves(Man man) const
+{
+	assert(m_men[man]);
+
+	const int maximumRequiredMoves = xstd::max(m_destinations, [&](const Destination& destination) {
+		return destination.men[man] ? destination.target ? destination.target->requiredMoves() : destination.capture->requiredMoves() : 0;
+	});
+
+	const int unavailableRequiredMoves = m_minimumRequiredMoves - maximumRequiredMoves;
+	return std::min(m_unassignedRequiredMoves, m_requiredMoves - unavailableRequiredMoves);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int Partition::unassignedRequiredCaptures(Man man) const
+{
+	assert(m_men[man]);
+
+	const int maximumRequiredCaptures = xstd::max(m_destinations, [&](const Destination& destination) {
+		return destination.men[man] ? destination.target ? destination.target->requiredCaptures() : destination.capture->requiredCaptures() : 0;
+		});
+
+	const int unavailableRequiredCaptures = m_minimumRequiredCaptures - maximumRequiredCaptures;
+	return std::min(m_unassignedRequiredCaptures, m_requiredCaptures - unavailableRequiredCaptures);
 }
 
 /* -------------------------------------------------------------------------- */

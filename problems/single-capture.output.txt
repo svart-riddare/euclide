@@ -4669,7 +4669,7 @@ Problème analysé :
 	25,5 coups                (16+15)
 
 Verdict :
-	Échelle de difficulté = 200.48
+	Échelle de difficulté = 200.37
 	Recherche interrompue
 
 

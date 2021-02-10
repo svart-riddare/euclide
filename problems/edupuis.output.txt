@@ -26,7 +26,7 @@ Problème analysé :
 	19,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 226.01
+	Échelle de difficulté = 225.96
 	Recherche interrompue
 
 
@@ -374,7 +374,7 @@ Problème analysé :
 	13,5 coups                (15+14)
 
 Verdict :
-	Échelle de difficulté = 236.03
+	Échelle de difficulté = 120.75
 	Recherche interrompue
 
 
@@ -406,7 +406,7 @@ Problème analysé :
 	15,5 coups                (15+11)
 
 Verdict :
-	Échelle de difficulté = 304.30
+	Échelle de difficulté = 234.37
 	Recherche interrompue
 
 
@@ -438,7 +438,7 @@ Problème analysé :
 	20,0 coups                (14+14)
 
 Verdict :
-	Échelle de difficulté = 201.71
+	Échelle de difficulté = 201.52
 	Recherche interrompue
 
 
@@ -543,7 +543,7 @@ Problème analysé :
 	15,5 coups                (12+13)
 
 Verdict :
-	Échelle de difficulté = 328.63
+	Échelle de difficulté = 288.27
 	Recherche interrompue
 
 
@@ -660,7 +660,7 @@ Problème analysé :
 	10,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 273.45
+	Échelle de difficulté = 166.20
 	Recherche interrompue
 
 
@@ -855,7 +855,7 @@ Problème analysé :
 	23,0 coups                (13+14)
 
 Verdict :
-	Échelle de difficulté = 384.94
+	Échelle de difficulté = 306.03
 	Recherche interrompue
 
 

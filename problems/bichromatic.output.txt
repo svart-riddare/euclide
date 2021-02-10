@@ -58,7 +58,7 @@ Problème analysé :
 	9,0 coups                 (15+13)
 
 Verdict :
-	Échelle de difficulté = 90.17
+	Échelle de difficulté = 86.63
 	Recherche interrompue
 
 
@@ -96,7 +96,7 @@ Solution n° 1 :
  7. Da6-a3    Ta7-a4      8. Da3-f3    Ta4-d4      9. Pc2-c3    Td4-d1+    
 
 Verdict :
-	Échelle de difficulté = 76.96
+	Échelle de difficulté = 75.25
 	Recherche interrompue
 
 
