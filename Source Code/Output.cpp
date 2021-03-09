@@ -371,7 +371,8 @@ void OutputSolution(const solution *Solution, unsigned int Numero, bool Dual)
 	if (!Dual)
 		SolutionReference = Solution;
 
-	fprintf(Output, "\n%s #%u :\n", GetTexte(MESSAGE_SOLUTION, 64, false), Numero);
+	fprintf(Output, "\n%s #%u ", GetTexte(MESSAGE_SOLUTION, 64, false), Numero);
+	fprintf(Output, "(%s %s) : \n", GetElapsedTime(), GetTexte(MESSAGE_SECONDES, 32, false));
 	fprintf(Output, "---------------------------------------------------------------------\n");
 
 	for (unsigned int k = 0; k < Solution->DemiCoups; k++) {
