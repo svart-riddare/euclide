@@ -42,6 +42,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2091DBC725FF11DA00B18419 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* Euclide */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Euclide; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859E8B029090EE04C91782 /* Euclide.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Euclide.1; sourceTree = "<group>"; };
 		CEA9124A11B1568C00B93666 /* Constantes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constantes.cpp; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 		08FB7794FE84155DC02AAC07 /* Euclide */ = {
 			isa = PBXGroup;
 			children = (
+				2091DBC725FF11DA00B18419 /* Config.xcconfig */,
 				CEA9131D11B162A300B93666 /* libiconv.2.4.0.dylib */,
 				CEA9130E11B1626800B93666 /* libncurses.5.4.dylib */,
 				08FB7795FE84155DC02AAC07 /* Source */,
