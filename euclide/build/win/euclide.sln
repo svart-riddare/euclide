@@ -1,20 +1,37 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "euclide", "euclide.vcproj", "{79975B44-0FD3-46AA-8345-D6BE668A0865}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "euclide", "euclide.vcxproj", "{79975B44-0FD3-46AA-8345-D6BE668A0865}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Release|Win32 = Release|Win32
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		DllRelease|x64 = DllRelease|x64
+		DllRelease|x86 = DllRelease|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|Win32.ActiveCfg = Debug|Win32
-		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|Win32.Build.0 = Debug|Win32
-		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|Win32.ActiveCfg = Release|Win32
-		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|Win32.Build.0 = Release|Win32
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|x64.ActiveCfg = Debug|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|x64.Build.0 = Debug|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|x86.ActiveCfg = Release|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Debug|x86.Build.0 = Release|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.DllRelease|x64.ActiveCfg = DllRelease|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.DllRelease|x64.Build.0 = DllRelease|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.DllRelease|x86.ActiveCfg = DllRelease|Win32
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.DllRelease|x86.Build.0 = DllRelease|Win32
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|x64.ActiveCfg = Release|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|x64.Build.0 = Release|x64
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|x86.ActiveCfg = Release|Win32
+		{79975B44-0FD3-46AA-8345-D6BE668A0865}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5DD7AAA-93B2-45FF-91B9-9890F9C63905}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,6 @@
+LIBRARY euclide
+EXPORTS
+	EUCLIDE_initialize
+	EUCLIDE_problem
+	EUCLIDE_done
+	EUCLIDE_solve

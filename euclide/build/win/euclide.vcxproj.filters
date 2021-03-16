@@ -127,4 +127,9 @@
   <ItemGroup>
     <Natvis Include="euclide.natvis" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="euclide.def">
+      <Filter>Interface Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
