@@ -66,7 +66,7 @@ typedef enum
 
 	/* -- Fairy pieces -- */
 
-	EUCLIDE_PIECE_GRASSHOPPER,    /**< Grasshopper classic fairy piece. */
+	EUCLIDE_PIECE_GRASSHOPPER,    /**< Grasshopper classic fairy piece. Not yet implemented. */
 	EUCLIDE_PIECE_NIGHTRIDER,     /**< Nighrider classic fairy piece. */
 
 	/* -- Knighted pieces -- */
@@ -81,7 +81,7 @@ typedef enum
 	EUCLIDE_PIECE_CAMEL,          /**< (1,3) leaper. */
 	EUCLIDE_PIECE_ZEBRA,          /**< (2,3) leaper. */
 
-	/* -- Chinese pieces -- */
+	/* -- Chinese pieces, not yet implemented -- */
 
 	EUCLIDE_PIECE_LEO,            /**< Chinese queen. */
 	EUCLIDE_PIECE_PAO,            /**< Chinese rook (cannon). */
