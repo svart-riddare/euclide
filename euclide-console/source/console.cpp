@@ -36,7 +36,6 @@ Console::Console(const Strings& strings)
 	m_callbacks.displayCopyright = displayCopyrightCallback;
 	m_callbacks.displayProblem = displayProblemCallback;
 	m_callbacks.displayMessage = displayMessageCallback;
-	m_callbacks.displayProgress = displayProgressCallback;
 	m_callbacks.displayDeductions = displayDeductionsCallback;
 	m_callbacks.displayThinking = displayThinkingCallback;
 	m_callbacks.displaySolution = displaySolutionCallback;
@@ -193,30 +192,19 @@ void Console::displayProblem(const EUCLIDE_Problem& problem) const
 
 /* -------------------------------------------------------------------------- */
 
-void Console::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const
-{
-	m_stdout.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
-	m_output.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
-
-	wchar_t string[32];
-
-	swprintf(string, countof(string), L"%d - %d", whiteFreeMoves, blackFreeMoves);
-	write(string, 16, true, 11, 2, Colors::FreeMoves);
-
-	swprintf(string, countof(string), L"%.2f", complexity);
-	write(string, 16, true, 27, 2, Colors::Complexity);
-
-	displayTimer();
-}
-
-/* -------------------------------------------------------------------------- */
-
 void Console::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
 	m_stdout.displayDeductions(deductions);
 	m_output.displayDeductions(deductions);
 
-	displayProgress(deductions.freeWhiteMoves, deductions.freeBlackMoves, deductions.complexity);
+	wchar_t string[32];
+
+	swprintf(string, countof(string), L"%d - %d", deductions.freeWhiteMoves, deductions.freeBlackMoves);
+	write(string, 16, true, 11, 2, Colors::FreeMoves);
+
+	swprintf(string, countof(string), L"%.2f", deductions.complexity);
+	write(string, 16, true, 27, 2, Colors::Complexity);
+
 	displayTimer();
 }
 

@@ -24,7 +24,6 @@ class BackgroundConsole : public Console
 		virtual void displayCopyright(const wchar_t *copyright) const override;
 		virtual void displayMessage(EUCLIDE_Message message) const override;
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const override;
-		virtual void displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const override;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const override;
 		virtual void displayThinking(const EUCLIDE_Thinking& thinking) const override;
 		virtual void displaySolution(const EUCLIDE_Solution& solution) const override;
@@ -49,11 +48,6 @@ class BackgroundConsole : public Console
 
 		mutable bool m_displayProblem;                        /**< Set if displayProblem callback has been called. */
 		mutable EUCLIDE_Problem m_problem;                    /**< Last parameters received through aforementioned callback. */
-
-		mutable bool m_displayProgress;                       /**< Set if displayProgress callback has been called. */
-		mutable int m_whiteFreeMoves;                         /**< Last parameters received through aforementioned callback. */
-		mutable int m_blackFreeMoves;                         /**< Last parameters received through aforementioned callback. */
-		mutable double m_complexity;                          /**< Last parameters received through aforementioned callback. */
 
 		mutable bool m_displayDeductions;                     /**< Set if displayDeductions callback has been called. */
 		mutable EUCLIDE_Deductions m_deductions;              /**< Last parameters received through aforementioned callback. */

@@ -243,7 +243,6 @@ typedef void *EUCLIDE_UserHandle;
 typedef void (*EUCLIDE_DisplayCopyrightFunction)(EUCLIDE_UserHandle handle, const wchar_t *copyright);
 typedef void (*EUCLIDE_DisplayProblemFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem);
 typedef void (*EUCLIDE_DisplayMessageFunction)(EUCLIDE_UserHandle handle, EUCLIDE_Message message);
-typedef void (*EUCLIDE_DisplayProgressFunction)(EUCLIDE_UserHandle handle, int whiteFreeMoves, int blackFreeMoves, double complexity);
 typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions);
 typedef void (*EUCLIDE_DisplayThinkingFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking);
 typedef void (*EUCLIDE_DisplaySolutionFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Solution *solution);
@@ -255,7 +254,6 @@ typedef struct
 	EUCLIDE_DisplayCopyrightFunction displayCopyright;
 	EUCLIDE_DisplayProblemFunction displayProblem;
 	EUCLIDE_DisplayMessageFunction displayMessage;
-	EUCLIDE_DisplayProgressFunction displayProgress;
 	EUCLIDE_DisplayDeductionsFunction displayDeductions;
 	EUCLIDE_DisplayThinkingFunction displayThinking;
 	EUCLIDE_DisplaySolutionFunction displaySolution;

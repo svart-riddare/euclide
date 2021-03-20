@@ -22,7 +22,6 @@ class Output
 		void displayCopyright(const wchar_t *copyright) const;
 		void displayMessage(EUCLIDE_Message message) const;
 		void displayProblem(const EUCLIDE_Problem& problem) const;
-		void displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const;
 		void displayDeductions(const EUCLIDE_Deductions& deductions) const;
 		void displayThinking(const EUCLIDE_Thinking& thinking) const;
 		void displaySolution(const EUCLIDE_Solution& solution) const;
@@ -40,8 +39,6 @@ class Output
 			{ return reinterpret_cast<Output *>(handle)->displayMessage(message); }
 		static void displayProblemCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem)
 			{ return reinterpret_cast<Output *>(handle)->displayProblem(*problem); }
-		static void displayProgressCallback(EUCLIDE_UserHandle handle, int whiteFreeMoves, int blackFreeMoves, double complexity)
-			{ return reinterpret_cast<Output *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
 		static void displayDeductionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions)
 			{ return reinterpret_cast<Output *>(handle)->displayDeductions(*deductions); }
 		static void displayThinkingCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking)

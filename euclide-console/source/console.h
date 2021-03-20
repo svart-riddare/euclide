@@ -30,7 +30,6 @@ class Console
 		virtual void displayCopyright(const wchar_t *copyright) const;
 		virtual void displayMessage(EUCLIDE_Message message) const;
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const;
-		virtual void displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
 		virtual void displayThinking(const EUCLIDE_Thinking& thinking) const;
 		virtual void displaySolution(const EUCLIDE_Solution& solution) const;
@@ -65,8 +64,6 @@ class Console
 			{ reinterpret_cast<Console *>(handle)->displayMessage(message); }
 		static void displayProblemCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem)
 			{ reinterpret_cast<Console *>(handle)->displayProblem(*problem); }
-		static void displayProgressCallback(EUCLIDE_UserHandle handle, int whiteFreeMoves, int blackFreeMoves, double complexity)
-			{ reinterpret_cast<Console *>(handle)->displayProgress(whiteFreeMoves, blackFreeMoves, complexity); }
 		static void displayDeductionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions)
 			{ reinterpret_cast<Console *>(handle)->displayDeductions(*deductions); }
 		static void displayThinkingCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Thinking *thinking)

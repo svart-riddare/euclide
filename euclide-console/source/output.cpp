@@ -15,7 +15,6 @@ Output::Output(const Strings& strings, const char *inputFileName)
 	m_callbacks.displayCopyright = displayCopyrightCallback;
 	m_callbacks.displayProblem = displayProblemCallback;
 	m_callbacks.displayMessage = displayMessageCallback;
-	m_callbacks.displayProgress = displayProgressCallback;
 	m_callbacks.displayDeductions = displayDeductionsCallback;
 	m_callbacks.displayThinking = displayThinkingCallback;
 	m_callbacks.displaySolution = displaySolutionCallback;
@@ -207,15 +206,9 @@ void Output::displayProblem(const EUCLIDE_Problem& problem) const
 
 /* -------------------------------------------------------------------------- */
 
-void Output::displayProgress(int /*whiteFreeMoves*/, int /*blackFreeMoves*/, double complexity) const
+void Output::displayDeductions(const EUCLIDE_Deductions& deductions) const
 {
-	m_complexity = complexity;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void Output::displayDeductions(const EUCLIDE_Deductions& /*deductions*/) const
-{
+	m_complexity = deductions.complexity;
 }
 
 /* -------------------------------------------------------------------------- */

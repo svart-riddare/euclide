@@ -41,7 +41,6 @@ void BackgroundConsole::clear()
 	m_displayCopyright = false;
 	m_displayMessage = false;
 	m_displayProblem = false;
-	m_displayProgress = false;
 	m_displayDeductions = false;
 	m_displayThinking = false;
 	m_displaySolution = false;
@@ -109,21 +108,6 @@ void BackgroundConsole::displayProblem(const EUCLIDE_Problem& problem) const
 
 	m_displayProblem = true;
 	m_problem = problem;
-}
-
-/* -------------------------------------------------------------------------- */
-
-void BackgroundConsole::displayProgress(int whiteFreeMoves, int blackFreeMoves, double complexity) const
-{
-	std::lock_guard<std::mutex> locker(m_lock);
-
-	if (m_active)
-		return m_console.displayProgress(whiteFreeMoves, blackFreeMoves, complexity);
-
-	m_displayProgress = true;
-	m_whiteFreeMoves = whiteFreeMoves;
-	m_blackFreeMoves = blackFreeMoves;
-	m_complexity = complexity;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -198,9 +182,6 @@ bool BackgroundConsole::foreground(bool wait)
 
 		if (m_displayMessage)
 			m_console.displayMessage(m_message);
-
-		if (m_displayProgress)
-			m_console.displayProgress(m_whiteFreeMoves, m_blackFreeMoves, m_complexity);
 
 		if (m_displayDeductions)
 			m_console.displayDeductions(m_deductions);
