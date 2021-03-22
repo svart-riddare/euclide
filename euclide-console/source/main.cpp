@@ -11,6 +11,7 @@ struct Options
 	bool wait = false;     /**< If set, wait for user input after each problem solved. */
 
 	int timeout = 0;       /**< Timeout, in seconds, before aborting solving for a problem. */
+	int solutions = 8;     /**< Maximum number of solutions, before aborting solving for a problem. */
 
 	int threads = 0;       /**< Number of threads used for batch solving. */
 };
@@ -27,8 +28,8 @@ bool solve(Console& console, const ForsytheString& problem, const Options& optio
 
 	/* -- Solve problem -- */
 
-	EUCLIDE_Configuration configuration = {};
-	configuration.maxSolutions = 8;
+	EUCLIDE_Options configuration = {};
+	configuration.maxSolutions = options.solutions;
 
 	const EUCLIDE_Status status = EUCLIDE_solve(&configuration, problem, console);
 
@@ -233,6 +234,19 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 		if (strncmp(arguments[argument], "--timeout=", strlen("--timeout=")) == 0)
 		{
 			options.timeout = atoi(arguments[argument] + strlen("--timeout="));
+		}
+		else
+		if (strcmp(arguments[argument], "--solutions") == 0)
+		{
+			if (++argument < numArguments)
+				options.solutions = atoi(arguments[argument]);
+			else
+				error = Strings::InvalidArguments;
+		}
+		else
+		if (strncmp(arguments[argument], "--solutions=", strlen("--solutions=")) == 0)
+		{
+			options.solutions = atoi(arguments[argument] + strlen("--solutions="));
 		}
 		else
 		if (strcmp(arguments[argument], "--threads") == 0)

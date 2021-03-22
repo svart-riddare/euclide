@@ -13,6 +13,7 @@ Output::Output(const Strings& strings, const char *inputFileName)
 	memset(&m_callbacks, 0, sizeof(m_callbacks));
 
 	m_callbacks.displayCopyright = displayCopyrightCallback;
+	m_callbacks.displayOptions = displayOptionsCallback;
 	m_callbacks.displayProblem = displayProblemCallback;
 	m_callbacks.displayMessage = displayMessageCallback;
 	m_callbacks.displayDeductions = displayDeductionsCallback;
@@ -90,6 +91,7 @@ void Output::reset()
 	m_timer = Timer();
 	m_complexity = 0.0;
 	m_positions = 0;
+	m_xsolutions = 0;
 	m_solutions = 0;
 }
 
@@ -101,23 +103,33 @@ void Output::done(EUCLIDE_Status status)
 	{
 		fprintf(m_file, "%ls\n", m_strings[Strings::Output]);
 		if (status == EUCLIDE_STATUS_OK)
-      {
+		{
 			fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
 			if (m_positions)
 				fprintf(m_file, "\t%ls %" PRId64 "\n", m_strings[Strings::Positions], m_positions);
 
-			const Strings::String verdicts[] = { Strings::NoSolution, Strings::UniqueSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::Cooked };
+			const Strings::String verdicts[6][2] = {
+				{ Strings::NoSolution, Strings::NoSolution},
+				{ Strings::AtLeastOneSolution, Strings::UniqueSolution },
+				{ Strings::AtLeastTwoSolutions, Strings::TwoSolutions },
+				{ Strings::AtLeastThreeSolutions, Strings::ThreeSolutions },
+				{ Strings::AtLeastFourSolutions, Strings::FourSolutions },
+				{ Strings::MultipleSolutions, Strings::MultipleSolutions }
+			};
+
+			const bool exhaustive = !m_xsolutions || (m_solutions < m_xsolutions);
+
 			if (m_positions)
-				fprintf(m_file, "\t%ls\n", m_strings[verdicts[std::min<int>(m_solutions, countof(verdicts) - 1)]]);
+				fprintf(m_file, "\t%ls\n", m_strings[verdicts[std::min<int>(m_solutions, countof(verdicts) - 1)][exhaustive]]);
 		}
-      else
-      if (status == EUCLIDE_STATUS_ABORTED)
-      {
-         fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
-         fprintf(m_file, "\t%ls\n", m_strings[status]);
-      }
 		else
-      {
+		if (status == EUCLIDE_STATUS_ABORTED)
+		{
+			fprintf(m_file, "\t%ls %.2f\n", m_strings[Strings::Score], m_complexity);
+			fprintf(m_file, "\t%ls\n", m_strings[status]);
+		}
+		else
+		{
 			fprintf(m_file, "\t%ls\n", m_strings[status]);
 		}
 		fprintf(m_file, "\n\n");
@@ -137,6 +149,13 @@ void Output::displayCopyright(const wchar_t *copyright) const
 		fprintf(m_file, "\n");
 		fflush(m_file);
 	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Output::displayOptions(const EUCLIDE_Options& options) const
+{
+	m_xsolutions = std::max(0, options.maxSolutions);
 }
 
 /* -------------------------------------------------------------------------- */

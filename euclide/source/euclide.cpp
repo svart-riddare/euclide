@@ -16,7 +16,7 @@ namespace Euclide
 class Euclide
 {
 	public:
-		Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks);
+		Euclide(const EUCLIDE_Options& options, const EUCLIDE_Callbacks& callbacks);
 		~Euclide();
 
 		void reset();
@@ -29,7 +29,7 @@ class Euclide
 		const EUCLIDE_Deductions& deductions() const;
 
 	private:
-		EUCLIDE_Configuration m_configuration;      /**< Global configuration. */
+		EUCLIDE_Options m_options;                  /**< Global solving options. */
 		EUCLIDE_Callbacks m_callbacks;              /**< User defined callbacks. */
 
 		Problem m_problem;                          /**< Current problem to solve. */
@@ -50,13 +50,18 @@ class Euclide
 
 /* -------------------------------------------------------------------------- */
 
-Euclide::Euclide(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks)
-	: m_configuration(configuration), m_callbacks(callbacks)
+Euclide::Euclide(const EUCLIDE_Options& options, const EUCLIDE_Callbacks& callbacks)
+	: m_options(options), m_callbacks(callbacks)
 {
 	/* -- Display copyright string -- */
 
 	if (m_callbacks.displayCopyright)
 		(*m_callbacks.displayCopyright)(m_callbacks.handle, Copyright);
+
+	/* -- Display options -- */
+
+	if (m_callbacks.displayOptions)
+		(*m_callbacks.displayOptions)(m_callbacks.handle, &m_options);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -414,7 +419,7 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 
 	/* -- Play all possible games -- */
 
-	std::unique_ptr<Game> game(new Game(m_configuration, m_callbacks, m_problem, m_pieces, m_freeMoves));
+	std::unique_ptr<Game> game(new Game(m_options, m_callbacks, m_problem, m_pieces, m_freeMoves));
 	game->play();
 }
 
@@ -633,11 +638,8 @@ const EUCLIDE_Deductions& Euclide::deductions() const
 /* -------------------------------------------------------------------------- */
 
 extern "C"
-EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configuration *configuration, const EUCLIDE_Callbacks *callbacks)
+EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Options *options, const EUCLIDE_Callbacks *callbacks)
 {
-	EUCLIDE_Configuration nullconfiguration; memset(&nullconfiguration, 0, sizeof(nullconfiguration));
-	EUCLIDE_Callbacks nullcallbacks; memset(&nullcallbacks, 0, sizeof(nullcallbacks));
-
 	/* -- Start by clearing return value -- */
 
 	if (!euclide)
@@ -647,7 +649,7 @@ EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configu
 
 	/* -- Create Euclide instance --  */
 
-	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(configuration ? *configuration : nullconfiguration, callbacks ? *callbacks : nullcallbacks)); }
+	try { *euclide = reinterpret_cast<EUCLIDE_Handle>(new Euclide::Euclide(options ? *options : EUCLIDE_Options {}, callbacks ? *callbacks : EUCLIDE_Callbacks {})); }
 	catch (Euclide::Status status) { return static_cast<EUCLIDE_Status>(status); }
 	catch (std::bad_alloc&) { return EUCLIDE_STATUS_MEMORY; }
 	catch (EUCLIDE_Status status) { return status; }
@@ -687,11 +689,11 @@ EUCLIDE_Status EUCLIDE_done(EUCLIDE_Handle euclide)
 /* -------------------------------------------------------------------------- */
 
 extern "C"
-EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Configuration *configuration, const EUCLIDE_Problem *problem, const EUCLIDE_Callbacks *callbacks)
+EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Options *options, const EUCLIDE_Problem *problem, const EUCLIDE_Callbacks *callbacks)
 {
 	EUCLIDE_Handle euclide = nullptr;
 
-	EUCLIDE_Status status = EUCLIDE_initialize(&euclide, configuration, callbacks);
+	EUCLIDE_Status status = EUCLIDE_initialize(&euclide, options, callbacks);
 	if (status != EUCLIDE_STATUS_OK)
 		return status;
 

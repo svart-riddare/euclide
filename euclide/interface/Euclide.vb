@@ -155,9 +155,15 @@ Friend Class Euclide
         Public Solution As Integer
     End Structure
 
+    Public Structure Options
+        Public MaxSolutions As Integer
+    End Structure
+
     Public Structure Callbacks
         Public Delegate Sub DisplayCopyrightFunction(ByVal Id As ULong, <MarshalAs(UnmanagedType.LPWStr)> ByVal Copyright As String)
         Public DisplayCopyright As DisplayCopyrightFunction
+        Public Delegate Sub DisplayOptionsFunction(ByVal Id As ULong, ByRef Options As Options)
+        Public DisplayOptions As DisplayOptionsFunction
         Public Delegate Sub DisplayProblemFunction(ByVal Id As ULong, ByRef Problem As Problem)
         Public DisplayProblem As DisplayProblemFunction
         Public Delegate Sub DisplayMessageFunction(ByVal Id As ULong, Message As Message)
@@ -175,12 +181,8 @@ Friend Class Euclide
         Public Id As ULong
     End Structure
 
-    Public Structure Configuration
-        Public MaxSolutions As Integer
-    End Structure
-
     Friend Declare Auto Function Solve Lib "euclide.dll" Alias "EUCLIDE_solve" (
-       ByRef Configuration As Configuration,
+       ByRef Options As Options,
        ByRef Problem As Problem,
        ByRef Callbacks As Callbacks
     ) As Status

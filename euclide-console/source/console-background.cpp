@@ -39,6 +39,7 @@ void BackgroundConsole::reset(std::chrono::seconds timeout, const Timer& timer)
 void BackgroundConsole::clear()
 {
 	m_displayCopyright = false;
+	m_displayOptions = false;
 	m_displayMessage = false;
 	m_displayProblem = false;
 	m_displayDeductions = false;
@@ -82,6 +83,19 @@ void BackgroundConsole::displayCopyright(const wchar_t *copyright) const
 
 	m_displayCopyright = true;
 	m_copyright = copyright;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void BackgroundConsole::displayOptions(const EUCLIDE_Options& options) const
+{
+	std::lock_guard<std::mutex> locker(m_lock);
+
+	if (m_active)
+		return m_console.displayOptions(options);
+
+	m_displayOptions = true;
+	m_options = options;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -176,6 +190,9 @@ bool BackgroundConsole::foreground(bool wait)
 
 		if (m_displayCopyright)
 			m_console.displayCopyright(m_copyright.c_str());
+
+		if (m_displayOptions)
+			m_console.displayOptions(m_options);
 
 		if (m_displayProblem)
 			m_console.displayProblem(m_problem);

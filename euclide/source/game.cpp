@@ -11,8 +11,8 @@ namespace Euclide
 /* -- Game                                                                 -- */
 /* -------------------------------------------------------------------------- */
 
-Game::Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves)
-	: m_configuration(configuration), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
+Game::Game(const EUCLIDE_Options& options, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves)
+	: m_options(options), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
 {
 	/* -- Initialize constant tables -- */
 
@@ -140,7 +140,7 @@ bool Game::play(const State& _state)
 
          /* -- Stop searching if we have found many solutions -- */
 
-         if ((m_configuration.maxSolutions > 0) && (m_solutions >= m_configuration.maxSolutions))
+         if ((m_options.maxSolutions > 0) && (m_solutions >= m_options.maxSolutions))
             throw Ok;
 		}
 

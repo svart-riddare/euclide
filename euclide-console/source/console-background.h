@@ -22,6 +22,7 @@ class BackgroundConsole : public Console
 		virtual void displayMessage(const wchar_t *) const override { assert(false); }
 
 		virtual void displayCopyright(const wchar_t *copyright) const override;
+		virtual void displayOptions(const EUCLIDE_Options& options) const override;
 		virtual void displayMessage(EUCLIDE_Message message) const override;
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const override;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const override;
@@ -40,8 +41,11 @@ class BackgroundConsole : public Console
 		mutable std::condition_variable m_condition;          /**< Condition variable used to wait for done() to be called. */
 		mutable std::mutex m_lock;                            /**< Mutex to protect against concurrent access of method foreground(). */
 
-		mutable bool m_displayCopyright;                      /**< Set if displayCopytigh callback has benn called. */
+		mutable bool m_displayCopyright;                      /**< Set if displayCopyright callback has been called. */
 		mutable std::wstring m_copyright;                     /**< Last parameters received through aforementioned callback. */
+
+		mutable bool m_displayOptions;                        /**< Set if displayOptions callback has been called. */
+		mutable EUCLIDE_Options m_options;                    /**< Last parameters received through aforementioned callback. */
 
 		mutable bool m_displayMessage;                        /**< Set if displayMessage callback has been called. */
 		mutable EUCLIDE_Message m_message;                    /**< Last parameters received through aforementioned callback. */

@@ -10,7 +10,7 @@ class Strings
 	public:
 		typedef enum { PressAnyKey, NumTexts } Text;
 		typedef enum { NoArguments, InvalidArguments, InvalidProblem, InvalidInputFile, UserInterruption, NumErrors } Error;
-		typedef enum { ForsytheSymbols, GlyphSymbols, Moves, Dot, Input, Output, Score, Positions, Solution, Colon, NoSolution, UniqueSolution, OneSolution, TwoSolutions, ThreeSolutions, FourSolutions, Cooked, NumStrings } String;
+		typedef enum { ForsytheSymbols, GlyphSymbols, Moves, Dot, Input, Output, Score, Positions, Solution, Colon, NoSolution, UniqueSolution, OneSolution, TwoSolutions, ThreeSolutions, FourSolutions, AtLeastOneSolution, AtLeastTwoSolutions, AtLeastThreeSolutions, AtLeastFourSolutions, MultipleSolutions, NumStrings } String;
 		typedef enum { Grasshoppers, Nightriders, Knighted, Alfils, Camels, Zebras, Chinese, Monochromatic, Bichromatic, Grid, Cylinder, Glasgow, NumOptions } Option;
 
 	public:

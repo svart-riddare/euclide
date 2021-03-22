@@ -20,6 +20,7 @@ class Output
 		void done(EUCLIDE_Status status);
 
 		void displayCopyright(const wchar_t *copyright) const;
+		void displayOptions(const EUCLIDE_Options& options) const;
 		void displayMessage(EUCLIDE_Message message) const;
 		void displayProblem(const EUCLIDE_Problem& problem) const;
 		void displayDeductions(const EUCLIDE_Deductions& deductions) const;
@@ -35,6 +36,8 @@ class Output
 	protected:
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
 			{ return reinterpret_cast<Output *>(handle)->displayCopyright(copyright); }
+		static void displayOptionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Options *options)
+			{ return reinterpret_cast<Output *>(handle)->displayOptions(*options); }
 		static void displayMessageCallback(EUCLIDE_UserHandle handle, EUCLIDE_Message message)
 			{ return reinterpret_cast<Output *>(handle)->displayMessage(message); }
 		static void displayProblemCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem)
@@ -50,12 +53,14 @@ class Output
 		const Strings& m_strings;         /**< Text strings. */
 
 		EUCLIDE_Callbacks m_callbacks;    /**< Euclide callbacks. */
+
 		FILE *m_file;                     /**< Output file. */
 		bool m_close;                     /**< Set if output file should be closed when done. */
 
 		Timer m_timer;                    /**< Timer used to output total solving time. */
 		mutable double m_complexity;      /**< Solving complexity, only the last value is written to file. */
 		mutable int64_t m_positions;      /**< Number of positions examined. */
+		mutable int m_xsolutions;         /**< Maximum number of solutions. */
 		mutable int m_solutions;          /**< Number of solutions found. */
 
 	private :

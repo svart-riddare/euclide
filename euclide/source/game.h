@@ -18,7 +18,7 @@ class Piece;
 class Game
 {
 	public:
-		Game(const EUCLIDE_Configuration& configuration, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves);
+		Game(const EUCLIDE_Options& options, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves);
 		~Game();
 
 		void play();
@@ -92,7 +92,7 @@ class Game
 		};
 
 	private:
-		const EUCLIDE_Configuration m_configuration;        /**< Euclide configuration. */
+		const EUCLIDE_Options m_options;                    /**< Euclide configuration. */
 		const EUCLIDE_Callbacks m_callbacks;                /**< Euclide callbacks. */
 
 		const Problem& m_problem;                           /**< Problem to solve. */

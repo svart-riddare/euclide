@@ -238,9 +238,18 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
+typedef struct
+{
+	int maxSolutions;                     /**< Solving stops (returns OK) when reaching this number of solutions. Zero means unlimited searching. */
+
+} EUCLIDE_Options;
+
+/* -------------------------------------------------------------------------- */
+
 typedef void *EUCLIDE_UserHandle;
 
 typedef void (*EUCLIDE_DisplayCopyrightFunction)(EUCLIDE_UserHandle handle, const wchar_t *copyright);
+typedef void (*EUCLIDE_DisplayOptionsFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Options *options);
 typedef void (*EUCLIDE_DisplayProblemFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem);
 typedef void (*EUCLIDE_DisplayMessageFunction)(EUCLIDE_UserHandle handle, EUCLIDE_Message message);
 typedef void (*EUCLIDE_DisplayDeductionsFunction)(EUCLIDE_UserHandle handle, const EUCLIDE_Deductions *deductions);
@@ -252,6 +261,7 @@ typedef bool (*EUCLIDE_AbortFunction)(EUCLIDE_UserHandle handle);
 typedef struct
 {
 	EUCLIDE_DisplayCopyrightFunction displayCopyright;
+	EUCLIDE_DisplayOptionsFunction displayOptions;
 	EUCLIDE_DisplayProblemFunction displayProblem;
 	EUCLIDE_DisplayMessageFunction displayMessage;
 	EUCLIDE_DisplayDeductionsFunction displayDeductions;
@@ -266,21 +276,13 @@ typedef struct
 
 /* -------------------------------------------------------------------------- */
 
-typedef struct
-{
-	int maxSolutions;                     /**< Solving stops (returns OK) when reaching this number of solutions. Zero means unlimited searching. */
-
-} EUCLIDE_Configuration;
-
-/* -------------------------------------------------------------------------- */
-
 typedef struct EUCLIDE_Structure *EUCLIDE_Handle;
 
-EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Configuration *configuration, const EUCLIDE_Callbacks *callbacks);
+EUCLIDE_Status EUCLIDE_initialize(EUCLIDE_Handle *euclide, const EUCLIDE_Options *options, const EUCLIDE_Callbacks *callbacks);
 EUCLIDE_Status EUCLIDE_problem(EUCLIDE_Handle euclide, const EUCLIDE_Problem *problem);
 EUCLIDE_Status EUCLIDE_done(EUCLIDE_Handle euclide);
 
-EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Configuration *configuration, const EUCLIDE_Problem *problem, const EUCLIDE_Callbacks *callbacks);
+EUCLIDE_Status EUCLIDE_solve(const EUCLIDE_Options *options, const EUCLIDE_Problem *problem, const EUCLIDE_Callbacks *callbacks);
 
 /* -------------------------------------------------------------------------- */
 

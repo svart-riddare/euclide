@@ -34,6 +34,7 @@ Console::Console(const Strings& strings)
 	memset(&m_callbacks, 0, sizeof(m_callbacks));
 
 	m_callbacks.displayCopyright = displayCopyrightCallback;
+	m_callbacks.displayOptions = displayOptionsCallback;
 	m_callbacks.displayProblem = displayProblemCallback;
 	m_callbacks.displayMessage = displayMessageCallback;
 	m_callbacks.displayDeductions = displayDeductionsCallback;
@@ -82,12 +83,20 @@ void Console::done(EUCLIDE_Status status)
 
 	displayMessage(L"");
 
-	if (m_solutions <= 1)
-	{
-		wchar_t string[32];
-		swprintf(string, countof(string), L"%24ls", m_strings[m_solutions ? Strings::UniqueSolution : Strings::NoSolution]);
-		write(string, m_width - 25, 5, Colors::Verdict);
-	}
+	const Strings::String verdicts[6][2] = {
+		{ Strings::NoSolution, Strings::NoSolution},
+		{ Strings::AtLeastOneSolution, Strings::UniqueSolution },
+		{ Strings::AtLeastTwoSolutions, Strings::TwoSolutions },
+		{ Strings::AtLeastThreeSolutions, Strings::ThreeSolutions },
+		{ Strings::AtLeastFourSolutions, Strings::FourSolutions },
+		{ Strings::MultipleSolutions, Strings::MultipleSolutions }
+	};
+
+	const bool exhaustive = !m_xsolutions || (m_solutions < m_xsolutions);
+
+	wchar_t string[32];
+	swprintf(string, countof(string), L"%24ls", m_strings[verdicts[std::min<int>(m_solutions, countof(verdicts) - 1)][exhaustive]]);
+	write(string, m_width - 25, 5, Colors::Verdict);
 
 	m_timer.stop();
 }
@@ -137,6 +146,16 @@ void Console::displayCopyright(const wchar_t *copyright) const
 
 	write(copyright, x, 0, Colors::Copyright);
 	displayTimer();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void Console::displayOptions(const EUCLIDE_Options& options) const
+{
+	m_stdout.displayOptions(options);
+	m_output.displayOptions(options);
+
+	m_xsolutions = std::max(0, options.maxSolutions);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -266,7 +285,7 @@ void Console::displaySolution(const EUCLIDE_Solution& solution) const
 
 	wchar_t string[32];
 
-	const Strings::String verdicts[] = { Strings::OneSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::Cooked };
+	const Strings::String verdicts[] = { Strings::OneSolution, Strings::TwoSolutions, Strings::ThreeSolutions, Strings::FourSolutions, Strings::MultipleSolutions };
 	swprintf(string, countof(string), L"%24ls", m_strings[verdicts[std::min<int>(countof(verdicts), solution.solution) - 1]]);
 	write(string, m_width - 25, 5, Colors::Verdict);
 

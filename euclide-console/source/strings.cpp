@@ -54,6 +54,10 @@ static const wchar_t *frenchStrings[] =
 	L"Deux solutions",
 	L"Trois solutions",
 	L"Quatre solutions",
+	L"Une solution ou plus",
+	L"Deux solutions ou plus",
+	L"Trois solutions ou plus",
+	L"Quatre solutions ou plus",
 	L"Probl\xE8me d\xE9moli"
 };
 
@@ -118,7 +122,11 @@ static const wchar_t *englishStrings[] =
 	L"Two solutions",
 	L"Three solutions",
 	L"Four solutions",
-	L"Multiple solutions"
+	L"At least one solution",
+	L"At least two solutions",
+	L"At least three solutions",
+	L"At least four solutions",
+	L"Cooked"
 };
 
 static const wchar_t *englishStatuses[] =

@@ -28,6 +28,7 @@ class Console
 		virtual void displayMessage(const wchar_t *string) const;
 
 		virtual void displayCopyright(const wchar_t *copyright) const;
+		virtual void displayOptions(const EUCLIDE_Options& options) const;
 		virtual void displayMessage(EUCLIDE_Message message) const;
 		virtual void displayProblem(const EUCLIDE_Problem& problem) const;
 		virtual void displayDeductions(const EUCLIDE_Deductions& deductions) const;
@@ -60,6 +61,8 @@ class Console
 	protected:
 		static void displayCopyrightCallback(EUCLIDE_UserHandle handle, const wchar_t *copyright)
 			{ reinterpret_cast<Console *>(handle)->displayCopyright(copyright); }
+		static void displayOptionsCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Options *options)
+			{ reinterpret_cast<Console *>(handle)->displayOptions(*options); }
 		static void displayMessageCallback(EUCLIDE_UserHandle handle, EUCLIDE_Message message)
 			{ reinterpret_cast<Console *>(handle)->displayMessage(message); }
 		static void displayProblemCallback(EUCLIDE_UserHandle handle, const EUCLIDE_Problem *problem)
@@ -82,6 +85,7 @@ class Console
 		Output m_output;                   /**< Output file for solving results. */
 		Timer m_timer;                     /**< Timer use to output solving time. */
 
+		mutable int m_xsolutions;          /**< Maximum number of solutions. */
 		mutable int m_solutions;           /**< Number of distinct solutions found. */
 		std::chrono::seconds m_timeout;    /**< Timeout, in seconds. Zero if none. */
 
