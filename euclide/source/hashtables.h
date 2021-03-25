@@ -55,6 +55,7 @@ class HashTable
 {
 	public:
 		HashTable(int capacity);
+		void reset();
 
 		void insert(const HashPosition& position, int moves);
 		bool contains(const HashPosition& position, int moves);

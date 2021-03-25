@@ -88,6 +88,7 @@ Friend Class Euclide
     Public Enum Message As Integer
         Analyzing
         Searching
+        Exhausting
         N
     End Enum
 
@@ -156,6 +157,7 @@ Friend Class Euclide
     End Structure
 
     Public Structure Options
+        Public SolvingContest As Boolean
         Public MaxSolutions As Integer
     End Structure
 

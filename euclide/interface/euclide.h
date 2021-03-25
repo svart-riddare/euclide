@@ -147,6 +147,7 @@ typedef enum
 {
 	EUCLIDE_MESSAGE_ANALYZING,                   /**< Analyzing problem. */
 	EUCLIDE_MESSAGE_SEARCHING,                   /**< Searching for solutions. */
+	EUCLIDE_MESSAGE_EXHAUSTING,                  /**< Searching for all solutions. */
 
 	EUCLIDE_NUM_MESSAGES                         /**< Number of different enumerated values. */
 
@@ -240,6 +241,7 @@ typedef struct
 
 typedef struct
 {
+	bool solvingContest;                  /**< Solving contest mode; non dualistic solutions are found faster. */
 	int maxSolutions;                     /**< Solving stops (returns OK) when reaching this number of solutions. Zero means unlimited searching. */
 
 } EUCLIDE_Options;

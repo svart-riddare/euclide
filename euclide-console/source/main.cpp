@@ -7,13 +7,14 @@
 
 struct Options
 {
-	bool quiet = false;    /**< If set, print to stdout rather than using console output. */
-	bool wait = false;     /**< If set, wait for user input after each problem solved. */
+	bool quiet = false;      /**< If set, print to stdout rather than using console output. */
+	bool wait = false;       /**< If set, wait for user input after each problem solved. */
 
-	int timeout = 0;       /**< Timeout, in seconds, before aborting solving for a problem. */
-	int solutions = 8;     /**< Maximum number of solutions, before aborting solving for a problem. */
+	int timeout = 0;         /**< Timeout, in seconds, before aborting solving for a problem. */
+	int solutions = 8;       /**< Maximum number of solutions, before aborting solving for a problem. */
+	bool contest = false;    /**< Solving contest mode. */
 
-	int threads = 0;       /**< Number of threads used for batch solving. */
+	int threads = 0;         /**< Number of threads used for batch solving. */
 };
 
 /* -------------------------------------------------------------------------- */
@@ -30,6 +31,7 @@ bool solve(Console& console, const ForsytheString& problem, const Options& optio
 
 	EUCLIDE_Options configuration = {};
 	configuration.maxSolutions = options.solutions;
+	configuration.solvingContest = options.contest;
 
 	const EUCLIDE_Status status = EUCLIDE_solve(&configuration, problem, console);
 
@@ -249,6 +251,11 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 			options.solutions = atoi(arguments[argument] + strlen("--solutions="));
 		}
 		else
+		if (strcmp(arguments[argument], "--contest") == 0)
+		{
+			options.contest = true;
+		}
+		else
 		if (strcmp(arguments[argument], "--threads") == 0)
 		{
 			if (++argument < numArguments)
@@ -262,7 +269,7 @@ int euclide(int numArguments, char *arguments[], char * /*environment*/[])
 			options.threads = atoi(arguments[argument] + strlen("--threads="));
 		}
 		else
-      if (strcmp(arguments[argument], "--quiet") == 0)
+		if (strcmp(arguments[argument], "--quiet") == 0)
 		{
 			options.quiet = true;
 		}

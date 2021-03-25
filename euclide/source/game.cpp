@@ -12,7 +12,7 @@ namespace Euclide
 /* -------------------------------------------------------------------------- */
 
 Game::Game(const EUCLIDE_Options& options, const EUCLIDE_Callbacks& callbacks, const Problem& problem, const array<Pieces, NumColors>& pieces, const array<int, NumColors>& freeMoves)
-	: m_options(options), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_cache(16 * 1024 * 1024)
+	: m_options(options), m_callbacks(callbacks), m_problem(problem), m_pieces(pieces), m_hash(problem), m_state(problem), m_cache(16 * 1024 * 1024)
 {
 	/* -- Initialize constant tables -- */
 
@@ -73,10 +73,29 @@ Game::~Game()
 
 void Game::play()
 {
+	m_exhaustive = !m_options.solvingContest;
+
+	/* -- Display searching message -- */
+
+	if (m_callbacks.displayMessage)
+		(*m_callbacks.displayMessage)(m_callbacks.handle, m_exhaustive ? EUCLIDE_MESSAGE_EXHAUSTING : EUCLIDE_MESSAGE_SEARCHING);
+
 	/* -- Recursively play all moves from initial state -- */
 
-	const State state(m_problem);
-	play(state);
+	play(m_state);
+
+	/* -- Clear solving contest mode to find all solutions -- */
+
+	if (!m_exhaustive)
+	{
+		m_exhaustive = true;
+
+		if (m_callbacks.displayMessage)
+			(*m_callbacks.displayMessage)(m_callbacks.handle, EUCLIDE_MESSAGE_EXHAUSTING);
+
+		m_cache.reset();
+		play(m_state);
+	}
 
 	/* -- Done -- */
 
@@ -116,6 +135,8 @@ bool Game::play(const State& _state)
 		if (m_callbacks.displayThinking)
 			(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
 
+		/* -- Check for user abort -- */
+
 		if (m_callbacks.abort)
 			if ((*m_callbacks.abort)(m_callbacks.handle))
 				throw UserAborted;
@@ -130,23 +151,124 @@ bool Game::play(const State& _state)
 		const bool solved = this->solved();
 		if (solved)
 		{
+			/* -- Thinking callback -- */
+
+			EUCLIDE_Thinking thinking;
+			thinking.positions = m_positions;
+			cmoves(thinking.moves, thinking.numHalfMoves = std::min<int>(countof(EUCLIDE_Thinking::moves), m_states.size()));
+
+			if (m_callbacks.displayThinking)
+				(*m_callbacks.displayThinking)(m_callbacks.handle, &thinking);
+
+			/* -- Solution callback -- */
+
 			EUCLIDE_Solution solution;
 			solution.numHalfMoves = m_states.size();
 			cmoves(solution.moves, m_states.size());
-			solution.solution = ++m_solutions;
 
-			if (m_callbacks.displaySolution)
-				(*m_callbacks.displaySolution)(m_callbacks.handle, &solution);
+			if (!duplicate(solution))
+			{
+				solution.solution = ++m_solutions;
 
-         /* -- Stop searching if we have found many solutions -- */
+				if (m_callbacks.displaySolution)
+					(*m_callbacks.displaySolution)(m_callbacks.handle, &solution);
 
-         if ((m_options.maxSolutions > 0) && (m_solutions >= m_options.maxSolutions))
-            throw Ok;
+				/* -- Store solution if suitable -- */
+
+				if (!m_exhaustive)
+					m_quickies.push_back(solution);
+
+				/* -- Stop searching if we have found many solutions -- */
+
+				if ((m_options.maxSolutions > 0) && (m_solutions >= m_options.maxSolutions))
+					throw Ok;
+			}
+
+			/* -- Check for user abort -- */
+
+			if (m_callbacks.abort)
+				if ((*m_callbacks.abort)(m_callbacks.handle))
+					throw UserAborted;
 		}
 
 		/* -- End recursion -- */
 
 		return solved;
+	}
+
+	/* -- Solving contest mode (non exhaustive search) -- */
+
+	if (!m_exhaustive && (m_states.size() >= 3))
+	{
+		const State **states = m_states.data() + m_states.size();
+		const State *state = (m_states.size() > 3) ? states[-4] : &m_state;
+
+		bool backtrack = true;
+		if (states[-1]->captured() || states[-2]->captured() || states[-3]->captured())
+			backtrack = false;
+
+		if (backtrack)
+		{
+			undo(*states[-1]);
+			undo(*states[-2]);
+			undo(*states[-3]);
+
+			/* -- Find obvious dualistic solution by swapping last moves -- */
+
+			bool dualistic = false;
+			if (!dualistic)
+			{
+				const Square from = states[-1]->from();
+				const Square to = states[-1]->to();
+				const Glyph glyph = states[-1]->glyph();
+				const Piece& piece = *m_board[from];
+
+				if (m_board[from] && ((m_position[White] | m_position[Black]) & piece.constraints(from, to, states[-1]->captured(), glyph != piece.glyph())).none())
+				{
+					State stateA = move(*state, from, to, glyph);
+					if (stateA.valid())
+					{
+						const Square from = states[-2]->from();
+						const Square to = states[-2]->to();
+						const Glyph glyph = states[-2]->glyph();
+						const Piece& piece = *m_board[from];
+
+						if (m_board[from] && ((m_position[White] | m_position[Black]) & piece.constraints(from, to, states[-2]->captured(), glyph != piece.glyph())).none())
+						{
+							State stateB = move(stateA, from, to, glyph);
+							if (stateB.valid())
+							{
+								const Square from = states[-3]->from();
+								const Square to = states[-3]->to();
+								const Glyph glyph = states[-3]->glyph();
+								const Piece& piece = *m_board[from];
+
+								if (m_board[from] && ((m_position[White] | m_position[Black]) & piece.constraints(from, to, states[-3]->captured(), glyph != piece.glyph())).none())
+								{
+									State stateC = move(stateB, from, to, glyph);
+									if (stateC.valid())
+										dualistic = true;
+
+									undo(stateC);
+								}
+							}
+
+							undo(stateB);
+						}
+
+					}
+
+					undo(stateA);
+				}
+			}
+
+			move(*state, states[-3]->from(), states[-3]->to(), states[-3]->glyph());
+			move(*states[-3], states[-2]->from(), states[-2]->to(), states[-2]->glyph());
+			move(*states[-2], states[-1]->from(), states[-1]->to(), states[-1]->glyph());
+
+			if (dualistic)
+				return false;
+		}
 	}
 
 	/* -- Get legal moves -- */
@@ -181,27 +303,6 @@ bool Game::play(const State& _state)
 
 			if (position & piece.constraints(from, to, capture, pawn))
 				continue;
-
-			/* -- Additional checks for castling -- */
-
-			CastlingSide castling = NoCastling;
-			if (piece.royal())
-				for (CastlingSide side : AllCastlingSides())
-					if ((from == Castlings[color][side].from) && (to == Castlings[color][side].to))
-						castling = side;
-
-			if (castling != NoCastling)
-			{
-				if (!_state.castling(castling))
-					continue;
-
-				const Piece *rook = m_board[Castlings[color][castling].rook];
-				if (!rook || (rook->color() != color) || !maybe(rook->castling(castling)) || rook->state.moves)
-					continue;
-
-				if (_state.check() || checked(Castlings[color][castling].free, color))
-					continue;
-			}
 
 			/* -- Check consequences of that move and if there are any free moves left -- */
 
@@ -241,31 +342,13 @@ bool Game::play(const State& _state)
 			{
 				/* -- Perform move and compute new game state -- */
 
-				State state = move(_state, from, to, glyph, castling);
+				State state = move(_state, from, to, glyph);
 				m_states.push_back(&state);
 
-				/* -- Move is valid only if the king is not in check -- */
+				/* -- Move may be invalid, if we have put ourself into check -- */
 
-				bool valid = true;
-				if (piece.royal() || _state.check())
-					valid &= !checked(m_kings[color], color);
-				else
-					valid &= !checked(m_kings[color], from, color);
-
-				if (valid)
+				if (state.valid())
 				{
-					/* -- Set check state -- */
-
-					if (checks(glyph, to, m_kings[!color]))
-						state.check(true);
-
-					if (checked(m_kings[!color], from, !color))
-						state.check(true);
-
-					if (castling != NoCastling)
-						if (checks(m_board[Castlings[color][castling].free]->glyph(), Castlings[color][castling].free, m_kings[!color]))
-							state.check(true);
-
 					/* -- Recursive call -- */
 
 					if (!play(state))
@@ -296,7 +379,7 @@ bool Game::play(const State& _state)
 
 /* -------------------------------------------------------------------------- */
 
-Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, CastlingSide castling)
+Game::State Game::move(const State& state, Square from, Square to, Glyph glyph)
 {
 	const Piece *piece = m_board[from];
 	const Color color = state.color();
@@ -306,6 +389,32 @@ Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, 
 
 	const Glyph initial = piece->state.glyph;
 	const Piece *promotion = (glyph != initial) ? piece->piece(glyph) : piece;
+
+	bool valid = true;
+
+	/* -- Check for castling and assert validity -- */
+
+	CastlingSide castling = NoCastling;
+	if (piece->royal())
+		for (CastlingSide side : AllCastlingSides())
+			if ((from == Castlings[color][side].from) && (to == Castlings[color][side].to))
+				castling = side;
+
+	if (castling != NoCastling)
+	{
+		if (!state.castling(castling))
+			valid = false;
+
+		const Piece *rook = m_board[Castlings[color][castling].rook];
+		if (!rook || (rook->color() != color) || !maybe(rook->castling(castling)) || rook->state.moves)
+			valid = false;
+
+		if (state.check() || checked(Castlings[color][castling].free, color))
+			valid = false;
+
+		if (!valid)
+			castling = NoCastling;
+	}
 
 	/* -- Update board position -- */
 
@@ -376,9 +485,27 @@ Game::State Game::move(const State& state, Square from, Square to, Glyph glyph, 
 		if (abs(row(from) - row(to)) == 2)
 			enpassant = Square((from + to) / 2);
 
+	/* -- Check if move is valid -- */
+
+	if ((piece->royal() || state.check()) ? checked(m_kings[color], color) : checked(m_kings[color], from, color))
+		valid = false;
+
+	/* -- Set check state -- */
+
+	bool check = false;
+	if (checks(glyph, to, m_kings[!color]))
+		check = true;
+	else
+	if (checked(m_kings[!color], from, !color))
+		check = true;
+	else
+	if (castling != NoCastling)
+		if (checks(m_board[Castlings[color][castling].free]->glyph(), Castlings[color][castling].free, m_kings[!color]))
+			check = true;
+
 	/* -- Return new state -- */
 
-	return State(state, from, to, initial, (glyph != initial) ? glyph : Empty, captured, capture, castling, castlings, enpassant);
+	return State(state, from, to, initial, (glyph != initial) ? glyph : Empty, captured, capture, castling, castlings, enpassant, check, valid);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -503,6 +630,17 @@ bool Game::solved() const
 
 /* -------------------------------------------------------------------------- */
 
+bool Game::duplicate(const EUCLIDE_Solution& solution) const
+{
+	return xstd::any_of(m_quickies, [&](const EUCLIDE_Solution& quicky) {
+		return std::equal(solution.moves, solution.moves + solution.numHalfMoves, quicky.moves, [](const EUCLIDE_Move& lhs, const EUCLIDE_Move& rhs) {
+			return (lhs.from == rhs.from) && (lhs.to == rhs.to) && (lhs.promotion == rhs.promotion);
+		});
+	});
+}
+
+/* -------------------------------------------------------------------------- */
+
 void Game::cmoves(EUCLIDE_Move *moves, int nmoves) const
 {
 	array<Glyph, NumSquares> diagram = m_problem.initialPosition();
@@ -558,6 +696,7 @@ Game::State::State(const Problem& problem)
 	m_enpassant = Nowhere;
 	m_color = problem.turn();
 	m_check = false;
+	m_valid = true;
 
 	m_glyph = Empty;
 	m_promotion = Empty;
@@ -570,7 +709,7 @@ Game::State::State(const Problem& problem)
 
 /* -------------------------------------------------------------------------- */
 
-Game::State::State(const State& state, Square from, Square to, Glyph glyph, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant)
+Game::State::State(const State& state, Square from, Square to, Glyph glyph, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant, bool check, bool valid)
 {
 	m_castlings = state.m_castlings;
 	for (CastlingSide side : AllCastlingSides())
@@ -583,7 +722,8 @@ Game::State::State(const State& state, Square from, Square to, Glyph glyph, Glyp
 
 	m_enpassant = enpassant;
 	m_color = !state.m_color;
-	m_check = false;
+	m_check = check;
+	m_valid = valid;
 
 	m_glyph = glyph;
 	m_promotion = promotion;

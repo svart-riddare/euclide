@@ -91,6 +91,13 @@ HashTable::HashTable(int capacity)
 	/* -- Create empty hash table -- */
 
 	m_entries.reset(new HashEntry[m_capacity + m_chaining]);
+	reset();
+}
+
+/* -------------------------------------------------------------------------- */
+
+void HashTable::reset()
+{
 	for (int k = 0; k < m_size + m_chaining; k++)
 		m_entries[k].hash = std::numeric_limits<uint32_t>::max();
 }

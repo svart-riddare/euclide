@@ -76,8 +76,9 @@ static const wchar_t *frenchStatuses[] =
 
 static const wchar_t *frenchMessages[] =
 {
-	L"Analyse pr\xE9liminaire...",
-	L"Recherche de solutions..."
+	L"Analyse pr\xE9liminaire",
+	L"Recherche de solutions",
+	L"Recherche exhaustive"
 };
 
 static_assert(countof(frenchTexts) == Strings::NumTexts);
@@ -144,8 +145,9 @@ static const wchar_t *englishStatuses[] =
 
 static const wchar_t *englishMessages[] =
 {
-	L"Static analysis...",
-	L"Searching solutions..."
+	L"Static analysis",
+	L"Looking for solutions",
+	L"Listing all solutions"
 };
 
 static_assert(countof(englishTexts) == Strings::NumTexts);

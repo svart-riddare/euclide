@@ -27,7 +27,7 @@ class Game
 		class State;
 		bool play(const State& state);
 
-		State move(const State& state, Square from, Square to, Glyph glyph, CastlingSide castling);
+		State move(const State& state, Square from, Square to, Glyph glyph);
 		void undo(const State& state);
 
 		bool checks(Glyph glyph, Square from, Square king) const;
@@ -35,6 +35,7 @@ class Game
 		bool checked(Square king, Square free, Color color) const;
 
 		bool solved() const;
+		bool duplicate(const EUCLIDE_Solution& solution) const;
 		void cmoves(EUCLIDE_Move *moves, int nmoves) const;
 
 	protected:
@@ -42,10 +43,7 @@ class Game
 		{
 			public:
 				State(const Problem& problem);
-				State(const State& state, Square from, Square to, Glyph glyph, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant);
-
-				inline void check(bool check)
-					{ m_check = check; }
+				State(const State& state, Square from, Square to, Glyph glyph, Glyph promotion, const Piece *captured, Square capture, CastlingSide castling, const array<bool, NumCastlingSides>& castlings, Square enpassant, bool check, bool valid);
 
 			public:
 				inline const array<bool, NumCastlingSides>& castlings(Color color) const
@@ -60,6 +58,8 @@ class Game
 					{ return m_color; }
 				inline bool check() const
 					{ return m_check; }
+				inline bool valid() const
+					{ return m_valid; }
 
 				inline Glyph glyph() const
 					{ return m_glyph; }
@@ -81,6 +81,7 @@ class Game
 				Square m_enpassant;                                       /**< Possible en passant capture. */
 				Color m_color;                                            /**< Whose turn it is. */
 				bool m_check;                                             /**< Set if side to move is in check. */
+				bool m_valid;                                             /**< Set if state is valid. */
 
 				Glyph m_glyph;                                            /**< Last move glyph. */
 				Glyph m_promotion;                                        /**< Last move promotion glyph, if any. */
@@ -109,6 +110,7 @@ class Game
 		HashPosition m_hash;                                /**< Position encoded for hash tables. */
 		Squares m_diagram;                                  /**< Occupied squares to reach. */
 
+		State m_state;                                      /**< Initial game state. */
 		std::vector<const State *> m_states;                /**< Game states, excluding initial state. */
 
 		class Assignment {
@@ -127,9 +129,12 @@ class Game
 		std::vector<Assignment> m_assignments;              /**< Extra move assignments performed while playing game. */
 
 		HashTable m_cache;                                  /**< Cache of already explored positions. */
+		bool m_exhaustive;                                  /**< Exhaustive search. */
 
 		int64_t m_positions;                                /**< Number of positions examined. */
 		int m_solutions;                                    /**< Number of solutions found. */
+
+		std::vector<EUCLIDE_Solution> m_quickies;           /**< Solutions found while performing quick non exhaustive search. -- */
 };
 
 /* -------------------------------------------------------------------------- */

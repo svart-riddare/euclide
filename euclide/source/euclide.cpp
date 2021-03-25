@@ -412,11 +412,6 @@ void Euclide::solve(const EUCLIDE_Problem& problem)
 	if (m_callbacks.displayDeductions)
 		(*m_callbacks.displayDeductions)(m_callbacks.handle, &deductions());
 
-	/* -- Display playing message -- */
-
-	if (m_callbacks.displayMessage)
-		(*m_callbacks.displayMessage)(m_callbacks.handle, EUCLIDE_MESSAGE_SEARCHING);
-
 	/* -- Play all possible games -- */
 
 	std::unique_ptr<Game> game(new Game(m_options, m_callbacks, m_problem, m_pieces, m_freeMoves));
