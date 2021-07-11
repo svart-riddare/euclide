@@ -40,72 +40,16 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 	if (!string || (numHalfMoves <= 0))
 		return;
 
-	/* -- Check multiple languages for diagram description -- */
+	/* -- Fetch diagram position and optional initial position -- */
 
-	assert(wcslen(strings[Strings::ForsytheSymbols]) % 7 == 0);
-	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols && !m_valid; symbols += 7)
-	{
-		const ForsytheSymbols forsythe(symbols);
-
-		/* -- Parse Forsythe string -- */
-
-		int numWhiteKings = 0;
-		int numBlackKings = 0;
-
-		int column = 0;
-		int row = 7;
-
-		bool spaces = true;
-		bool valid = true;
-
-		for (const char *s = string; *s && valid; s++)
-		{
-			if (isdigit(*s))
-			{
-				column += (*s - '0');
-				spaces = false;
-			}
-			else
-			if (*s == '/')
-			{
-				spaces = false;
-				column = 0;
-
-				if (!row--)
-					return;
-			}
-			else
-			if (isspace(*s))
-			{
-				if (!spaces)
-					break;
-			}
-			else
-			if (isalpha(*s))
-			{
-				const EUCLIDE_Glyph glyph = forsythe[*s];
-
-				if (glyph == EUCLIDE_GLYPH_WHITE_KING)
-					numWhiteKings++;
-
-				if (glyph == EUCLIDE_GLYPH_BLACK_KING)
-					numBlackKings++;
-
-				if (glyph == EUCLIDE_GLYPH_NONE)
-					valid = false;
-
-				spaces = false;
-				if (column > 7)
-					return;
-
-				m_problem.diagram[8 * column + row] = glyph;
-				column++;
-			}
-		}
-
-		if (valid && (numWhiteKings == 1) && (numBlackKings == 1))
-			m_valid = true;
-	}
+	const char *arrow = strstr(string, "->");
+	if (arrow)
+		m_valid = parse(strings, string, m_problem.initial) && parse(strings, arrow + 2, m_problem.diagram);
+	else
+		m_valid = parse(strings, string, m_problem.diagram);
+	
+	if (!m_valid)
+		return;
 
 	/* -- Set number of moves -- */
 
@@ -158,3 +102,76 @@ ForsytheString::ForsytheString(const Strings& strings, const char *string, int n
 
 /* -------------------------------------------------------------------------- */
 
+bool ForsytheString::parse(const Strings& strings, const char *string, EUCLIDE_Glyph position[64])
+{
+	/* -- Check multiple languages for diagram description -- */
+
+	assert(wcslen(strings[Strings::ForsytheSymbols]) % 7 == 0);
+	for (const wchar_t *symbols = strings[Strings::ForsytheSymbols]; *symbols; symbols += 7)
+	{
+		const ForsytheSymbols forsythe(symbols);
+
+		/* -- Parse Forsythe string -- */
+
+		int numWhiteKings = 0;
+		int numBlackKings = 0;
+
+		int column = 0;
+		int row = 7;
+
+		bool spaces = true;
+		bool valid = true;
+
+		for (const char *s = string; *s && valid; s++)
+		{
+			if (isdigit(*s))
+			{
+				column += (*s - '0');
+				spaces = false;
+			}
+			else
+			if (*s == '/')
+			{
+				spaces = false;
+				column = 0;
+
+				if (!row--)
+					return false;
+			}
+			else
+			if (isspace(*s))
+			{
+				if (!spaces)
+					break;
+			}
+			else
+			if (isalpha(*s))
+			{
+				const EUCLIDE_Glyph glyph = forsythe[*s];
+
+				if (glyph == EUCLIDE_GLYPH_WHITE_KING)
+					numWhiteKings++;
+
+				if (glyph == EUCLIDE_GLYPH_BLACK_KING)
+					numBlackKings++;
+
+				if (glyph == EUCLIDE_GLYPH_NONE)
+					valid = false;
+
+				spaces = false;
+				if (column > 7)
+					return false;
+
+				position[8 * column + row] = glyph;
+				column++;
+			}
+		}
+
+		if (valid && (numWhiteKings == 1) && (numBlackKings == 1))
+			return true;
+	}
+
+	return false;
+}
+
+/* -------------------------------------------------------------------------- */

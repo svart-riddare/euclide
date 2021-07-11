@@ -33,6 +33,9 @@ class ForsytheString
 			{ return m_valid; }
 
 	private:
+		bool parse(const Strings& strings, const char *string, EUCLIDE_Glyph position[64]);
+
+	private:
 		EUCLIDE_Problem m_problem;    /**< Problem description. */
 		bool m_valid;                 /**< Set if the problem is valid. */
 };

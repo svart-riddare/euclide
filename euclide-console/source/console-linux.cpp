@@ -118,6 +118,11 @@ void LinuxConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 			for (int k = 0; k < m_width / 2; k++)
 				addch(' ' | Colors::Standard);
 
+			/* -- Early return if there was not 16 pieces in the initial position -- */
+
+			if (piece >= (color ? deductions.numBlackPieces : deductions.numWhitePieces))
+				continue;
+
 			/* -- Print required moves -- */
 
 			if (deduction.requiredMoves > 10)

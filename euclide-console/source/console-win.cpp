@@ -172,96 +172,105 @@ void WinConsole::displayDeductions(const EUCLIDE_Deductions& deductions) const
 		for (int color = 0; color <= 1; color++)
 		{
 			const EUCLIDE_Deduction& deduction = color ? deductions.blackPieces[piece] : deductions.whitePieces[piece];
+			const bool print = (piece < (color ? deductions.numBlackPieces : deductions.numWhitePieces));
 
 			/* -- Set default attributes and clear area -- */
 
 			for (int k = 0; k < m_width / 2; k++)
 			{
-				characters[k].Attributes = color ? (deduction.captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction.captured ? Colors::WhiteCaptures : Colors::WhiteMoves);
+				characters[k].Attributes = print ? color ? (deduction.captured ? Colors::BlackCaptures : Colors::BlackMoves) : (deduction.captured ? Colors::WhiteCaptures : Colors::WhiteMoves) : Colors::Standard;
 				characters[k].Char.UnicodeChar = ' ';
 			}
 
-			/* -- Print required moves -- */
-
-			if (deduction.requiredMoves > 0)
+			if (print)
 			{
-				characters[1].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
-				characters[2].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
+				/* -- Print required moves -- */
 
-				if (deduction.requiredMoves > 9)
-					characters[1].Char.UnicodeChar = '0' + (deduction.requiredMoves / 10 % 10);
-
-				characters[2].Char.UnicodeChar = '0' + deduction.requiredMoves % 10;
-			}
-
-			/* -- Print deduction -- */
-
-			if (deduction.final.square >= 0)
-			{
-				characters[5].Char.UnicodeChar = toupper(symbols[deduction.initial.glyph]);
-				characters[6].Char.UnicodeChar = 'a' + (deduction.initial.square / 8);
-				characters[7].Char.UnicodeChar = '1' + (deduction.initial.square % 8);
-
-				if ((deduction.final.square != deduction.initial.square) || (deduction.requiredMoves > 0))
+				if (deduction.requiredMoves > 0)
 				{
-					characters[9].Char.UnicodeChar = '-';
-					characters[10].Char.UnicodeChar = '>';
+					characters[1].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
+					characters[2].Attributes = color ? Colors::NumBlackMoves : Colors::NumWhiteMoves;
 
-					characters[12].Char.UnicodeChar = toupper(symbols[deduction.final.glyph]);
-					characters[13].Char.UnicodeChar = 'a' + (deduction.final.square / 8);
-					characters[14].Char.UnicodeChar = '1' + (deduction.final.square % 8);
+					if (deduction.requiredMoves > 9)
+						characters[1].Char.UnicodeChar = '0' + (deduction.requiredMoves / 10 % 10);
+
+					characters[2].Char.UnicodeChar = '0' + deduction.requiredMoves % 10;
 				}
 
-				if (deduction.captured && (deduction.capturer.square >= 0))
+				/* -- Print deduction -- */
+
+				if (deduction.final.square >= 0)
 				{
-					characters[16].Char.UnicodeChar = '(';
-					characters[17].Char.UnicodeChar = toupper(symbols[deduction.capturer.glyph]);
-					characters[18].Char.UnicodeChar = 'a' + (deduction.capturer.square / 8);
-					characters[19].Char.UnicodeChar = '1' + (deduction.capturer.square % 8);
-					characters[20].Char.UnicodeChar = ')';
+					characters[5].Char.UnicodeChar = toupper(symbols[deduction.initial.glyph]);
+					characters[6].Char.UnicodeChar = 'a' + (deduction.initial.square / 8);
+					characters[7].Char.UnicodeChar = '1' + (deduction.initial.square % 8);
+
+					if ((deduction.final.square != deduction.initial.square) || (deduction.requiredMoves > 0))
+					{
+						characters[9].Char.UnicodeChar = '-';
+						characters[10].Char.UnicodeChar = '>';
+
+						characters[12].Char.UnicodeChar = toupper(symbols[deduction.final.glyph]);
+						characters[13].Char.UnicodeChar = 'a' + (deduction.final.square / 8);
+						characters[14].Char.UnicodeChar = '1' + (deduction.final.square % 8);
+					}
+
+					if (deduction.captured && (deduction.capturer.square >= 0))
+					{
+						characters[16].Char.UnicodeChar = '(';
+						characters[17].Char.UnicodeChar = toupper(symbols[deduction.capturer.glyph]);
+						characters[18].Char.UnicodeChar = 'a' + (deduction.capturer.square / 8);
+						characters[19].Char.UnicodeChar = '1' + (deduction.capturer.square % 8);
+						characters[20].Char.UnicodeChar = ')';
+					}
+				}
+
+				/* -- Print number of possible squares -- */
+
+				if (deduction.numSquares > 1)
+				{
+					if (deduction.numSquares >= 100)
+						characters[22].Char.UnicodeChar = '0' + ((deduction.numSquares / 100) % 10);
+					if (deduction.numSquares >= 10)
+						characters[23].Char.UnicodeChar = '0' + ((deduction.numSquares / 10) % 10);
+					if (deduction.numSquares >= 1)
+						characters[24].Char.UnicodeChar = '0' + ((deduction.numSquares / 1) % 10);
+
+					characters[22].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+					characters[23].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+					characters[24].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				}
+
+				/* -- Print number of possible moves -- */
+
+				if (deduction.requiredMoves < deduction.numMoves)
+				{
+					int numExtraMoves = deduction.numMoves - deduction.requiredMoves;
+
+					if (numExtraMoves >= 10000)
+						characters[27].Char.UnicodeChar = '0' + ((numExtraMoves / 10000) % 10);
+					if (numExtraMoves >= 1000)
+						characters[28].Char.UnicodeChar = '0' + ((numExtraMoves / 1000) % 10);
+					if (numExtraMoves >= 100)
+						characters[29].Char.UnicodeChar = '0' + ((numExtraMoves / 100) % 10);
+					if (numExtraMoves >= 10)
+						characters[30].Char.UnicodeChar = '0' + ((numExtraMoves / 10) % 10);
+					if (numExtraMoves >= 1)
+						characters[31].Char.UnicodeChar = '0' + ((numExtraMoves / 1) % 10);
+
+					characters[27].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+					characters[28].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+					characters[29].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+					characters[30].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
+					characters[31].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
 				}
 			}
-
-			/* -- Print number of possible squares -- */
-
-			if (deduction.numSquares > 1)
+			else
 			{
-				if (deduction.numSquares >= 100)
-					characters[22].Char.UnicodeChar = '0' + ((deduction.numSquares / 100) % 10);
-				if (deduction.numSquares >= 10)
-					characters[23].Char.UnicodeChar = '0' + ((deduction.numSquares / 10) % 10);
-				if (deduction.numSquares >= 1)
-					characters[24].Char.UnicodeChar = '0' + ((deduction.numSquares / 1) % 10);
-
-				characters[22].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
-				characters[23].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
-				characters[24].Attributes = color ? Colors::NumBlackSquares : Colors::NumWhiteSquares;
+				characters[5].Char.UnicodeChar = '-';
+				characters[6].Char.UnicodeChar = '-';
+				characters[7].Char.UnicodeChar = '-';
 			}
-
-			/* -- Print number of possible moves -- */
-
-			if (deduction.requiredMoves < deduction.numMoves)
-			{
-				int numExtraMoves = deduction.numMoves - deduction.requiredMoves;
-
-				if (numExtraMoves >= 10000)
-					characters[27].Char.UnicodeChar = '0' + ((numExtraMoves / 10000) % 10);
-				if (numExtraMoves >= 1000)
-					characters[28].Char.UnicodeChar = '0' + ((numExtraMoves / 1000) % 10);
-				if (numExtraMoves >= 100)
-					characters[29].Char.UnicodeChar = '0' + ((numExtraMoves / 100) % 10);
-				if (numExtraMoves >= 10)
-					characters[30].Char.UnicodeChar = '0' + ((numExtraMoves / 10) % 10);
-				if (numExtraMoves >= 1)
-					characters[31].Char.UnicodeChar = '0' + ((numExtraMoves / 1) % 10);
-
-				characters[27].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
-				characters[28].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
-				characters[29].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
-				characters[30].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
-				characters[31].Attributes = color ? Colors::NumBlackExtraMoves : Colors::NumWhiteExtraMoves;
-			}
-
 
 			/* -- Move on -- */
 
