@@ -2137,7 +2137,7 @@ bool SwitchbackPossible(const vie *Piece)
 			break;
 		case TOURROI :
 			Verifier(QuelleColonne(Piece->Depart) == H);
-			if (CasesMortes[QuelleCase(A, RPions)] && CasesMortes[QuelleCase(G, RDepart)])
+			if (CasesMortes[QuelleCase(H, RPions)] && CasesMortes[QuelleCase(G, RDepart)])
 				Possible = false;
 			break;
 		case FOUDAME :
