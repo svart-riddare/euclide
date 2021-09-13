@@ -35,7 +35,7 @@ It is distributed as freeware in the hope that it will help proofgame composers 
 <H2>2. What's New</H2>
 
 <P>
-Version 1.10 adds new fetaures:
+Version 1.10 adds new features:
 <UL>
 	<LI>User constraints can be provided with each problem, to speed up solving of complex problems. See section 4.1 for documentation.
 </UL>
@@ -61,7 +61,7 @@ Version 0.95 showcases the following major improvements:
 Version 0.92 had the following improvements:
 <UL>
 	<LI>The <CODE>S</CODE> key is trapped to skip the current strategy.
-	<LI>Euclide can be ran in batch mode.
+	<LI>Euclide can be run in batch mode.
 	<LI>Euclide can restart an interrupted analysis.
 	<LI>The output file has been made more readable.
 </UL>
@@ -78,7 +78,7 @@ The initial released version was labelled 0.90. Versions 0.91, 0.93, 0.94, 0.96,
 <P>
 Execute <CODE>euclide-setup.exe</CODE> to install the software.
 A folder will be created in your startup menu with everything needed to run <EM>Euclide</EM>.
-You may choose the language of the software by executing one of the script in the <CODE>Language Files</CODE> subfolder.
+You may choose the language of the software by executing one of the scripts in the <CODE>Language Files</CODE> subfolder.
 If installing over a previous version, the setup program will prompt you before overwriting the input file.
 </P>
 
@@ -89,7 +89,7 @@ If installing over a previous version, the setup program will prompt you before 
 <P>
 <EM>Euclide</EM> accepts as input a text file containing one or more problems.
 Each problem is described by a diagram in <A HREF = "http://en.wikipedia.org/wiki/Forsyth–Edwards_Notation">Forsythe notation</A> (FEN, also EPD) 
-and a number of halfmoves, followed by optional contraints. Contraints are documented below, in section 4.1.
+and a number of halfmoves, followed by optional contraints. Constraints are documented below, in section 4.1.
 Here is a simple example, my first proofgame :
 </P>
 
@@ -102,8 +102,8 @@ Probleemblad, May-June 1999
 
 <P>
 The input file can contain comments or additional information.
-<EM>Euclide</EM> will ignore them as long as the next line does not start by a digit (or white spaces followed by a digit).
-<EM>Natch</EM>'s input file can thus be feed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
+<EM>Euclide</EM> will ignore them as long as the next line does not start with a digit (or white spaces followed by a digit).
+<EM>Natch</EM>'s input file can thus be fed to <EM>Euclide</EM> and <EM>Euclide</EM>'s to <EM>Natch</EM>.
 However, note that <EM>Euclide</EM> does not perform strong typechecking; a position containing an error may be interpreted as correct and thus analyzed. 
 </P>
 
@@ -142,13 +142,13 @@ This section is intended for advanced users.
 Starting with version 1.10 of Euclide, user constraints may be appended to the number of half moves. 
 Constraints are strings describing piece's arrival, promotion or capture squares. For each strategy considered
 plausible by <EM>Euclide</EM>, a string describing the strategy is built, against which the constraints are
-mathced. This string description constains, for each of the 32 pieces, the following information:
+mathced. This string description contains, for each of the 32 pieces, the following information:
 <I>Piece[=Promoition]->Square[(Capture)]</I>, where <I>Piece</I> is the piece type and initial position,
 <I>Promotion</I> is the promotion type and square, <I>Square</I> is the piece's final square and
 <I>Capture</I> is the capturing piece type and initial square, followed by an 'x' and the captured piece's initial square.
 Examples:
 <UL>
-	<LI><B>Ke1->e1</B> for a king that is on it's initial square, whether it moved or not;
+	<LI><B>Ke1->e1</B> for a king that is on its initial square, whether it moved or not;
 	<LI><B>Pa2=Rb8->a1</B> for a Pronkin rook;
 	<LI><B>Ra1->g6(Ph7xRa1)</B> for a captured rook;
 	<LI><B>Pa2=Qb8->h3(Pg2xh3)</B> for a promoted piece later captured.
@@ -159,7 +159,7 @@ Examples:
 For each user defined constraint prefixed with a '+' (plus) sign, the strategy will be skipped if the description
 does not contain the constraint, i.e. the constraint must be satisfied for the strategy to be considered. For each user 
 defined constraint prefixed with a '-' (minus) sign, the strategy will be skipped if the description
-does contain the constraint, i.e. the constraint shall not be satisfied fot the strategy to be considered.
+does contain the constraint, i.e. the constraint shall not be satisfied for the strategy to be considered.
 </P>
 
 <P>
@@ -222,7 +222,7 @@ Available options are:
 	<LI><CODE>-s<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to start solving from the <I>nth</I> strategy.
 	Note that reaching this strategy may take a substantial amount of time.</LI>
 	<LI><CODE>-m<I>n</I></CODE>, where <I>n</I> is a positive integer, will instruct Euclide to allocate 2<SUP>n</SUP> bytes of memory for hashtables.
-	When this option is not used, Euclide automatically set this parameter according to the amount of free memory available.</LI>
+	When this option is not used, Euclide automatically sets this parameter according to the amount of free memory available.</LI>
 </UL>
 
 <P>
@@ -255,7 +255,7 @@ Press <CODE>Escape</CODE> or the character <CODE>X</CODE> to quit, and any other
 <P>
 <EM>Euclide</EM> writes all solutions found in a text file called <CODE>Output.txt</CODE>, unless a different name has been provided on the command line.
 The file is reset each time <EM>Euclide</EM> is launched, hence make a copy if you wish to keep its content.
-You may of course open it with any text editor and paste it's content in your email program for example.
+You may of course open it with any text editor and paste its content in your email program for example.
 </P> 
 
 <!-- *********************************************************************** -->
@@ -274,11 +274,11 @@ Use <CODE>X</CODE> instead.
 </P>
 
 <P>
-Algoritmic bugs will produce one of the following four results:<OL>
+Algorithmic bugs will produce one of the following four results:<OL>
 	<LI>A crash;
 	<LI>An internal error, which will be displayed;
 	<LI>An invalid (illegal) solution;
-	<LI>No solution for a valid problem. Please carefully check the diagram position and the intended solution to make sure this event is not simply a mistake from your part. 
+	<LI>No solution for a valid problem. Please carefully check the diagram position and the intended solution to make sure this event is not simply a mistake on your part. 
 </OL>
 In all cases, the author would be grateful if you could<OL>
 	<LI>Verify on the web, on <A HREF = "http://lestourtereaux.free.fr/euclide/">Euclide's home page</A> if there is a newer version that includes a correction;
@@ -291,7 +291,7 @@ In all cases, the author would be grateful if you could<OL>
 <H2>7. Linux</H2>
 
 <P>
-Official Linux supports for <EM>Euclide</EM> has been introduced with version 0.95.
+Official Linux support for <EM>Euclide</EM> has been introduced with version 0.95.
 However, as the author does not master this environment, there is no installation package.
 Linux users are invited to follow these steps to get <EM>Euclide</EM> working on Linux :
 <OL>
@@ -324,7 +324,7 @@ Mac OS X users are invited to follow these steps to get <EM>Euclide</EM> working
 		 This will download <EM>Euclide</EM>'s source code.</LI>
 	<LI>Going back to the finder, locate, in <EM>Euclide</EM>'s folder, <EM>Project Files</EM>.
 	    In this folder, launch <CODE>Euclide.xcodeproj</CODE>. This will launch <EM>Xcode</EM>.</LI>
-	<LI>In the top left corner of the <EM>Xcode</EM> project window that appears, there is a small drow down menu to select compiler configuration.
+	<LI>In the top left corner of the <EM>Xcode</EM> project window that appears, there is a small drop down menu to select compiler configuration.
 	    Choose <EM>Release</EM> configuration.</LI>
 	<LI>Build the program, using <CODE>Build</CODE> menu.
 	    The build process takes less than 10 seconds; you should see a <EM>Build succeeded</EM> message in the status bar when the process in complete.
@@ -341,7 +341,7 @@ The above steps are probably difficult for a casual Mac user but they neverthele
 <H2>9. Random notes</H2>
 
 <P>
-<EM>Euclide</EM> is divided in four major parts.
+<EM>Euclide</EM> is divided into four major parts.
 The first one, called the preliminary analysis, tries to make obvious deductions directly from the position.
 The second part builds all possible strategies by going through a large number of permutations.
 These permutations include which piece is which, which captured which, which promoted where, etc.
@@ -353,7 +353,7 @@ The reason why <EM>Euclide</EM> is so slow at finding strategies for problems in
 <P>
 Then, for each strategy found, we apply the third and fourth part of the analysis.
 The third part, unique to <EM>Euclide</EM>, consists in the partial analysis of move dependencies.
-The sofwtare is sometimes able to reconstruct pieces of the proofgame and order moves within these fragments.
+The software is sometimes able to reconstruct pieces of the proofgame and order moves within these fragments.
 The underlying code is fairly tricky, and can certainly be improved tremendously.
 You may think as this part as being <EM>Natch</EM>'s option <CODE>-k</CODE> builtin.
 Finally, the fourth part simply plays, from the initial position, moves until solutions are found or the move tree is exhausted.
@@ -365,7 +365,7 @@ However, if not much was deduced from the third part, a great deal of speed is l
 <P>
 Most of the development of <EM>Euclide</EM> took place at the end of summer 2000, when I was (eagerly) waiting for my VISA for France.
 A second burst of activity to finish the third part occurred in January 2001, between two projects at the company where I was working then, before moving on to Cryo Networks and the <A HREF = "http://www.dunegenerations.com/">Dune Generations</A> team at the end of January.
-The easier fourth part was programmed sporadically, maybe one Sunday each three week, from February to May 2001.
+The easier fourth part was programmed sporadically, maybe one Sunday every third week, from February to May 2001.
 </P>
 
 <P>
